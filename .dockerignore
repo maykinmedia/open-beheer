@@ -1,0 +1,44 @@
+# Developers
+.hg
+.git
+.svn
+.idea/
+.vscode/
+vscode.env
+.sass-cache/
+*.db
+*.DS_Store
+*.pyc
+__pycache__
+*~
+*.mo
+.python-version
+dump.rdb
+
+# Javascript libraries
+backend/node_modules/
+
+# Generated files
+backend/docs/_build
+
+# Coverage reports
+/reports/
+/htmlcov/
+.coverage
+
+# Environment
+#/deployment/app.*.yml
+#/deployment/hosts.*
+local.py
+backend/env/
+backend/venv/
+backend/media/
+backend/static/
+backend/mail/
+backend/log/*.log*
+backend/log/nginx/*.log*
+.env
+
+# Static files
+backend/src/openbeheer/templates/index.html
+backend/src/openbeheer/static/assets
