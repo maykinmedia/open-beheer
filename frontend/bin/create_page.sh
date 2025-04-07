@@ -5,8 +5,9 @@ INDEX_FILE="$PAGES_DIR/index.ts"
 
 page_name=$1
 page_name_lowercase=$(echo "$page_name" | tr '[:upper:]' '[:lower:]')
-capitalized_page_name=$(echo "$page_name" | awk '{print toupper(substr($0, 1, 1)) tolower(substr($0, 2))}')
 page_dir="$PAGES_DIR/$page_name_lowercase"
+capitalized_page_name=$(echo "$page_name" | awk '{print toupper(substr($0, 1, 1)) tolower(substr($0, 2))}')
+component_name="${capitalized_page_name}Page"
 
 # Function to check if a directory exists
 function directory_exists() {
@@ -27,7 +28,7 @@ function create_index_file() {
 
 # Function to create the CSS file
 function create_css_file() {
-  echo ".${capitalized_page_name}Page {" > "$2/$capitalized_page_name.css"
+  echo ".${component_name} {" > "$2/$capitalized_page_name.css"
   echo "  /* Rules here. */" >> "$2/$capitalized_page_name.css"
   echo "}" >> "$2/$capitalized_page_name.css"
 }
@@ -37,17 +38,17 @@ function create_stories_file() {
   cat > "$2/$capitalized_page_name.stories.tsx" <<EOF
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ${capitalized_page_name}Page } from "./$capitalized_page_name";
+import { ${component_name} as ${component_name}Component } from "./$capitalized_page_name";
 
-const meta: Meta<typeof ${capitalized_page_name}Page> = {
+const meta: Meta<typeof ${component_name}Component> = {
   title: "Pages/${capitalized_page_name}",
-  component: ${capitalized_page_name}Page,
+  component: ${component_name}Component,
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ${page_name_lowercase}Page: Story = {
+export const ${component_name}: Story = {
   args: {
     children: "The quick brown fox jumps over the lazy dog.",
   },
@@ -58,19 +59,18 @@ EOF
 # Function to create the page file
 function create_page_file() {
   cat > "$2/$capitalized_page_name.tsx" <<EOF
-
 import "./$capitalized_page_name.css";
 
-export type ${capitalized_page_name}PageProps = React.ComponentProps<"main"> & {
+export type ${component_name}Props = React.ComponentProps<"main"> & {
   // Props here.
 };
 
 /**
  * ${capitalized_page_name} page
  */
-export function ${capitalized_page_name}Page({ children, ...props }: ${capitalized_page_name}PageProps) {
+export function ${component_name}({ children, ...props }: ${component_name}Props) {
   return (
-    <main className="${capitalized_page_name}Page" {...props}>
+    <main className="${component_name}" {...props}>
       {children}
     </main>
   );
