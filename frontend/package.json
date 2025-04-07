@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "preview": "vite preview",
-    "prepare": "cd .. && husky frontend/.husky"
+    "prepare": "cd .. && husky frontend/.husky",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage --watch=false"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -20,18 +22,22 @@
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@maykinmedia/eslint-config": "^1.0.0",
+    "@testing-library/react": "^16.3.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-istanbul": "^3.1.1",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-tsdoc": "^0.4.0",
     "husky": "^9.1.7",
+    "jsdom": "^26.0.0",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^3.1.1"
   },
   "lint-staged": {
     "*.{js,ts,md}": "npm run lint:fix"
