@@ -6,6 +6,7 @@
 # Developers
 .hg
 .git
+.python-version
 .svn
 .idea/
 .vscode/
