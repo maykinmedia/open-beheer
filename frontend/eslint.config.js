@@ -1,28 +1,18 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import { ignoreBuildArtifacts } from "@maykinmedia/eslint-config";
+import recommended from "@maykinmedia/eslint-config/recommended";
+import eslint_plugin_tsdoc from "eslint-plugin-tsdoc";
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+const config = [
+  ignoreBuildArtifacts(["build", "storybook-static"]),
+  ...recommended,
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      tsdoc: eslint_plugin_tsdoc,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      "tsdoc/syntax": "error",
     },
   },
-)
+];
+
+export default config;
