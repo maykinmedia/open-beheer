@@ -1,7 +1,7 @@
 import * as ReactDOM from "react-dom/client";
 import { Mock, expect, it, vi } from "vitest";
 
-import "./main.tsx";
+import "./main";
 
 vi.mock("react-dom/client", async () => {
   const actual = await vi.importActual<typeof ReactDOM>("react-dom/client");
