@@ -16,11 +16,11 @@ mozilla-django-oidc-db
 
 # API libraries
 djangorestframework
+drf-spectacular
+djangorestframework-camel-case
 # django-cors-headers
 # django-extra-fields
 # django-filter
-# drf-spectacular
-# djangorestframework-camel-case
 
 # WSGI servers & monitoring - production oriented
 uwsgi
