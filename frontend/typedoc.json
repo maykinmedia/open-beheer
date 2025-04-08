@@ -1,0 +1,13 @@
+{
+  "entryPoints": ["src/*"],
+  "exclude": ["src/index.ts"],
+  "tsconfig": "tsconfig.json",
+  "plugin": ["typedoc-plugin-markdown"],
+  "disableSources": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "excludeProtected": true,
+  "theme": "markdown",
+  "readme": "none",
+  "out": "docs"
+}
