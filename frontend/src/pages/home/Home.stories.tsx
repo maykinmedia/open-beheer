@@ -5,7 +5,7 @@ import {
 } from "storybook-addon-remix-react-router";
 
 import { HomePage as HomePageComponent } from "./Home";
-import { HomeLoaderData } from "./Home.loader.tsx";
+import { HomeLoaderData } from "./home.loader.tsx";
 
 const meta: Meta<typeof HomePageComponent> = {
   title: "Pages/Home",

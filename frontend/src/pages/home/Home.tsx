@@ -2,7 +2,7 @@ import React from "react";
 import { useLoaderData } from "react-router";
 
 import "./Home.css";
-import { HomeLoaderData } from "./Home.loader.tsx";
+import { HomeLoaderData } from "./home.loader.tsx";
 
 export type HomePageProps = React.ComponentProps<"main"> & {
   // Props here.

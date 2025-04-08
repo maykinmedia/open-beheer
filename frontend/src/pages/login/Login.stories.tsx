@@ -5,7 +5,7 @@ import {
 } from "storybook-addon-remix-react-router";
 
 import { LoginPage as LoginPageComponent } from "./Login";
-import { LoginLoaderData } from "./Login.loader.tsx";
+import { LoginLoaderData } from "./login.loader.tsx";
 
 const meta: Meta<typeof LoginPageComponent> = {
   title: "Pages/Login",
