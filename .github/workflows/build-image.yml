@@ -1,0 +1,86 @@
+name: Build the target Docker image
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        required: true
+        type: string 
+        description: Image name without tag, e.g. 'repo/app'
+      image_tag_suffix:
+        required: true
+        type: string
+        default: ''
+      target_env:
+        required: true
+        type: string
+        default: 'production'
+        # options:
+        # - production
+        # - dev
+      settings_module:
+        required: true
+        type: string
+        default: 'docker'
+        # options:
+        # - docker
+        # - dev
+    outputs:
+      image_name:
+        description: Image name + tag of the built image
+        value: ${{ jobs.image_build.outputs.image_name }}
+      artifact_name:
+        description: Artifact name for the built image
+        value: ${{ jobs.image_build.outputs.artifact_name }}
+
+jobs:
+  image_build:
+    name: Build image
+    runs-on: ubuntu-latest
+
+    env:
+      COMPOSE_DOCKER_CLI_BUILD: 1
+      DOCKER_BUILDKIT: 1
+
+    outputs:
+      image_name: ${{ steps.build-args.outputs.image_name }}
+      artifact_name: ${{ steps.build-args.outputs.artifact_name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract build args
+        id: build-args
+        run: |
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
+
+          # PRs result in version 'merge' -> transform that into 'latest'
+          [ "$VERSION" == "merge" ] && VERSION=latest
+
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "image_name=${{ inputs.image_name }}:${VERSION}${{ inputs.image_tag_suffix }}" >> $GITHUB_OUTPUT
+          echo "artifact_name=docker-image-${VERSION}${{ inputs.image_tag_suffix }}" >> $GITHUB_OUTPUT
+          echo "git_hash=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Build the Docker image
+        run: |
+          docker build . \
+            --tag ${{ steps.build-args.outputs.image_name }} \
+            --build-arg COMMIT_HASH=${{ steps.build-args.outputs.git_hash }} \
+            --build-arg RELEASE=${{ steps.build-args.outputs.version }} \
+            --build-arg TARGET_ENVIRONMENT=${{ inputs.target_env }} \
+            --build-arg SETTINGS_MODULE=${{ inputs.settings_module }}
+
+      - name: Dump image to file
+        run: docker image save -o image.tar ${{ steps.build-args.outputs.image_name }}
+
+      - name: Store image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build-args.outputs.artifact_name }}
+          path: image.tar
+          retention-days: 1
