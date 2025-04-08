@@ -10,7 +10,7 @@ const dirname =
 
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineWorkspace([
-  "vitest.config.ts",
+  "*.stories.tsx",
   {
     extends: "vite.config.ts",
     plugins: [
