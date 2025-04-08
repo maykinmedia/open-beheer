@@ -14,6 +14,9 @@ export type LoginPageProps = React.ComponentProps<"main"> & {
  * Login page
  */
 export function LoginPage({ ...props }: LoginPageProps) {
+  const actionData = useActionData() || {};
+  const submit = useSubmit();
+
   const fields = [
     {
       autoFocus: true,
@@ -29,9 +32,6 @@ export function LoginPage({ ...props }: LoginPageProps) {
       type: "password",
     },
   ];
-
-  const actionData = useActionData() || {};
-  const submit = useSubmit();
 
   const formErrors = Object.fromEntries(
     Object.entries(actionData).map(([key, values]) => [

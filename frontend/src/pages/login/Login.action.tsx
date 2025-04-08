@@ -15,8 +15,9 @@ export async function loginAction({
   const username = formData.get("username");
   const password = formData.get("password");
 
-  console.log("Login action", { username, password });
   return {
     nonFieldErrors: ["Login not implemented yet"],
+    username,
+    password,
   };
 }
