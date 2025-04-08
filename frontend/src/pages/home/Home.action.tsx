@@ -1,4 +1,4 @@
-export type HomeActionData = {};
+export type HomeActionData = object;
 
 /**
  * Home action.
