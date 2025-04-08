@@ -40,7 +40,7 @@ import React from "react";
 import { useLoaderData } from "react-router";
 
 import "./$capitalized_page_name.css";
-import { ${capitalized_page_name}LoaderData } from "./${capitalized_page_name}.loader.tsx";
+import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.tsx";
 
 export type ${component_name}Props = React.ComponentProps<"main"> & {
   // Props here.
@@ -64,14 +64,14 @@ EOF
 
 # Function to create the loader file
 function create_loader_file() {
-  cat > "$2/$capitalized_page_name.loader.tsx" <<EOF
+  cat > "$2/$page_name.loader.tsx" <<EOF
 export type ${capitalized_page_name}LoaderData = object;
 
 /**
  * ${capitalized_page_name} loader.
  * Loader data can be obtained using \`useLoaderData()\` in ${component_name}.
  */
-export async function ${capitalized_page_name}Loader(): Promise<${capitalized_page_name}LoaderData> {
+export async function ${page_name}Loader(): Promise<${capitalized_page_name}LoaderData> {
   return {};
 }
 EOF
@@ -79,14 +79,14 @@ EOF
 
 # Function to create the action file
 function create_action_file() {
-  cat > "$2/$capitalized_page_name.action.tsx" <<EOF
+  cat > "$2/$page_name.action.tsx" <<EOF
 export type ${capitalized_page_name}ActionData = object;
 
 /**
  * ${capitalized_page_name} action.
  * Action data can be obtained using \`useActionData()\` in ${component_name}.
  */
-export async function ${capitalized_page_name}Action(): Promise<${capitalized_page_name}ActionData> {
+export async function ${page_name}Action(): Promise<${capitalized_page_name}ActionData> {
   return {};
 }
 EOF
@@ -102,7 +102,7 @@ import {
 } from "storybook-addon-remix-react-router";
 
 import { ${component_name} as ${component_name}Component } from "./$capitalized_page_name";
-import { ${capitalized_page_name}LoaderData } from "./${capitalized_page_name}.loader.tsx";
+import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.tsx";
 
 const meta: Meta<typeof ${component_name}Component> = {
   title: "Pages/${capitalized_page_name}",
