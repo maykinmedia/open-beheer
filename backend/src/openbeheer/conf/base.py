@@ -119,9 +119,12 @@ INSTALLED_APPS = [
     "axes",
     "hijack",
     "hijack.contrib.admin",
+    "rest_framework",
+    "drf_spectacular",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
+    "openbeheer.api",
 ]
 
 MIDDLEWARE = [
@@ -489,3 +492,58 @@ if not ELASTIC_APM_SERVER_URL:
 SUBPATH = config("SUBPATH", None)
 if SUBPATH:
     SUBPATH = f"/{SUBPATH.strip('/')}"
+
+#
+# DJANGO REST FRAMEWORK
+#
+ENABLE_THROTTLING = config("ENABLE_THROTTLING", default=True)
+
+throttle_rate_anon = (
+    config("THROTTLE_RATE_ANON", default="2500/hour") if ENABLE_THROTTLING else None
+)
+throttle_rate_user = (
+    config("THROTTLE_RATE_USER", default="15000/hour") if ENABLE_THROTTLING else None
+)
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_THROTTLE_CLASSES": (
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.ScopedRateThrottle",
+    ),
+    "DEFAULT_THROTTLE_RATES": {
+        # used by regular throttle classes
+        "anon": throttle_rate_anon,
+        "user": throttle_rate_user,
+    },
+    "DEFAULT_RENDERER_CLASSES": [
+        "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
+        "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
+    ],
+    "DEFAULT_PARSER_CLASSES": [
+        "djangorestframework_camel_case.parser.CamelCaseJSONParser",
+        "djangorestframework_camel_case.parser.CamelCaseFormParser",
+        "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+
+#
+# SPECTACULAR - OpenAPI schema generation
+#
+_DESCRIPTION = "Open Beheer"
+
+API_VERSION = "0.1.0"
+
+SPECTACULAR_SETTINGS = {
+    "SCHEMA_PATH_PREFIX": "/api/v1",
+    "TITLE": "Open Beheer API",
+    "DESCRIPTION": _DESCRIPTION,
+    "VERSION": API_VERSION,
+    "POSTPROCESSING_HOOKS": [],
+}
