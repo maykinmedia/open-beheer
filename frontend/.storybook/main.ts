@@ -6,6 +6,7 @@ const config: StorybookConfig = {
     "@storybook/addon-onboarding",
     "@chromatic-com/storybook",
     "@storybook/experimental-addon-test",
+    "storybook-addon-remix-react-router",
     {
       name: "@storybook/addon-coverage",
       options: {
