@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
+// @ts-expect-error Style is an alias, and ts isn't able to resolve this
 import "@maykin-ui/admin-ui/style";
 import { Outlet } from "react-router";
 
@@ -9,11 +8,7 @@ import { Outlet } from "react-router";
  * This component serves as the entry point for the React app and renders the main UI structure.
  */
 function App() {
-  return (
-    <>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 }
 
 export default App;
