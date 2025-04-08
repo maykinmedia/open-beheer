@@ -2,8 +2,8 @@
 -r base.txt
 
 # Dependencies only relevant for (unit) testing
+black
 coverage
-django-jenkins
 django-webtest
 factory-boy
 freezegun
@@ -12,3 +12,8 @@ pylint
 pyquery  # integrates with webtest
 requests-mock
 tblib
+
+# For documentation
+pytest
+sphinx
+sphinx_rtd_theme
