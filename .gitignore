@@ -1,10 +1,5 @@
 .DS_STORE
 
-# Template
-# /_os_app
-# /_os_api
-# /os_generic/
-
 # Developers
 .hg
 .git
@@ -12,6 +7,7 @@
 .svn
 .idea/
 .vscode/
+vscode.env
 .sass-cache/
 *.db
 *.pyc
@@ -31,18 +27,13 @@ __pycache__
 .coverage
 
 # Environment
-#/deployment/app.*.yml
-#/deployment/hosts.*
 local.py
-/env/
-/venv/
-/media/
-/static/
-/mail/
-/log/*.log*
-/log/nginx/*.log*
-/.env
+backend/env/
+backend/venv/
+backend/media/
+backend/static/
+backend/mail/
+backend/log/*.log*
+backend/log/nginx/*.log*
+.env
 
-# Static files
-src/openbeheer/static/bundles/
-src/openbeheer/fonts/
