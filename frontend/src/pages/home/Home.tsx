@@ -16,8 +16,8 @@ export function HomePage({ children, ...props }: HomePageProps) {
 
   return (
     <main className="HomePage" {...props}>
-      data: {JSON.stringify(loaderData)}
-      {children}
+      <pre>children: {children}</pre>
+      <pre>data: {JSON.stringify(loaderData)}</pre>
     </main>
   );
 }

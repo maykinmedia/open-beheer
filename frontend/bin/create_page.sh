@@ -54,8 +54,8 @@ export function ${component_name}({ children, ...props }: ${component_name}Props
 
   return (
     <main className="${component_name}" {...props}>
-      data: {JSON.stringify(loaderData)}
-      {children}
+      <pre>children: {children}</pre>
+      <pre>data: {JSON.stringify(loaderData)}</pre>
     </main>
   );
 }
@@ -96,18 +96,31 @@ EOF
 function create_stories_file() {
   cat > "$2/$capitalized_page_name.stories.tsx" <<EOF
 import type { Meta, StoryObj } from "@storybook/react";
+import {
+  reactRouterParameters,
+  withRouter,
+} from "storybook-addon-remix-react-router";
 
 import { ${component_name} as ${component_name}Component } from "./$capitalized_page_name";
+import { ${capitalized_page_name}LoaderData } from "./${capitalized_page_name}.loader.tsx";
 
 const meta: Meta<typeof ${component_name}Component> = {
   title: "Pages/${capitalized_page_name}",
   component: ${component_name}Component,
+  decorators: [withRouter],
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ${component_name}: Story = {
+  parameters: {
+    reactRouter: reactRouterParameters({
+      routing: {
+        loader: () => ({}) as ${capitalized_page_name}LoaderData,
+      },
+    }),
+  },
   args: {
     children: "The quick brown fox jumps over the lazy dog.",
   },
