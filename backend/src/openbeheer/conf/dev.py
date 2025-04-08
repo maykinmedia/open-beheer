@@ -1,6 +1,8 @@
 import os
 import warnings
+
 from corsheaders.defaults import default_headers
+
 from .utils import config
 
 os.environ.setdefault("DEBUG", "yes")
@@ -122,7 +124,6 @@ MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
 INTERNAL_IPS = ("127.0.0.1",)
 
 
-
 # None of the authentication backends require two-factor authentication.
 if config("DISABLE_2FA", default=False):
     MAYKIN_2FA_ALLOW_MFA_BYPASS_BACKENDS = AUTHENTICATION_BACKENDS
@@ -134,7 +135,6 @@ warnings.filterwarnings(
     RuntimeWarning,
     r"django\.db\.models\.fields",
 )
-
 
 
 # Override settings with local settings.

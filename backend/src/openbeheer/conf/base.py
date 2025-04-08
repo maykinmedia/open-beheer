@@ -171,7 +171,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "openbeheer.wsgi.application"
 
 # Translations
-LOCALE_PATHS = (DJANGO_PROJECT_DIR / "conf" / "locale", )
+LOCALE_PATHS = (DJANGO_PROJECT_DIR / "conf" / "locale",)
 
 #
 # SERVING of static and media files
@@ -374,7 +374,9 @@ elif (BASE_DIR / ".git").exists():
         repo = git.Repo(search_parent_directories=True)
         try:
             GIT_SHA = repo.head.object.hexsha
-        except ValueError:  # on startproject initial runs before any git commits have been made
+        except (
+            ValueError
+        ):  # on startproject initial runs before any git commits have been made
             GIT_SHA = repo.active_branch.name
 else:
     GIT_SHA = None

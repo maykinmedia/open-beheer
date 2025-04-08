@@ -40,9 +40,7 @@ class LoginTests(APITestCase):
         response = client.post(login_url, data={})
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(
-            response.json()["detail"], "CSRF Failed: CSRF cookie not set."
-        )
+        self.assertEqual(response.json()["detail"], "CSRF Failed: CSRF cookie not set.")
 
     def test_no_credentials_given(self):
         login_url = reverse("api:authentication:login")
