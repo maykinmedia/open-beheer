@@ -7,10 +7,14 @@ import { HomePage } from "./pages";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />
-  }
+    element: <HomePage />,
+  },
 ]);
 
 const root = document.getElementById("root") as HTMLElement;
 
-ReactDOM.createRoot(root).render(<StrictMode><RouterProvider router={router} /></StrictMode>);
+ReactDOM.createRoot(root).render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
+);

@@ -1,4 +1,4 @@
-export type HomeLoaderData = {};
+export type HomeLoaderData = object;
 
 /**
  * Home loader.

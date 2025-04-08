@@ -65,7 +65,7 @@ EOF
 # Function to create the loader file
 function create_loader_file() {
   cat > "$2/$capitalized_page_name.loader.tsx" <<EOF
-export type ${capitalized_page_name}LoaderData = {};
+export type ${capitalized_page_name}LoaderData = object;
 
 /**
  * ${capitalized_page_name} loader.
@@ -80,7 +80,7 @@ EOF
 # Function to create the action file
 function create_action_file() {
   cat > "$2/$capitalized_page_name.action.tsx" <<EOF
-export type ${capitalized_page_name}ActionData = {};
+export type ${capitalized_page_name}ActionData = object;
 
 /**
  * ${capitalized_page_name} action.
