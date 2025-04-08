@@ -9,10 +9,12 @@ from openbeheer.accounts.tests.factories import UserFactory
 class EnvironmentInfoTests(SimpleTestCase):
 
     def _render(self, context=None):
-        tpl = Template("""
+        tpl = Template(
+            """
             {%load utils%}
             {% show_environment_info %}
-        """)
+        """
+        )
         return tpl.render(Context(context or {})).strip()
 
     @override_settings(SHOW_ENVIRONMENT=False)
