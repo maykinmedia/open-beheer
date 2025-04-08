@@ -33,6 +33,65 @@ function create_css_file() {
   echo "}" >> "$2/$capitalized_page_name.css"
 }
 
+# Function to create the page file
+function create_page_file() {
+  cat > "$2/$capitalized_page_name.tsx" <<EOF
+import React from "react";
+import { useLoaderData } from "react-router";
+
+import "./$capitalized_page_name.css";
+import { ${capitalized_page_name}LoaderData } from "./${capitalized_page_name}.loader.tsx";
+
+export type ${component_name}Props = React.ComponentProps<"main"> & {
+  // Props here.
+};
+
+/**
+ * ${capitalized_page_name} page
+ */
+export function ${component_name}({ children, ...props }: ${component_name}Props) {
+  const loaderData = useLoaderData<${capitalized_page_name}LoaderData>();
+
+  return (
+    <main className="${component_name}" {...props}>
+      data: {JSON.stringify(loaderData)}
+      {children}
+    </main>
+  );
+}
+EOF
+}
+
+# Function to create the loader file
+function create_loader_file() {
+  cat > "$2/$capitalized_page_name.loader.tsx" <<EOF
+export type ${capitalized_page_name}LoaderData = {};
+
+/**
+ * ${capitalized_page_name} loader.
+ * Loader data can be obtained using \`useLoaderData()\` in ${component_name}.
+ */
+export async function ${capitalized_page_name}Loader(): Promise<${capitalized_page_name}LoaderData> {
+  return {};
+}
+EOF
+}
+
+# Function to create the action file
+function create_action_file() {
+  cat > "$2/$capitalized_page_name.action.tsx" <<EOF
+export type ${capitalized_page_name}ActionData = {};
+
+/**
+ * ${capitalized_page_name} action.
+ * Action data can be obtained using \`useActionData()\` in ${component_name}.
+ */
+export async function ${capitalized_page_name}Action(): Promise<${capitalized_page_name}ActionData> {
+  return {};
+}
+EOF
+}
+
 # Function to create the stories.tsx file
 function create_stories_file() {
   cat > "$2/$capitalized_page_name.stories.tsx" <<EOF
@@ -53,28 +112,6 @@ export const ${component_name}: Story = {
     children: "The quick brown fox jumps over the lazy dog.",
   },
 };
-EOF
-}
-
-# Function to create the page file
-function create_page_file() {
-  cat > "$2/$capitalized_page_name.tsx" <<EOF
-import "./$capitalized_page_name.css";
-
-export type ${component_name}Props = React.ComponentProps<"main"> & {
-  // Props here.
-};
-
-/**
- * ${capitalized_page_name} page
- */
-export function ${component_name}({ children, ...props }: ${component_name}Props) {
-  return (
-    <main className="${component_name}" {...props}>
-      {children}
-    </main>
-  );
-}
 EOF
 }
 
@@ -110,8 +147,10 @@ create_directory $page_dir
 # Create individual files
 create_index_file $capitalized_page_name $page_dir
 create_css_file $capitalized_page_name $page_dir
-create_stories_file $capitalized_page_name $page_dir
 create_page_file $capitalized_page_name $page_dir
+create_loader_file $capitalized_page_name $page_dir
+create_action_file $capitalized_page_name $page_dir
+create_stories_file $capitalized_page_name $page_dir
 
 # Update pages/index.ts file
 update_index_file
