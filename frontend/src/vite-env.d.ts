@@ -1,3 +1,10 @@
 /// <reference types="vite/client" />
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {};
+
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string;
+  readonly VITE_API_PATH: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
