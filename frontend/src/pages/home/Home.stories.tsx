@@ -5,7 +5,7 @@ import {
 } from "storybook-addon-remix-react-router";
 
 import { HomePage as HomePageComponent } from "./Home";
-import { HomeLoaderData } from "./home.loader.tsx";
+import { homeLoader } from "./home.loader.tsx";
 
 const meta: Meta<typeof HomePageComponent> = {
   title: "Pages/Home",
@@ -20,7 +20,7 @@ export const HomePage: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
       routing: {
-        loader: () => ({}) as HomeLoaderData,
+        loader: homeLoader,
       },
     }),
   },
