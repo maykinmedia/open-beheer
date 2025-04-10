@@ -1,14 +1,13 @@
 import { getCookie } from "@maykin-ui/client-common/cookie";
 
 /** The base origin for all API requests. */
-export const API_URL = import.meta.env.VITE_API_URL || window.location.origin;
+export const API_URL = import.meta.env.MYKN_API_URL || window.location.origin;
 
 /** The base path for all API requests. */
-export const API_PATH = import.meta.env.VITE_API_PATH || "/api/v1";
+export const API_PATH = import.meta.env.MYKN_API_PATH || "/api/v1";
 
 /** The base url for all API requests. */
 export const API_BASE_URL = `${API_URL}${API_PATH}`;
-
 /**
  * Makes an actual fetch request to the API, should be used by all other API implementations.
  * @param method - method to use for the request
