@@ -6,6 +6,8 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
+from openbeheer.accounts.api.views import WhoAmIView
+
 app_name = "api"
 
 urlpatterns = [
@@ -34,4 +36,12 @@ urlpatterns = [
         include("openbeheer.api.authentication.urls", namespace="authentication"),
     ),
     # Actual endpoints
+    path(
+        "v1/",
+        include(
+            [
+                path("whoami/", WhoAmIView.as_view(), name="whoami"),
+            ]
+        ),
+    ),
 ]
