@@ -8,6 +8,7 @@ export default defineConfig({
   build: {
     assetsDir: "static/assets",
   },
+  envPrefix: "MYKN_",
   resolve: {
     alias: {
       "~": path.resolve(__dirname, "src"),
