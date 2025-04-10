@@ -37,7 +37,7 @@ jobs:
           npm run lint
           CI=false npm run build
         env: 
-          API_URL: "http://localhost:8000"
+          VITE_API_URL: "http://localhost:8000"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -180,7 +180,7 @@ jobs:
   docker_build:
     name: Build docker image
 
-    uses: ./.github/workflows/build-image.yaml
+    uses: ./.github/workflows/build-image.yml
     with:
       image_name: maykinmedia/open-beheer
       image_tag_suffix: ""
