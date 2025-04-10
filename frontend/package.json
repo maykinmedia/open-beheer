@@ -13,8 +13,6 @@
     "prepare": "cd .. && husky frontend/.husky",
     "test": "vitest",
     "test:coverage": "vitest --coverage --watch=false",
-    "test-storybook": "test-storybook",
-    "test-storybook:coverage": "test-storybook --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
