@@ -24,6 +24,8 @@ function create_directory() {
 # Function to create the index.ts file
 function create_index_file() {
   echo "export * from \"./$capitalized_page_name\";" > "$2/index.ts"
+  echo "export * from \"./${page_name}.action\";" >> "$2/index.ts"
+  echo "export * from \"./${page_name}.loader\";" >> "$2/index.ts"
 }
 
 # Function to create the CSS file
