@@ -104,7 +104,7 @@ import {
 } from "storybook-addon-remix-react-router";
 
 import { ${component_name} as ${component_name}Component } from "./$capitalized_page_name";
-import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.tsx";
+import { ${page_name}Loader } from "./${page_name}.loader";
 
 const meta: Meta<typeof ${component_name}Component> = {
   title: "Pages/${capitalized_page_name}",
@@ -119,7 +119,7 @@ export const ${component_name}: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
       routing: {
-        loader: () => ({}) as ${capitalized_page_name}LoaderData,
+        loader: ${page_name}Loader,
       },
     }),
   },

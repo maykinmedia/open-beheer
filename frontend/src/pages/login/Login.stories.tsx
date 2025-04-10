@@ -5,7 +5,7 @@ import {
 } from "storybook-addon-remix-react-router";
 
 import { LoginPage as LoginPageComponent } from "./Login";
-import { LoginLoaderData } from "./login.loader.tsx";
+import { loginLoader } from "./login.loader.tsx";
 
 const meta: Meta<typeof LoginPageComponent> = {
   title: "Pages/Login",
@@ -20,7 +20,7 @@ export const LoginPage: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
       routing: {
-        loader: () => ({}) as LoginLoaderData,
+        loader: loginLoader,
       },
     }),
   },
