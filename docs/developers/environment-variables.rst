@@ -13,12 +13,12 @@ Backend (Django)
    * - Variable
      - Description
      - Default
-   * - `FOO`
+   * - ``FOO``
      - Bar
-     - -
+     - ``"bla"``
 
 Frontend (React)
-------------------------
+----------------
 
 .. list-table::
    :header-rows: 1
@@ -27,15 +27,15 @@ Frontend (React)
    * - Variable
      - Description
      - Default
-   * - `MYKN_API_URL`
+   * - ``MYKN_API_URL``
      - Base URL for the backend API.
-     - `http://localhost:5173`
-   * - `MYKN_API_PATH`
+     - ``http://localhost:5173``
+   * - ``MYKN_API_PATH``
      - Path to the API.
-     - `/api/v1`
+     - ``/api/v1``
 
 Notes
 -----
 
-- All frontend environment variables **must start with `MYKN_`** to be exposed to the app during build time.
+- All frontend environment variables **must** start with ``MYKN_`` to be exposed to the app during build time.
 

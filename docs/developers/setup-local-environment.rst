@@ -9,6 +9,7 @@ Prerequisites
 Make sure the following tools are installed:
 
 * `Python`_ – check the ``Dockerfile`` for the required version.
+* `uv`_.
 * Python `Virtualenv`_ and `Pip`_
 * `PostgreSQL`_
 * `Node.js`_
@@ -17,12 +18,12 @@ Make sure the following tools are installed:
 
 .. _Python: https://www.python.org/
 .. _Virtualenv: https://virtualenv.pypa.io/en/stable/
-.. _Pip: https://packaging.python.org/tutorials/installing-packages/#ensure-pip-setuptools-and-wheel-are-up-to-date
+.. _Pip: https://packaging.python.org/en/latest/tutorials/installing-packages/#ensure-pip-setuptools-and-wheel-are-up-to-date
 .. _PostgreSQL: https://www.postgresql.org/
 .. _Node.js: https://nodejs.org/
 .. _npm: https://www.npmjs.com/
 .. _Redis: https://redis.io/
-
+.. _uv: https://docs.astral.sh/uv/
 
 
 Database Setup (PostgreSQL)
@@ -34,14 +35,15 @@ Create the `openbeheer` role and database:
 
    sudo -u postgres psql
 
-   -- Inside the PostgreSQL shell:
+Inside the PostgreSQL shell (``openbeheer`` is the user/password/database name used by default by the development server):
+
+.. code:: sql
 
    CREATE ROLE openbeheer WITH LOGIN PASSWORD 'openbeheer';
    ALTER ROLE openbeheer CREATEDB;
    CREATE DATABASE openbeheer OWNER openbeheer;
-   \q
 
-You can adjust the password or database name as needed, but make sure it matches your backend’s `.env`.
+You can adjust the password or database name as needed, but make sure it matches your backend's ``.env``.
 
 Clone the Repository
 --------------------
@@ -73,7 +75,7 @@ Backend Setup (Django)
 
    .. code-block:: bash
 
-      pip install -r requirements/dev.txt
+      uv pip install -r requirements/dev.txt
 
 4. **Create a `.env` file** and configure environment variables. See :doc:`environment-variables` for details.
 
@@ -87,29 +89,22 @@ Backend Setup (Django)
 
    .. code-block:: bash
 
-      python src/manage.py migrate
+      src/manage.py migrate
 
 6. **Create a superuser** (optional, but recommended):
 
    .. code-block:: bash
 
-      python src/manage.py createsuperuser
-
-7. **Build the Django admin frontend assets**:
-
-   .. code-block:: bash
-
-      npm install
-      npm run build
+      src/manage.py createsuperuser
 
 8. **Run the development server**:
 
    .. code-block:: bash
 
-      python src/manage.py runserver
+      src/manage.py runserver
 
 Frontend Setup (React)
------------------------------
+----------------------
 
 1. **Navigate to the frontend directory**:
 
@@ -137,7 +132,7 @@ Frontend Setup (React)
 
       npm run dev
 
-This will usually be available at http://localhost:5173. The Django backend runs at http://localhost:8000 by default.
+This will usually be available at ``http://localhost:5173/``. The Django backend runs at ``http://localhost:8000/`` by default.
 
 Next Steps
 ----------
