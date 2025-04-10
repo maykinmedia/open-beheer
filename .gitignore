@@ -20,7 +20,6 @@ __pycache__
 
 # Generated files
 /docs/_build
-/frontend/storybook-static
 
 # Coverage reports
 /reports/
