@@ -37,7 +37,7 @@ jobs:
           npm run lint
           CI=false npm run build
         env: 
-          VITE_API_URL: "http://localhost:8000"
+          MYKN_API_URL: "http://localhost:8000"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -104,7 +104,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   frontend-tests:
-    name: Run storybook tests
+    name: Run the Vitest test suite
     needs: frontend-build
     runs-on: ubuntu-latest
 
@@ -124,28 +124,10 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps
 
-      - name: Build Storybook
-        run: npm run build-storybook
-
-      - name: Run vitest tests
+      - name: Run tests
         run: npm run test:coverage
 
-      - name: Serve Storybook and run tests
-        run: |
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-            "npx http-server storybook-static --port 6006" \
-            "npx wait-on tcp:127.0.0.1:6006 && npm run test-storybook"
-
-      - name: Publish coverage report (storybook)
-        uses: codecov/codecov-action@v3.1.4
-        with:
-          working-directory: frontend/coverage
-          files: ./storybook/coverage-storybook.json
-          flags: storybook
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Publish coverage report (jest)
+      - name: Publish coverage report
         uses: codecov/codecov-action@v3.1.4
         with:
           working-directory: frontend/coverage
