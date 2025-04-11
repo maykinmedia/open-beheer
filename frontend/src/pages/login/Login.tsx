@@ -43,6 +43,7 @@ export function LoginPage({ ...props }: LoginPageProps) {
 
   return (
     <LoginTemplate<LoginFormType>
+      contentOnly={false} // Explicit to override context.
       slotPrimaryNavigation={<></>} // FIXME: Should be easier to override
       formProps={{
         "aria-label": "Vul uw inloggegevens in",
