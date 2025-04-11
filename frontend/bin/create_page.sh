@@ -40,7 +40,7 @@ function create_page_file() {
   cat > "$2/$capitalized_page_name.tsx" <<EOF
 import React from "react";
 import { Outlet, useLoaderData } from "react-router";
-import { useCurrentMatch } from "~/api/hooks/useCurrentMatch.ts";
+import { useCurrentMatch } from "~/hooks/useCurrentMatch";
 
 import "./$capitalized_page_name.css";
 import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.tsx";

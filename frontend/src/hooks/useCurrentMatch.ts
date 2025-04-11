@@ -1,4 +1,4 @@
-import { useMatches } from "react-router";
+import { UIMatch, useMatches } from "react-router";
 
 /**
  * Returns the deepest matched route from the current route hierarchy.
@@ -10,5 +10,5 @@ import { useMatches } from "react-router";
  */
 export function useCurrentMatch() {
   const matches = useMatches();
-  return [...matches].pop() as (typeof matches)[number];
+  return matches.pop() as UIMatch;
 }
