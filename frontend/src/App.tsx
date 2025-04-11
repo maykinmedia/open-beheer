@@ -40,11 +40,7 @@ function App() {
 
     const buttons = [
       {
-        children: (
-          <>
-            <Outline.Squares2X2Icon />
-          </>
-        ),
+        children: <Outline.Squares2X2Icon />,
         title: "Catalogi",
         onClick: () => navigate("/"),
       },

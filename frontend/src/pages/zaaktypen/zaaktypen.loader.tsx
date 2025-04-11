@@ -1,4 +1,12 @@
-export type ZaaktypenLoaderData = object;
+export type ZaaktypenLoaderData = {
+  demoData: {
+    id: number;
+    name: string;
+    age: number;
+    email: string;
+    status: string;
+  }[];
+};
 
 /**
  * Zaaktypen loader.
