@@ -2,7 +2,7 @@ import { redirect } from "react-router";
 import { vi } from "vitest";
 import { loginRequired } from "~/loaders/loginRequired.loader.ts";
 
-vi.mock("react-router-dom", () => ({
+vi.mock("react-router", () => ({
   redirect: vi.fn(),
 }));
 

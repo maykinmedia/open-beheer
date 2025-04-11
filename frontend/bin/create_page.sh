@@ -39,7 +39,8 @@ function create_css_file() {
 function create_page_file() {
   cat > "$2/$capitalized_page_name.tsx" <<EOF
 import React from "react";
-import { useLoaderData } from "react-router";
+import { Outlet, useLoaderData } from "react-router";
+import { useCurrentMatch } from "~/api/hooks/useCurrentMatch.ts";
 
 import "./$capitalized_page_name.css";
 import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.tsx";
@@ -52,12 +53,14 @@ export type ${component_name}Props = React.ComponentProps<"main"> & {
  * ${capitalized_page_name} page
  */
 export function ${component_name}({ children, ...props }: ${component_name}Props) {
+  const activeMatch = useCurrentMatch();
   const loaderData = useLoaderData<${capitalized_page_name}LoaderData>();
 
   return (
     <main className="${component_name}" {...props}>
-      <pre>children: {children}</pre>
+      <pre>match: {JSON.stringify(activeMatch)}</pre>
       <pre>data: {JSON.stringify(loaderData)}</pre>
+      <Outlet />
     </main>
   );
 }
