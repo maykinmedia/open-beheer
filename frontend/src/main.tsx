@@ -1,38 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router";
+import { routes } from "~/routes.tsx";
 
-import App from "./App";
 import "./main.css";
-import {
-  HomePage,
-  LoginPage,
-  homeAction,
-  homeLoader,
-  loginAction,
-  loginLoader,
-} from "./pages";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "/",
-        element: <HomePage />,
-        loader: homeLoader,
-        action: homeAction,
-      },
-      {
-        path: "/login",
-        element: <LoginPage />,
-        loader: loginLoader,
-        action: loginAction,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(routes);
 
 const root = document.getElementById("root") as HTMLElement;
 

@@ -4,23 +4,23 @@ import {
   withRouter,
 } from "storybook-addon-remix-react-router";
 
-import { HomePage as HomePageComponent } from "./Home";
-import { homeLoader } from "./home.loader.tsx";
+import { CatalogiPage as CatalogiPageComponent } from "./Catalogi";
+import { catalogiLoader } from "./catalogi.loader";
 
-const meta: Meta<typeof HomePageComponent> = {
-  title: "Pages/Home",
-  component: HomePageComponent,
+const meta: Meta<typeof CatalogiPageComponent> = {
+  title: "Pages/Catalogi",
+  component: CatalogiPageComponent,
   decorators: [withRouter],
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const HomePage: Story = {
+export const CatalogiPage: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
       routing: {
-        loader: homeLoader,
+        loader: catalogiLoader,
       },
     }),
   },

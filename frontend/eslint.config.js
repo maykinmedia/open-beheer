@@ -16,6 +16,7 @@ const config = [
     },
     rules: {
       "tsdoc/syntax": "error",
+      "react-hooks/exhaustive-deps": "off",
     },
   },
 ];
