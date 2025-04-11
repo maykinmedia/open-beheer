@@ -3,11 +3,14 @@ import App from "~/App.tsx";
 import {
   CatalogiPage,
   LoginPage,
+  ZaaktypePage,
   ZaaktypenPage,
   catalogiAction,
   catalogiLoader,
   loginAction,
   loginLoader,
+  zaaktypeAction,
+  zaaktypeLoader,
   zaaktypenAction,
   zaaktypenLoader,
 } from "~/pages";
@@ -17,17 +20,18 @@ import {
  */
 export const routes: RouteObject[] = [
   {
+    id: "root",
     path: "/",
     element: <App />,
     children: [
       {
-        id: "root",
+        id: "index",
         path: "/",
         element: <Navigate to="/catalogi" replace />,
       },
       {
         id: "catalogi",
-        path: "/catalogi",
+        path: "catalogi",
         element: <CatalogiPage />,
         loader: catalogiLoader,
         action: catalogiAction,
@@ -38,6 +42,15 @@ export const routes: RouteObject[] = [
             element: <ZaaktypenPage />,
             loader: zaaktypenLoader,
             action: zaaktypenAction,
+            children: [
+              {
+                id: "zaaktype",
+                path: ":id",
+                element: <ZaaktypePage />,
+                loader: zaaktypeLoader,
+                action: zaaktypeAction,
+              },
+            ],
           },
         ],
       },
