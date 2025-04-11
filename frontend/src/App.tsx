@@ -12,6 +12,7 @@ import { useMemo } from "react";
 import { Outlet, RouteObject, useLocation, useNavigate } from "react-router";
 import { useChildRoutes } from "~/api/hooks/useChildRoutes.ts";
 import { useCurrentMatch } from "~/api/hooks/useCurrentMatch.ts";
+import { Profile } from "~/components/Profile/Profile.tsx";
 import { ROUTE_IDS } from "~/routes.tsx";
 
 import "./main.css";
@@ -52,10 +53,12 @@ function App() {
       align: "start",
       pad: true,
     }));
+
     return [
       <Logo key="logo" abbreviated variant="contrast" />,
       ...buttons,
       "spacer",
+      <Profile key="Profile" />,
     ];
   }, [location, routeId]);
 

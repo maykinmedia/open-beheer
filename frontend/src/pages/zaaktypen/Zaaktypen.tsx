@@ -1,4 +1,5 @@
-import { ListTemplate } from "../../../../../maykin-ui";
+import { ListTemplate } from "@maykin-ui/admin-ui";
+
 import "./Zaaktypen.css";
 
 /**

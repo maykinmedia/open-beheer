@@ -1,5 +1,13 @@
 import { request } from "~/api/request.ts";
 
+export type User = {
+  pk: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
 /**
  * API call for login.
  * @param username - username of the user
@@ -22,6 +30,22 @@ export async function login(
     undefined,
     signal,
   );
+}
+
+/**
+ * API call to get the current logged-in user.
+ */
+export async function whoAmI(signal?: AbortSignal) {
+  const response = await request(
+    "GET",
+    "/whoami/",
+    undefined,
+    undefined,
+    undefined,
+    signal,
+  );
+  const promise: Promise<User> = response.json();
+  return promise;
 }
 
 /**
