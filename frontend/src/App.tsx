@@ -10,6 +10,7 @@ import {
 import "@maykin-ui/admin-ui/style";
 import { useMemo } from "react";
 import { Outlet, RouteObject, useLocation, useNavigate } from "react-router";
+import { Profile } from "~/components/Profile/Profile.tsx";
 import { useChildRoutes } from "~/hooks/useChildRoutes.ts";
 import { useCurrentMatch } from "~/hooks/useCurrentMatch.ts";
 
@@ -59,6 +60,7 @@ function App() {
       <Logo key="logo" abbreviated variant="contrast" />,
       ...buttons,
       "spacer",
+      <Profile key="Profile" />,
     ];
   }, [location]);
 
