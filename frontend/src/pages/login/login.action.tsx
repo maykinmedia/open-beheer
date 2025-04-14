@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, redirect } from "react-router";
-import { login } from "~/api/auth.ts";
+import { login } from "~/lib/api/auth.ts";
 
 import "./Login.css";
 

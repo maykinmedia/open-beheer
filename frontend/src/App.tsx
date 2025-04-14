@@ -8,11 +8,12 @@ import {
 } from "@maykin-ui/admin-ui";
 // @ts-expect-error - no ts modules
 import "@maykin-ui/admin-ui/style";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Outlet, RouteObject, useLocation, useNavigate } from "react-router";
 import { Profile } from "~/components/Profile/Profile.tsx";
-import { useChildRoutes } from "~/hooks/useChildRoutes.ts";
-import { useCurrentMatch } from "~/hooks/useCurrentMatch.ts";
+import { User, whoAmI } from "~/lib";
+import { useChildRoutes } from "~/lib/hooks/useChildRoutes.ts";
+import { useCurrentMatch } from "~/lib/hooks/useCurrentMatch.ts";
 
 import "./main.css";
 
@@ -24,6 +25,25 @@ function App() {
   const navigate = useNavigate();
   const currentMatch = useCurrentMatch();
   const childRoutes = useChildRoutes();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Fetch user data from an API or context
+    const fetchUser = async () => {
+      try {
+        const currentUser = await whoAmI();
+        setUser(currentUser);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    void fetchUser();
+
+    return () => {
+      setUser(null);
+    };
+  }, []);
 
   const currentMatchHandle = currentMatch.handle as
     | Record<string, unknown>
@@ -60,9 +80,9 @@ function App() {
       <Logo key="logo" abbreviated variant="contrast" />,
       ...buttons,
       "spacer",
-      <Profile key="Profile" />,
+      <Profile key="Profile" user={user} />,
     ];
-  }, [location]);
+  }, [location, user]);
 
   /**
    * The sidebar navigation items.

@@ -1,5 +1,5 @@
 import { UIMatch, useMatches } from "react-router";
-import { routes } from "~/routes";
+import { routes } from "~/routes.tsx";
 
 /**
  * Returns the child routes for a given route ID.
