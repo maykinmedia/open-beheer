@@ -1,11 +1,17 @@
+import { FieldSet } from "@maykin-ui/admin-ui";
+import { ZAAKTYPE_FIELDSETS } from "~/pages/zaaktype";
+
 export type ZaaktypenLoaderData = {
-  demoData: {
-    id: number;
-    name: string;
-    age: number;
-    email: string;
-    status: string;
-  }[];
+  objectList: ZaakType[];
+  fieldsets: FieldSet<ZaakType>[];
+};
+
+export type ZaakType = {
+  id: number;
+  name: string;
+  age: number;
+  email: string;
+  status: string;
 };
 
 /**
@@ -13,7 +19,7 @@ export type ZaaktypenLoaderData = {
  * Loader data can be obtained using `useLoaderData()` in ZaaktypenPage.
  */
 export async function zaaktypenLoader(): Promise<ZaaktypenLoaderData> {
-  const demoData = [
+  const objectList = [
     {
       id: 1,
       name: "John Doe",
@@ -722,5 +728,5 @@ export async function zaaktypenLoader(): Promise<ZaaktypenLoaderData> {
       status: "Pending",
     },
   ];
-  return { demoData };
+  return { objectList, fieldsets: ZAAKTYPE_FIELDSETS };
 }

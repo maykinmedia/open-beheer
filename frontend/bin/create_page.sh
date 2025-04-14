@@ -28,13 +28,6 @@ function create_index_file() {
   echo "export * from \"./${page_name}.loader\";" >> "$2/index.ts"
 }
 
-# Function to create the CSS file
-function create_css_file() {
-  echo ".${component_name} {" > "$2/$capitalized_page_name.css"
-  echo "  /* Rules here. */" >> "$2/$capitalized_page_name.css"
-  echo "}" >> "$2/$capitalized_page_name.css"
-}
-
 # Function to create the page file
 function create_page_file() {
   cat > "$2/$capitalized_page_name.tsx" <<EOF
@@ -42,7 +35,6 @@ import React from "react";
 import { Outlet, useLoaderData } from "react-router";
 import { useCurrentMatch } from "~/hooks/useCurrentMatch";
 
-import "./$capitalized_page_name.css";
 import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.tsx";
 
 export type ${component_name}Props = React.ComponentProps<"main"> & {
@@ -164,7 +156,6 @@ create_directory $page_dir
 
 # Create individual files
 create_index_file $capitalized_page_name $page_dir
-create_css_file $capitalized_page_name $page_dir
 create_page_file $capitalized_page_name $page_dir
 create_loader_file $capitalized_page_name $page_dir
 create_action_file $capitalized_page_name $page_dir

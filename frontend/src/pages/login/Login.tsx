@@ -2,8 +2,6 @@ import { LoginTemplate, forceArray } from "@maykin-ui/admin-ui";
 import React from "react";
 import { useActionData, useSubmit } from "react-router";
 
-import "./Login.css";
-
 type LoginFormType = { username: string; password: string };
 
 export type LoginPageProps = React.ComponentProps<"main"> & {

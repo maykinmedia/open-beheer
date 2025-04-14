@@ -1,7 +1,5 @@
 import { Outlet } from "react-router";
 
-import "./Catalogi.css";
-
 /**
  * Catalogi page
  */

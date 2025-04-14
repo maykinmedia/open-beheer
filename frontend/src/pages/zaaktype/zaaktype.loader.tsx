@@ -1,8 +1,10 @@
+import { FieldSet } from "@maykin-ui/admin-ui";
 import { LoaderFunctionArgs } from "react-router";
-import { ZaaktypenLoaderData, zaaktypenLoader } from "~/pages";
+import { ZAAKTYPE_FIELDSETS, ZaakType, zaaktypenLoader } from "~/pages";
 
 export type ZaaktypeLoaderData = {
-  demoData: ZaaktypenLoaderData["demoData"][number];
+  data: ZaakType;
+  fieldsets: FieldSet<ZaakType>[];
 };
 
 /**
@@ -13,8 +15,9 @@ export async function zaaktypeLoader({
   params,
 }: LoaderFunctionArgs): Promise<ZaaktypeLoaderData> {
   // Probably not a great idea when implementing.
-  const { demoData } = await zaaktypenLoader();
+  const { objectList } = await zaaktypenLoader();
   return {
-    demoData: demoData.find((row) => row.id === parseInt(params?.id || ""))!,
+    data: objectList.find((row) => row.id === parseInt(params?.id || ""))!,
+    fieldsets: ZAAKTYPE_FIELDSETS,
   };
 }
