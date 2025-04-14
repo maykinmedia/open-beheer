@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { login } from "~/lib/api/auth.ts";
 import { loginAction } from "~/pages";
 
-vi.mock("~/api/auth.ts", () => ({
+vi.mock("~/lib/api/auth.ts", () => ({
   login: vi.fn(),
 }));
 
