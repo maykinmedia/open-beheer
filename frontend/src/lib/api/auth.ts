@@ -1,4 +1,4 @@
-import { request } from "~/api/request.ts";
+import { request } from "~/lib/api/request.ts";
 
 export type User = {
   pk: number;

@@ -11,27 +11,18 @@ import {
   P,
   Solid,
 } from "@maykin-ui/admin-ui";
-import React, { useEffect, useState } from "react";
-import { User, whoAmI } from "~/api/auth.ts";
-import { formatUser } from "~/format/formatUser.ts";
+import React from "react";
+import { User } from "~/lib/api/auth.ts";
+import { formatUser } from "~/lib/format/formatUser.ts";
 
-type ProfileProps = object;
+type ProfileProps = {
+  user: User | null;
+};
 
-export const Profile: React.FC<ProfileProps> = () => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const currentUser = await whoAmI();
-        setUser(currentUser);
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-      }
-    };
-
-    void fetchUser();
-  }, []);
+export const Profile: React.FC<ProfileProps> = ({ user }) => {
+  if (!user) {
+    return null;
+  }
 
   return (
     <Dropdown
@@ -39,7 +30,7 @@ export const Profile: React.FC<ProfileProps> = () => {
       key="account"
       label={
         <IconInitials
-          name={user ? formatUser(user as User, { showUsername: false }) : ""}
+          name={user ? formatUser(user, { showUsername: false }) : ""}
         />
       }
       pad="v"
@@ -54,7 +45,7 @@ export const Profile: React.FC<ProfileProps> = () => {
               <IconInitials
                 name={
                   user
-                    ? formatUser(user as User, {
+                    ? formatUser(user, {
                         showUsername: false,
                       })
                     : ""
