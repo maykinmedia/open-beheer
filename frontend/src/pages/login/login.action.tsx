@@ -1,8 +1,6 @@
 import { ActionFunctionArgs, redirect } from "react-router";
 import { login } from "~/lib/api/auth.ts";
 
-import "./Login.css";
-
 export type LoginActionData = object;
 
 /**

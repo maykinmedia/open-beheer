@@ -17,6 +17,9 @@ import { useCurrentMatch } from "~/lib/hooks/useCurrentMatch.ts";
 
 import "./main.css";
 
+/** Route id to show children for in the sidebar. */
+const SIDEBAR_INDEX = "catalogi";
+
 /**
  * This component serves as the entry point for the React app and renders the main UI structure.
  */
@@ -24,7 +27,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentMatch = useCurrentMatch();
-  const childRoutes = useChildRoutes();
+  const childRoutes = useChildRoutes(SIDEBAR_INDEX);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -47,6 +50,7 @@ function App() {
     };
   }, []);
 
+  // Determine whether we should render the base UI.
   const currentMatchHandle = currentMatch.handle as
     | Record<string, unknown>
     | undefined;
@@ -98,12 +102,9 @@ function App() {
           active: currentMatch.id === id,
           align: "start",
           children: ucFirst(path?.split("/").pop()?.trim() || ""),
-          onClick: () =>
-            navigate(
-              currentMatch.id === id
-                ? currentMatch.pathname || ""
-                : [currentMatch.pathname, path!].join("/"),
-            ),
+          onClick: () => {
+            navigate("/catalogi/" + path);
+          },
         };
       });
   }, [primaryNavigationItems]);
