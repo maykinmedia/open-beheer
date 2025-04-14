@@ -28,10 +28,11 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Fetch user data from an API or context
+    const controller = new AbortController();
+
     const fetchUser = async () => {
       try {
-        const currentUser = await whoAmI();
+        const currentUser = await whoAmI(controller.signal);
         setUser(currentUser);
       } catch (error) {
         console.error("Failed to fetch user:", error);
@@ -41,6 +42,7 @@ function App() {
     void fetchUser();
 
     return () => {
+      controller.abort();
       setUser(null);
     };
   }, []);
