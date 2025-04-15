@@ -91,7 +91,7 @@ function App() {
    */
   const sidebarItems = useMemo(() => {
     // Page with no child routes should not show sidebar.
-    if (!childRoutes.length) {
+    if (hideUi || !childRoutes.length) {
       return [];
     }
 
