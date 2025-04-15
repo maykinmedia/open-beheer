@@ -12,7 +12,7 @@ import {
   Solid,
 } from "@maykin-ui/admin-ui";
 import React from "react";
-import { User } from "~/lib/api/auth.ts";
+import { User } from "~/api";
 import { formatUser } from "~/lib/format/formatUser.ts";
 
 type ProfileProps = {
