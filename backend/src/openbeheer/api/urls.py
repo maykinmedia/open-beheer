@@ -7,6 +7,7 @@ from drf_spectacular.views import (
 )
 
 from openbeheer.accounts.api.views import WhoAmIView
+from ..zaken.views import ZakenView
 
 app_name = "api"
 
@@ -43,5 +44,9 @@ urlpatterns = [
                 path("whoami/", WhoAmIView.as_view(), name="whoami"),
             ]
         ),
+    ),
+    path(
+        "v1/zaken/",
+        ZakenView.as_view(),
     ),
 ]
