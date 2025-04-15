@@ -10,10 +10,9 @@ import {
 import "@maykin-ui/admin-ui/style";
 import { useEffect, useMemo, useState } from "react";
 import { Outlet, RouteObject, useLocation, useNavigate } from "react-router";
+import { User, whoAmI } from "~/api";
 import { Profile } from "~/components/Profile/Profile.tsx";
-import { User, whoAmI } from "~/lib";
-import { useChildRoutes } from "~/lib/hooks/useChildRoutes.ts";
-import { useCurrentMatch } from "~/lib/hooks/useCurrentMatch.ts";
+import { useChildRoutes, useCurrentMatch } from "~/hooks";
 
 import "./main.css";
 

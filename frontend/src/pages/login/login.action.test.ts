@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { login } from "~/lib/api/auth.ts";
+import { login } from "~/api";
 import { loginAction } from "~/pages";
 
 vi.mock("~/lib/api/auth.ts", () => ({

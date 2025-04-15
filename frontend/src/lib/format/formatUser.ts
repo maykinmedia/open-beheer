@@ -1,4 +1,4 @@
-import { User } from "~/lib/api/auth.ts";
+import { User } from "~/api";
 
 export function formatUser(user: User, { showUsername = true } = {}) {
   let displayName = "";
