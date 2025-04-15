@@ -3,7 +3,7 @@ import { LoaderFunctionArgs } from "react-router";
 import { ZAAKTYPE_FIELDSETS, ZaakType, zaaktypenLoader } from "~/pages";
 
 export type ZaaktypeLoaderData = {
-  data: ZaakType;
+  object: ZaakType;
   fieldsets: FieldSet<ZaakType>[];
 };
 
@@ -17,7 +17,7 @@ export async function zaaktypeLoader({
   // Probably not a great idea when implementing.
   const { objectList } = await zaaktypenLoader();
   return {
-    data: objectList.find((row) => row.id === parseInt(params?.id || ""))!,
+    object: objectList.find((row) => row.id === parseInt(params?.id || ""))!,
     fieldsets: ZAAKTYPE_FIELDSETS,
   };
 }

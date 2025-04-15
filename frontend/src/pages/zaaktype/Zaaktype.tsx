@@ -1,22 +1,19 @@
-import { DetailTemplate, FieldSet } from "@maykin-ui/admin-ui";
+import { DetailTemplate } from "@maykin-ui/admin-ui";
 import { useLoaderData } from "react-router";
-import { ZaakType } from "~/pages";
+import { ZaakType, ZaaktypeLoaderData } from "~/pages";
 
 /**
  * Zaaktype page
  */
-export function ZaaktypePage<T extends { name: string } = ZaakType>() {
-  const { data, fieldsets } = useLoaderData<{
-    data: T;
-    fieldsets: FieldSet<T>[];
-  }>();
+export function ZaaktypePage() {
+  const { object, fieldsets } = useLoaderData<ZaaktypeLoaderData>();
 
   return (
-    <DetailTemplate<T>
+    <DetailTemplate<ZaakType>
       attributeGridProps={{
-        title: data.name,
+        title: object.name,
         fieldsets,
-        object: data,
+        object: object,
       }}
     />
   );

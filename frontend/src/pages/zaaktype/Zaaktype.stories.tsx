@@ -19,7 +19,11 @@ type Story = StoryObj<typeof meta>;
 export const ZaaktypePage: Story = {
   parameters: {
     reactRouter: reactRouterParameters({
+      location: {
+        pathParams: { id: "42" },
+      },
       routing: {
+        path: ":id",
         loader: zaaktypeLoader,
       },
     }),
