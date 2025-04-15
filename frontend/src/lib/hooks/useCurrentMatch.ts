@@ -10,5 +10,5 @@ import { UIMatch, useMatches } from "react-router";
  */
 export function useCurrentMatch() {
   const matches = useMatches();
-  return matches.pop() as UIMatch;
+  return [...matches].pop() as UIMatch;
 }
