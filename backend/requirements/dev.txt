@@ -9,6 +9,11 @@ annotated-types==0.7.0
     # via pydantic
 anyio==4.9.0
     # via httpx
+ape-pie==0.2.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   zgw-consumers
 asgiref==3.8.1
     # via
     #   -c requirements/ci.txt
@@ -21,11 +26,6 @@ asn1crypto==1.5.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   webauthn
-astroid==3.3.9
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   pylint
 attrs==25.3.0
     # via
     #   -c requirements/ci.txt
@@ -44,10 +44,7 @@ beautifulsoup4==4.13.3
     #   -r requirements/ci.txt
     #   webtest
 black==25.1.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   -r requirements/dev.in
+    # via -r requirements/dev.in
 boltons==25.0.0
     # via
     #   -c requirements/ci.txt
@@ -84,8 +81,6 @@ charset-normalizer==3.4.1
     #   requests
 click==8.1.8
     # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
     #   black
     #   bump-my-version
     #   rich-click
@@ -99,6 +94,7 @@ cryptography==44.0.2
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   django-simple-certmanager
     #   josepy
     #   mozilla-django-oidc
     #   pyopenssl
@@ -108,11 +104,6 @@ cssselect==1.3.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   pyquery
-dill==0.3.9
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   pylint
 django==5.2
     # via
     #   -c requirements/ci.txt
@@ -127,8 +118,12 @@ django==5.2
     #   django-jsonform
     #   django-otp
     #   django-phonenumber-field
+    #   django-privates
     #   django-redis
+    #   django-relativedelta
     #   django-rosetta
+    #   django-sendfile2
+    #   django-simple-certmanager
     #   django-solo
     #   django-two-factor-auth
     #   djangorestframework
@@ -136,6 +131,7 @@ django==5.2
     #   maykin-2fa
     #   mozilla-django-oidc
     #   mozilla-django-oidc-db
+    #   zgw-consumers
 django-admin-index==4.0.0
     # via
     #   -c requirements/ci.txt
@@ -183,19 +179,40 @@ django-phonenumber-field==8.0.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-two-factor-auth
+django-privates==3.1.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   django-simple-certmanager
 django-redis==5.4.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+django-relativedelta==2.0.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   zgw-consumers
 django-rosetta==0.10.2
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+django-sendfile2==0.7.2
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   django-privates
+django-simple-certmanager==2.4.1
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   zgw-consumers
 django-solo==2.4.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   mozilla-django-oidc-db
+    #   zgw-consumers
 django-two-factor-auth==1.17.0
     # via
     #   -c requirements/ci.txt
@@ -248,14 +265,16 @@ faker==37.1.0
     #   -r requirements/ci.txt
     #   factory-boy
 flake8==7.2.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   -r requirements/dev.in
+    # via -r requirements/dev.in
 freezegun==1.5.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+furl==2.1.4
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   ape-pie
 gitdb==4.0.12
     # via gitpython
 gitpython==3.1.44
@@ -278,6 +297,7 @@ idna==3.10
     #   anyio
     #   httpx
     #   requests
+    #   yarl
 imagesize==1.4.1
     # via
     #   -c requirements/ci.txt
@@ -294,11 +314,7 @@ iniconfig==2.1.0
     #   -r requirements/ci.txt
     #   pytest
 isort==6.0.1
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   -r requirements/dev.in
-    #   pylint
+    # via -r requirements/dev.in
 jinja2==3.1.6
     # via
     #   -c requirements/ci.txt
@@ -319,6 +335,11 @@ jsonschema-specifications==2024.10.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   jsonschema
+legacy-cgi==2.6.3
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   webob
 lxml==5.3.1
     # via
     #   -c requirements/ci.txt
@@ -336,11 +357,7 @@ maykin-2fa==1.0.2
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
 mccabe==0.7.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   flake8
-    #   pylint
+    # via flake8
 mdurl==0.1.2
     # via markdown-it-py
 mozilla-django-oidc==4.0.1
@@ -352,11 +369,22 @@ mozilla-django-oidc-db==0.22.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-mypy-extensions==1.0.0
+msgspec==0.19.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-    #   black
+multidict==6.4.3
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   yarl
+mypy-extensions==1.0.0
+    # via black
+orderedmultidict==1.0.1
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   furl
 packaging==24.2
     # via
     #   -c requirements/ci.txt
@@ -365,10 +393,7 @@ packaging==24.2
     #   pytest
     #   sphinx
 pathspec==0.12.1
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   black
+    # via black
 phonenumberslite==8.13.55
     # via
     #   -c requirements/ci.txt
@@ -379,11 +404,7 @@ pillow==11.1.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
 platformdirs==4.3.7
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   black
-    #   pylint
+    # via black
 pluggy==1.5.0
     # via
     #   -c requirements/ci.txt
@@ -396,15 +417,17 @@ polib==1.2.0
     #   django-rosetta
 prompt-toolkit==3.0.50
     # via questionary
+propcache==0.3.1
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   yarl
 psycopg2==2.9.10
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
 pycodestyle==2.13.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   flake8
+    # via flake8
 pycparser==2.22
     # via
     #   -c requirements/ci.txt
@@ -419,20 +442,18 @@ pydantic-core==2.33.1
 pydantic-settings==2.8.1
     # via bump-my-version
 pyflakes==3.3.2
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   flake8
+    # via flake8
 pygments==2.19.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   rich
     #   sphinx
-pylint==3.3.6
+pyjwt==2.10.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   zgw-consumers
 pyopenssl==25.0.0
     # via
     #   -c requirements/ci.txt
@@ -455,6 +476,7 @@ python-dateutil==2.9.0.post0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   django-relativedelta
     #   freezegun
 python-decouple==3.8
     # via
@@ -475,6 +497,7 @@ pyyaml==6.0.2
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   drf-spectacular
+    #   vcrpy
 qrcode==7.4.2
     # via
     #   -c requirements/ci.txt
@@ -497,14 +520,11 @@ requests==2.32.3
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   ape-pie
     #   django-rosetta
     #   mozilla-django-oidc
-    #   requests-mock
     #   sphinx
-requests-mock==1.12.1
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
+    #   zgw-consumers
 rich==14.0.0
     # via
     #   bump-my-version
@@ -522,6 +542,10 @@ rpds-py==0.24.0
     #   -r requirements/ci.txt
     #   jsonschema
     #   referencing
+ruff==0.11.5
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
 sentry-sdk==2.25.1
     # via
     #   -c requirements/ci.txt
@@ -530,6 +554,8 @@ six==1.17.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   furl
+    #   orderedmultidict
     #   python-dateutil
 smmap==5.0.2
     # via gitdb
@@ -603,25 +629,19 @@ tblib==3.1.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
 tomlkit==0.13.2
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   bump-my-version
-    #   pylint
+    # via bump-my-version
 typing-extensions==4.13.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-    #   anyio
     #   beautifulsoup4
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
-    #   pyopenssl
     #   qrcode
-    #   referencing
     #   rich-click
     #   typing-inspection
+    #   zgw-consumers
 typing-inspection==0.4.0
     # via pydantic
 tzdata==2025.2
@@ -641,7 +661,12 @@ urllib3==2.3.0
     #   elastic-apm
     #   requests
     #   sentry-sdk
+    #   vcrpy
 uwsgi==2.0.28
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+vcrpy==7.0.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -674,3 +699,13 @@ wrapt==1.17.2
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   elastic-apm
+    #   vcrpy
+yarl==1.19.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   vcrpy
+zgw-consumers==0.38.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt

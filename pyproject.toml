@@ -1,5 +1,7 @@
 [project]
-requires-python = "3.12"
+name = "open-beheer"
+version = "0.1.0"
+requires-python = ">=3.12"
 
 [tool.bumpversion]
 current_version = "0.1.0"
@@ -56,3 +58,130 @@ replace = "API_VERSION = \"{new_version}\""
 filename = "../frontend/package.json"
 search = "\"version\": \"{current_version}\""
 replace = "\"version\": \"{new_version}\""
+
+[tool.coverage.run]
+branch = true
+source = "backend/src"
+omit = [
+    "backend/src/manage.py",
+    "backend/src/openbeheer/wsgi.py",
+    "backend/src/openbeheer/conf/local_example.py",
+    "backend/src/openbeheer/conf/production.py",
+    "*/migrations/*",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+skip_covered = true
+exclude_also = [
+    'if (typing\.)?TYPE_CHECKING:',
+    '@(typing\.)?overload',
+    'class .*\(.*Protocol.*\):',
+    '@(abc\.)?abstractmethod',
+    'raise NotImplementedError',
+    '\.\.\.',
+    'pass',
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+warn_unused_ignores = true
+# follow_imports = "silent"
+
+plugins = ["mypy_django_plugin.main"]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/backend/src"
+sqlite_cache = true
+
+[tool.pyright]
+include = ["backend/src"]
+reportUnnecessaryTypeIgnoreComment = true
+
+[tool.pytest.ini_options]
+# pytest settings for quick local runs; ci uses ci.toml!
+python_files = [
+    "test_*.py",
+    "tests.py",
+]
+addopts = [
+    # db startup speedup; comment out or override with --create-db when switching
+    # between pgw/pih. etc etc or when you want a clean test slate.
+    "--reuse-db",
+    "--no-migrations",  # skip running migrations; create db from current model state
+    "--ignore-glob",
+    "*_migrations.py",  # skip test_migrations
+    "--basetemp=/dev/shm",  # use ram disk
+    "--dist=loadscope",  # fix some (not all) db isolation issues when run in parallel
+    "--import-mode=importlib",  # lift pytest requirement for unique test module names
+]
+
+filterwarnings = [
+    # "error",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+pythonpath = "backend/src"
+
+[tool.ruff]
+include = ["backend/src/**/*.py"]
+exclude = ["static", "media"]
+
+# Consider backend/src/ as first-party imports
+src = ["backend/src"]
+
+[tool.ruff.lint]
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = [
+    # PyFlakes
+    "F",
+    # Subset of pycodestyle
+    "E4",
+    "E7",
+    "E9",
+    "W",
+    # flake8-type-checking
+    "TC",
+    # flake8-bugbear
+    "B",
+    # print style debugging ok, committing print calls not
+    "T20",
+    # Prefer simple code
+    "C",
+    "SIM",
+]
+ignore = [
+    "E501", # line too long
+    "E731", # Assign lambda
+    # "W503",  # Line break before binary operator
+]
+
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["msgspec.Struct"]
+
+[tool.ruff.lint.isort.sections]
+django = ["django"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+default-section = "third-party"
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "third-party",
+    "first-party",
+    "local-folder"
+]
+
+[tool.uv]
+no-binary-package = [
+    "xmlsec",  # xmlsec and lxml should always be linked with the same libxml
+    "lxml",
+]
+# prefer system python over managing but allow managed, so devs don't need to
+# run the same os as the container
+python-preference = "system"
+
+[tool.uv.pip]
+emit-index-url = false

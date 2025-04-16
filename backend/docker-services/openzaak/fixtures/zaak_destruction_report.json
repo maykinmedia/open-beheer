@@ -1,0 +1,113 @@
+[
+    {
+        "model": "zaken.zaakidentificatie",
+        "pk": 104,
+        "fields": {
+            "identificatie": "ZAAK-ID-101",
+            "bronorganisatie": "523791045"
+        }
+    },
+    {
+        "model": "zaken.zaak",
+        "pk": 104,
+        "fields": {
+            "uuid": "b316d968-c357-4fbf-a1ad-60b3f8b9c3a6",
+            "_id": null,
+            "_identificatie": "ZAAK-ID-101",
+            "_bronorganisatie": "",
+            "hoofdzaak": null,
+            "omschrijving": "Destruction Report for a list",
+            "toelichting": "",
+            "_zaaktype": 1,
+            "registratiedatum": "2024-07-11",
+            "verantwoordelijke_organisatie": "754209635",
+            "startdatum": "2024-07-14",
+            "einddatum": "2024-08-28",
+            "einddatum_gepland": null,
+            "uiterlijke_einddatum_afdoening": null,
+            "publicatiedatum": null,
+            "producten_of_diensten": "[]",
+            "communicatiekanaal": "",
+            "vertrouwelijkheidaanduiding": "zeer_geheim",
+            "betalingsindicatie": "",
+            "laatste_betaaldatum": null,
+            "zaakgeometrie": null,
+            "verlenging_reden": "",
+            "verlenging_duur": null,
+            "opschorting_indicatie": false,
+            "opschorting_reden": "",
+            "selectielijstklasse": "",
+            "archiefnominatie": "blijvend_bewaren",
+            "archiefstatus": "",
+            "archiefactiedatum": null,
+            "opdrachtgevende_organisatie": "",
+            "processobjectaard": "",
+            "startdatum_bewaartermijn": null,
+            "processobject_datumkenmerk": "",
+            "processobject_identificatie": "",
+            "processobject_objecttype": "",
+            "processobject_registratie": "",
+            "communicatiekanaal_naam": "",
+            "created_on": "2024-07-19T13:33:19.146Z"
+        }
+    },
+    {
+        "model": "documenten.enkelvoudiginformatieobjectcanonical",
+        "pk": 5,
+        "fields": {
+          "lock": ""
+        }
+      },
+      {
+        "model": "documenten.enkelvoudiginformatieobject",
+        "pk": 5,
+        "fields": {
+          "identificatie": "DOCUMENT-04",
+          "bronorganisatie": "428075162",
+          "creatiedatum": "2018-06-27",
+          "titel": "some titel",
+          "vertrouwelijkheidaanduiding": "openbaar",
+          "auteur": "Open Archiefbeheer App",
+          "status": "",
+          "beschrijving": "",
+          "ontvangstdatum": null,
+          "verzenddatum": null,
+          "indicatie_gebruiksrecht": null,
+          "ondertekening_soort": "",
+          "ondertekening_datum": null,
+          "_informatieobjecttype": 1,
+          "canonical": 5,
+          "uuid": "ac7ab173-3b1c-4ea9-8ccb-023c3814e3b3",
+          "formaat": "application/vnd.ms-excel",
+          "taal": "nld",
+          "bestandsnaam": "",
+          "bestandsomvang": 9,
+          "inhoud": "uploads/2024/12/01219b90-0d13-4e25-b463-ab1545b05f05.bin",
+          "link": "",
+          "integriteit_algoritme": "",
+          "integriteit_waarde": "",
+          "integriteit_datum": null,
+          "versie": 1,
+          "begin_registratie": "2024-07-19T13:33:19.526Z",
+          "verschijningsvorm": "",
+          "trefwoorden": "[]"
+        }
+      },
+    {
+        "model": "zaken.zaakinformatieobject",
+        "pk": 4,
+        "fields": {
+          "_etag": "253456e0340419fe3ccab4dc6454b068",
+          "uuid": "be6d2a4f-30bd-4d02-8b2d-522bcc07f90f",
+          "zaak": 104,
+          "_informatieobject": 5,
+          "aard_relatie": "hoort_bij",
+          "titel": "",
+          "beschrijving": "",
+          "registratiedatum": "2024-07-19T13:33:19.659Z",
+          "_objectinformatieobject_url": "",
+          "vernietigingsdatum": null,
+          "status": null
+        }
+      }
+]

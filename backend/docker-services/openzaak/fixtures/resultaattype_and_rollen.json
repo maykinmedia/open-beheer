@@ -1,0 +1,280 @@
+[
+    {
+        "model": "catalogi.zaaktype",
+        "pk": 3,
+        "fields": {
+            "_etag": "e06d2051a4000b5bf5bbb65826d67cdf",
+            "datum_begin_geldigheid": "2018-01-01",
+            "datum_einde_geldigheid": null,
+            "concept": false,
+            "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487",
+            "identificatie": "ZAAKTYPE-2020-0000000001",
+            "zaaktype_omschrijving": "Testing resultaattypen process",
+            "zaaktype_omschrijving_generiek": "",
+            "vertrouwelijkheidaanduiding": "",
+            "doel": "Trouble red compare produce animal. Everything today Democrat student enter. By probably adult.",
+            "aanleiding": "Couple toward trip old nice memory system instead.",
+            "toelichting": "",
+            "indicatie_intern_of_extern": "extern",
+            "handeling_initiator": "indienen",
+            "onderwerp": "Evenementvergunning",
+            "handeling_behandelaar": "uitvoeren",
+            "doorlooptijd_behandeling": "P30D",
+            "servicenorm_behandeling": null,
+            "opschorting_en_aanhouding_mogelijk": true,
+            "verlenging_mogelijk": false,
+            "verlengingstermijn": null,
+            "trefwoorden": "[]",
+            "publicatie_indicatie": true,
+            "publicatietekst": "",
+            "verantwoordingsrelatie": "[]",
+            "versiedatum": "2018-01-01",
+            "verantwoordelijke": "100000000",
+            "producten_of_diensten": "[\"https://example.com/product/123\"]",
+            "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+            "selectielijst_procestype_jaar": 2020,
+            "referentieproces_naam": "ReferentieProces 0",
+            "referentieproces_link": "",
+            "broncatalogus_url": "",
+            "broncatalogus_domein": "",
+            "broncatalogus_rsin": "",
+            "bronzaaktype_url": "",
+            "bronzaaktype_identificatie": "",
+            "bronzaaktype_omschrijving": "",
+            "catalogus": 1,
+            "deelzaaktypen": []
+        }
+    },
+    {
+        "model": "catalogi.resultaattype",
+        "pk": 3,
+        "fields": {
+            "uuid": "b9109699-67cd-4c2e-a2cf-76b311d40e25",
+            "omschrijving": "Afgehandeld",
+            "resultaattypeomschrijving": "Afgehandeld",
+            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/1bb001e9-5eab-4f10-8940-8781e11f180f",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "catalogi.resultaattype",
+        "pk": 4,
+        "fields": {
+            "uuid": "7759dcb7-de9a-4543-99e3-81472c488f32",
+            "omschrijving": "Lopend",
+            "resultaattypeomschrijving": "Lopend",
+            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/cc5ae4e3-a9e6-4386-bcee-46be4986a829",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "catalogi.roltype",
+        "pk": 1,
+        "fields": {
+            "uuid": "ae39e60c-0e4b-4432-a830-8755ed083fda",
+            "_etag": "",
+            "datum_begin_geldigheid": null,
+            "datum_einde_geldigheid": null,
+            "omschrijving": "Behandelend afdeling",
+            "omschrijving_generiek": "behandelaar",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "catalogi.roltype",
+        "pk": 1,
+        "fields": {
+            "uuid": "ae39e60c-0e4b-4432-a830-8755ed083fda",
+            "_etag": "",
+            "datum_begin_geldigheid": null,
+            "datum_einde_geldigheid": null,
+            "omschrijving": "Behandelend afdeling",
+            "omschrijving_generiek": "behandelaar",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "zaken.zaakidentificatie",
+        "pk": 105,
+        "fields": {
+            "identificatie": "ZAAK-2025-02-20-A",
+            "bronorganisatie": "523791045"
+        }
+    },
+    {
+        "model": "zaken.zaak",
+        "pk": 105,
+        "fields": {
+            "uuid": "0857eea4-9a80-4b13-8520-4b1e11c8d768",
+            "_id": null,
+            "_identificatie": "ZAAK-2025-02-20-A",
+            "_bronorganisatie": "",
+            "hoofdzaak": null,
+            "omschrijving": "",
+            "toelichting": "",
+            "_zaaktype": 3,
+            "registratiedatum": "2024-07-11",
+            "verantwoordelijke_organisatie": "754209635",
+            "startdatum": "2024-07-14",
+            "einddatum": "2024-08-28",
+            "einddatum_gepland": null,
+            "uiterlijke_einddatum_afdoening": null,
+            "publicatiedatum": null,
+            "producten_of_diensten": "[]",
+            "communicatiekanaal": "",
+            "vertrouwelijkheidaanduiding": "zeer_geheim",
+            "betalingsindicatie": "",
+            "laatste_betaaldatum": null,
+            "zaakgeometrie": null,
+            "verlenging_reden": "",
+            "verlenging_duur": null,
+            "opschorting_indicatie": false,
+            "opschorting_reden": "",
+            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/70d1d36b-49eb-4526-bc01-26f9b79b4100",
+            "archiefnominatie": "vernietigen",
+            "archiefstatus": "nog_te_archiveren",
+            "archiefactiedatum": "2024-01-01",
+            "opdrachtgevende_organisatie": "",
+            "processobjectaard": "",
+            "startdatum_bewaartermijn": null,
+            "processobject_datumkenmerk": "",
+            "processobject_identificatie": "",
+            "processobject_objecttype": "",
+            "processobject_registratie": "",
+            "communicatiekanaal_naam": "",
+            "created_on": "2024-07-19T13:33:19.146Z"
+        }
+    },
+    {
+        "model": "zaken.resultaat",
+        "pk": 10,
+        "fields": {
+            "_etag": "9ca03d2cf915c579e6a2a19d3425adea",
+            "uuid": "821b4d8f-3244-4ece-8d33-791fa6d2a2f3",
+            "zaak": 105,
+            "_resultaattype_base_url": null,
+            "_resultaattype_relative_url": null,
+            "_resultaattype_url": null,
+            "_resultaattype": 3,
+            "toelichting": "Testing resultaten"
+        }
+    },
+    {
+        "model": "zaken.zaakidentificatie",
+        "pk": 106,
+        "fields": {
+            "identificatie": "ZAAK-2025-02-20-B",
+            "bronorganisatie": "523791045"
+        }
+    },
+    {
+        "model": "zaken.zaak",
+        "pk": 106,
+        "fields": {
+            "uuid": "37e5ab9c-8f1b-40c7-9d2d-6b549ee2ee2a",
+            "_id": null,
+            "_identificatie": "ZAAK-2025-02-20-B",
+            "_bronorganisatie": "",
+            "hoofdzaak": null,
+            "omschrijving": "",
+            "toelichting": "",
+            "_zaaktype": 3,
+            "registratiedatum": "2024-07-11",
+            "verantwoordelijke_organisatie": "754209635",
+            "startdatum": "2024-07-14",
+            "einddatum": "2024-08-28",
+            "einddatum_gepland": null,
+            "uiterlijke_einddatum_afdoening": null,
+            "publicatiedatum": null,
+            "producten_of_diensten": "[]",
+            "communicatiekanaal": "",
+            "vertrouwelijkheidaanduiding": "zeer_geheim",
+            "betalingsindicatie": "",
+            "laatste_betaaldatum": null,
+            "zaakgeometrie": null,
+            "verlenging_reden": "",
+            "verlenging_duur": null,
+            "opschorting_indicatie": false,
+            "opschorting_reden": "",
+            "selectielijstklasse": "",
+            "archiefnominatie": "vernietigen",
+            "archiefstatus": "nog_te_archiveren",
+            "archiefactiedatum": "2024-01-01",
+            "opdrachtgevende_organisatie": "",
+            "processobjectaard": "",
+            "startdatum_bewaartermijn": null,
+            "processobject_datumkenmerk": "",
+            "processobject_identificatie": "",
+            "processobject_objecttype": "",
+            "processobject_registratie": "",
+            "communicatiekanaal_naam": "",
+            "created_on": "2024-07-19T13:33:19.146Z"
+        }
+    },
+    {
+        "model": "zaken.resultaat",
+        "pk": 11,
+        "fields": {
+            "_etag": "fe043a089750cfe350e14130c92d2c56",
+            "uuid": "c81e0154-7d0f-4f1f-9264-06c45127d6a4",
+            "zaak": 106,
+            "_resultaattype_base_url": null,
+            "_resultaattype_relative_url": null,
+            "_resultaattype_url": null,
+            "_resultaattype": 4,
+            "toelichting": "Testing resultaattype"
+        }
+    },
+    {
+        "model": "zaken.rol",
+        "pk": 1,
+        "fields": {
+            "_etag": "2dc6415ef81623bb0c12483672eaca5d",
+            "uuid": "b94d7ac7-b6c5-4e0a-8776-4c78090d1c47",
+            "zaak": 105,
+            "betrokkene": "",
+            "betrokkene_type": "organisatorische_eenheid",
+            "afwijkende_naam_betrokkene": "",
+            "_roltype_base_url": null,
+            "_roltype_relative_url": null,
+            "_roltype_url": null,
+            "_roltype": 1,
+            "omschrijving": "Maykin Dev Afdeling",
+            "omschrijving_generiek": "Maykin Dev Afdeling",
+            "roltoelichting": "",
+            "registratiedatum": "2025-02-20T14:09:47.129Z",
+            "indicatie_machtiging": "",
+            "contactpersoon_rol_emailadres": "",
+            "contactpersoon_rol_functie": "",
+            "contactpersoon_rol_telefoonnummer": "",
+            "contactpersoon_rol_naam": "",
+            "authenticatie_context": null
+        }
+    },
+    {
+        "model": "zaken.rol",
+        "pk": 2,
+        "fields": {
+            "_etag": "cff68ceca76b521d77f94ad8cf2721d1",
+            "uuid": "a0962f1a-07bf-46ed-bd49-8b54c3009b80",
+            "zaak": 106,
+            "betrokkene": "",
+            "betrokkene_type": "organisatorische_eenheid",
+            "afwijkende_naam_betrokkene": "",
+            "_roltype_base_url": null,
+            "_roltype_relative_url": null,
+            "_roltype_url": null,
+            "_roltype": 1,
+            "omschrijving": "Maykin Support Afdeling",
+            "omschrijving_generiek": "Maykin Support Afdeling",
+            "roltoelichting": "",
+            "registratiedatum": "2025-02-20T14:17:16.006Z",
+            "indicatie_machtiging": "",
+            "contactpersoon_rol_emailadres": "",
+            "contactpersoon_rol_functie": "",
+            "contactpersoon_rol_telefoonnummer": "",
+            "contactpersoon_rol_naam": "",
+            "authenticatie_context": null
+        }
+    }
+]
