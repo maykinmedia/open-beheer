@@ -90,13 +90,7 @@ class OBField[T](Struct, rename="camel"):
     # width?: string;
 
 
-class OBSelection[K](Struct):
-    key: str
-    selection: dict[K, object]
-
-
 class OBList[T](Struct):
     fields: list[OBField]
     pagination: OBPagination
     results: list[T]
-    selection: OBSelection

@@ -15,7 +15,6 @@ from openbeheer.types import (
     OBFieldType,
     OBList,
     OBPagination,
-    OBSelection,
     Zaak,
     ZGWError,
     ZGWResponse,
@@ -83,10 +82,6 @@ class ZakenView(MsgspecAPIView):
                 page_size=page_size,
             ),
             results=data.results,
-            selection=OBSelection[uuid.UUID](
-                key="uuid",
-                selection={},
-            ),
         )
 
         return Response(resp, status=response.status_code)

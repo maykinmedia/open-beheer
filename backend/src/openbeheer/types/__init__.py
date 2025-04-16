@@ -5,20 +5,19 @@ from ._open_beheer import (
     OBFieldType,
     OBList,
     OBPagination,
-    OBSelection,
     as_ob_option,
 )
 from ._sundry import URL
 from ._zgw import ZGWError, ZGWResponse
 from ._zrc import Zaak
-from ._ztc import Statustype
+from ._ztc import Statustype, Catalogus
 
 __all__ = [
+    "Catalogus",
     "OBField",
     "OBFieldType",
     "OBList",
     "OBPagination",
-    "OBSelection",
     "Statustype",
     "URL",
     "ZGWError",
