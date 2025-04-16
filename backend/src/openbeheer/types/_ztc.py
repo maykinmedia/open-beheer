@@ -59,7 +59,7 @@ def _(arg: Archiefstatus, /) -> OBOption[Archiefstatus]:
             assert_never(arg)
 
 
-class Catalogus(Struct):
+class Catalogus(Struct, rename="camel"):
     """
     ZTC.CATALOGUS
 
@@ -93,9 +93,9 @@ class Catalogus(Struct):
     url: UnsetType | URL = UNSET
     contactpersoon_beheer_telefoonnummer: UnsetType | str = UNSET
     contactpersoon_beheer_emailadres: UnsetType | str = UNSET
-    zaaktypen: UnsetType | list[str] = UNSET
-    besluittypen: UnsetType | list[str] = UNSET
-    informatieobjecttypen: UnsetType | list[str] = UNSET
+    zaaktypen: UnsetType | list[URL] = UNSET
+    besluittypen: UnsetType | list[URL] = UNSET
+    informatieobjecttypen: UnsetType | list[URL] = UNSET
     naam: UnsetType | str = UNSET
     versie: UnsetType | str = UNSET
     begindatum_versie: None | UnsetType | datetime.date = UNSET

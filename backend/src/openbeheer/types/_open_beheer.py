@@ -9,7 +9,7 @@ class OBPagination(Struct, rename="camel"):
     count: int
     page: int
     page_size: int
-    next: URL
+    next: URL | None
     previous: URL | None
 
 

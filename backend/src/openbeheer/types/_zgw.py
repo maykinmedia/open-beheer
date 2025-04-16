@@ -21,6 +21,6 @@ class ZGWError(Struct, rename="camel"):
 
 class ZGWResponse[T](Struct):
     count: int
-    next: URL
+    next: URL | None
     previous: URL | None
     results: list[T]
