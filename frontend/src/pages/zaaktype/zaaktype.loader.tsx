@@ -1,6 +1,7 @@
 import { FieldSet } from "@maykin-ui/admin-ui";
 import { LoaderFunctionArgs } from "react-router";
-import { ZAAKTYPE_FIELDSETS, ZaakType, zaaktypenLoader } from "~/pages";
+import { ZAAKTYPE_FIELDSETS, zaaktypenLoader } from "~/pages";
+import { ZaakType } from "~/types";
 
 export type ZaaktypeLoaderData = {
   object: ZaakType;
@@ -17,7 +18,7 @@ export async function zaaktypeLoader({
   // Probably not a great idea when implementing.
   const { objectList } = await zaaktypenLoader();
   return {
-    object: objectList.find((row) => row.id === parseInt(params?.id || ""))!,
+    object: objectList.find((row) => row.identificatie === params?.id)!,
     fieldsets: ZAAKTYPE_FIELDSETS,
   };
 }

@@ -1,6 +1,7 @@
 import { DetailTemplate } from "@maykin-ui/admin-ui";
 import { useLoaderData } from "react-router";
-import { ZaakType, ZaaktypeLoaderData } from "~/pages";
+import { ZaaktypeLoaderData } from "~/pages";
+import { ZaakType } from "~/types";
 
 /**
  * Zaaktype page
@@ -11,7 +12,7 @@ export function ZaaktypePage() {
   return (
     <DetailTemplate<ZaakType>
       attributeGridProps={{
-        title: object.name,
+        title: object.identificatie,
         fieldsets,
         object: object,
       }}

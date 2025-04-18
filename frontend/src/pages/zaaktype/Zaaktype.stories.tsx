@@ -3,9 +3,9 @@ import {
   reactRouterParameters,
   withRouter,
 } from "storybook-addon-remix-react-router";
+import { zaaktypeLoader } from "~/pages";
 
 import { ZaaktypePage as ZaaktypePageComponent } from "./Zaaktype";
-import { zaaktypeLoader } from "./zaaktype.loader";
 
 const meta: Meta<typeof ZaaktypePageComponent> = {
   title: "Pages/Zaaktype",
