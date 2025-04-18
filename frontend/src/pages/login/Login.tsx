@@ -1,17 +1,12 @@
 import { LoginTemplate, forceArray } from "@maykin-ui/admin-ui";
-import React from "react";
 import { useActionData, useSubmit } from "react-router";
 
 type LoginFormType = { username: string; password: string };
 
-export type LoginPageProps = React.ComponentProps<"main"> & {
-  // Props here.
-};
-
 /**
  * Login page
  */
-export function LoginPage({ ...props }: LoginPageProps) {
+export function LoginPage() {
   const actionData = useActionData() || {};
   const submit = useSubmit();
 
@@ -50,7 +45,6 @@ export function LoginPage({ ...props }: LoginPageProps) {
         fields,
         onSubmit: (_, data) => submit(data, { method: "POST" }),
       }}
-      {...props}
     />
   );
 }

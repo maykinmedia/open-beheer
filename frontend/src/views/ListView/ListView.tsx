@@ -1,13 +1,13 @@
 import {
   AttributeGrid,
   Body,
-  Card,
   FieldSet,
   ListTemplate,
+  Modal,
   Outline,
   ToolbarItem,
 } from "@maykin-ui/admin-ui";
-import React, { useCallback, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useOutlet } from "react-router";
 
 /**
@@ -39,10 +39,18 @@ export function ListView<T extends { id: number | string; name: string }>({
   // Ctrl + click (or command + click on Mac) triggers secondary action.
   const ACTIONS = {
     // The primary action (click) shows item details in a side pane.
-    PRIMARY: (data: T) => setActiveItem(data),
+    PRIMARY: (data: T) => {
+      if (data.id === activeItem?.id) {
+        navigate(data.id.toString());
+      }
+      setActiveItem(data);
+    },
 
     // Ctrl+click or Cmd+click navigates to the item's detail route in fullscreen.
-    SECONDARY: (data: T) => navigate(data.id.toString()),
+    SECONDARY: (data: T) => {
+      setActiveItem(data);
+      navigate(data.id.toString());
+    },
   };
 
   /**
@@ -58,7 +66,7 @@ export function ListView<T extends { id: number | string; name: string }>({
       }
       return ACTIONS.PRIMARY(data);
     },
-    [setActiveItem],
+    [activeItem, setActiveItem],
   );
 
   return (
@@ -70,7 +78,10 @@ export function ListView<T extends { id: number | string; name: string }>({
             ...row,
             href: `${pathname}/${row.id}`,
           })),
+          fieldsSelectable: true,
+          filterable: true,
           height: "fill-available-space",
+          selectable: true,
           showPaginator: true,
           title,
           onClick: handleClick,
@@ -91,17 +102,8 @@ export function ListView<T extends { id: number | string; name: string }>({
                 ),
                 onClick: () => navigate(`${activeItem?.id}`),
               },
-              {
-                justify: true,
-                variant: "transparent",
-                children: (
-                  <>
-                    <Outline.XMarkIcon /> Sluiten
-                  </>
-                ),
-                onClick: () => setActiveItem(undefined),
-              },
             ]}
+            onClose={() => setActiveItem(undefined)}
           />
         )}
       </ListTemplate>
@@ -120,26 +122,45 @@ export function ListView<T extends { id: number | string; name: string }>({
  * @param fieldsets - Optional custom fieldsets configuration.
  * @param actions - Optional toolbar items shown as actions.
  * @param defaultTitle - Title shown when no object is selected.
+ * @param onClose - Gets called when the modal is closed.
  */
 function ListItemDetails<T extends { name: string }>({
   object,
   fieldsets,
   actions,
   defaultTitle = "Geen item geselecteerd",
+  onClose,
 }: {
   object?: T;
   fieldsets?: FieldSet<T>[];
   actions?: ToolbarItem[];
   defaultTitle?: string;
+  onClose?: React.EventHandler<SyntheticEvent<HTMLDialogElement>>;
 }) {
+  const [open, setOpen] = useState<boolean>();
+
+  useEffect(() => {
+    setOpen(Boolean(object));
+  }, [object]);
+
   const defaultFieldsets: FieldSet<T>[] = object
     ? [["", { fields: Object.keys(object) as (keyof T)[], span: 12 }]]
     : [];
 
   return (
-    <Card
-      actions={object ? actions : undefined}
+    <Modal
+      actions={actions}
+      open={open}
+      position="side"
+      showLabelClose={true}
+      size="m"
       title={object ? object.name : defaultTitle}
+      type="dialog"
+      restoreAutofocus={true}
+      onClose={(e) => {
+        onClose?.(e);
+        setOpen(false);
+      }}
     >
       <Body>
         <AttributeGrid<T>
@@ -147,6 +168,6 @@ function ListItemDetails<T extends { name: string }>({
           fieldsets={object ? fieldsets || defaultFieldsets : []}
         />
       </Body>
-    </Card>
+    </Modal>
   );
 }
