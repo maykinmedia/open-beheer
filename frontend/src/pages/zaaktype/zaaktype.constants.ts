@@ -1,19 +1,28 @@
 import { FieldSet } from "@maykin-ui/admin-ui";
-import { ZaakType } from "~/pages";
+import { ZaakType } from "~/types";
 
 export const ZAAKTYPE_FIELDSETS: FieldSet<ZaakType>[] = [
   [
     "Algemeen",
     {
-      fields: ["id", "name", "age"],
-      title: "name",
+      fields: [
+        "identificatie",
+        "omschrijving",
+        "broncatalogus",
+        "verantwoordelijke",
+      ],
+      title: "identificatie",
       span: 12,
     },
   ],
   [
-    "Contact",
+    "Geldigheid",
     {
-      fields: ["email"],
+      fields: [
+        "datumBeginGeldigheid",
+        "datumEindeGeldigheid",
+        "publicatieIndicatie",
+      ],
       span: 12,
     },
   ],

@@ -3,9 +3,9 @@ import {
   reactRouterParameters,
   withRouter,
 } from "storybook-addon-remix-react-router";
+import { zaaktypenLoader } from "~/pages";
 
 import { ZaaktypenPage as ZaaktypenPageComponent } from "./Zaaktypen";
-import { zaaktypenLoader } from "./zaaktypen.loader";
 
 const meta: Meta<typeof ZaaktypenPageComponent> = {
   title: "Pages/Zaaktypen",

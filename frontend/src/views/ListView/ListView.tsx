@@ -16,13 +16,15 @@ import { useLocation, useNavigate, useOutlet } from "react-router";
  * The primary action (click) shows item details in a side pane.
  * Ctrl+click or Cmd+click navigates to the item's detail route in fullscreen.
  *
- * @typeParam T - The type of items in the list. Must include at least `id` and `name` fields.
+ * @typeParam T - The type of items in the list. Must include at least `identificatie` and `omschrijving` fields.
  *
  * @param objectList - The list of items to render in the data grid.
  * @param fieldsets - Optional custom fieldsets used for rendering item details.
  * @param title - Optional title shown above the list.
  */
-export function ListView<T extends { id: number | string; name: string }>({
+export function ListView<
+  T extends { identificatie: string; omschrijving: string },
+>({
   objectList,
   fieldsets,
   title = "Resultaten",
@@ -40,8 +42,8 @@ export function ListView<T extends { id: number | string; name: string }>({
   const ACTIONS = {
     // The primary action (click) shows item details in a side pane.
     PRIMARY: (data: T) => {
-      if (data.id === activeItem?.id) {
-        navigate(data.id.toString());
+      if (data.identificatie === activeItem?.identificatie) {
+        navigate(data.identificatie.toString());
       }
       setActiveItem(data);
     },
@@ -49,7 +51,7 @@ export function ListView<T extends { id: number | string; name: string }>({
     // Ctrl+click or Cmd+click navigates to the item's detail route in fullscreen.
     SECONDARY: (data: T) => {
       setActiveItem(data);
-      navigate(data.id.toString());
+      navigate(data.identificatie.toString());
     },
   };
 
@@ -76,7 +78,7 @@ export function ListView<T extends { id: number | string; name: string }>({
         dataGridProps={{
           objectList: objectList.map((row) => ({
             ...row,
-            href: `${pathname}/${row.id}`,
+            href: `${pathname}/${row.identificatie}`,
           })),
           fieldsSelectable: true,
           filterable: true,
@@ -100,7 +102,7 @@ export function ListView<T extends { id: number | string; name: string }>({
                     <Outline.PencilIcon /> Bewerken
                   </>
                 ),
-                onClick: () => navigate(`${activeItem?.id}`),
+                onClick: () => navigate(`${activeItem?.identificatie}`),
               },
             ]}
             onClose={() => setActiveItem(undefined)}
@@ -116,7 +118,7 @@ export function ListView<T extends { id: number | string; name: string }>({
  *
  * If no object is selected, a placeholder title is shown instead.
  *
- * @typeParam T - The type of the object. Must include a `name` field.
+ * @typeParam T - The type of the object. Must include a `identificatie` field.
  *
  * @param object - The selected object to display details for.
  * @param fieldsets - Optional custom fieldsets configuration.
@@ -124,7 +126,7 @@ export function ListView<T extends { id: number | string; name: string }>({
  * @param defaultTitle - Title shown when no object is selected.
  * @param onClose - Gets called when the modal is closed.
  */
-function ListItemDetails<T extends { name: string }>({
+function ListItemDetails<T extends { identificatie: string }>({
   object,
   fieldsets,
   actions,
@@ -154,7 +156,7 @@ function ListItemDetails<T extends { name: string }>({
       position="side"
       showLabelClose={true}
       size="m"
-      title={object ? object.name : defaultTitle}
+      title={object ? object.identificatie : defaultTitle}
       type="dialog"
       restoreAutofocus={true}
       onClose={(e) => {
