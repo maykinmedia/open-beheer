@@ -11,13 +11,14 @@
     "lint:fix": "eslint --fix .",
     "preview": "vite preview",
     "prepare": "cd .. && husky frontend/.husky",
+    "start": "npm run dev",
     "test": "vitest",
     "test:coverage": "vitest --coverage --watch=false",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@maykin-ui/admin-ui": "^2.0.0-alpha.2",
+    "@maykin-ui/admin-ui": "alpha",
     "@maykin-ui/client-common": "^0.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
