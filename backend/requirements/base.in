@@ -18,6 +18,8 @@ mozilla-django-oidc-db
 djangorestframework
 drf-spectacular
 djangorestframework-camel-case
+zgw-consumers[setup-configuration]
+openapi3-parser
 # django-cors-headers
 # django-extra-fields
 # django-filter

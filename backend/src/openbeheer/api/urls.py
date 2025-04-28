@@ -5,8 +5,13 @@ from drf_spectacular.views import (
     SpectacularJSONAPIView,
     SpectacularRedocView,
 )
+from rest_framework import routers
 
 from openbeheer.accounts.api.views import WhoAmIView
+from openbeheer.catalogi.api.viewsets import ZaaktypenViewSet
+
+router = routers.DefaultRouter()
+router.register(r"catalogi", ZaaktypenViewSet, basename="zaaktypen")
 
 app_name = "api"
 
@@ -41,6 +46,7 @@ urlpatterns = [
         include(
             [
                 path("whoami/", WhoAmIView.as_view(), name="whoami"),
+                path("", include(router.urls)),
             ]
         ),
     ),

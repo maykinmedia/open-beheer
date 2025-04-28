@@ -2,6 +2,16 @@
 #    ./bin/compile_dependencies.sh
 alabaster==1.0.0
     # via sphinx
+annotated-types==0.7.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   pydantic
+ape-pie==0.2.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   zgw-consumers
 asgiref==3.8.1
     # via
     #   -c requirements/base.txt
@@ -51,6 +61,11 @@ cffi==1.17.1
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   cryptography
+chardet==5.2.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   prance
 charset-normalizer==3.4.1
     # via
     #   -c requirements/base.txt
@@ -64,6 +79,7 @@ cryptography==44.0.2
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+    #   django-simple-certmanager
     #   josepy
     #   mozilla-django-oidc
     #   pyopenssl
@@ -83,8 +99,13 @@ django==5.2
     #   django-jsonform
     #   django-otp
     #   django-phonenumber-field
+    #   django-privates
     #   django-redis
+    #   django-relativedelta
     #   django-rosetta
+    #   django-sendfile2
+    #   django-setup-configuration
+    #   django-simple-certmanager
     #   django-solo
     #   django-two-factor-auth
     #   djangorestframework
@@ -92,6 +113,7 @@ django==5.2
     #   maykin-2fa
     #   mozilla-django-oidc
     #   mozilla-django-oidc-db
+    #   zgw-consumers
 django-admin-index==4.0.0
     # via
     #   -c requirements/base.txt
@@ -133,19 +155,44 @@ django-phonenumber-field==8.0.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   django-two-factor-auth
+django-privates==3.1.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   django-simple-certmanager
 django-redis==5.4.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+django-relativedelta==2.0.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   zgw-consumers
 django-rosetta==0.10.2
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+django-sendfile2==0.7.2
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   django-privates
+django-setup-configuration==0.7.2
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+django-simple-certmanager==2.4.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   zgw-consumers
 django-solo==2.4.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   mozilla-django-oidc-db
+    #   zgw-consumers
 django-two-factor-auth==1.17.0
     # via
     #   -c requirements/base.txt
@@ -164,6 +211,9 @@ djangorestframework-camel-case==1.4.2
     #   -r requirements/base.txt
 docutils==0.21.2
     # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   django-setup-configuration
     #   sphinx
     #   sphinx-rtd-theme
 drf-spectacular==0.28.0
@@ -192,6 +242,11 @@ flake8==7.2.0
     # via -r requirements/test-tools.in
 freezegun==1.5.1
     # via -r requirements/test-tools.in
+furl==2.1.4
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   ape-pie
 glom==24.11.0
     # via
     #   -c requirements/base.txt
@@ -225,11 +280,24 @@ jsonschema==4.23.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   drf-spectacular
+    #   openapi-schema-validator
+    #   openapi-spec-validator
+jsonschema-path==0.3.4
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   openapi-spec-validator
 jsonschema-specifications==2024.10.1
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   jsonschema
+    #   openapi-schema-validator
+lazy-object-proxy==1.11.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   openapi-spec-validator
 lxml==5.3.1
     # via pyquery
 markupsafe==3.0.2
@@ -253,11 +321,38 @@ mozilla-django-oidc-db==0.22.0
     #   -r requirements/base.txt
 mypy-extensions==1.0.0
     # via black
-packaging==24.2
+openapi-schema-validator==0.6.3
     # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   openapi-spec-validator
+openapi-spec-validator==0.7.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   openapi3-parser
+openapi3-parser==1.1.21
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+orderedmultidict==1.0.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   furl
+packaging==25.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
     #   black
+    #   prance
     #   pytest
     #   sphinx
+pathable==0.4.4
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   jsonschema-path
 pathspec==0.12.1
     # via black
 phonenumberslite==8.13.55
@@ -280,6 +375,11 @@ polib==1.2.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   django-rosetta
+prance==25.4.8.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   openapi3-parser
 psycopg2==2.9.10
     # via
     #   -c requirements/base.txt
@@ -291,10 +391,31 @@ pycparser==2.22
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   cffi
+pydantic==2.11.3
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   django-setup-configuration
+    #   pydantic-settings
+pydantic-core==2.33.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   pydantic
+pydantic-settings==2.9.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   django-setup-configuration
 pyflakes==3.3.2
     # via flake8
 pygments==2.19.1
     # via sphinx
+pyjwt==2.10.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   zgw-consumers
 pylint==3.3.6
     # via -r requirements/test-tools.in
 pyopenssl==25.0.0
@@ -312,7 +433,11 @@ pyquery==2.0.1
 pytest==8.3.5
     # via -r requirements/test-tools.in
 python-dateutil==2.9.0.post0
-    # via freezegun
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   django-relativedelta
+    #   freezegun
 python-decouple==3.8
     # via
     #   -c requirements/base.txt
@@ -321,6 +446,7 @@ python-dotenv==1.1.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+    #   pydantic-settings
 python-ipware==3.0.0
     # via
     #   -c requirements/base.txt
@@ -331,6 +457,8 @@ pyyaml==6.0.2
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   drf-spectacular
+    #   jsonschema-path
+    #   pydantic-settings
 qrcode==7.4.2
     # via
     #   -c requirements/base.txt
@@ -346,17 +474,27 @@ referencing==0.36.2
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   jsonschema
+    #   jsonschema-path
     #   jsonschema-specifications
 requests==2.32.3
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+    #   ape-pie
     #   django-rosetta
+    #   jsonschema-path
     #   mozilla-django-oidc
+    #   prance
     #   requests-mock
     #   sphinx
+    #   zgw-consumers
 requests-mock==1.12.1
     # via -r requirements/test-tools.in
+rfc3339-validator==0.1.4
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   openapi-schema-validator
 roman-numerals-py==3.1.0
     # via sphinx
 rpds-py==0.24.0
@@ -365,12 +503,29 @@ rpds-py==0.24.0
     #   -r requirements/base.txt
     #   jsonschema
     #   referencing
+ruamel-yaml==0.18.10
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   django-setup-configuration
+    #   prance
+ruamel-yaml-clib==0.2.12
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   ruamel-yaml
 sentry-sdk==2.25.1
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
 six==1.17.0
-    # via python-dateutil
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   furl
+    #   orderedmultidict
+    #   python-dateutil
+    #   rfc3339-validator
 snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.6
@@ -411,9 +566,19 @@ typing-extensions==4.13.1
     #   -r requirements/base.txt
     #   beautifulsoup4
     #   mozilla-django-oidc-db
+    #   pydantic
+    #   pydantic-core
     #   pyopenssl
     #   qrcode
     #   referencing
+    #   typing-inspection
+    #   zgw-consumers
+typing-inspection==0.4.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   pydantic
+    #   pydantic-settings
 tzdata==2025.2
     # via faker
 uritemplate==4.1.1
@@ -448,3 +613,7 @@ wrapt==1.17.2
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   elastic-apm
+zgw-consumers==0.38.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
