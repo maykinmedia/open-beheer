@@ -8,7 +8,7 @@ export const ZAAKTYPE_FIELDSETS: FieldSet<ZaakType>[] = [
       fields: [
         "identificatie",
         "omschrijving",
-        "broncatalogus",
+        // "broncatalogus",
         "verantwoordelijke",
       ],
       title: "identificatie",

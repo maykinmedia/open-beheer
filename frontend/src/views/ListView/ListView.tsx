@@ -80,6 +80,7 @@ export function ListView<
             ...row,
             href: `${pathname}/${row.identificatie}`,
           })),
+          decorate: true,
           fieldsSelectable: true,
           filterable: true,
           height: "fill-available-space",
