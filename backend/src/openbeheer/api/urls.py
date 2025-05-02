@@ -11,7 +11,7 @@ from openbeheer.accounts.api.views import WhoAmIView
 from openbeheer.catalogi.api.viewsets import ZaaktypenViewSet
 
 router = routers.DefaultRouter()
-router.register(r"catalogi", ZaaktypenViewSet, basename="zaaktypen")
+router.register(r"catalogi/zaaktypen", ZaaktypenViewSet, basename="zaaktypen")
 
 app_name = "api"
 
