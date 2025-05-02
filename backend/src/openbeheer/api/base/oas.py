@@ -1,7 +1,8 @@
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
+
 from openapi_parser import parse
-from openapi_parser.specification import Operation, Property, Content, Parameter
+from openapi_parser.specification import Content, Operation, Parameter, Property
 from rest_framework.request import Request
 from rest_framework.response import Response
 from zgw_consumers.models import Service
@@ -18,7 +19,7 @@ class OASOperationNotFound(Exception):
 
 
 def get_fields_from_oas(
-        request: Request, service: Service, method: str, path: str
+    request: Request, service: Service, method: str, path: str
 ) -> list[TypedField]:
     """
     Retrieves all fields from the properties defined in the OAS result schema
@@ -41,7 +42,7 @@ def get_fields_from_oas(
 
 
 def convert_oas_property_to_field(
-        prop: Property, request: Request, service: Service, method: str, path: str
+    prop: Property, request: Request, service: Service, method: str, path: str
 ) -> TypedField:
     """
     Converts a single OAS property to a TypedField definition.
@@ -61,18 +62,20 @@ def convert_oas_property_to_field(
     supported_params = get_oas_parameter_names(service, method, path)
 
     return {
-        "options": [
-            {
-                "label": o.replace("_", " ").replace("-", " "),
-                "value": o
-            }
-            for o in schema.enum
-        ] if schema.enum else None,
+        "options": (
+            [
+                {"label": o.replace("_", " ").replace("-", " "), "value": o}
+                for o in schema.enum
+            ]
+            if schema.enum
+            else None
+        ),
         "filterable": name in supported_params,
         "name": name,
         "type": schema.type.name.lower(),
-        "filter_value": request.query_params.get(
-            name) if name in supported_params else None,
+        "filter_value": (
+            request.query_params.get(name) if name in supported_params else None
+        ),
     }
 
 
@@ -80,7 +83,7 @@ def convert_oas_property_to_field(
 
 
 def get_oas_result_properties(
-        service: Service, method: str, path: str
+    service: Service, method: str, path: str
 ) -> list[Property]:
     """
     Retrieve the list of properties from the returned object(s)s in the OAS response
@@ -99,9 +102,7 @@ def get_oas_result_properties(
 
     if is_detail:
         return properties
-    return next(
-        p.schema.items.properties for p in properties if p.name == "results"
-    )
+    return next(p.schema.items.properties for p in properties if p.name == "results")
 
 
 def get_oas_properties(service: Service, method: str, path: str) -> list[Property]:
@@ -211,7 +212,8 @@ def get_oas_operation(service: Service, method: str, path: str) -> Operation:
         return operation_match
     except StopIteration:
         raise OASOperationNotFound(
-            f"OAS does not specify the current action for {method} {path}.")
+            f"OAS does not specify the current action for {method} {path}."
+        )
 
 
 def get_spec(service: Service):
@@ -236,7 +238,8 @@ def get_spec(service: Service):
 
     if not oas_url:
         raise ImproperlyConfigured(
-            f"Please specify a OAS URL for {service.label} Service.")
+            f"Please specify a OAS URL for {service.label} Service."
+        )
 
     spec = parse(oas_url)
 

@@ -1,6 +1,7 @@
+from django.utils.translation import gettext_lazy as _
+
 from drf_spectacular.utils import extend_schema
 from zgw_consumers.constants import APITypes
-from django.utils.translation import gettext_lazy as _
 
 from openbeheer.api.base.viewsets import ZGWViewSet
 
@@ -12,4 +13,3 @@ from openbeheer.api.base.viewsets import ZGWViewSet
 )
 class ZaaktypenViewSet(ZGWViewSet):
     service_type = APITypes.ztc
-
