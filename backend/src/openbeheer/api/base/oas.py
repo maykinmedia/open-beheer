@@ -17,7 +17,7 @@ class OASOperationNotFound(Exception):
         self.message = message
 
 
-def get_fields_from_oas_properties(
+def get_fields_from_oas(
         request: Request, service: Service, method: str, path: str
 ) -> list[TypedField]:
     """
@@ -36,7 +36,7 @@ def get_fields_from_oas_properties(
 
     return [
         convert_oas_property_to_field(p, request, service, method, path)
-        for p in get_oab_result_properties(service, method, path)
+        for p in get_oas_result_properties(service, method, path)
     ]
 
 
@@ -71,18 +71,20 @@ def convert_oas_property_to_field(
         "filterable": name in supported_params,
         "name": name,
         "type": schema.type.name.lower(),
-        "filter_value": request.query_params.get(name) if name in supported_params else None,
+        "filter_value": request.query_params.get(
+            name) if name in supported_params else None,
     }
 
 
 # Schema resolving
 
 
-def get_oab_result_properties(
+def get_oas_result_properties(
         service: Service, method: str, path: str
 ) -> list[Property]:
     """
-    Retrieve the list of properties from the 'results' object in the OAS response schema.
+    Retrieve the list of properties from the returned object(s)s in the OAS response
+    schema.
 
     Args:
         service: The service for which the OpenAPI spec is being fetched.
@@ -92,23 +94,13 @@ def get_oab_result_properties(
     Returns:
         A list of Property objects defined in the OAS 'results' object.
     """
-    return get_oas_results(service, method, path).schema.items.properties
+    is_detail = "{" in path  # If a placeholder is used, we assume it's the uuid.
+    properties = get_oas_properties(service, method, path)
 
-
-def get_oas_results(service: Service, method: str, path: str) -> Property:
-    """
-    Retrieve the 'results' property from the OAS response schema.
-
-    Args:
-        service: The service for which the OpenAPI spec is being fetched.
-        method: The HTTP method (e.g., 'GET', 'POST').
-        path: The path of the API endpoint.
-
-    Returns:
-        The Property object corresponding to the 'results' property in the OAS schema.
-    """
+    if is_detail:
+        return properties
     return next(
-        p for p in get_oas_properties(service, method, path) if p.name == "results"
+        p.schema.items.properties for p in properties if p.name == "results"
     )
 
 
