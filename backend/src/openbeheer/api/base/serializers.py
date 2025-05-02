@@ -39,10 +39,7 @@ class ListZGWSerializer(BaseZGWSerializer):
         }
 
     def get_results(self, obj):
-        return [{
-            "uuid": self.get_uuid(result),
-            **result
-        } for result in obj["results"]]
+        return [{"uuid": self.get_uuid(result), **result} for result in obj["results"]]
 
 
 class DetailZGWSerializer(BaseZGWSerializer):
@@ -53,7 +50,4 @@ class DetailZGWSerializer(BaseZGWSerializer):
     result = serializers.SerializerMethodField()
 
     def get_result(self, obj):
-        return {
-            "uuid": self.get_uuid(obj),
-            **obj
-        }
+        return {"uuid": self.get_uuid(obj), **obj}

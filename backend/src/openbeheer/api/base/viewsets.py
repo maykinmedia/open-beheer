@@ -1,15 +1,16 @@
 from typing import Optional
 
 from django.core.exceptions import ImproperlyConfigured
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from zgw_consumers.client import build_client, ClientT
+from zgw_consumers.client import ClientT, build_client
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 
-from .oas import get_oas_parameter_names, get_fields_from_oas
-from .serializers import ListZGWSerializer, DetailZGWSerializer
+from .oas import get_fields_from_oas, get_oas_parameter_names
+from .serializers import DetailZGWSerializer, ListZGWSerializer
 from .types import TypedField
 
 
@@ -126,8 +127,9 @@ class ZGWViewSet(ViewSet):
         )
         response.raise_for_status()
 
-        resolved_fields = get_fields_from_oas(self.request, service, method,
-                                              operation_path)
+        resolved_fields = get_fields_from_oas(
+            self.request, service, method, operation_path
+        )
         data = {
             **response.json(),
             "fields": getattr(self, "fields", resolved_fields),

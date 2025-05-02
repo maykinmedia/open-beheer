@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional
+from typing import Optional, TypedDict
 
 
 class FieldOption(TypedDict):
@@ -9,13 +9,16 @@ class FieldOption(TypedDict):
     label: str
     value: str
 
+
 class Paginator(TypedDict):
     """
     Close to @maykin-ui/admin-ui PaginatorProps for use in datagrid.
     """
+
     count: int
     page: int
     page_size: int
+
 
 class TypedField(TypedDict):
     """
