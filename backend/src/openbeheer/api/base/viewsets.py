@@ -51,10 +51,14 @@ class ZGWViewSet(ViewSet):
             ImproperlyConfigured: If no service is configured for the given service type.
         """
         try:
-            return Service.objects.filter(api_type=self.service_type).get()
+            return Service.objects.get(api_type=self.service_type)
         except Service.DoesNotExist:
             raise ImproperlyConfigured(
                 f"No service configured for type {self.service_type}"
+            )
+        except Service.MultipleObjectsReturned:
+            raise ImproperlyConfigured(
+                f"Multiple services configured for type {self.service_type}"
             )
 
     def get_client(self) -> ClientT:
