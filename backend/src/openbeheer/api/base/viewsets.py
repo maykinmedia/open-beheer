@@ -22,11 +22,10 @@ class ZGWViewSet(ViewSet):
     and maps DRF methods and actions to external API methods and paths.
 
     By default,
-    - `get_service_method` uses the HTTP method (`GET`, `POST`, etc.) from the request.
     - `get_service_api_path` uses the DRF basename.
 
-    Subclasses should override `get_service_method` and/or `get_service_api_path`
-    if the external API uses a different method or path than DRF's.
+    Subclasses should override `get_service_api_path` if the external API uses a
+    different method or path than DRF's.
     """
 
     # Fields definition (resolved if empty)
@@ -67,12 +66,6 @@ class ZGWViewSet(ViewSet):
         """
         return build_client(self.get_service())
 
-    def get_service_method(self) -> str:
-        """
-        Returns the HTTP method (service method) to be used for the request.
-        """
-        return self.request.method
-
     def get_service_api_path(self) -> str:
         """
         Returns the API path corresponding to the DRF basename.
@@ -112,7 +105,7 @@ class ZGWViewSet(ViewSet):
     def service_request(self) -> Response:
         service = self.get_service()
         client = self.get_client()
-        method = self.get_service_method().lower()
+        method = self.request.method.lower()
         service_path = self.get_service_api_path()
         operation_path = self.get_oas_operation_path()
 
