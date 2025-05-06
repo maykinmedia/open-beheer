@@ -22,11 +22,14 @@ class ZGWViewSet(ViewSet):
     and maps DRF methods and actions to external API methods and paths.
 
     By default,
-    - `get_service_api_path` uses the DRF basename.
+    - `service_api_base` uses the DRF `basename` to specify the base path on the API.
 
     Subclasses should override `get_service_api_path` if the external API uses a
     different method or path than DRF's.
     """
+
+    # ZGW API base name (specifies path on API, defaults to self.basename).
+    service_api_base: Optional[str] = None
 
     # Fields definition (resolved if empty)
     fields: Optional[list[TypedField]]
@@ -68,23 +71,27 @@ class ZGWViewSet(ViewSet):
 
     def get_service_api_path(self) -> str:
         """
-        Returns the API path corresponding to the DRF basename.
+        Returns the API path corresponding to `self.service_api_base` or
+        `self.basename`.
         """
         uuid = self.kwargs.get(self.lookup_field)
+        basename = self.service_api_base or self.basename
 
         if uuid:
-            return self.basename + "/" + uuid.strip("/")
-        return self.basename
+            return basename.strip("/") + "/" + uuid.strip("/")
+        return basename.strip("/")
 
     def get_oas_operation_path(self) -> str:
         """
-        Returns the API path corresponding to the DRF basename.
+        Returns the OAS operation path corresponding to `self.service_api_base` or
+        `self.basename`.
         """
         uuid = self.kwargs.get(self.lookup_field)
+        basename = self.service_api_base or self.basename
 
         if uuid:
-            return self.basename + "/{" + self.lookup_field + "}"
-        return self.basename
+            return basename.strip("/") + "/{" + self.lookup_field + "}"
+        return basename.strip("/")
 
     def list(self, *_, **__) -> Response:
         """
