@@ -129,7 +129,11 @@ class ZGWViewSet(ViewSet):
             service_path,
             params=params,
         )
-        response.raise_for_status()
+
+        # Don't serialize errors.
+        if not response.ok:
+            data = response.json()
+            return Response(data, status=response.status_code)
 
         resolved_fields = get_fields_from_oas(
             self.request, service, method, operation_path
