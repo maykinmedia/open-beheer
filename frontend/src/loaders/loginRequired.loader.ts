@@ -1,8 +1,10 @@
 import { LoaderFunction, redirect } from "react-router";
 
 /**
- * Wraps an existing loader with authentication protection. Redirects to the sign-in
- * page if the request fails with a 403 status code.
+ * Wraps an existing loader with authentication protection handling. Redirects
+ * to the sign-in page if the request fails with a 403 status code.
+ *
+ * NOTE: This does not perform any actual authentication checks.
  *
  * @param wrappedLoader - Loader function to wrap.
  * @returns A function that, when called, executes the wrapped loader with the
@@ -26,5 +28,3 @@ export function loginRequired<T extends object>(
     }
   };
 }
-
-loginRequired(async () => true);

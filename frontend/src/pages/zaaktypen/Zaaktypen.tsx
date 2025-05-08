@@ -6,8 +6,6 @@ import { ListView } from "~/views";
  * Zaaktypen page
  */
 export function ZaaktypenPage() {
-  const { objectList, fieldsets } = useLoaderData<ZaaktypenLoaderData>();
-  return (
-    <ListView objectList={objectList} fieldsets={fieldsets} title="Zaaktypen" />
-  );
+  const loaderData = useLoaderData<ZaaktypenLoaderData>();
+  return <ListView {...loaderData} />;
 }

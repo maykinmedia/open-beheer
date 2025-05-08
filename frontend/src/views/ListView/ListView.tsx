@@ -5,10 +5,30 @@ import {
   ListTemplate,
   Modal,
   Outline,
+  SerializedFormData,
   ToolbarItem,
+  TypedField,
 } from "@maykin-ui/admin-ui";
-import { SyntheticEvent, useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate, useOutlet } from "react-router";
+import React, {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  useLocation,
+  useNavigate,
+  useNavigation,
+  useOutlet,
+  useSearchParams,
+} from "react-router";
+import { ListResponse } from "~/api/types";
+import { useBreadcrumbItems } from "~/hooks";
+
+export type ListViewProps<T extends object> = ListResponse<T> & {
+  fieldsets: FieldSet<T>[];
+};
 
 /**
  * Displays a paginated list of items using a data grid.
@@ -16,42 +36,59 @@ import { useLocation, useNavigate, useOutlet } from "react-router";
  * The primary action (click) shows item details in a side pane.
  * Ctrl+click or Cmd+click navigates to the item's detail route in fullscreen.
  *
- * @typeParam T - The type of items in the list. Must include at least `identificatie` and `omschrijving` fields.
+ * @typeParam T - The type of items in the list. Must include at least `uuid` and `identificatie` fields.
  *
- * @param objectList - The list of items to render in the data grid.
+ * @param fields - The field's configuration.
+ * @param pagination - The paginator configuration.
+ * @param results - The list of items to render in the data grid.
  * @param fieldsets - Optional custom fieldsets used for rendering item details.
- * @param title - Optional title shown above the list.
+ * @param fieldsets - Optional custom fieldsets used for rendering item details.
  */
-export function ListView<
-  T extends { identificatie: string; omschrijving: string },
->({
-  objectList,
+export function ListView<T extends object>({
+  fields,
+  pagination,
+  results,
   fieldsets,
-  title = "Resultaten",
-}: {
-  objectList: T[];
-  fieldsets?: FieldSet<T>[];
-  title?: string;
-}) {
+}: ListViewProps<T>) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { state } = useNavigation();
   const outlet = useOutlet();
+  const [urlSearchParams, setURLSearchParams] = useSearchParams();
   const [activeItem, setActiveItem] = useState<T>();
+  const breadcrumbItems = useBreadcrumbItems();
+
+  // Clean up some OAS/Admin-ui mismatches.
+  const sanitizedFields: TypedField<T>[] = useMemo(
+    () =>
+      fields
+        .filter((f) =>
+          ["boolean", "number", "integer", "string", "date"].includes(f.type),
+        )
+        .map((f) => ({ ...f, type: f.type === "integer" ? "number" : f.type })),
+    [fields],
+  );
 
   // Ctrl + click (or command + click on Mac) triggers secondary action.
   const ACTIONS = {
     // The primary action (click) shows item details in a side pane.
     PRIMARY: (data: T) => {
-      if (data.identificatie === activeItem?.identificatie) {
-        navigate(data.identificatie.toString());
+      if (
+        // @ts-expect-error - Assume uuid.
+        data.uuid &&
+        // @ts-expect-error - Assume uuid.
+        data.uuid === activeItem?.uuid
+      ) {
+        // @ts-expect-error - Assume uuid.
+        navigate(data.uuid);
       }
       setActiveItem(data);
     },
 
     // Ctrl+click or Cmd+click navigates to the item's detail route in fullscreen.
     SECONDARY: (data: T) => {
-      setActiveItem(data);
-      navigate(data.identificatie.toString());
+      // @ts-expect-error - Assume uuid.
+      return data.uuid ? navigate(data.uuid) : undefined;
     },
   };
 
@@ -71,23 +108,68 @@ export function ListView<
     [activeItem, setActiveItem],
   );
 
+  /**
+   * Gets called when a filter is applied.
+   * @param event - The mouse event.
+   * @param data - The row data.
+   */
+  const handleFilter = useCallback(
+    (data: SerializedFormData) => {
+      updateSanitizedURLSearchParams(data);
+    },
+    [urlSearchParams],
+  );
+
+  /**
+   * Gets called when the page number changes.
+   * @param page - The new page number.
+   */
+  const handlePageChange = useCallback(
+    (page: number) => {
+      updateSanitizedURLSearchParams({ page });
+    },
+    [urlSearchParams],
+  );
+
+  /**
+   * Sanitizes, then updates `urlSearchParams`, this causes the loader to refresh the
+   * page.
+   * @param params - The updates to apply to `urlSearchParams`.
+   */
+  const updateSanitizedURLSearchParams = useCallback(
+    (params: Record<string, unknown>) => {
+      const newParams = { ...urlSearchParams, ...params };
+
+      const filteredEntries = Object.fromEntries(
+        Object.entries(newParams)
+          .filter(([, v]) => v !== null)
+          .map(([k, v]) => [k, v.toString()]),
+      );
+
+      setURLSearchParams(filteredEntries);
+    },
+    [urlSearchParams],
+  );
+
   return (
     outlet || (
       <ListTemplate
-        cardProps={{ direction: "row-reverse" }}
+        breadcrumbItems={breadcrumbItems}
         dataGridProps={{
-          objectList: objectList.map((row) => ({
+          objectList: results.map((row) => ({
             ...row,
-            href: `${pathname}/${row.identificatie}`,
+            // @ts-expect-error - Assume uuid.
+            href: row.uuid ? `${pathname}/${row.uuid}` : undefined,
           })),
           decorate: true,
-          fieldsSelectable: true,
-          filterable: true,
+          fields: sanitizedFields,
           height: "fill-available-space",
-          selectable: true,
-          showPaginator: true,
-          title,
+          showPaginator: Boolean(pagination),
+          loading: state !== "idle",
+          paginatorProps: pagination,
           onClick: handleClick,
+          onPageChange: handlePageChange,
+          onFilter: handleFilter,
         }}
       >
         {activeItem && (
@@ -103,7 +185,12 @@ export function ListView<
                     <Outline.PencilIcon /> Bewerken
                   </>
                 ),
-                onClick: () => navigate(`${activeItem?.identificatie}`),
+                onClick: () =>
+                  // @ts-expect-error - Assume uuid.
+                  activeItem.uuid
+                    ? // @ts-expect-error - Assume uuid.
+                      navigate(`${activeItem?.uuid}`)
+                    : undefined,
               },
             ]}
             onClose={() => setActiveItem(undefined)}
@@ -127,7 +214,7 @@ export function ListView<
  * @param defaultTitle - Title shown when no object is selected.
  * @param onClose - Gets called when the modal is closed.
  */
-function ListItemDetails<T extends { identificatie: string }>({
+function ListItemDetails<T extends object>({
   object,
   fieldsets,
   actions,
@@ -157,7 +244,8 @@ function ListItemDetails<T extends { identificatie: string }>({
       position="side"
       showLabelClose={true}
       size="m"
-      title={object ? object.identificatie : defaultTitle}
+      // @ts-expect-error - Assume identificatie
+      title={object?.identificatie ? object.identificatie : defaultTitle}
       type="dialog"
       restoreAutofocus={true}
       onClose={(e) => {

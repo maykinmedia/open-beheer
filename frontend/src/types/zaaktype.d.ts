@@ -1,5 +1,6 @@
-// TODO: Get from GEMMA dynamically
 export type ZaakType = {
+  uuid: string; // Added by BFF.
+
   url: string;
   identificatie: string; // e.g. "ZAAKTYPE-123"
   omschrijving: string; // Short description

@@ -1,5 +1,6 @@
-import { DetailTemplate, Sidebar } from "@maykin-ui/admin-ui";
+import { DetailTemplate } from "@maykin-ui/admin-ui";
 import { useLoaderData } from "react-router";
+import { useBreadcrumbItems } from "~/hooks";
 import { ZaaktypeLoaderData } from "~/pages";
 import { ZaakType } from "~/types";
 
@@ -7,20 +8,17 @@ import { ZaakType } from "~/types";
  * Zaaktype page
  */
 export function ZaaktypePage() {
-  const { object, fieldsets } = useLoaderData<ZaaktypeLoaderData>();
+  const breadcrumbItems = useBreadcrumbItems();
+  const { result, fieldsets } = useLoaderData<ZaaktypeLoaderData>();
 
   return (
     <DetailTemplate<ZaakType>
-      cardProps={{
-        direction: "row",
-      }}
+      breadcrumbItems={breadcrumbItems}
       attributeGridProps={{
-        title: object.identificatie,
+        title: result.identificatie,
         fieldsets,
-        object: object,
+        object: result,
       }}
-    >
-      <Sidebar expandable={false} />
-    </DetailTemplate>
+    />
   );
 }
