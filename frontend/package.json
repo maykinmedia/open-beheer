@@ -18,7 +18,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@maykin-ui/admin-ui": "alpha",
+    "@maykin-ui/admin-ui": "^2.0.0-alpha.5",
     "@maykin-ui/client-common": "^0.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -31,7 +31,6 @@
     "@maykinmedia/eslint-config": "^1.0.0",
     "@storybook/addon-coverage": "^1.0.5",
     "@storybook/addon-essentials": "^8.6.12",
-    "@storybook/addon-onboarding": "^8.6.12",
     "@storybook/blocks": "^8.6.12",
     "@storybook/experimental-addon-test": "^8.6.12",
     "@storybook/react": "^8.6.12",
@@ -52,6 +51,7 @@
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "lint-staged": "^15.5.0",
+    "msw-storybook-addon": "^2.0.4",
     "playwright": "^1.51.1",
     "prettier": "^3.5.3",
     "storybook": "^8.6.12",
@@ -62,5 +62,10 @@
   },
   "lint-staged": {
     "*.{js,ts,md}": "npm run lint:fix"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

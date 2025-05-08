@@ -1,10 +1,12 @@
 import { FieldSet } from "@maykin-ui/admin-ui";
-import { FIXTURE_ZAAKTYPEN } from "~/fixtures";
-import { ZAAKTYPE_FIELDSETS } from "~/pages/zaaktype";
+import { LoaderFunctionArgs } from "react-router";
+import { request } from "~/api";
+import { ListResponse } from "~/api/types";
+import { ZAAKTYPE_FIELDSETS } from "~/fieldsets";
+import { loginRequired } from "~/loaders/loginRequired.loader.ts";
 import { ZaakType } from "~/types";
 
-export type ZaaktypenLoaderData = {
-  objectList: ZaakType[];
+export type ZaaktypenLoaderData = ListResponse<ZaakType> & {
   fieldsets: FieldSet<ZaakType>[];
 };
 
@@ -12,7 +14,14 @@ export type ZaaktypenLoaderData = {
  * Zaaktypen loader.
  * Loader data can be obtained using `useLoaderData()` in ZaaktypenPage.
  */
-export async function zaaktypenLoader(): Promise<ZaaktypenLoaderData> {
-  const objectList = FIXTURE_ZAAKTYPEN;
-  return { objectList, fieldsets: ZAAKTYPE_FIELDSETS };
-}
+export const zaaktypenLoader = loginRequired(
+  async (
+    loaderFunctionArgs: LoaderFunctionArgs,
+  ): Promise<ZaaktypenLoaderData> => {
+    const url = new URL(loaderFunctionArgs.request.url);
+    const params = url.searchParams;
+    const response = await request("GET", "/catalogi/zaaktypen", params);
+    const listResponse: ListResponse<ZaakType> = await response.json();
+    return { ...listResponse, fieldsets: ZAAKTYPE_FIELDSETS };
+  },
+);

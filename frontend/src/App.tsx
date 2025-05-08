@@ -2,6 +2,8 @@ import {
   BaseTemplate,
   ButtonProps,
   ConfigContext,
+  H2,
+  Hr,
   Logo,
   Outline,
   ucFirst,
@@ -9,7 +11,13 @@ import {
 // @ts-expect-error - no ts modules
 import "@maykin-ui/admin-ui/style";
 import { useEffect, useMemo, useState } from "react";
-import { Outlet, RouteObject, useLocation, useNavigate } from "react-router";
+import {
+  Outlet,
+  RouteObject,
+  useLocation,
+  useMatches,
+  useNavigate,
+} from "react-router";
 import { User, whoAmI } from "~/api";
 import { Profile } from "~/components/Profile/Profile.tsx";
 import { useChildRoutes, useCurrentMatch } from "~/hooks";
@@ -25,6 +33,7 @@ const SIDEBAR_INDEX = "catalogi";
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const matches = useMatches();
   const currentMatch = useCurrentMatch();
   const childRoutes = useChildRoutes(SIDEBAR_INDEX);
   const [user, setUser] = useState<User | null>(null);
@@ -94,11 +103,11 @@ function App() {
       return [];
     }
 
-    return childRoutes
+    const items = childRoutes
       .filter((route) => route.path)
       .map(({ path, id }: RouteObject): ButtonProps => {
         return {
-          active: currentMatch.id === id,
+          active: Boolean(id && matches.map((m) => m.id).includes(id)),
           align: "start",
           children: ucFirst(path?.split("/").pop()?.trim() || ""),
           onClick: () => {
@@ -106,6 +115,11 @@ function App() {
           },
         };
       });
+    return [
+      <H2 key="product-name">Open Beheer</H2>,
+      <Hr key="hr" size="xxl" />,
+      ...items,
+    ];
   }, [primaryNavigationItems]);
 
   return (

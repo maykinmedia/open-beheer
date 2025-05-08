@@ -45,7 +45,7 @@ export const routes: RouteObject[] = [
             children: [
               {
                 id: "zaaktype",
-                path: ":id",
+                path: ":uuid",
                 element: <ZaaktypePage />,
                 loader: zaaktypeLoader,
                 action: zaaktypeAction,
