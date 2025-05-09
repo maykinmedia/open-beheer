@@ -2,12 +2,18 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 
 from openapi_parser import parse
-from openapi_parser.specification import Content, Operation, Parameter, Property
+from openapi_parser.specification import (
+    Content,
+    Operation,
+    Parameter,
+    Property,
+    Specification,
+)
 from rest_framework.request import Request
 from rest_framework.response import Response
 from zgw_consumers.models import Service
 
-from .types import TypedField
+from openbeheer.api.base.types import TypedField
 
 CACHE_TIMEOUT = 86400  # 24 hours
 
@@ -198,7 +204,7 @@ def get_oas_operation(service: Service, method: str, path: str) -> Operation:
     Returns:
         The Operation object corresponding to the specified method and path in the OAS.
     """
-    spec = get_spec(service)
+    spec = get_oas_spec_for_service(service)
     paths = spec.paths
 
     try:
@@ -216,7 +222,7 @@ def get_oas_operation(service: Service, method: str, path: str) -> Operation:
         )
 
 
-def get_spec(service: Service):
+def get_oas_spec_for_service(service: Service) -> Specification:
     """
     Fetches and parses the OpenAPI specification (OAS) for the given service.
 
@@ -229,17 +235,31 @@ def get_spec(service: Service):
     Raises:
         ImproperlyConfigured: If no OAS URL is provided for the service.
     """
-    cache_key = f"{__name__}.get_spec#{service.pk}"
-    cache_value = cache.get(cache_key)
-
-    if cache_value:
-        return cache_value
     oas_url = service.oas  # POSSIBLE TODO: oas_file not supported
 
     if not oas_url:
         raise ImproperlyConfigured(
             f"Please specify a OAS URL for {service.label} Service."
         )
+
+    return get_oas_spec(oas_url)
+
+
+def get_oas_spec(oas_url: str) -> Specification:
+    """
+    Fetches and parses the OpenAPI specification (OAS) for the given service.
+
+    Args:
+        oas_url: URL of the OpenAPI spec to fetch.
+
+    Returns:
+        The parsed OpenAPI specification.
+    """
+    cache_key = f"{__name__}.get_spec#{oas_url}"
+    cache_value = cache.get(cache_key)
+
+    if cache_value:
+        return cache_value
 
     spec = parse(oas_url)
 

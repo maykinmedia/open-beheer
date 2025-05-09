@@ -5,8 +5,20 @@ from pathlib import Path
 from django.urls import reverse_lazy
 
 import sentry_sdk
+from zgw_consumers.constants import APITypes
 
 from .utils import config, get_sentry_integrations
+
+#
+# Application specific
+#
+
+# This is the URL to the OpenAPI specification (OAS).
+SERVICE_OAS = config("SERVICE_OAS", "")
+
+# This is API type of the service linked to in SERVICE_OAS.
+SERVICE_TYPE = config("SERVICE_TYPE", default=APITypes.ztc)
+
 
 # Build paths inside the project, so further paths can be defined relative to
 # the code root.
