@@ -9,6 +9,9 @@ export default defineConfig({
     assetsDir: "static/assets",
   },
   envPrefix: "MYKN_",
+  optimizeDeps: {
+    include: ["react", "react-dom", "react-dom/client"],
+  },
   resolve: {
     alias: {
       "~": path.resolve(__dirname, "src"),

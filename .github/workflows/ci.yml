@@ -155,6 +155,9 @@ jobs:
       - name: Initialize msw for msw-storybook-addon
         run: npx msw init public/
 
+      - name: Clear node_modules cache
+        run: rm -rf node_modules/.cache node_modules/.vite;
+
       - name: Run tests
         run: npm run test:coverage
 
