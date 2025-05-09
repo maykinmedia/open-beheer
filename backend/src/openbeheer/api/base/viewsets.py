@@ -9,7 +9,7 @@ from zgw_consumers.client import ClientT, build_client
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 
-from .oas import get_fields_from_oas, get_oas_parameter_names
+from ..oas import get_fields_from_oas, get_oas_parameter_names
 from .serializers import DetailZGWSerializer, ListZGWSerializer
 from .types import TypedField
 

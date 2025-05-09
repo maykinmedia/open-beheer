@@ -8,12 +8,14 @@ from drf_spectacular.views import (
 from rest_framework import routers
 
 from openbeheer.accounts.api.views import WhoAmIView
-from openbeheer.catalogi.api.viewsets import ZaaktypenViewSet
-
-router = routers.DefaultRouter()
-router.register(r"catalogi/zaaktypen", ZaaktypenViewSet, basename="zaaktypen")
+from openbeheer.api.catalogi import register_catalogi
 
 app_name = "api"
+
+router = routers.DefaultRouter()
+
+# Register ZGW endpoints.
+register_catalogi(router)
 
 urlpatterns = [
     # API documentation
