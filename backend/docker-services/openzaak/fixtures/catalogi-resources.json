@@ -1,5 +1,21 @@
 [
   {
+    "model": "catalogi.catalogus",
+    "pk": 1,
+    "fields": {
+      "_etag": "2b4f1c5d92b4a954d595fde194e352d1",
+      "naam": "Archiving test",
+      "uuid": "ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+      "domein": "VAVAV",
+      "rsin": "100000000",
+      "contactpersoon_beheer_naam": "Contact persoon beheer 0",
+      "contactpersoon_beheer_telefoonnummer": "0612345678",
+      "contactpersoon_beheer_emailadres": "contact_0@example.com",
+      "versie": "",
+      "begindatum_versie": null
+    }
+  },
+  {
     "model": "catalogi.zaaktype",
     "pk": 3,
     "fields": {
