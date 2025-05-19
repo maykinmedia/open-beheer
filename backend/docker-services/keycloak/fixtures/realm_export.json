@@ -316,40 +316,8 @@
       ],
       "openbeheer-dev": [
         {
-          "id": "81c6c73e-c2ca-4503-960b-2504ea9d77e4",
-          "name": "Record Manager",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "e727c82d-99d0-4e9f-8f37-a77821a1dfc6",
-          "attributes": {}
-        },
-        {
-          "id": "a0974f2f-7143-497d-a380-c9da8ac84871",
-          "name": "Administrator",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "e727c82d-99d0-4e9f-8f37-a77821a1dfc6",
-          "attributes": {}
-        },
-        {
           "id": "e71a7e56-135a-48b5-bb1e-2a5c01603694",
           "name": "Superuser",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "e727c82d-99d0-4e9f-8f37-a77821a1dfc6",
-          "attributes": {}
-        },
-        {
-          "id": "baa57413-0c52-4690-bc0f-d6664746894e",
-          "name": "Reviewer",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "e727c82d-99d0-4e9f-8f37-a77821a1dfc6",
-          "attributes": {}
-        },
-        {
-          "id": "5a39397a-b057-4fa5-a275-d55f01b88f79",
-          "name": "Archivist",
           "composite": false,
           "clientRole": true,
           "containerId": "e727c82d-99d0-4e9f-8f37-a77821a1dfc6",
@@ -550,14 +518,10 @@
         "default-roles-openbeheer-dev"
       ],
       "clientRoles": {
-        "openbeheer-dev": [
-          "Record Manager"
-        ]
+        "openbeheer-dev": []
       },
       "notBefore": 0,
-      "groups": [
-        "/OAB - Record Manager"
-      ]
+      "groups": []
     },
     {
       "id": "5aca5d15-ab33-4f05-a335-4ac764869121",
@@ -589,9 +553,7 @@
         ]
       },
       "notBefore": 0,
-      "groups": [
-        "/Admins"
-      ]
+      "groups": []
     }
   ],
   "scopeMappings": [
