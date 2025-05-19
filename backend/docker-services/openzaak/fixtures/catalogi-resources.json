@@ -1,0 +1,340 @@
+[
+    {
+        "model": "catalogi.zaaktype",
+        "pk": 3,
+        "fields": {
+            "_etag": "e06d2051a4000b5bf5bbb65826d67cdf",
+            "datum_begin_geldigheid": "2018-01-01",
+            "datum_einde_geldigheid": null,
+            "concept": false,
+            "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487",
+            "identificatie": "ZAAKTYPE-2020-0000000001",
+            "zaaktype_omschrijving": "Testing resultaattypen process",
+            "zaaktype_omschrijving_generiek": "",
+            "vertrouwelijkheidaanduiding": "",
+            "doel": "Trouble red compare produce animal. Everything today Democrat student enter. By probably adult.",
+            "aanleiding": "Couple toward trip old nice memory system instead.",
+            "toelichting": "",
+            "indicatie_intern_of_extern": "extern",
+            "handeling_initiator": "indienen",
+            "onderwerp": "Evenementvergunning",
+            "handeling_behandelaar": "uitvoeren",
+            "doorlooptijd_behandeling": "P30D",
+            "servicenorm_behandeling": null,
+            "opschorting_en_aanhouding_mogelijk": true,
+            "verlenging_mogelijk": false,
+            "verlengingstermijn": null,
+            "trefwoorden": "[]",
+            "publicatie_indicatie": true,
+            "publicatietekst": "",
+            "verantwoordingsrelatie": "[]",
+            "versiedatum": "2018-01-01",
+            "verantwoordelijke": "100000000",
+            "producten_of_diensten": "[\"https://example.com/product/123\"]",
+            "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+            "selectielijst_procestype_jaar": 2020,
+            "referentieproces_naam": "ReferentieProces 0",
+            "referentieproces_link": "",
+            "broncatalogus_url": "",
+            "broncatalogus_domein": "",
+            "broncatalogus_rsin": "",
+            "bronzaaktype_url": "",
+            "bronzaaktype_identificatie": "",
+            "bronzaaktype_omschrijving": "",
+            "catalogus": 1,
+            "deelzaaktypen": []
+        }
+    },
+    {
+        "model": "catalogi.resultaattype",
+        "pk": 3,
+        "fields": {
+            "uuid": "b9109699-67cd-4c2e-a2cf-76b311d40e25",
+            "omschrijving": "Afgehandeld",
+            "resultaattypeomschrijving": "Afgehandeld",
+            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/1bb001e9-5eab-4f10-8940-8781e11f180f",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "catalogi.resultaattype",
+        "pk": 4,
+        "fields": {
+            "uuid": "7759dcb7-de9a-4543-99e3-81472c488f32",
+            "omschrijving": "Lopend",
+            "resultaattypeomschrijving": "Lopend",
+            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/cc5ae4e3-a9e6-4386-bcee-46be4986a829",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "catalogi.roltype",
+        "pk": 1,
+        "fields": {
+            "uuid": "ae39e60c-0e4b-4432-a830-8755ed083fda",
+            "_etag": "",
+            "datum_begin_geldigheid": null,
+            "datum_einde_geldigheid": null,
+            "omschrijving": "Behandelend afdeling",
+            "omschrijving_generiek": "behandelaar",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "catalogi.roltype",
+        "pk": 1,
+        "fields": {
+            "uuid": "ae39e60c-0e4b-4432-a830-8755ed083fda",
+            "_etag": "",
+            "datum_begin_geldigheid": null,
+            "datum_einde_geldigheid": null,
+            "omschrijving": "Behandelend afdeling",
+            "omschrijving_generiek": "behandelaar",
+            "zaaktype": 3
+        }
+    },
+    {
+        "model": "catalogi.informatieobjecttype",
+        "pk": 1,
+        "fields": {
+          "_etag": "70b8d72e0053dab98f8b7051ecbdc493",
+          "datum_begin_geldigheid": "2018-01-01",
+          "datum_einde_geldigheid": null,
+          "concept": false,
+          "uuid": "a8089bdf-72d3-414f-a9cd-953cfa602b6c",
+          "omschrijving": "Informatie object type 0",
+          "informatieobjectcategorie": "stock",
+          "trefwoord": "[]",
+          "vertrouwelijkheidaanduiding": "openbaar",
+          "omschrijving_generiek_informatieobjecttype": "bill",
+          "omschrijving_generiek_definitie": "Bank sound west control fly Mrs. West their some pressure. Many often various guess first move visit group.",
+          "omschrijving_generiek_herkomst": "ZSWuoDPOIaWF",
+          "omschrijving_generiek_hierarchie": "until",
+          "omschrijving_generiek_opmerking": "",
+          "catalogus": 1
+        }
+      },
+      {
+        "model": "catalogi.zaaktypeinformatieobjecttype",
+        "pk": 1,
+        "fields": {
+          "_etag": "a4c91ba75881d58770677aed808474fa",
+          "uuid": "7c8ea2ed-6865-4388-877a-194988aeaf44",
+          "zaaktype": 1,
+          "informatieobjecttype": 1,
+          "volgnummer": 1,
+          "richting": "inkomend",
+          "statustype": null
+        }
+      },
+      {
+        "model": "catalogi.zaaktype",
+        "pk": 1,
+        "fields": {
+          "_etag": "e06d2051a4000b5bf5bbb65826d67cdf",
+          "datum_begin_geldigheid": "2018-01-01",
+          "datum_einde_geldigheid": null,
+          "concept": false,
+          "uuid": "be210495-20b6-48ff-8d3d-3e44f74c43a4",
+          "identificatie": "ZAAKTYPE-2018-0000000001",
+          "zaaktype_omschrijving": "brand world-class initiatives",
+          "zaaktype_omschrijving_generiek": "",
+          "vertrouwelijkheidaanduiding": "",
+          "doel": "Trouble red compare produce animal. Everything today Democrat student enter. By probably adult.",
+          "aanleiding": "Couple toward trip old nice memory system instead.",
+          "toelichting": "",
+          "indicatie_intern_of_extern": "extern",
+          "handeling_initiator": "indienen",
+          "onderwerp": "Evenementvergunning",
+          "handeling_behandelaar": "uitvoeren",
+          "doorlooptijd_behandeling": "P30D",
+          "servicenorm_behandeling": null,
+          "opschorting_en_aanhouding_mogelijk": true,
+          "verlenging_mogelijk": false,
+          "verlengingstermijn": null,
+          "trefwoorden": "[]",
+          "publicatie_indicatie": true,
+          "publicatietekst": "",
+          "verantwoordingsrelatie": "[]",
+          "versiedatum": "2018-01-01",
+          "verantwoordelijke": "100000000",
+          "producten_of_diensten": "[\"https://example.com/product/123\"]",
+          "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+          "selectielijst_procestype_jaar": 2020,
+          "referentieproces_naam": "ReferentieProces 0",
+          "referentieproces_link": "",
+          "broncatalogus_url": "",
+          "broncatalogus_domein": "",
+          "broncatalogus_rsin": "",
+          "bronzaaktype_url": "",
+          "bronzaaktype_identificatie": "",
+          "bronzaaktype_omschrijving": "",
+          "catalogus": 1,
+          "deelzaaktypen": []
+        }
+      },
+      {
+        "model": "catalogi.informatieobjecttype",
+        "pk": 2,
+        "fields": {
+          "datum_begin_geldigheid": "2018-01-01",
+          "datum_einde_geldigheid": null,
+          "concept": false,
+          "uuid": "9dee6712-122e-464a-99a3-c16692de5485",
+          "omschrijving": "Destruction report type",
+          "informatieobjectcategorie": "stock",
+          "trefwoord": "[]",
+          "vertrouwelijkheidaanduiding": "openbaar",
+          "omschrijving_generiek_informatieobjecttype": "bill",
+          "omschrijving_generiek_definitie": "Destruction report type",
+          "omschrijving_generiek_herkomst": "ZSWuoDPOIaWF",
+          "omschrijving_generiek_hierarchie": "until",
+          "omschrijving_generiek_opmerking": "",
+          "catalogus": 1
+        }
+      },
+      {
+        "model": "catalogi.zaaktypeinformatieobjecttype",
+        "pk": 2,
+        "fields": {
+          "uuid": "835af306-c038-42f5-8225-008628b6e3f8",
+          "zaaktype": 4,
+          "informatieobjecttype": 2,
+          "volgnummer": 1,
+          "richting": "inkomend",
+          "statustype": null
+        }
+      },
+      {
+        "model": "catalogi.zaaktype",
+        "pk": 2,
+        "fields": {
+          "datum_begin_geldigheid": "2018-01-01",
+          "datum_einde_geldigheid": "2025-03-20",
+          "concept": false,
+          "uuid": "ecd08880-5081-4d7a-afc3-ade1d6e6346f",
+          "identificatie": "ZAAKTYPE-2018-0000000002",
+          "zaaktype_omschrijving": "Destruction confirmation type",
+          "zaaktype_omschrijving_generiek": "",
+          "vertrouwelijkheidaanduiding": "",
+          "doel": "To confirm that a destruction list has been correctly processed.",
+          "aanleiding": "When a destructio list is processed by Open Archiefbeheer",
+          "toelichting": "",
+          "indicatie_intern_of_extern": "extern",
+          "handeling_initiator": "indienen",
+          "onderwerp": "Destruction",
+          "handeling_behandelaar": "uitvoeren",
+          "doorlooptijd_behandeling": "P30D",
+          "servicenorm_behandeling": null,
+          "opschorting_en_aanhouding_mogelijk": true,
+          "verlenging_mogelijk": false,
+          "verlengingstermijn": null,
+          "trefwoorden": "[]",
+          "publicatie_indicatie": true,
+          "publicatietekst": "",
+          "verantwoordingsrelatie": "[]",
+          "versiedatum": "2018-01-01",
+          "verantwoordelijke": "100000000",
+          "producten_of_diensten": "[\"https://example.com/product/123\"]",
+          "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0",
+          "selectielijst_procestype_jaar": 2020,
+          "referentieproces_naam": "ReferentieProces 0",
+          "referentieproces_link": "",
+          "broncatalogus_url": "",
+          "broncatalogus_domein": "",
+          "broncatalogus_rsin": "",
+          "bronzaaktype_url": "",
+          "bronzaaktype_identificatie": "",
+          "bronzaaktype_omschrijving": "",
+          "catalogus": 1,
+          "deelzaaktypen": []
+        }
+      },
+      {
+        "model": "catalogi.zaaktype",
+        "pk": 4,
+        "fields": {
+          "datum_begin_geldigheid": "2025-03-21",
+          "datum_einde_geldigheid": null,
+          "concept": false,
+          "uuid": "ce9feadd-00cb-46c8-a0ef-1d1dfc78586a",
+          "identificatie": "ZAAKTYPE-2018-0000000002",
+          "zaaktype_omschrijving": "Destruction confirmation type",
+          "zaaktype_omschrijving_generiek": "",
+          "vertrouwelijkheidaanduiding": "",
+          "doel": "To confirm that a destruction list has been correctly processed.",
+          "aanleiding": "When a destructio list is processed by Open Archiefbeheer",
+          "toelichting": "",
+          "indicatie_intern_of_extern": "extern",
+          "handeling_initiator": "indienen",
+          "onderwerp": "Destruction",
+          "handeling_behandelaar": "uitvoeren",
+          "doorlooptijd_behandeling": "P30D",
+          "servicenorm_behandeling": null,
+          "opschorting_en_aanhouding_mogelijk": true,
+          "verlenging_mogelijk": false,
+          "verlengingstermijn": null,
+          "trefwoorden": "[]",
+          "publicatie_indicatie": true,
+          "publicatietekst": "",
+          "verantwoordingsrelatie": "[]",
+          "versiedatum": "2018-01-01",
+          "verantwoordelijke": "100000000",
+          "producten_of_diensten": "[\"https://example.com/product/123\"]",
+          "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0",
+          "selectielijst_procestype_jaar": 2020,
+          "referentieproces_naam": "ReferentieProces 0",
+          "referentieproces_link": "",
+          "broncatalogus_url": "",
+          "broncatalogus_domein": "",
+          "broncatalogus_rsin": "",
+          "bronzaaktype_url": "",
+          "bronzaaktype_identificatie": "",
+          "bronzaaktype_omschrijving": "",
+          "catalogus": 1,
+          "deelzaaktypen": []
+        }
+      },
+      {
+        "model": "catalogi.statustype",
+        "pk": 1,
+        "fields": {
+          "uuid": "835a2a13-f52f-4339-83e5-b7250e5ad016",
+          "statustype_omschrijving": "Statustype for destruction report zaak",
+          "statustypevolgnummer": 1,
+          "zaaktype": 4
+        }
+      },
+      {
+        "model": "catalogi.statustype",
+        "pk": 2,
+        "fields": {
+          "uuid": "9438e56a-5d78-4dc8-9d9a-2404781f818d",
+          "statustype_omschrijving": "Statustype Completed",
+          "statustypevolgnummer": 1,
+          "zaaktype": 1
+        }
+      },
+      {
+        "model": "catalogi.resultaattype",
+        "pk": 1,
+        "fields": {
+          "uuid": "5d39b8ac-437a-475c-9a76-0f6ae1540d0e",
+          "omschrijving": "Afgehandeld",
+          "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
+          "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/1bb001e9-5eab-4f10-8940-8781e11f180f",
+          "zaaktype": 4
+        }
+      },
+      {
+        "model": "catalogi.resultaattype",
+        "pk": 2,
+        "fields": {
+          "uuid": "12903100-b7a0-4441-9645-eda7df2ad106",
+          "omschrijving": "Verwerkt",
+          "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/f33dbd16-68ae-4820-acb5-5f437bca5edb",
+          "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/cc5ae4e3-a9e6-4386-bcee-46be4986a829",
+          "zaaktype": 1
+        }
+      }
+]
