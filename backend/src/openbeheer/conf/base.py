@@ -128,6 +128,7 @@ INSTALLED_APPS = [
     "openbeheer.accounts",
     "openbeheer.utils",
     "openbeheer.api",
+    "openbeheer.catalogi",
 ]
 
 MIDDLEWARE = [

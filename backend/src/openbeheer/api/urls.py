@@ -9,6 +9,7 @@ from rest_framework import routers
 
 from openbeheer.accounts.api.views import WhoAmIView
 from openbeheer.catalogi.api.viewsets import ZaaktypenViewSet
+from openbeheer.catalogi.views import DummyView
 
 router = routers.DefaultRouter()
 router.register(r"catalogi/zaaktypen", ZaaktypenViewSet, basename="zaaktypen")
@@ -46,6 +47,7 @@ urlpatterns = [
         include(
             [
                 path("whoami/", WhoAmIView.as_view(), name="whoami"),
+                path("dummy/", DummyView.as_view(), name="dummy"),
                 path("", include(router.urls)),
             ]
         ),
