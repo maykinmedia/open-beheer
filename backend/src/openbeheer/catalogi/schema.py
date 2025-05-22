@@ -1,4 +1,4 @@
-from typing import Any, Literal
+from typing import Any, Literal, _GenericAlias  # TODO Fix undesired import
 from drf_spectacular.extensions import OpenApiSerializerExtension
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import Direction
@@ -8,9 +8,6 @@ from drf_spectacular.plumbing import ResolvedComponent
 
 
 class MsgSpecExtension(OpenApiSerializerExtension):
-    target_class = Struct
-    match_subclasses = True
-
     def map_serializer(
         self, auto_schema: AutoSchema, direction: Direction
     ) -> dict[str, Any]:
@@ -19,7 +16,8 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         )
         # This is the schema of the current component. However, its schema may reference other components that
         # also need to be registered in the schema.
-        component_schema = components.pop(self.target.__name__)
+        component_name = out["$ref"].replace("#/components/schemas/", "")
+        component_schema = components.pop(component_name)
 
         # Extracting and registering sub components
         for sub_name, sub_schema in components.items():
@@ -39,5 +37,17 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         auto_schema: AutoSchema,
         direction: Literal["request"] | Literal["response"],
     ) -> str | None:
-        # The parent does self.target.__class__.__name__ which gives StructMeta for OBField
-        return self.target.__name__
+        # msgspec builds the names for the classes, we can extract it from the schema
+        # This needs to remain in sync with the name that we
+        (out,), components = schema_components((self.target,), ref_template="{name}")
+        return out["$ref"]
+
+
+class MsgSpecStructExtension(MsgSpecExtension):
+    target_class = Struct
+    match_subclasses = True
+
+
+class GenericAliasExtension(MsgSpecExtension):
+    target_class = _GenericAlias
+    match_subclasses = True

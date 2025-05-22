@@ -31,3 +31,7 @@ class DummyView(APIView):
     @extend_schema(responses={200: TestOption, 201: OBField})
     def get(self, request, format=None):
         return Response([{"label": "test", "value": "test"}])
+
+    @extend_schema(request=OBField[int])
+    def post(self, request, format=None):
+        return Response({"name": "bla", "value": "bal", "type": "int"})
