@@ -25,6 +25,7 @@ openapi3-parser
 # django-cors-headers
 # django-extra-fields
 # django-filter
+msgspec
 
 # WSGI servers & monitoring - production oriented
 uwsgi
