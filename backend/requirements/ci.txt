@@ -248,6 +248,7 @@ idna==3.10
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   requests
+    #   yarl
 imagesize==1.4.1
     # via sphinx
 inflection==0.5.1
@@ -308,6 +309,8 @@ mozilla-django-oidc-db==0.22.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+multidict==6.4.4
+    # via yarl
 openapi-schema-validator==0.6.3
     # via
     #   -c requirements/base.txt
@@ -360,6 +363,8 @@ prance==25.4.8.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   openapi3-parser
+propcache==0.3.1
+    # via yarl
 psycopg2==2.9.10
     # via
     #   -c requirements/base.txt
@@ -433,6 +438,7 @@ pyyaml==6.0.2
     #   drf-spectacular
     #   jsonschema-path
     #   pydantic-settings
+    #   vcrpy
 qrcode==7.4.2
     # via
     #   -c requirements/base.txt
@@ -565,10 +571,13 @@ urllib3==2.3.0
     #   elastic-apm
     #   requests
     #   sentry-sdk
+    #   vcrpy
 uwsgi==2.0.28
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+vcrpy==7.0.0
+    # via -r requirements/test-tools.in
 waitress==3.0.2
     # via webtest
 webauthn==2.5.2
@@ -585,6 +594,9 @@ wrapt==1.17.2
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   elastic-apm
+    #   vcrpy
+yarl==1.20.0
+    # via vcrpy
 zgw-consumers==0.38.0
     # via
     #   -c requirements/base.txt
