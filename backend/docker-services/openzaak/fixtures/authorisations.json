@@ -1,0 +1,20 @@
+[
+    {
+        "model": "vng_api_common.jwtsecret",
+        "pk": 1,
+        "fields": {
+            "identifier": "test-vcr",
+            "secret": "test-vcr"
+        }
+    },
+    {
+        "model": "authorizations.applicatie",
+        "pk": 1,
+        "fields": {
+            "uuid": "72320633-898b-419c-be94-ce8e7800b021",
+            "client_ids": "[\"test-vcr\"]",
+            "label": "VCR test",
+            "heeft_alle_autorisaties": true
+        }
+    }
+]
