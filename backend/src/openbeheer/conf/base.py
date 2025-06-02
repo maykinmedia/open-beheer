@@ -128,6 +128,8 @@ INSTALLED_APPS = [
     "openbeheer.accounts",
     "openbeheer.utils",
     "openbeheer.api",
+    "openbeheer.config",
+    "openbeheer.health_checks",
 ]
 
 MIDDLEWARE = [
@@ -388,6 +390,18 @@ RELEASE = config("RELEASE", GIT_SHA)
 
 # Default (connection timeout, read timeout) for the requests library (in seconds)
 REQUESTS_DEFAULT_TIMEOUT = (10, 30)
+
+#
+# App specific settings
+#
+
+ZGW_REQUIRED_SERVICE_TYPES = ["ztc", "orc"]
+HEALTH_CHECKS = [
+    "openbeheer.health_checks.checks.ServiceHealthCheck",
+    "openbeheer.health_checks.checks.CatalogueHealthCheck",
+    "openbeheer.config.health_checks.APIConfigHealthCheck",
+]
+
 
 ##############################
 #                            #
