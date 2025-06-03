@@ -28,8 +28,6 @@ certifi==2025.1.31
     #   sentry-sdk
 cffi==1.17.1
     # via cryptography
-chardet==5.2.0
-    # via prance
 charset-normalizer==3.4.1
     # via requests
 cryptography==44.0.2
@@ -132,18 +130,9 @@ inflection==0.5.1
 josepy==2.0.0
     # via mozilla-django-oidc
 jsonschema==4.23.0
-    # via
-    #   drf-spectacular
-    #   openapi-schema-validator
-    #   openapi-spec-validator
-jsonschema-path==0.3.4
-    # via openapi-spec-validator
+    # via drf-spectacular
 jsonschema-specifications==2024.10.1
-    # via
-    #   jsonschema
-    #   openapi-schema-validator
-lazy-object-proxy==1.11.0
-    # via openapi-spec-validator
+    # via jsonschema
 maykin-2fa==1.0.2
     # via -r requirements/base.in
 maykin-common==0.2.0
@@ -154,26 +143,14 @@ mozilla-django-oidc-db==0.22.0
     # via -r requirements/base.in
 msgspec==0.19.0
     # via -r requirements/base.in
-openapi-schema-validator==0.6.3
-    # via openapi-spec-validator
-openapi-spec-validator==0.7.1
-    # via openapi3-parser
-openapi3-parser==1.1.21
-    # via -r requirements/base.in
 orderedmultidict==1.0.1
     # via furl
-packaging==25.0
-    # via prance
-pathable==0.4.4
-    # via jsonschema-path
 phonenumberslite==8.13.55
     # via django-two-factor-auth
 pillow==11.1.0
     # via -r requirements/base.in
 polib==1.2.0
     # via django-rosetta
-prance==25.4.8.0
-    # via openapi3-parser
 psycopg2==2.9.10
     # via -r requirements/base.in
 pycparser==2.22
@@ -205,7 +182,6 @@ python-ipware==3.0.0
 pyyaml==6.0.2
     # via
     #   drf-spectacular
-    #   jsonschema-path
     #   pydantic-settings
 qrcode==7.4.2
     # via django-two-factor-auth
@@ -214,26 +190,19 @@ redis==5.2.1
 referencing==0.36.2
     # via
     #   jsonschema
-    #   jsonschema-path
     #   jsonschema-specifications
 requests==2.32.3
     # via
     #   ape-pie
     #   django-rosetta
-    #   jsonschema-path
     #   mozilla-django-oidc
-    #   prance
     #   zgw-consumers
-rfc3339-validator==0.1.4
-    # via openapi-schema-validator
 rpds-py==0.24.0
     # via
     #   jsonschema
     #   referencing
 ruamel-yaml==0.18.10
-    # via
-    #   django-setup-configuration
-    #   prance
+    # via django-setup-configuration
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
 sentry-sdk==2.25.1
@@ -243,7 +212,6 @@ six==1.17.0
     #   furl
     #   orderedmultidict
     #   python-dateutil
-    #   rfc3339-validator
 sqlparse==0.5.3
     # via django
 typing-extensions==4.13.1

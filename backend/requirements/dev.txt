@@ -79,11 +79,6 @@ cffi==1.17.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   cryptography
-chardet==5.2.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   prance
 charset-normalizer==3.4.1
     # via
     #   -c requirements/ci.txt
@@ -354,24 +349,11 @@ jsonschema==4.23.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   drf-spectacular
-    #   openapi-schema-validator
-    #   openapi-spec-validator
-jsonschema-path==0.3.4
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-spec-validator
 jsonschema-specifications==2024.10.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   jsonschema
-    #   openapi-schema-validator
-lazy-object-proxy==1.11.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-spec-validator
 lxml==5.3.1
     # via
     #   -c requirements/ci.txt
@@ -416,20 +398,6 @@ multidict==6.4.4
     #   yarl
 mypy-extensions==1.1.0
     # via black
-openapi-schema-validator==0.6.3
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-spec-validator
-openapi-spec-validator==0.7.1
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi3-parser
-openapi3-parser==1.1.21
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
 orderedmultidict==1.0.1
     # via
     #   -c requirements/ci.txt
@@ -441,14 +409,8 @@ packaging==25.0
     #   -r requirements/ci.txt
     #   black
     #   datamodel-code-generator
-    #   prance
     #   pytest
     #   sphinx
-pathable==0.4.4
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   jsonschema-path
 pathspec==0.12.1
     # via black
 phonenumberslite==8.13.55
@@ -472,11 +434,6 @@ polib==1.2.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-rosetta
-prance==25.4.8.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi3-parser
 prompt-toolkit==3.0.50
     # via questionary
 propcache==0.3.1
@@ -568,7 +525,6 @@ pyyaml==6.0.2
     #   -r requirements/ci.txt
     #   datamodel-code-generator
     #   drf-spectacular
-    #   jsonschema-path
     #   pydantic-settings
     #   vcrpy
 qrcode==7.4.2
@@ -588,7 +544,6 @@ referencing==0.36.2
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   jsonschema
-    #   jsonschema-path
     #   jsonschema-specifications
 requests==2.32.3
     # via
@@ -596,9 +551,7 @@ requests==2.32.3
     #   -r requirements/ci.txt
     #   ape-pie
     #   django-rosetta
-    #   jsonschema-path
     #   mozilla-django-oidc
-    #   prance
     #   requests-mock
     #   sphinx
     #   zgw-consumers
@@ -606,11 +559,6 @@ requests-mock==1.12.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-rfc3339-validator==0.1.4
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-schema-validator
 rich==13.9.4
     # via
     #   bump-my-version
@@ -634,7 +582,6 @@ ruamel-yaml==0.18.10
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-setup-configuration
-    #   prance
 ruamel-yaml-clib==0.2.12
     # via
     #   -c requirements/ci.txt
@@ -653,7 +600,6 @@ six==1.17.0
     #   furl
     #   orderedmultidict
     #   python-dateutil
-    #   rfc3339-validator
 smmap==5.0.2
     # via gitdb
 sniffio==1.3.1
