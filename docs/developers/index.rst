@@ -8,3 +8,4 @@ This section is for developers working on the project.
 
    setup-local-environment
    environment-variables
+   health-checks
