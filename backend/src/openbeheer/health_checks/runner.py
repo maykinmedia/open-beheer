@@ -4,7 +4,8 @@ from django.conf import settings
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
-from .types import HealthCheck, HealthCheckError, HealthCheckResult
+from .checks import HealthCheck
+from .types import HealthCheckError, HealthCheckResult
 
 
 class HealthChecksRunner:

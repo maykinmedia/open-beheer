@@ -1,11 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 
 from openbeheer.config.models import APIConfig
-from openbeheer.health_checks.types import (
-    HealthCheck,
-    HealthCheckError,
-    HealthCheckResult,
-)
+from openbeheer.health_checks.checks import HealthCheck
+from openbeheer.health_checks.types import HealthCheckError, HealthCheckResult
 
 
 class APIConfigHealthCheck(HealthCheck):
