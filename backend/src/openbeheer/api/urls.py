@@ -8,11 +8,10 @@ from drf_spectacular.views import (
 from rest_framework import routers
 
 from openbeheer.accounts.api.views import WhoAmIView
-from openbeheer.catalogi.api.viewsets import ZaaktypenViewSet
 from openbeheer.health_checks.api.views import HealthChecksView
+from openbeheer.zaaktype.api.views import ZaakTypeListView
 
 router = routers.DefaultRouter()
-router.register(r"catalogi/zaaktypen", ZaaktypenViewSet, basename="zaaktypen")
 
 app_name = "api"
 
@@ -50,6 +49,7 @@ urlpatterns = [
                 path(
                     "health-checks/", HealthChecksView.as_view(), name="health-checks"
                 ),
+                path("zaaktypen/", ZaakTypeListView.as_view(), name="zaaktype-list"),
                 path("", include(router.urls)),
             ]
         ),
