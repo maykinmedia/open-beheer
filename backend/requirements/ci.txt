@@ -57,11 +57,6 @@ cffi==1.17.1
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   cryptography
-chardet==5.2.0
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   prance
 charset-normalizer==3.4.1
     # via
     #   -c requirements/base.txt
@@ -270,24 +265,11 @@ jsonschema==4.23.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   drf-spectacular
-    #   openapi-schema-validator
-    #   openapi-spec-validator
-jsonschema-path==0.3.4
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   openapi-spec-validator
 jsonschema-specifications==2024.10.1
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   jsonschema
-    #   openapi-schema-validator
-lazy-object-proxy==1.11.0
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   openapi-spec-validator
 lxml==5.3.1
     # via pyquery
 markupsafe==3.0.2
@@ -315,20 +297,6 @@ msgspec==0.19.0
     #   -r requirements/base.txt
 multidict==6.4.4
     # via yarl
-openapi-schema-validator==0.6.3
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   openapi-spec-validator
-openapi-spec-validator==0.7.1
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   openapi3-parser
-openapi3-parser==1.1.21
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
 orderedmultidict==1.0.1
     # via
     #   -c requirements/base.txt
@@ -336,16 +304,8 @@ orderedmultidict==1.0.1
     #   furl
 packaging==25.0
     # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   prance
     #   pytest
     #   sphinx
-pathable==0.4.4
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   jsonschema-path
 phonenumberslite==8.13.55
     # via
     #   -c requirements/base.txt
@@ -362,11 +322,6 @@ polib==1.2.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   django-rosetta
-prance==25.4.8.0
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   openapi3-parser
 propcache==0.3.1
     # via yarl
 psycopg2==2.9.10
@@ -440,7 +395,6 @@ pyyaml==6.0.2
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   drf-spectacular
-    #   jsonschema-path
     #   pydantic-settings
     #   vcrpy
 qrcode==7.4.2
@@ -458,7 +412,6 @@ referencing==0.36.2
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   jsonschema
-    #   jsonschema-path
     #   jsonschema-specifications
 requests==2.32.3
     # via
@@ -466,19 +419,12 @@ requests==2.32.3
     #   -r requirements/base.txt
     #   ape-pie
     #   django-rosetta
-    #   jsonschema-path
     #   mozilla-django-oidc
-    #   prance
     #   requests-mock
     #   sphinx
     #   zgw-consumers
 requests-mock==1.12.1
     # via -r requirements/test-tools.in
-rfc3339-validator==0.1.4
-    # via
-    #   -c requirements/base.txt
-    #   -r requirements/base.txt
-    #   openapi-schema-validator
 roman-numerals-py==3.1.0
     # via sphinx
 rpds-py==0.24.0
@@ -492,7 +438,6 @@ ruamel-yaml==0.18.10
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   django-setup-configuration
-    #   prance
 ruamel-yaml-clib==0.2.12
     # via
     #   -c requirements/base.txt
@@ -509,7 +454,6 @@ six==1.17.0
     #   furl
     #   orderedmultidict
     #   python-dateutil
-    #   rfc3339-validator
 snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.6
