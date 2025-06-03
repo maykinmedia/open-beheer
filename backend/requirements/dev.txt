@@ -436,11 +436,6 @@ polib==1.2.0
     #   django-rosetta
 prompt-toolkit==3.0.50
     # via questionary
-propcache==0.3.1
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   yarl
 psycopg2==2.9.10
     # via
     #   -c requirements/ci.txt
