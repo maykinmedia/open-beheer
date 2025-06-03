@@ -1,6 +1,8 @@
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Literal, NotRequired, TypedDict
+from typing import TYPE_CHECKING, Literal, NotRequired, TypedDict
+
+if TYPE_CHECKING:
+    from .checks import HealthCheck
 
 
 @dataclass
@@ -26,6 +28,8 @@ class HealthCheckResult:
         for error in self.errors or []:
             serialised_error: HealthCheckSerialisedError = {
                 "message": error.message,
+                "code": error.code,
+                "severity": error.severity,
             }
             if with_traceback:
                 serialised_error["traceback"] = error.exc
@@ -34,17 +38,11 @@ class HealthCheckResult:
         return result
 
 
-class HealthCheck(ABC):
-    def get_name(self):
-        return self.__class__.__name__
-
-    @abstractmethod
-    def run(self) -> HealthCheckResult: ...
-
-
 class HealthCheckSerialisedError(TypedDict):
     message: str
     traceback: NotRequired[str]
+    code: str
+    severity: Literal["error", "warning", "info"]
 
 
 class HealthCheckSerialisedResult(TypedDict):

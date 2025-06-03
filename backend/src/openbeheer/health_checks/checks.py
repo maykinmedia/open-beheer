@@ -1,4 +1,5 @@
 import traceback
+from abc import ABC, abstractmethod
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -8,7 +9,15 @@ from zgw_consumers.client import build_client
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 
-from .types import HealthCheck, HealthCheckError, HealthCheckResult
+from .types import HealthCheckError, HealthCheckResult
+
+
+class HealthCheck(ABC):
+    def get_name(self):
+        return self.__class__.__name__
+
+    @abstractmethod
+    def run(self) -> HealthCheckResult: ...
 
 
 class ServiceHealthCheck(HealthCheck):
