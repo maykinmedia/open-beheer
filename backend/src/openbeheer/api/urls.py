@@ -8,7 +8,10 @@ from drf_spectacular.views import (
 from rest_framework import routers
 
 from openbeheer.accounts.api.views import WhoAmIView
+<<<<<<< HEAD
 from openbeheer.health_checks.api.views import HealthChecksView
+=======
+>>>>>>> 55e3144 (:fire: [#36] revert: remove dynamic viewsets version)
 from openbeheer.zaaktype.api.views import ZaakTypeListView
 
 router = routers.DefaultRouter()
