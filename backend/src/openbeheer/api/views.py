@@ -6,7 +6,7 @@ from furl import furl
 from msgspec import ValidationError, convert, to_builtins
 from msgspec.json import Encoder, decode
 from msgspec.structs import asdict
-from rest_framework.renderers import BaseRenderer
+from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
 from openbeheer.clients import ztc_client
@@ -31,15 +31,15 @@ type _RequestParamT = (
 )
 
 
-class MsgspecJSONRenderer(BaseRenderer):
-    media_type = "application/json"
-    format = "json"
-
+class MsgspecJSONRenderer(JSONRenderer):
     def render(self, data, *_, **__) -> bytes:
         if data is None:
             return bytes()
 
-        return _ENCODER.encode(data)
+        try:
+            return _ENCODER.encode(data)
+        except TypeError:  # raised errors contain DRF types
+            return super().render(data, *_, *__)
 
 
 class _Renderer(Protocol):
