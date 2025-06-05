@@ -24,7 +24,7 @@ class HealthCheckResult:
 
     def serialise(self, with_traceback: bool = False) -> "HealthCheckSerialisedResult":
         result: HealthCheckSerialisedResult = {
-            "check": repr(self.check),
+            "check": str(self.check),
             "success": self.success,
             "errors": [],
         }
