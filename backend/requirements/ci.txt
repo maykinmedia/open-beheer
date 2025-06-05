@@ -75,7 +75,7 @@ cryptography==44.0.2
     #   webauthn
 cssselect==1.3.0
     # via pyquery
-django==5.2
+django==5.2.1
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
