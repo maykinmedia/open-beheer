@@ -12,7 +12,7 @@ from .types import TypedField
 CACHE_TIMEOUT = 86400  # 24 hours
 
 
-class OASOperationNotFound(Exception):
+class OASOperationNotFound(Exception):  # noqa: N818
     def __init__(self, message):
         super().__init__(message)
         self.message = message
@@ -213,7 +213,7 @@ def get_oas_operation(service: Service, method: str, path: str) -> Operation:
     except StopIteration:
         raise OASOperationNotFound(
             f"OAS does not specify the current action for {method} {path}."
-        )
+        ) from None
 
 
 def get_spec(service: Service):

@@ -19,24 +19,18 @@ def validate_max_permissions(
 
     allowed_permissions = current_user.get_all_permissions()
 
-    given_permissions = set(
-        [
-            "{}.{}".format(*p)
-            for p in permissions.all().values_list(
-                "content_type__app_label", "codename"
-            )
-        ]
-    )
+    given_permissions = {
+        "{}.{}".format(*p)
+        for p in permissions.all().values_list("content_type__app_label", "codename")
+    }
     for group in groups.all():
         given_permissions.update(
-            set(
-                [
-                    "{}.{}".format(*p)
-                    for p in group.permissions.all().values_list(
-                        "content_type__app_label", "codename"
-                    )
-                ]
-            )
+            {
+                "{}.{}".format(*p)
+                for p in group.permissions.all().values_list(
+                    "content_type__app_label", "codename"
+                )
+            }
         )
 
     if not given_permissions.issubset(allowed_permissions):
