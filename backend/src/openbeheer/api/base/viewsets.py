@@ -57,11 +57,11 @@ class ZGWViewSet(ViewSet):
         except Service.DoesNotExist:
             raise ImproperlyConfigured(
                 f"No service configured for type {self.service_type}"
-            )
-        except Service.MultipleObjectsReturned:
+            ) from None
+        except Service.MultipleObjectsReturned as e:
             raise ImproperlyConfigured(
                 f"Multiple services configured for type {self.service_type}"
-            )
+            ) from e
 
     def get_client(self) -> ClientT:
         """
