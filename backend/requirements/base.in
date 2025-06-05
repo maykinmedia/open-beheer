@@ -14,6 +14,8 @@ django-rosetta
 maykin-2fa
 mozilla-django-oidc-db
 
+maykin-common[axes]
+
 # API libraries
 djangorestframework
 drf-spectacular

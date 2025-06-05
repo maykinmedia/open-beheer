@@ -61,13 +61,16 @@ django==5.2
     #   djangorestframework
     #   drf-spectacular
     #   maykin-2fa
+    #   maykin-common
     #   mozilla-django-oidc
     #   mozilla-django-oidc-db
     #   zgw-consumers
 django-admin-index==4.0.0
     # via -r requirements/base.in
 django-axes==7.0.2
-    # via -r requirements/base.in
+    # via
+    #   -r requirements/base.in
+    #   maykin-common
 django-formtools==2.5.1
     # via django-two-factor-auth
 django-hijack==3.7.1
@@ -142,6 +145,8 @@ jsonschema-specifications==2024.10.1
 lazy-object-proxy==1.11.0
     # via openapi-spec-validator
 maykin-2fa==1.0.2
+    # via -r requirements/base.in
+maykin-common==0.2.0
     # via -r requirements/base.in
 mozilla-django-oidc==4.0.1
     # via mozilla-django-oidc-db
