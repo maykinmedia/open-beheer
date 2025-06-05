@@ -1,0 +1,59 @@
+include = ["pyproject.toml", "backend/**/*.py"]
+exclude = [
+    "migrations",
+    "static",
+    "media",
+]
+src = ["backend/src"]
+
+[format]
+docstring-code-format = false
+
+[lint]
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = [
+    # PyFlakes
+    "F",
+    # Subset of pycodestyle
+    "E4",
+    "E7",
+    "E9",
+    "W",
+    # flake8-type-checking
+    "TC",
+    # flake8-bugbear
+    "B",
+    # Prefer simple code
+    "C",
+    "SIM",
+    # perflint
+    "PERF",
+    # refurb
+    "FURB",
+    # pep8-naming
+    "N",
+]
+ignore = [
+    "E501", # line too long
+    "E731", # Assign lambda
+]
+
+[lint.per-file-ignores]
+"**/openbeheer/conf/*" = ["F405"]
+
+[lint.isort]
+combine-as-imports = true
+force-wrap-aliases = false
+known-first-party = ["openbeheer"]
+lines-after-imports = -1
+relative-imports-order = "furthest-to-closest"
+sections = { django = ["django"] }
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
