@@ -40,7 +40,6 @@ class HealthChecksRunner:
                             exc=traceback.format_exc(),
                         )
                     ],
-                    success=False,
                 )
             results.append(result)
 

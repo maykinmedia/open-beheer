@@ -6,8 +6,7 @@ from openbeheer.health_checks.types import HealthCheckError, HealthCheckResult
 
 
 class APIConfigHealthCheck(HealthCheck):
-    def get_name(self) -> str:
-        return _("API configuration")
+    human_name = _("API configuration")
 
     def run(self) -> HealthCheckResult:
         errors = []
@@ -25,6 +24,6 @@ class APIConfigHealthCheck(HealthCheck):
             )
 
         result = HealthCheckResult(
-            check=self, errors=errors, success=(len(errors) == 0)
+            check=self, errors=errors
         )
         return result
