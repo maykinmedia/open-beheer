@@ -17,7 +17,7 @@ from openbeheer.accounts.views.password_reset import PasswordResetView
 
 monkeypatch_admin()
 
-handler500 = "openbeheer.utils.views.server_error"
+handler500 = "maykin_common.views.server_error"
 
 admin.site.enable_nav_sidebar = False
 admin.site.site_header = "openbeheer admin"
