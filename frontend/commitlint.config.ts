@@ -12,9 +12,10 @@ const TYPE_ENUM = [
   "docs",
   "feat",
   "fix",
-  "style",
-  "refactor",
   "perf",
+  "refactor",
+  "revert",
+  "style",
   "test",
 ];
 
