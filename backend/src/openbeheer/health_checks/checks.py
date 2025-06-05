@@ -17,10 +17,10 @@ class HealthCheck(ABC):
     human_name: Union[str, Promise]
 
     def __str__(self) -> str:
-        return self.__class__.__name__
+        return str(self.human_name) if self.human_name else self.__class__.__name__
 
     def __repr__(self) -> str:
-        return str(self.human_name) or self.__class__.__name__
+        return f"<{self.__class__.__qualname__}: {self}>"
 
     @abstractmethod
     def run(self) -> HealthCheckResult: ...
@@ -133,9 +133,7 @@ class CatalogueHealthCheck(HealthCheck):
                         severity="warning",
                     )
                 )
-        else:
-            return HealthCheckResult(check=self, errors=errors)
 
         return HealthCheckResult(
-                check=self,
+                check=self, errors=errors
             )
