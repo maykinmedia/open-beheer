@@ -1,5 +1,7 @@
 import traceback
 from abc import ABC, abstractmethod
+from typing import Union
+from django.utils.functional import Promise
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -11,18 +13,21 @@ from zgw_consumers.models import Service
 
 from .types import HealthCheckError, HealthCheckResult
 
-
 class HealthCheck(ABC):
-    def get_name(self):
+    human_name: Union[str, Promise]
+
+    def __str__(self) -> str:
         return self.__class__.__name__
+
+    def __repr__(self) -> str:
+        return str(self.human_name) or self.__class__.__name__
 
     @abstractmethod
     def run(self) -> HealthCheckResult: ...
 
 
 class ServiceHealthCheck(HealthCheck):
-    def get_name(self) -> str:
-        return _("Services")
+    human_name = _("Services")
 
     def run(self) -> HealthCheckResult:
         errors = []
@@ -43,7 +48,11 @@ class ServiceHealthCheck(HealthCheck):
                 continue
 
         for service in Service.objects.all():
-            if service.connection_check != 200:
+            service_connection_result = service.connection_check
+            if (
+                service_connection_result is None
+                or (service_connection_result and not 200 <= service_connection_result < 300)
+            ):
                 errors.append(
                     HealthCheckError(
                         code="improperly_configured_service",
@@ -54,13 +63,12 @@ class ServiceHealthCheck(HealthCheck):
                     )
                 )
 
-        result = HealthCheckResult(check=self, errors=errors, success=len(errors) == 0)
+        result = HealthCheckResult(check=self, errors=errors)
         return result
 
 
 class CatalogueHealthCheck(HealthCheck):
-    def get_name(self) -> str:
-        return _("Catalogue present")
+    human_name = _("Catalogue present")
 
     def run(self) -> HealthCheckResult:
         ztc_services = Service.objects.filter(api_type=APITypes.ztc)
@@ -68,7 +76,6 @@ class CatalogueHealthCheck(HealthCheck):
         if not ztc_services.exists():
             return HealthCheckResult(
                 check=self,
-                success=False,
                 errors=[
                     HealthCheckError(
                         code="no_ztc_error",
@@ -79,12 +86,9 @@ class CatalogueHealthCheck(HealthCheck):
             )
 
         errors = []
-
-        catalogue_found = False
         for service in ztc_services:
             client = build_client(service)
             with client:
-                response = None
                 try:
                     response = client.get("catalogussen")
                 except ConnectionError:
@@ -100,7 +104,6 @@ class CatalogueHealthCheck(HealthCheck):
                     )
                     continue
 
-                assert response is not None
                 try:
                     response.raise_for_status()
                 except HTTPError:
@@ -108,7 +111,8 @@ class CatalogueHealthCheck(HealthCheck):
                         HealthCheckError(
                             code="response_error",
                             message=_(
-                                'Received unexpected error response from catalogussen endpoint with service "{service}".'
+                                'Received unexpected error response from catalogussen '
+                                'endpoint with service "{service}".'
                             ).format(service=service.label),
                             severity="error",
                             exc=traceback.format_exc(),
@@ -118,7 +122,6 @@ class CatalogueHealthCheck(HealthCheck):
 
                 data = response.json()
                 if data["count"] >= 1:
-                    catalogue_found = True
                     break
 
                 errors.append(
@@ -130,11 +133,9 @@ class CatalogueHealthCheck(HealthCheck):
                         severity="warning",
                     )
                 )
+        else:
+            return HealthCheckResult(check=self, errors=errors)
 
-        if catalogue_found:
-            return HealthCheckResult(
+        return HealthCheckResult(
                 check=self,
-                success=True,
             )
-
-        return HealthCheckResult(check=self, success=False, errors=errors)

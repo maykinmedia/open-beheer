@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal, NotRequired, TypedDict
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Literal, NotRequired, Sequence, TypedDict
 
 if TYPE_CHECKING:
     from .checks import HealthCheck
@@ -16,16 +16,19 @@ class HealthCheckError:
 @dataclass
 class HealthCheckResult:
     check: "HealthCheck"
-    success: bool
-    errors: list[HealthCheckError] | None = None
+    errors: Sequence[HealthCheckError] = field(default_factory=list)
+
+    @property
+    def success(self) -> bool:
+        return not bool(self.errors)
 
     def serialise(self, with_traceback: bool = False) -> "HealthCheckSerialisedResult":
         result: HealthCheckSerialisedResult = {
-            "check": self.check.get_name(),
+            "check": repr(self.check),
             "success": self.success,
             "errors": [],
         }
-        for error in self.errors or []:
+        for error in self.errors:
             serialised_error: HealthCheckSerialisedError = {
                 "message": error.message,
                 "code": error.code,
