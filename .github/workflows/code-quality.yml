@@ -8,89 +8,19 @@ on:
       - stable/*
     tags:
     paths:
-      - '**.py'
-      - '**.json'
-      - '**.yaml'
-      - '**.in'
+      - "**.py"
+      - "**.json"
+      - "**.yaml"
+      - "**.in"
   pull_request:
     paths:
-      - '**.py'
-      - '**.json'
-      - '**.yaml'
-      - '**.in'
+      - "**.py"
+      - "**.json"
+      - "**.yaml"
+      - "**.in"
   workflow_dispatch:
 
 jobs:
-  isort:
-    name: Check import sorting
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up backend environment
-        uses: maykinmedia/setup-django-backend@v1.3
-        with:
-          python-version: '3.12'
-          setup-node: 'no'
-          working-directory: backend
-      - uses: isort/isort-action@v1.1.0
-        with:
-          requirements-files: requirements/ci.txt
-          sort-paths: 'backend/src backend/docs backend/bin'
-          configuration: '--check-only --diff'
-
-  black:
-    name: Check code formatting with black
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up backend environment
-        uses: maykinmedia/setup-django-backend@v1.3
-        with:
-          python-version: '3.12'
-          setup-node: 'no'
-          working-directory: backend
-      - name: Run black
-        run: black --check src bin ../docs
-        working-directory: backend
-
-  flake8:
-    name: Code style (flake8)
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: backend
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up backend environment
-        uses: maykinmedia/setup-django-backend@v1.3
-        with:
-          python-version: '3.12'
-          setup-node: 'no'
-          working-directory: backend
-      - name: Run flake8
-        id: flake8
-        run: |
-          flake8 src 2>&1 | tee flake8_output.txt
-          result_code=${PIPESTATUS[0]}
-          report="$(cat flake8_output.txt)"
-          report="${report//$'\n'/'%0A'}"  # escape newlines
-          echo "FLAKE8_REPORT=${report}" >> $GITHUB_OUTPUT
-          exit $result_code
-      - name: Emit flake8 flake8 output
-        if: ${{ failure() }}
-        run: |
-          echo "${{ steps.flake8.outputs.FLAKE8_REPORT }}"
-
-          echo 'flake8 found some issues' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          echo '| File | Line | Column | Issue |' >> $GITHUB_STEP_SUMMARY
-          echo '| :--- | ---- | ------ | :---- |' >> $GITHUB_STEP_SUMMARY
-          python ./bin/flake8_summary.py "${{ steps.flake8.outputs.FLAKE8_REPORT }}" >> $GITHUB_STEP_SUMMARY
-
   migrations:
     name: Check for model changes not present in migrations
     runs-on: ubuntu-latest
@@ -107,17 +37,16 @@ jobs:
         ports:
           - 5432:5432
         # Needed because the postgres container does not provide a healthcheck
-        options:
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up backend environment
         uses: maykinmedia/setup-django-backend@v1.3
         with:
-          apt-packages: 'gettext postgresql-client'
-          python-version: '3.12'
-          setup-node: 'no'
+          apt-packages: "gettext postgresql-client"
+          python-version: "3.12"
+          setup-node: "no"
           working-directory: backend
       - name: Run makemigrations to check for missing migrations
         working-directory: backend
@@ -127,8 +56,18 @@ jobs:
             --dry-run
         env:
           DJANGO_SETTINGS_MODULE: "openbeheer.conf.ci"
-          DEBUG: 'true'
+          DEBUG: "true"
           SECRET_KEY: dummy
           DB_USER: postgres
           DB_NAME: postgres
-          DB_PASSWORD: ''
+          DB_PASSWORD: ""
+
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+      - name: Linting
+      - run: ruff check
+      - name: Check formatting
+      - run: ruff format --check

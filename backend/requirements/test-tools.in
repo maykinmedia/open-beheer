@@ -2,13 +2,10 @@
 -r base.txt
 
 # Dependencies only relevant for (unit) testing
-black
 coverage
 django-webtest
 factory-boy
 freezegun
-flake8
-pylint
 pyquery  # integrates with webtest
 requests-mock
 tblib
