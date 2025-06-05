@@ -123,6 +123,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "zgw_consumers",
     "simple_certmanager",
+    "maykin_common",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
@@ -163,7 +164,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "openbeheer.utils.context_processors.settings",
+                "maykin_common.context_processors.settings",
             ],
             "loaders": TEMPLATE_LOADERS,
         },
@@ -401,7 +402,7 @@ ADMIN_INDEX_SHOW_REMAINING_APPS = False
 ADMIN_INDEX_AUTO_CREATE_APP_GROUP = False
 ADMIN_INDEX_SHOW_REMAINING_APPS_TO_SUPERUSERS = True
 ADMIN_INDEX_DISPLAY_DROP_DOWN_MENU_CONDITION_FUNCTION = (
-    "openbeheer.utils.django_two_factor_auth.should_display_dropdown_menu"
+    "maykin_common.django_two_factor_auth.should_display_dropdown_menu"
 )
 
 #
