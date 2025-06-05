@@ -58,7 +58,7 @@ class MsgspecMixin:
 def _add_mixin(render_class: type[BaseRenderer]) -> type[BaseRenderer]:
     """Return a new `render_class`, with `MsgspecMixin` added
 
-    Addapts any DRF Renderer to support the types of data msgspec supports.
+    Adapts any DRF Renderer to support the types of data msgspec supports.
     """
     return type(
         f"Msgspec{render_class.__name__}",
@@ -197,7 +197,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
                 detail=str(e),
                 instance="",
                 status=500,
-                invalidParams=[],
+                invalid_params=[],
             ), 500
 
     @staticmethod

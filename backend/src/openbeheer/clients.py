@@ -11,37 +11,12 @@ from zgw_consumers.models import Service
 
 
 @cache
-def zrc_client() -> APIClient:
-    try:
-        client = build_client(
-            Service.objects.get(api_type=APITypes.zrc),
-        )
-    except Service.DoesNotExist:
-        raise ImproperlyConfigured(__("No ZRC service configured")) from None
-    # passing as arg to build_client doesn't work
-    client.headers["Accept-Crs"] = "EPSG:4326"
-    return client
-
-
-@receiver(post_save, sender=Service)
-def _(sender, instance, **_):
-    if instance.api_type == APITypes.zrc:
-        zrc_client.cache_clear()
-
-
-@receiver(post_delete, sender=Service)
-def _(sender, instance, **_):
-    if instance.api_type == APITypes.zrc:
-        zrc_client.cache_clear()
-
-
-@cache
 def ztc_client() -> APIClient:
     try:
         client = build_client(
             Service.objects.get(api_type=APITypes.ztc),
         )
-    except Service.DoesNotExist:
+    except Service.DoesNotExist:  # type: ignore  abstract difficulties?
         raise ImproperlyConfigured(__("No ZTC service configured")) from None
     # passing as arg to build_client doesn't work
     client.headers["Accept-Crs"] = "EPSG:4326"
@@ -51,10 +26,10 @@ def ztc_client() -> APIClient:
 @receiver(post_save, sender=Service)
 def _(sender, instance, **_):
     if instance.api_type == APITypes.zrc:
-        zrc_client.cache_clear()
+        ztc_client.cache_clear()
 
 
 @receiver(post_delete, sender=Service)
 def _(sender, instance, **_):
     if instance.api_type == APITypes.zrc:
-        zrc_client.cache_clear()
+        ztc_client.cache_clear()

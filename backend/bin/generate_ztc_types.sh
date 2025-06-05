@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ZTC_URL=${ZTC_URL-"http://localhost:8003/catalogi/api/v1/schema/openapi.yaml"}
+ZTC_URL=${ZTC_URL:-"http://localhost:8003/catalogi/api/v1/schema/openapi.yaml"}
 
 PWD=$(pwd)
 BACKEND_ROOT=$(dirname "${0}")/..
@@ -55,11 +55,10 @@ mkdir -p "${TARGET_DIR}"
 datamodel-codegen \
     --input-file-type openapi \
     --url "${ZTC_URL}" \
-    --formatters black isort \
+    --formatters ruff-check ruff-format \
     --target-python-version 3.12 \
     --openapi-scopes schemas paths parameters \
     --output-model-type msgspec.Struct \
-    --additional-imports datetime.date,datetime.datetime \
     --snake-case-field \
     --use-union-operator \
     --enable-version-header \
