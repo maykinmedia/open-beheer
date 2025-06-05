@@ -1,13 +1,24 @@
-from typing import Any, Literal, _GenericAlias  # TODO Fix undesired import
+from typing import Any, Literal, get_origin  # TODO Fix undesired import
 from drf_spectacular.extensions import OpenApiSerializerExtension
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import Direction
 from msgspec import Struct
 from msgspec.json import schema_components
-from drf_spectacular.plumbing import ResolvedComponent
+from drf_spectacular.plumbing import ResolvedComponent, get_class
+import enum
 
+SUPPORTED_MSG_CLASSES = (
+    Struct, enum.StrEnum
+)
 
 class MsgSpecExtension(OpenApiSerializerExtension):
+    @classmethod
+    def _matches(cls, target: Any) -> bool:
+        # For generic types
+        if get_origin(target):
+            return issubclass(get_origin(target), SUPPORTED_MSG_CLASSES)
+        return issubclass(get_class(target), SUPPORTED_MSG_CLASSES)
+
     def map_serializer(
         self, auto_schema: AutoSchema, direction: Direction
     ) -> dict[str, Any]:
@@ -41,13 +52,3 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         # This needs to remain in sync with the name that we
         (out,), components = schema_components((self.target,), ref_template="{name}")
         return out["$ref"]
-
-
-class MsgSpecStructExtension(MsgSpecExtension):
-    target_class = Struct
-    match_subclasses = True
-
-
-class GenericAliasExtension(MsgSpecExtension):
-    target_class = _GenericAlias
-    match_subclasses = True

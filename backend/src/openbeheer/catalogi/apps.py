@@ -7,4 +7,4 @@ class CatalogiConfig(AppConfig):
     verbose_name = _("Catalogi")
 
     def ready(self):
-        from .schema import MsgSpecStructExtension, GenericAliasExtension  # noqa
+        from .schema import MsgSpecExtension  # noqa
