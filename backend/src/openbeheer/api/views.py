@@ -88,7 +88,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
 
     filter_backends = (MsgSpecFilterBackend,)
     """
-    Class attribute used by drf-spectacular to determine which extension to use to 
+    Class attribute used by drf-spectacular to determine which extension to use to
     generate a schema for the query parameters.
     """
 
