@@ -47,6 +47,7 @@ class ZaakType(Struct, kw_only=True):
         tags=["Zaaktypen"],
         summary="Get zaaktypen",
         parameters=[],
+        filters=True,
         description="Retrive zaaktypen from Open Zaak.",
         responses={
             "200": ZGWResponse[ZaakType],
