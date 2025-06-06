@@ -3,8 +3,10 @@ from typing import Mapping
 
 from msgspec import UNSET, Struct, UnsetType, field
 from openbeheer.api.views import ListView
-from openbeheer.types.ztc import Status, VertrouwelijkheidaanduidingEnum
+from openbeheer.types._zgw import ZGWResponse
+from openbeheer.types.ztc import Status, ValidatieFout, VertrouwelijkheidaanduidingEnum
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True):
@@ -40,6 +42,18 @@ class ZaakType(Struct, kw_only=True):
         )
 
 
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Get zaaktypen",
+        parameters=[],
+        description="Retrive zaaktypen from Open Zaak.",
+        responses={
+            "200": ZGWResponse[ZaakType],
+            "400": ValidatieFout,
+        },
+    )
+)
 class ZaakTypeListView(ListView):
     data_type = ZaakType
     query_type = ZaaktypenGetParametersQuery
