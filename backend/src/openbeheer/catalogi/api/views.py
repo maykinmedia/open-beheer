@@ -2,9 +2,8 @@ from django.utils.translation import gettext_lazy as _
 
 from drf_spectacular.utils import extend_schema
 
-from git import TYPE_CHECKING
+from msgspec import convert
 from zgw_consumers.constants import APITypes
-from zgw_consumers.service import pagination_helper
 from zgw_consumers.models import Service
 
 from rest_framework.request import Request
@@ -12,10 +11,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from openbeheer.api.views import MsgspecAPIView
-from openbeheer.clients import ztc_client
+from openbeheer.clients import ztc_client, pagination_helper
 
-if TYPE_CHECKING:
-    from openbeheer.types._open_beheer import OBOption
+from openbeheer.types.ztc import PaginatedCatalogusList
+
+from openbeheer.types._open_beheer import OBOption
 
 
 
@@ -26,10 +26,10 @@ if TYPE_CHECKING:
         "while the label is the name of the service."
     ),
     # responses={
-    #     "200": list[OBOption[str]] # TODO blueprint of msgspec
+    #     "200": list[OBOption[str]] # TODO blueprint of msgspec (Github #50)
     # }
 )
-class ServiceChoicesView(MsgspecAPIView): # TODO rebase on Chris PR
+class ServiceChoicesView(MsgspecAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
@@ -47,33 +47,38 @@ class ServiceChoicesView(MsgspecAPIView): # TODO rebase on Chris PR
         "while the label is the name of the catalogue (if configured) and otherwise the domain field."
     ),
     # responses={
-    #     "200": list[OBOption[str]] # TODO blueprint of msgspec
+    #     "200": list[OBOption[str]] # TODO blueprint of msgspec (Github #50)
     # }
 )
-class CatalogChoicesView(MsgspecAPIView): # TODO rebase on Chris PR
-    permission_classes = [IsAuthenticated]
-
+class CatalogChoicesView(MsgspecAPIView):
     def get(self, request: Request, slug: str) -> Response:
-        client = ztc_client(slug)
+        # TODO for now, we only support one Open Zaak, so the slug
+        # is not used.
+        client = ztc_client()
 
-        response = client.get("/catalogussen")
-        # TODO error handling on OZ unexpected response
+        response = client.get("catalogussen")
+        # TODO error handling on OZ unexpected response (Github #51)
         response.raise_for_status()
 
         results: list[OBOption[str]] = []
-        for page in pagination_helper(
+        for page_data in pagination_helper(
             client,
-            response,
+            response.json(),
         ):
-            # TODO validate response data with msgspec type
-            results += [
-                {
-                    "label": f"{catalogue['naam']} ({catalogue['domein']})"
-                    if catalogue.get("naam")
-                    else catalogue["domein"],
-                    "value": catalogue["url"],
-                }
-                for catalogue in page["results"]
-            ]
+            decoded_page_data = convert(
+                page_data,
+                type=PaginatedCatalogusList,
+            )
+            for catalogue in decoded_page_data.results:
+                label = f"{catalogue.naam} ({catalogue.domein})" if catalogue.naam else catalogue.domein
+                # OZ API specs say that is is not required, but VNG specs say it is.
+                # In practice, it is always present.
+                value = catalogue.url
+                assert value
+
+                results.append(OBOption(
+                    label=label,
+                    value=value
+                ))
 
         return Response(results)
