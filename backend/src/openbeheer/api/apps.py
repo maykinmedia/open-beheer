@@ -7,4 +7,4 @@ class CatalogiConfig(AppConfig):
     verbose_name = _("API")
 
     def ready(self):
-        from .drf_spectacular.schema import MsgSpecExtension  # noqa
+        pass  # noqa

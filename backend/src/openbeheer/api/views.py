@@ -9,6 +9,7 @@ from msgspec.structs import asdict
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
+from openbeheer.api.drf_spectacular.schema import MsgSpecFilterBackend
 from openbeheer.clients import ztc_client
 from openbeheer.types import (
     OBField,
@@ -84,6 +85,12 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
 
     query_type: type[P]
     "Query parameters we accept"
+
+    filter_backends = (MsgSpecFilterBackend,)
+    """
+    Class attribute used by drf-spectacular to determine which extension to use to 
+    generate a schema for the query parameters.
+    """
 
     endpoint_path: str
     "Path part of the ZGW API endpoint url"

@@ -5,7 +5,11 @@ from drf_spectacular.utils import Direction
 from msgspec import Struct
 from msgspec.json import schema_components
 from drf_spectacular.plumbing import ResolvedComponent, get_class
+from drf_spectacular.extensions import OpenApiFilterExtension
 import enum
+
+from openbeheer.types._drf_spectacular import QueryParamSchema
+
 
 SUPPORTED_MSG_CLASSES = (Struct, enum.StrEnum)
 
@@ -53,3 +57,43 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         # This needs to remain in sync with the name that we use in the method :func:`MsgSpecExtension.map_serializer`
         (out,), components = schema_components((self.target,), ref_template="{name}")
         return out["$ref"]
+
+
+class MsgSpecFilterBackend:
+    pass
+
+
+class MsgSpecQueryParamsExtension(OpenApiFilterExtension):
+    target_class = MsgSpecFilterBackend
+    match_subclasses = True
+
+    def get_schema_operation_parameters(
+        self, auto_schema: "AutoSchema", *args, **kwargs
+    ) -> list[dict[str, Any]]:
+        filters = getattr(auto_schema.view, "query_type", None)
+
+        (out,), components = schema_components(
+            (filters,), ref_template="#/components/schemas/{name}"
+        )
+
+        # Extract the component which contains the schema of the "query_type" object
+        component_name = out["$ref"].replace("#/components/schemas/", "")
+        component_schema = components.pop(component_name)
+
+        # Manually construct the schema for the query params
+        results = [
+            QueryParamSchema.from_json_schema(query_name, query_schema)
+            for query_name, query_schema in component_schema["properties"].items()
+        ]
+
+        # Register any additional component needed for the schema of the query parameters
+        for sub_name, sub_schema in components.items():
+            sub_component = ResolvedComponent(
+                name=sub_name,
+                type=ResolvedComponent.SCHEMA,
+                object=sub_name,
+                schema=sub_schema,
+            )
+            auto_schema.registry.register_on_missing(sub_component)
+
+        return results
