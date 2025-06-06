@@ -131,6 +131,7 @@ INSTALLED_APPS = [
     "openbeheer.config",
     "openbeheer.health_checks",
     "openbeheer.catalogi",
+    "openbeheer.services",
 ]
 
 MIDDLEWARE = [
