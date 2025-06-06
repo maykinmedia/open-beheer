@@ -20,6 +20,7 @@ from openbeheer.types._open_beheer import OBOption
 
 
 @extend_schema(
+    tags=["Catalogi"],
     summary=_("Get Open Zaak choices"),
     description=_(
         "Get the available Open Zaak catalogi instances. The value is the slug of the configured service, "
@@ -35,11 +36,17 @@ class ServiceChoicesView(MsgspecAPIView):
     def get(self, request: Request) -> Response:
         services = Service.objects.filter(api_type=APITypes.ztc)
 
-        data = [{"label": service.label, "value": service.slug} for service in services]
+        data = [
+            OBOption(
+                label=service.label,
+                value=service.slug
+            ) for service in services
+        ]
         return Response(data)
 
 
 @extend_schema(
+    tags=["Catalogi"],
     summary=_("Get catalogue choices"),
     description=_(
         "Retrieve the catalogues available in an Open Zaak instance. "
