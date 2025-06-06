@@ -3,20 +3,13 @@ from rest_framework.reverse import reverse
 from rest_framework import status
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
-from vcr.unittest import VCRMixin
 
 from openbeheer.accounts.tests.factories import UserFactory
 
-class CatalogiChoicesView(VCRMixin, APITestCase):
+class CatalogiChoicesView(APITestCase):
     def test_not_authenticated(self):
-        ServiceFactory.create(
-            api_type=APITypes.ztc,
-            api_root="http://localhost:8003/catalogi/api/v1",
-            client_id="test-vcr",
-            secret="test-vcr",
-            slug="tralala-service"
-        )
-        response = self.client.get(reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"}))
+
+        response = self.client.get(reverse("api:services:choices"))
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -27,16 +20,17 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
             api_root="http://localhost:8003/catalogi/api/v1",
             client_id="test-vcr",
             secret="test-vcr",
-            slug="tralala-service"
+            slug="tralala-service",
+            label="Test Tralala"
         )
 
         self.client.force_login(user)
-        response = self.client.get(reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"}))
+        response = self.client.get(reverse("api:services:choices"))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = response.json()
 
         self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]["label"], "Test Catalogue (VAVAV)")
-        self.assertEqual(data[0]["value"], "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77")
+        self.assertEqual(data[0]["label"], "Test Tralala")
+        self.assertEqual(data[0]["value"], "tralala-service")
