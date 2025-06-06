@@ -25,7 +25,7 @@ class OBOption[T](Struct, frozen=True):
     "The label, value pair for when a `T` has to be presented in some selection"
 
     label: str
-    value: T | object
+    value: T
 
     @classmethod
     def from_enum(cls, enum: enum.EnumType) -> list[Self]:
