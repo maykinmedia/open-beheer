@@ -17,6 +17,8 @@ ape-pie==0.2.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   zgw-consumers
+argcomplete==3.6.2
+    # via datamodel-code-generator
 asgiref==3.8.1
     # via
     #   -c requirements/ci.txt
@@ -46,6 +48,8 @@ beautifulsoup4==4.13.3
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   webtest
+black==25.1.0
+    # via datamodel-code-generator
 boltons==25.0.0
     # via
     #   -c requirements/ci.txt
@@ -75,11 +79,6 @@ cffi==1.17.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   cryptography
-chardet==5.2.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   prance
 charset-normalizer==3.4.1
     # via
     #   -c requirements/ci.txt
@@ -87,7 +86,9 @@ charset-normalizer==3.4.1
     #   requests
 click==8.1.8
     # via
+    #   black
     #   bump-my-version
+    #   httpx
     #   rich-click
 coverage==7.8.0
     # via
@@ -107,7 +108,9 @@ cssselect==1.3.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   pyquery
-django==5.2
+datamodel-code-generator==0.30.1
+    # via -r requirements/dev.in
+django==5.2.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -283,6 +286,8 @@ furl==2.1.4
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   ape-pie
+genson==1.3.0
+    # via datamodel-code-generator
 gitdb==4.0.12
     # via gitpython
 gitpython==3.1.44
@@ -297,7 +302,10 @@ h11==0.14.0
 httpcore==1.0.7
     # via httpx
 httpx==0.28.1
-    # via bump-my-version
+    # via
+    #   -r requirements/dev.in
+    #   bump-my-version
+    #   datamodel-code-generator
 idna==3.10
     # via
     #   -c requirements/ci.txt
@@ -311,6 +319,8 @@ imagesize==1.4.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   sphinx
+inflect==7.5.0
+    # via datamodel-code-generator
 inflection==0.5.1
     # via
     #   -c requirements/ci.txt
@@ -321,10 +331,13 @@ iniconfig==2.1.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   pytest
+isort==6.0.1
+    # via datamodel-code-generator
 jinja2==3.1.6
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   datamodel-code-generator
     #   sphinx
 josepy==2.0.0
     # via
@@ -336,24 +349,11 @@ jsonschema==4.23.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   drf-spectacular
-    #   openapi-schema-validator
-    #   openapi-spec-validator
-jsonschema-path==0.3.4
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-spec-validator
 jsonschema-specifications==2024.10.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   jsonschema
-    #   openapi-schema-validator
-lazy-object-proxy==1.11.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-spec-validator
 lxml==5.3.1
     # via
     #   -c requirements/ci.txt
@@ -376,6 +376,8 @@ maykin-common==0.2.0
     #   -r requirements/ci.txt
 mdurl==0.1.2
     # via markdown-it-py
+more-itertools==10.7.0
+    # via inflect
 mozilla-django-oidc==4.0.1
     # via
     #   -c requirements/ci.txt
@@ -385,25 +387,17 @@ mozilla-django-oidc-db==0.22.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+msgspec==0.19.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
 multidict==6.4.4
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   yarl
-openapi-schema-validator==0.6.3
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-spec-validator
-openapi-spec-validator==0.7.1
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi3-parser
-openapi3-parser==1.1.21
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
+mypy-extensions==1.1.0
+    # via black
 orderedmultidict==1.0.1
     # via
     #   -c requirements/ci.txt
@@ -413,14 +407,12 @@ packaging==25.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-    #   prance
+    #   black
+    #   datamodel-code-generator
     #   pytest
     #   sphinx
-pathable==0.4.4
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   jsonschema-path
+pathspec==0.12.1
+    # via black
 phonenumberslite==8.13.55
     # via
     #   -c requirements/ci.txt
@@ -430,6 +422,8 @@ pillow==11.1.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+platformdirs==4.3.8
+    # via black
 pluggy==1.5.0
     # via
     #   -c requirements/ci.txt
@@ -440,18 +434,8 @@ polib==1.2.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-rosetta
-prance==25.4.8.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi3-parser
 prompt-toolkit==3.0.50
     # via questionary
-propcache==0.3.1
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   yarl
 psycopg2==2.9.10
     # via
     #   -c requirements/ci.txt
@@ -466,6 +450,7 @@ pydantic==2.11.3
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   bump-my-version
+    #   datamodel-code-generator
     #   django-setup-configuration
     #   pydantic-settings
 pydantic-core==2.33.1
@@ -483,6 +468,7 @@ pygments==2.19.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   httpx
     #   rich
     #   sphinx
 pyjwt==2.10.1
@@ -532,8 +518,8 @@ pyyaml==6.0.2
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   datamodel-code-generator
     #   drf-spectacular
-    #   jsonschema-path
     #   pydantic-settings
     #   vcrpy
 qrcode==7.4.2
@@ -553,7 +539,6 @@ referencing==0.36.2
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   jsonschema
-    #   jsonschema-path
     #   jsonschema-specifications
 requests==2.32.3
     # via
@@ -561,9 +546,7 @@ requests==2.32.3
     #   -r requirements/ci.txt
     #   ape-pie
     #   django-rosetta
-    #   jsonschema-path
     #   mozilla-django-oidc
-    #   prance
     #   requests-mock
     #   sphinx
     #   zgw-consumers
@@ -571,14 +554,10 @@ requests-mock==1.12.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-rfc3339-validator==0.1.4
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   openapi-schema-validator
-rich==14.0.0
+rich==13.9.4
     # via
     #   bump-my-version
+    #   httpx
     #   rich-click
 rich-click==1.8.8
     # via bump-my-version
@@ -598,7 +577,6 @@ ruamel-yaml==0.18.10
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-setup-configuration
-    #   prance
 ruamel-yaml-clib==0.2.12
     # via
     #   -c requirements/ci.txt
@@ -617,7 +595,6 @@ six==1.17.0
     #   furl
     #   orderedmultidict
     #   python-dateutil
-    #   rfc3339-validator
 smmap==5.0.2
     # via gitdb
 sniffio==1.3.1
@@ -691,6 +668,8 @@ tblib==3.1.0
     #   -r requirements/ci.txt
 tomlkit==0.13.2
     # via bump-my-version
+typeguard==4.4.2
+    # via inflect
 typing-extensions==4.13.1
     # via
     #   -c requirements/ci.txt
@@ -704,6 +683,7 @@ typing-extensions==4.13.1
     #   qrcode
     #   referencing
     #   rich-click
+    #   typeguard
     #   typing-inspection
     #   zgw-consumers
 typing-inspection==0.4.0
