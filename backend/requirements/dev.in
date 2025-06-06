@@ -18,3 +18,7 @@ sphinx_rtd_theme
 
 # API libraries
 django-cors-headers
+
+# openapi type generator
+httpx[cli]
+datamodel-code-generator[http]
