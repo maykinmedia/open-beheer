@@ -5,16 +5,10 @@ from drf_spectacular.views import (
     SpectacularJSONAPIView,
     SpectacularRedocView,
 )
-from rest_framework import routers
 
 from openbeheer.accounts.api.views import WhoAmIView
-<<<<<<< HEAD
 from openbeheer.health_checks.api.views import HealthChecksView
-=======
->>>>>>> 55e3144 (:fire: [#36] revert: remove dynamic viewsets version)
 from openbeheer.zaaktype.api.views import ZaakTypeListView
-
-router = routers.DefaultRouter()
 
 app_name = "api"
 
@@ -43,7 +37,14 @@ urlpatterns = [
         "v1/auth/",
         include("openbeheer.api.authentication.urls", namespace="authentication"),
     ),
-    # Actual endpoints
+    # ZTC endpoints
+    path(
+      "v1/service/<slug:slug>/zaaktypen/",  ZaakTypeListView.as_view(), name="zaaktype-list"
+    ),
+    path(
+      "v1/service/<slug:slug>/catalogi/",  include("openbeheer.catalogi.urls", namespace="catalogi")
+    ),
+    # Other endpoints
     path(
         "v1/",
         include(
@@ -52,8 +53,6 @@ urlpatterns = [
                 path(
                     "health-checks/", HealthChecksView.as_view(), name="health-checks"
                 ),
-                path("zaaktypen/", ZaakTypeListView.as_view(), name="zaaktype-list"),
-                path("", include(router.urls)),
             ]
         ),
     ),
