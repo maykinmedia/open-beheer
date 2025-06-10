@@ -2,7 +2,6 @@ from typing import Mapping
 from msgspec import Struct
 
 
-
 class ZaaktypeVersionSummary(Struct):
     """Summary of the different version of a Zaaktype.
 
