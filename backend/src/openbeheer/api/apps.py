@@ -7,4 +7,7 @@ class ApiAppConfig(AppConfig):
     verbose_name = _("API")
 
     def ready(self):
-        from .drf_spectacular.schema import MsgSpecFilterBackend, MsgSpecQueryParamsExtension # noqa: F401
+        from .drf_spectacular.schema import (
+            MsgSpecFilterBackend,  # noqa: F401
+            MsgSpecQueryParamsExtension,  # noqa: F401
+        )
