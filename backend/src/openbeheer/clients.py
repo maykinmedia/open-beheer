@@ -4,7 +4,6 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as __
-
 from ape_pie import APIClient
 from zgw_consumers.client import build_client
 from zgw_consumers.constants import APITypes
