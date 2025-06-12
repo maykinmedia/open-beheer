@@ -4,6 +4,9 @@ from types import NoneType, UnionType
 from typing import Self, Sequence
 from msgspec import Struct, UnsetType
 import enum
+from typing import Mapping
+import msgspec
+from django.utils.functional import Promise
 
 
 class OBPagedQueryParams(Struct):
@@ -129,3 +132,39 @@ class OBList[T](Struct):
 
     results: Sequence[T]
     'The "rows" in the list. All `fields` MUST be an attribute on each `T`'
+
+
+# TODO: think how we should structure types, also thinking about OBField
+class OBDetailField(Struct):
+    label: str
+    value: str
+    description: str = ""
+    required: bool = False
+
+
+class DataGroup(Struct):
+    label: str | Promise
+    fields: list["str | DataGroup"]
+
+    def __post_init__(self):
+        # TODO: How to better handle translatable strings?
+        # msgspec.to_builtins fails on proxy strings
+        self.label = str(self.label)
+
+
+class VersionSummary(Struct):
+    """Summary of the different version of a ZTC resource.
+
+    # TODO: what do we need to show per version?
+    """
+
+    uuid: str
+    begin_geldigheid: str
+    einde_geldigheid: str | None
+    concept: bool | None
+
+
+class DetailResponse(Struct):
+    item_data: Mapping[str, OBDetailField]
+    data_groups: list[DataGroup]
+    versions: list[VersionSummary] | UnsetType = msgspec.UNSET

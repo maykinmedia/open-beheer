@@ -1,10 +1,23 @@
 import datetime
 from typing import Mapping
-
+from msgspec.json import decode
+from msgspec import convert
 from msgspec import UNSET, Struct, UnsetType, field
-from openbeheer.api.views import ListView
-from openbeheer.types.ztc import Status, VertrouwelijkheidaanduidingEnum
+from msgspec.structs import fields
+from openbeheer.api.views import DetailView, ListView
+from openbeheer.clients import pagination_helper, ztc_client
+from openbeheer.types._open_beheer import DataGroup, VersionSummary
+from openbeheer.types.ztc import (
+    PaginatedZaakTypeList,
+    Status,
+    ValidatieFout,
+    VertrouwelijkheidaanduidingEnum,
+    ZaakType,
+)
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
+from furl import furl
+from openbeheer.zaaktype.constants import ZAAKTYPE_DATA_GROUPS
+from openbeheer.types._open_beheer import OBDetailField
 
 
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True):
@@ -16,7 +29,7 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True):
     trefwoorden: list[str] = []
 
 
-class ZaakType(Struct, kw_only=True):
+class ZaakTypeSummary(Struct, kw_only=True):
     # Identificate
     # Omschrijving
     # Actief ja/nee
@@ -41,7 +54,7 @@ class ZaakType(Struct, kw_only=True):
 
 
 class ZaakTypeListView(ListView):
-    data_type = ZaakType
+    data_type = ZaakTypeSummary
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
 
@@ -58,3 +71,72 @@ class ZaakTypeListView(ListView):
                 )
             },
         )
+
+
+class ZaakTypeDetailView(DetailView[ZaakType]):
+    data_type = ZaakType
+    endpoint_path = "zaaktypen/{uuid}"
+    has_versions = True
+
+    def get_item_versions(
+        self, slug: str, data: ZaakType
+    ) -> tuple[list[ZaakType] | ValidatieFout, int]:
+        # TODO: Question: should we keep the versions "paginated"? (I don't think so)
+        with ztc_client() as client:
+            response = client.get(
+                "zaaktypen",
+                params={"identificatie": data.identificatie},
+            )
+
+        if not response.ok:
+            error = decode(response.content, type=ValidatieFout)
+            return error, response.status_code
+
+        results: list[ZaakType] = []
+        for page_data in pagination_helper(
+            client,
+            response.json(),
+        ):
+            decoded_page_data = convert(
+                page_data,
+                type=PaginatedZaakTypeList,
+            )
+            results.extend(decoded_page_data.results)
+
+        return results, response.status_code
+
+    def format_item(self, data: ZaakType) -> Mapping[str, OBDetailField]:
+        item_data = {}
+        for defined_field in fields(ZaakType):
+            extra_json_schema = getattr(defined_field.type, "extra_json_schema", {})
+
+            item_data[defined_field.name] = OBDetailField(
+                label=defined_field.name.replace(
+                    "_", " "
+                ).capitalize(),  # TODO other way of getting label?
+                value=getattr(data, defined_field.name, defined_field.default),
+                description=extra_json_schema.get("description", ""),
+                required=defined_field.required,
+            )
+
+        return item_data
+
+    def format_version(self, data: ZaakType) -> VersionSummary:
+        assert (
+            data.url
+        )  # The specs say that it is optional, but in practice it's always present
+        zaaktype_url = furl(data.url)
+        uuid = zaaktype_url.path.segments[-1]
+
+        return VersionSummary(
+            uuid=uuid,
+            begin_geldigheid=data.begin_geldigheid,
+            einde_geldigheid=data.einde_geldigheid,
+            concept=data.concept,
+        )
+
+    def get_display_groups(self) -> list[DataGroup]:
+        return [
+            ZAAKTYPE_DATA_GROUPS["overview"],
+            ZAAKTYPE_DATA_GROUPS["general"],
+        ]
