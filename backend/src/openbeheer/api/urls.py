@@ -38,14 +38,15 @@ urlpatterns = [
         include("openbeheer.api.authentication.urls", namespace="authentication"),
     ),
     # ZTC endpoints
+    path("v1/service/", include("openbeheer.services.urls", namespace="services")),
     path(
-      "v1/service/",  include("openbeheer.services.urls", namespace="services")
+        "v1/service/<slug:slug>/zaaktypen/",
+        ZaakTypeListView.as_view(),
+        name="zaaktype-list",
     ),
     path(
-      "v1/service/<slug:slug>/zaaktypen/",  ZaakTypeListView.as_view(), name="zaaktype-list"
-    ),
-    path(
-      "v1/service/<slug:slug>/catalogi/",  include("openbeheer.catalogi.urls", namespace="catalogi")
+        "v1/service/<slug:slug>/catalogi/",
+        include("openbeheer.catalogi.urls", namespace="catalogi"),
     ),
     # Other endpoints
     path(

@@ -7,6 +7,7 @@ from vcr.unittest import VCRMixin
 
 from openbeheer.accounts.tests.factories import UserFactory
 
+
 class CatalogiChoicesView(VCRMixin, APITestCase):
     def test_not_authenticated(self):
         ServiceFactory.create(
@@ -14,9 +15,11 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
             api_root="http://localhost:8003/catalogi/api/v1",
             client_id="test-vcr",
             secret="test-vcr",
-            slug="tralala-service"
+            slug="tralala-service",
         )
-        response = self.client.get(reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"}))
+        response = self.client.get(
+            reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"})
+        )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -27,11 +30,13 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
             api_root="http://localhost:8003/catalogi/api/v1",
             client_id="test-vcr",
             secret="test-vcr",
-            slug="tralala-service"
+            slug="tralala-service",
         )
 
         self.client.force_login(user)
-        response = self.client.get(reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"}))
+        response = self.client.get(
+            reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"})
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -39,4 +44,7 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
 
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["label"], "Test Catalogue (VAVAV)")
-        self.assertEqual(data[0]["value"], "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77")
+        self.assertEqual(
+            data[0]["value"],
+            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+        )

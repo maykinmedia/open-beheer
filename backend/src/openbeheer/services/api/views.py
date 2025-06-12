@@ -14,7 +14,6 @@ from openbeheer.api.views import MsgspecAPIView
 from openbeheer.types._open_beheer import OBOption
 
 
-
 @extend_schema(
     tags=["Services"],
     summary=_("Get Open Zaak choices"),
@@ -33,10 +32,6 @@ class ServiceChoicesView(MsgspecAPIView):
         services = Service.objects.filter(api_type=APITypes.ztc)
 
         data = [
-            OBOption(
-                label=service.label,
-                value=service.slug
-            ) for service in services
+            OBOption(label=service.label, value=service.slug) for service in services
         ]
         return Response(data)
-

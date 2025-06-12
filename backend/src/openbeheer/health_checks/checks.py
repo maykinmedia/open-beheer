@@ -13,6 +13,7 @@ from zgw_consumers.models import Service
 
 from .types import HealthCheckError, HealthCheckResult
 
+
 class HealthCheck(ABC):
     human_name: Union[str, Promise]
 
@@ -49,9 +50,8 @@ class ServiceHealthCheck(HealthCheck):
 
         for service in Service.objects.all():
             service_connection_result = service.connection_check
-            if (
-                service_connection_result is None
-                or (service_connection_result and not 200 <= service_connection_result < 300)
+            if service_connection_result is None or (
+                service_connection_result and not 200 <= service_connection_result < 300
             ):
                 errors.append(
                     HealthCheckError(
@@ -111,7 +111,7 @@ class CatalogueHealthCheck(HealthCheck):
                         HealthCheckError(
                             code="response_error",
                             message=_(
-                                'Received unexpected error response from catalogussen '
+                                "Received unexpected error response from catalogussen "
                                 'endpoint with service "{service}".'
                             ).format(service=service.label),
                             severity="error",
@@ -134,6 +134,4 @@ class CatalogueHealthCheck(HealthCheck):
                     )
                 )
 
-        return HealthCheckResult(
-                check=self, errors=errors
-            )
+        return HealthCheckResult(check=self, errors=errors)

@@ -6,9 +6,9 @@ from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 
+
 class CatalogiChoicesView(APITestCase):
     def test_not_authenticated(self):
-
         response = self.client.get(reverse("api:services:choices"))
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -21,7 +21,7 @@ class CatalogiChoicesView(APITestCase):
             client_id="test-vcr",
             secret="test-vcr",
             slug="tralala-service",
-            label="Test Tralala"
+            label="Test Tralala",
         )
 
         self.client.force_login(user)

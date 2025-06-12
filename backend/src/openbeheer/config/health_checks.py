@@ -23,7 +23,5 @@ class APIConfigHealthCheck(HealthCheck):
                 )
             )
 
-        result = HealthCheckResult(
-            check=self, errors=errors
-        )
+        result = HealthCheckResult(check=self, errors=errors)
         return result

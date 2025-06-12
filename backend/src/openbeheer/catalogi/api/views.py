@@ -18,7 +18,6 @@ from openbeheer.types.ztc import PaginatedCatalogusList
 from openbeheer.types._open_beheer import OBOption
 
 
-
 @extend_schema(
     tags=["Catalogi"],
     summary=_("Get Open Zaak choices"),
@@ -37,10 +36,7 @@ class ServiceChoicesView(MsgspecAPIView):
         services = Service.objects.filter(api_type=APITypes.ztc)
 
         data = [
-            OBOption(
-                label=service.label,
-                value=service.slug
-            ) for service in services
+            OBOption(label=service.label, value=service.slug) for service in services
         ]
         return Response(data)
 
@@ -77,15 +73,16 @@ class CatalogChoicesView(MsgspecAPIView):
                 type=PaginatedCatalogusList,
             )
             for catalogue in decoded_page_data.results:
-                label = f"{catalogue.naam} ({catalogue.domein})" if catalogue.naam else catalogue.domein
+                label = (
+                    f"{catalogue.naam} ({catalogue.domein})"
+                    if catalogue.naam
+                    else catalogue.domein
+                )
                 # OZ API specs say that is is not required, but VNG specs say it is.
                 # In practice, it is always present.
                 value = catalogue.url
                 assert value
 
-                results.append(OBOption(
-                    label=label,
-                    value=value
-                ))
+                results.append(OBOption(label=label, value=value))
 
         return Response(results)
