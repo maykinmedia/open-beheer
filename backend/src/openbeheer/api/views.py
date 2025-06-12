@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from enum import EnumType
 from types import UnionType
 from typing import Iterable, Mapping, Protocol, Sequence
@@ -5,6 +6,7 @@ from typing import Iterable, Mapping, Protocol, Sequence
 from ape_pie import APIClient
 from furl import furl
 from msgspec import ValidationError, convert, to_builtins
+import msgspec
 from msgspec.json import Encoder, decode
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
@@ -19,6 +21,12 @@ from openbeheer.types import (
     ZGWResponse,
 )
 from openbeheer.types import OBOption, as_ob_fieldtype
+from openbeheer.types._open_beheer import (
+    DataGroup,
+    DetailResponse,
+    OBDetailField,
+    VersionSummary,
+)
 from openbeheer.types.ztc import ValidatieFout
 from typing_extensions import get_annotations
 
@@ -255,3 +263,79 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
             ),
             results=data.results,
         )
+
+
+class DetailView[T](MsgspecAPIView, ABC):
+    data_type: type[T]
+    has_versions: bool
+    endpoint_path: str
+
+    def get_item_data(self, slug: str, uuid: str) -> tuple[T | ValidatieFout, int]:
+        with ztc_client() as client:
+            response = client.get(
+                self.endpoint_path.format(uuid=uuid),
+            )
+
+        if not response.ok:
+            # error = decode(response.content, type=ValidatieFout) # TODO: the OZ 404 response gives invalid JSON back
+            return ValidatieFout(
+                code="",
+                title="",
+                detail="",
+                instance="",
+                status=response.status_code,
+                invalid_params=[],
+            ), response.status_code
+
+        content = response.content
+        try:
+            return decode(
+                content,
+                type=self.data_type,
+                strict=False,
+            ), response.status_code
+        except ValidationError as e:
+            return ValidatieFout(
+                code="Bad response",
+                title="Server returned out of spec response",
+                detail=str(e),
+                instance="",
+                status=500,
+                invalid_params=[],
+            ), 500
+
+    def get(self, request: Request, slug: str, uuid: str, *args, **kwargs) -> Response:
+        data, status_code = self.get_item_data(slug, uuid)
+
+        if isinstance(data, ValidatieFout):
+            return Response(data, status=status_code)
+
+        versions = []
+        if self.has_versions:
+            versions, status_code = self.get_item_versions(slug, data)
+
+            if isinstance(versions, ValidatieFout):
+                return Response(versions, status=status_code)
+
+        response_data = DetailResponse(
+            versions=[self.format_version(version) for version in versions]
+            if self.has_versions
+            else msgspec.UNSET,
+            item_data=self.format_item(data),
+            data_groups=self.get_display_groups(),
+        )
+        return Response(response_data)
+
+    @abstractmethod
+    def get_item_versions(
+        self, slug: str, data: T
+    ) -> tuple[list[T] | ValidatieFout, int]: ...
+
+    @abstractmethod
+    def format_item(self, data: T) -> Mapping[str, OBDetailField]: ...
+
+    @abstractmethod
+    def format_version(self, data: T) -> VersionSummary: ...
+
+    @abstractmethod
+    def get_display_groups(self) -> list[DataGroup]: ...
