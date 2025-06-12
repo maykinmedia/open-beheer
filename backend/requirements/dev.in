@@ -22,3 +22,8 @@ django-cors-headers
 # openapi type generator
 httpx[cli]
 datamodel-code-generator[http]
+
+# CVE pins
+# These are sub-dependencies and can be completely removed when they have no
+# "via" anymore in the .txt
+h11>=0.16.0  # CVE-2025-43859

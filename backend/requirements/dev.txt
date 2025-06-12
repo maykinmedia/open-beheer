@@ -110,7 +110,7 @@ cssselect==1.3.0
     #   pyquery
 datamodel-code-generator==0.30.1
     # via -r requirements/dev.in
-django==5.2.1
+django==5.2.3
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -297,9 +297,11 @@ glom==24.11.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   mozilla-django-oidc-db
-h11==0.14.0
-    # via httpcore
-httpcore==1.0.7
+h11==0.16.0
+    # via
+    #   -r requirements/dev.in
+    #   httpcore
+httpcore==1.0.9
     # via httpx
 httpx==0.28.1
     # via
@@ -354,6 +356,11 @@ jsonschema-specifications==2024.10.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   jsonschema
+legacy-cgi==2.6.3
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   webob
 lxml==5.3.1
     # via
     #   -c requirements/ci.txt
@@ -436,6 +443,11 @@ polib==1.2.0
     #   django-rosetta
 prompt-toolkit==3.0.50
     # via questionary
+propcache==0.3.2
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   yarl
 psycopg2==2.9.10
     # via
     #   -c requirements/ci.txt
@@ -540,7 +552,7 @@ referencing==0.36.2
     #   -r requirements/ci.txt
     #   jsonschema
     #   jsonschema-specifications
-requests==2.32.3
+requests==2.32.4
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -577,11 +589,6 @@ ruamel-yaml==0.18.10
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-setup-configuration
-ruamel-yaml-clib==0.2.12
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   ruamel-yaml
 ruff==0.11.12
     # via -r requirements/dev.in
 sentry-sdk==2.25.1
@@ -674,14 +681,11 @@ typing-extensions==4.13.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-    #   anyio
     #   beautifulsoup4
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
-    #   pyopenssl
     #   qrcode
-    #   referencing
     #   rich-click
     #   typeguard
     #   typing-inspection
