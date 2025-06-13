@@ -19,7 +19,7 @@ export async function login(
   password: string,
   signal?: AbortSignal,
 ) {
-  return request(
+  return request<void>(
     "POST",
     "/auth/login/",
     undefined,
@@ -36,7 +36,7 @@ export async function login(
  * API call to get the current logged-in user.
  */
 export async function whoAmI(signal?: AbortSignal) {
-  const response = await request(
+  return await request<User>(
     "GET",
     "/whoami/",
     undefined,
@@ -44,15 +44,13 @@ export async function whoAmI(signal?: AbortSignal) {
     undefined,
     signal,
   );
-  const promise: Promise<User> = response.json();
-  return promise;
 }
 
 /**
  * API call for logout.
  */
 export async function logout(signal?: AbortSignal) {
-  return request(
+  return request<void>(
     "POST",
     "/auth/logout/",
     undefined,

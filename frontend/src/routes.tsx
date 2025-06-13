@@ -1,4 +1,4 @@
-import { Navigate, RouteObject } from "react-router";
+import { Navigate, Outlet, RouteObject } from "react-router";
 import App from "~/App.tsx";
 import {
   CatalogiPage,
@@ -25,30 +25,36 @@ export const routes: RouteObject[] = [
     element: <App />,
     children: [
       {
-        id: "index",
-        path: "/",
-        element: <Navigate to="/catalogi" replace />,
+        index: true,
+        element: <Navigate to="/catalogus" replace />,
       },
       {
-        id: "catalogi",
-        path: "catalogi",
+        id: "catalogus",
+        path: "catalogus",
         element: <CatalogiPage />,
         loader: catalogiLoader,
         action: catalogiAction,
         children: [
           {
-            id: "zaaktypen",
-            path: "zaaktypen",
-            element: <ZaaktypenPage />,
-            loader: zaaktypenLoader,
-            action: zaaktypenAction,
+            id: "catalogus-selected",
+            path: ":catalogusId",
+            element: <Outlet />,
             children: [
               {
-                id: "zaaktype",
-                path: ":uuid",
-                element: <ZaaktypePage />,
-                loader: zaaktypeLoader,
-                action: zaaktypeAction,
+                id: "zaaktypen",
+                path: "zaaktypen",
+                element: <ZaaktypenPage />,
+                loader: zaaktypenLoader,
+                action: zaaktypenAction,
+                children: [
+                  {
+                    id: "zaaktype",
+                    path: ":zaaktypeId",
+                    element: <ZaaktypePage />,
+                    loader: zaaktypeLoader,
+                    action: zaaktypeAction,
+                  },
+                ],
               },
             ],
           },

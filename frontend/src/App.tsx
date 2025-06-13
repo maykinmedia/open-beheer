@@ -6,6 +6,7 @@ import {
   Hr,
   Logo,
   Outline,
+  Select,
   ucFirst,
 } from "@maykin-ui/admin-ui";
 // @ts-expect-error - no ts modules
@@ -17,15 +18,20 @@ import {
   useLocation,
   useMatches,
   useNavigate,
+  useParams,
 } from "react-router";
 import { User, whoAmI } from "~/api";
 import { Profile } from "~/components/Profile/Profile.tsx";
 import { useChildRoutes, useCurrentMatch } from "~/hooks";
+import { useCatalogi } from "~/hooks/useCatalogi.ts";
+import { useService } from "~/hooks/useService.ts";
 
 import "./main.css";
 
 /** Route id to show children for in the sidebar. */
-const SIDEBAR_INDEX = "catalogi";
+const SIDEBAR_INDEX = "catalogus-selected";
+/** Paramater name for the catalogus id in the URL. */
+const CATALOGUS_PARAM = "catalogusId";
 
 /**
  * This component serves as the entry point for the React app and renders the main UI structure.
@@ -33,9 +39,14 @@ const SIDEBAR_INDEX = "catalogi";
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const params = useParams();
   const matches = useMatches();
   const currentMatch = useCurrentMatch();
   const childRoutes = useChildRoutes(SIDEBAR_INDEX);
+  const { service } = useService();
+  const { catalogiChoices } = useCatalogi(service);
+  const selectedCatalogi = params[CATALOGUS_PARAM] || null;
+
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -102,7 +113,6 @@ function App() {
     if (hideUi || !childRoutes.length) {
       return [];
     }
-
     const items = childRoutes
       .filter((route) => route.path)
       .map(({ path, id }: RouteObject): ButtonProps => {
@@ -110,6 +120,7 @@ function App() {
           active: Boolean(id && matches.map((m) => m.id).includes(id)),
           align: "start",
           children: ucFirst(path?.split("/").pop()?.trim() || ""),
+          disabled: !selectedCatalogi,
           onClick: () => {
             navigate("/catalogi/" + path);
           },
@@ -118,9 +129,19 @@ function App() {
     return [
       <H2 key="product-name">Open Beheer</H2>,
       <Hr key="hr" size="xxl" />,
+      <Select
+        key="catalogi-select"
+        disabled={catalogiChoices.length === 0}
+        options={catalogiChoices}
+        placeholder="Selecteer catalogus"
+        value={selectedCatalogi}
+        onChange={(e) => {
+          navigate(`catalogus/${e.target.value}/zaaktypen`);
+        }}
+      />,
       ...items,
     ];
-  }, [primaryNavigationItems]);
+  }, [primaryNavigationItems, catalogiChoices]);
 
   return (
     <BaseTemplate

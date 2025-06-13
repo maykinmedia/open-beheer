@@ -17,14 +17,14 @@ export const API_BASE_URL = `${API_URL}${API_PATH}`;
  * @param headers - headers to send with the request
  * @param signal - optional abort signal to cancel the request
  */
-export async function request(
+export async function request<T>(
   method: "DELETE" | "GET" | "PATCH" | "POST" | "PUT",
   endpoint: string,
   params?: URLSearchParams | Record<string, string | number | undefined>,
   data?: Record<string, unknown>,
   headers?: Record<string, string>,
   signal?: AbortSignal,
-) {
+): Promise<T> {
   // Filter undefined params.
   let _params = params;
   if (params && !(params instanceof URLSearchParams)) {
@@ -49,13 +49,19 @@ export async function request(
       "X-CSRFToken": csrfToken || "",
       ...headers,
     },
-    method: method,
-    signal: signal,
+    method,
+    signal,
   });
 
-  if (response.ok) {
-    return response;
-  } else {
+  if (!response.ok) {
     throw response;
+  }
+
+  const contentType = response.headers.get("Content-Type") || "";
+  if (contentType.includes("application/json")) {
+    return (await response.json()) as T;
+  } else {
+    // in case isf expected to return nothing, the caller should use `T = void`
+    return undefined as T;
   }
 }

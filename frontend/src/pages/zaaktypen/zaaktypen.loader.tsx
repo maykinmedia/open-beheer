@@ -18,10 +18,11 @@ export const zaaktypenLoader = loginRequired(
   async (
     loaderFunctionArgs: LoaderFunctionArgs,
   ): Promise<ZaaktypenLoaderData> => {
-    const url = new URL(loaderFunctionArgs.request.url);
-    const params = url.searchParams;
-    const response = await request("GET", "/catalogi/zaaktypen", params);
-    const listResponse: ListResponse<ZaakType> = await response.json();
-    return { ...listResponse, fieldsets: ZAAKTYPE_FIELDSETS };
+    const { params } = loaderFunctionArgs;
+    const response = await request<ListResponse<ZaakType>>(
+      "GET",
+      `/service/${params.catalogusId}/zaaktypen`,
+    );
+    return { ...response, fieldsets: ZAAKTYPE_FIELDSETS };
   },
 );

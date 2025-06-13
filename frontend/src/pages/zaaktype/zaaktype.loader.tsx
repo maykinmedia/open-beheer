@@ -19,14 +19,13 @@ export const zaaktypeLoader = loginRequired(
     loaderFunctionArgs: LoaderFunctionArgs,
   ): Promise<ZaaktypeLoaderData> => {
     const url = new URL(loaderFunctionArgs.request.url);
-    const uuid = loaderFunctionArgs.params.uuid;
+    const uuid = loaderFunctionArgs.params.zaaktypeId;
     const params = url.searchParams;
-    const response = await request(
+    const response = await request<DetailResponse<ZaakType>>(
       "GET",
       `/catalogi/zaaktypen/${uuid}`,
       params,
     );
-    const detailReponse: DetailResponse<ZaakType> = await response.json();
-    return { ...detailReponse, fieldsets: ZAAKTYPE_FIELDSETS };
+    return { ...response, fieldsets: ZAAKTYPE_FIELDSETS };
   },
 );
