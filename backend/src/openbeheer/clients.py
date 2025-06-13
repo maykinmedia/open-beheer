@@ -1,5 +1,5 @@
 from functools import cache
-from typing import Generator
+from typing import Generator, NoReturn
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -13,13 +13,19 @@ from zgw_consumers.utils import PaginatedResponseData
 
 
 @cache
-def ztc_client() -> APIClient:
-    try:
-        client = build_client(
-            Service.objects.get(api_type=APITypes.ztc),
-        )
-    except Service.DoesNotExist:  # type: ignore  abstract difficulties?
-        raise ImproperlyConfigured(__("No ZTC service configured")) from None
+def ztc_client(slug: str = "") -> APIClient | NoReturn:
+    """Return and APIClient for the configured ZTC service
+
+    The empty slug `""` wil return whatever the "first" is if it exists.
+    """
+    services = Service.objects.filter(api_type=APITypes.ztc)
+    if slug:
+        services = services.filter(slug=slug)
+
+    if not (service := services.first()):
+        raise ImproperlyConfigured(__("No ZTC service configured"))
+
+    client = build_client(service)
     # passing as arg to build_client doesn't work
     client.headers["Accept-Crs"] = "EPSG:4326"
     return client
