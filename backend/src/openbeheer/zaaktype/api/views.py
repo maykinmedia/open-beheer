@@ -18,7 +18,7 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True):
     trefwoorden: list[str] = []
 
 
-class ZaakType(Struct, kw_only=True):
+class ZaakType(Struct, kw_only=True, rename="camel"):
     # Identificate
     # Omschrijving
     # Actief ja/nee
@@ -32,6 +32,7 @@ class ZaakType(Struct, kw_only=True):
     actief: bool | UnsetType = UNSET
     einde_geldigheid: datetime.date | None = None
     # str, because VertrouwelijkheidaanduidingEnum does not contain "" but OZ does
+    # XXX: the "" is actually a fault in the fixtures!
     vertrouwelijkheidaanduiding: str
     versiedatum: datetime.date
 

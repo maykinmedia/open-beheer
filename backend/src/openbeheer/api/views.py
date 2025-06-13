@@ -53,7 +53,11 @@ class MsgspecMixin:
         https://jcristharif.com/msgspec/supported-types.html
         this mixin translates it to builtins so any DRF renderer can handle them.
         """
-        return super().render(to_builtins(data), *args, **kwargs)
+        try:
+            return super().render(to_builtins(data), *args, **kwargs)
+        except TypeError:
+            # data is probably some DRF class returned by exception handling
+            return super().render(data, *args, **kwargs)
 
 
 def _add_mixin(render_class: type[BaseRenderer]) -> type[BaseRenderer]:
@@ -95,9 +99,9 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
     endpoint_path: str
     "Path part of the ZGW API endpoint url"
 
-    def get(self, request: Request) -> Response:
+    def get(self, request: Request, slug: str = "") -> Response:
         params = self.parse_query_params(request)
-        data, status_code = self.get_data(params)
+        data, status_code = self.get_data(params, slug=slug)
         match data:
             case ValidatieFout():
                 return Response(data, status=status_code)
@@ -165,6 +169,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
         base_params: Mapping[str, _RequestParamT] = {
             "pageSize": 10,
         },
+        slug: str = "",
     ) -> tuple[
         ZGWResponse[T] | ValidatieFout,
         int,
@@ -180,7 +185,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
         params: dict[str, _RequestParamT] = {}
         params |= base_params
         params |= asdict(query_params)
-        with ztc_client() as client:
+        with ztc_client(slug) as client:
             response = client.get(
                 self.endpoint_path,
                 params=params,
