@@ -1,1 +1,1 @@
-export * from "./service.loader";
+export * from "./service.loader.ts";

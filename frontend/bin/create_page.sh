@@ -35,7 +35,7 @@ import React from "react";
 import { Outlet, useLoaderData } from "react-router";
 import { useCurrentMatch } from "~/hooks/useCurrentMatch";
 
-import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.tsx";
+import { ${capitalized_page_name}LoaderData } from "./${page_name}.loader.ts";
 
 export type ${component_name}Props = React.ComponentProps<"main"> & {
   // Props here.
@@ -61,7 +61,7 @@ EOF
 
 # Function to create the loader file
 function create_loader_file() {
-  cat > "$2/$page_name.loader.tsx" <<EOF
+  cat > "$2/$page_name.loader.ts" <<EOF
 export type ${capitalized_page_name}LoaderData = object;
 
 /**
@@ -76,7 +76,7 @@ EOF
 
 # Function to create the action file
 function create_action_file() {
-  cat > "$2/$page_name.action.tsx" <<EOF
+  cat > "$2/$page_name.action.ts" <<EOF
 export type ${capitalized_page_name}ActionData = object;
 
 /**
