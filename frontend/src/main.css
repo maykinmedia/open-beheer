@@ -2,17 +2,7 @@ html,
 body,
 #root {
   --page-color-primary: #2F8CDD!important;
-
-  /* Backport to admin-ui? */
-  --button-color-text-transparent-active: var(--button-color-text-transparent);
-  --button-color-background-transparent-active: var(--typography-color-background-alt);
-  --button-color-text-outline-active: var(--button-color-text-transparent);
-  --button-color-background-outline-active: var(--typography-color-background-alt);
-  --typography-color-background-alt: light-dark(#EEEEEE, #252f3d);
-
-  /* FIXME. */
-  --page-color-logo: hsl(253 69% 33%);
-
+  --page-color-accent: rgba(47, 140, 222, 0.3) !important;
   height: 100%;
 }
 
