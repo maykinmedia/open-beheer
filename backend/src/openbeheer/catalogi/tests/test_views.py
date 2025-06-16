@@ -46,5 +46,5 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
         self.assertEqual(data[0]["label"], "Test Catalogue (VAVAV)")
         self.assertEqual(
             data[0]["value"],
-            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "ec77ad39-0954-4aeb-bcf2-6f45263cde77",
         )

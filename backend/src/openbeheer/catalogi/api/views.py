@@ -80,7 +80,7 @@ class CatalogChoicesView(MsgspecAPIView):
                 )
                 # OZ API specs say that is is not required, but VNG specs say it is.
                 # In practice, it is always present.
-                value = catalogue.url
+                value = catalogue.url.split("/")[-1]  # UUID.
                 assert value
 
                 results.append(OBOption(label=label, value=value))
