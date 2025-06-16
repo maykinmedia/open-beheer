@@ -78,9 +78,15 @@ class CatalogChoicesView(MsgspecAPIView):
                     if catalogue.naam
                     else catalogue.domein
                 )
-                # OZ API specs say that is is not required, but VNG specs say it is.
+                # OZ API specs say that url is not required, but VNG specs say it is.
                 # In practice, it is always present.
-                value = catalogue.url.split("/")[-1]  # UUID.
+                url = catalogue.url
+
+                # Extract the UUID by removing service API root and known endpoint.
+                # We only support 1 ZTC for now.
+                # TODO: Provide util for this?
+                service = Service.objects.get(api_type=APITypes.ztc)
+                value = url.removeprefix(service.api_root + "catalogussen/")
                 assert value
 
                 results.append(OBOption(label=label, value=value))
