@@ -1,2 +1,2 @@
 export * from "./Zaaktype";
-export * from "./zaaktype.loader";
+export * from "./zaaktype.loader.ts";
