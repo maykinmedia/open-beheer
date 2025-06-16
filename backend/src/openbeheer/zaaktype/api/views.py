@@ -10,7 +10,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 
 
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True):
-    catalogus: int | None = None
+    catalogus: str | None = None
     datum_geldigheid: str | None = field(name="datumGeldigheid", default=None)
     identificatie: str | None = None
     page: int = 1
