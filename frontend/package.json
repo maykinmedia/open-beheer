@@ -18,7 +18,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@maykin-ui/admin-ui": "^2.0.0-alpha.7",
+    "@maykin-ui/admin-ui": "^2.0.0-alpha.8",
     "@maykin-ui/client-common": "^0.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
