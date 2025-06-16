@@ -1,17 +1,13 @@
 import { Navigate, Outlet, RouteObject } from "react-router";
-import App from "~/App.tsx";
+import App, { CATALOGUS_PARAM, SERVICE_PARAM, SIDEBAR_INDEX } from "~/App.tsx";
 import {
-  CatalogiPage,
   LoginPage,
   ZaaktypePage,
   ZaaktypenPage,
-  catalogiAction,
-  catalogiLoader,
   loginAction,
   loginLoader,
-  zaaktypeAction,
+  serviceLoader,
   zaaktypeLoader,
-  zaaktypenAction,
   zaaktypenLoader,
 } from "~/pages";
 
@@ -26,33 +22,33 @@ export const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="/catalogus" replace />,
+        loader: serviceLoader,
       },
       {
-        id: "catalogus",
-        path: "catalogus",
-        element: <CatalogiPage />,
-        loader: catalogiLoader,
-        action: catalogiAction,
+        id: "service",
+        path: `:${SERVICE_PARAM}`,
+        element: <Outlet />,
         children: [
           {
-            id: "catalogus-selected",
-            path: ":catalogusId",
+            id: SIDEBAR_INDEX,
+            path: `:${CATALOGUS_PARAM}`,
             element: <Outlet />,
             children: [
+              {
+                index: true,
+                element: <Navigate to="zaaktypen" replace={true} />,
+              },
               {
                 id: "zaaktypen",
                 path: "zaaktypen",
                 element: <ZaaktypenPage />,
                 loader: zaaktypenLoader,
-                action: zaaktypenAction,
                 children: [
                   {
                     id: "zaaktype",
                     path: ":zaaktypeId",
                     element: <ZaaktypePage />,
                     loader: zaaktypeLoader,
-                    action: zaaktypeAction,
                   },
                 ],
               },

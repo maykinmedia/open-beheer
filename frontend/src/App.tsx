@@ -29,9 +29,13 @@ import { useService } from "~/hooks/useService.ts";
 import "./main.css";
 
 /** Route id to show children for in the sidebar. */
-const SIDEBAR_INDEX = "catalogus-selected";
-/** Paramater name for the catalogus id in the URL. */
-const CATALOGUS_PARAM = "catalogusId";
+export const SIDEBAR_INDEX = "catalogus";
+
+/** Parameter name for the catalogus id in the URL. */
+export const SERVICE_PARAM = "serviceSlug";
+
+/** Parameter name for the catalogus id in the URL. */
+export const CATALOGUS_PARAM = "catalogusId";
 
 /**
  * This component serves as the entry point for the React app and renders the main UI structure.
@@ -45,7 +49,9 @@ function App() {
   const childRoutes = useChildRoutes(SIDEBAR_INDEX);
   const { service } = useService();
   const { catalogiChoices } = useCatalogi(service);
-  const selectedCatalogi = params[CATALOGUS_PARAM] || null;
+
+  const serviceSlug = params[SERVICE_PARAM];
+  const catalogusId = params[CATALOGUS_PARAM];
 
   const [user, setUser] = useState<User | null>(null);
 
@@ -120,9 +126,9 @@ function App() {
           active: Boolean(id && matches.map((m) => m.id).includes(id)),
           align: "start",
           children: ucFirst(path?.split("/").pop()?.trim() || ""),
-          disabled: !selectedCatalogi,
+          disabled: !catalogusId,
           onClick: () => {
-            navigate("/catalogi/" + path);
+            navigate(`${serviceSlug}/${catalogusId}/${path}`);
           },
         };
       });
@@ -134,9 +140,16 @@ function App() {
         disabled={catalogiChoices.length === 0}
         options={catalogiChoices}
         placeholder="Selecteer catalogus"
-        value={selectedCatalogi}
-        onChange={(e) => {
-          navigate(`catalogus/${e.target.value}/zaaktypen`);
+        value={catalogusId}
+        variant="accent"
+        onChange={({ target }) => {
+          const { value } = target;
+
+          if (!value) {
+            navigate("/");
+          }
+
+          navigate(serviceSlug + "/" + value);
         }}
       />,
       ...items,
