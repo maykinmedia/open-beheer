@@ -1,8 +1,8 @@
 import datetime
-from typing import Mapping
+from typing import Annotated, Mapping
 
 from ape_pie import APIClient
-from msgspec import UNSET, Struct, UnsetType
+from msgspec import UNSET, Meta, Struct, UnsetType
 from rest_framework.request import Request
 from openbeheer.api.views import ListView
 from openbeheer.types._zgw import ZGWResponse
@@ -12,12 +12,16 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 
 
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="camel"):
-    catalogus: str | UnsetType = UNSET  # frontend uuid.UUID, backend url
-    datum_geldigheid: str | UnsetType = UNSET
+    catalogus: Annotated[
+        str | UnsetType, Meta(description="UUID part of the catalogus URL")
+    ] = UNSET  # frontend uuid.UUID, backend url
+    datum_geldigheid: datetime.date | UnsetType = UNSET
     identificatie: str | UnsetType = UNSET
     page: int = 1
     status: Status = Status.alles  # OZ defaults to definitief
-    trefwoorden: str | UnsetType = UNSET
+    trefwoorden: Annotated[
+        str | UnsetType, Meta(description="Comma separated keywords")
+    ] = UNSET
 
 
 class ZaakType(Struct, kw_only=True, rename="camel"):
