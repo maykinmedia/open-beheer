@@ -21,10 +21,13 @@ import {
   useParams,
 } from "react-router";
 import { User, whoAmI } from "~/api";
-import { Profile } from "~/components/profile/Profile.tsx";
-import { useChildRoutes, useCurrentMatch } from "~/hooks";
-import { useCatalogi } from "~/hooks/useCatalogi.ts";
-import { useService } from "~/hooks/useService.ts";
+import { Profile } from "~/components";
+import {
+  useCatalogi,
+  useChildRoutes,
+  useCurrentMatch,
+  useService,
+} from "~/hooks";
 
 import "./main.css";
 
