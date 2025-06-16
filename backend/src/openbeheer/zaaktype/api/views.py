@@ -1,7 +1,9 @@
 import datetime
 from typing import Mapping
 
-from msgspec import UNSET, Struct, UnsetType, field
+from ape_pie import APIClient
+from msgspec import UNSET, Struct, UnsetType
+from rest_framework.request import Request
 from openbeheer.api.views import ListView
 from openbeheer.types._zgw import ZGWResponse
 from openbeheer.types.ztc import Status, ValidatieFout, VertrouwelijkheidaanduidingEnum
@@ -9,13 +11,13 @@ from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
 
-class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True):
-    catalogus: str | None = None
-    datum_geldigheid: str | None = field(name="datumGeldigheid", default=None)
-    identificatie: str | None = None
+class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="camel"):
+    catalogus: str | UnsetType = UNSET  # frontend uuid.UUID, backend url
+    datum_geldigheid: str | UnsetType = UNSET
+    identificatie: str | UnsetType = UNSET
     page: int = 1
-    status: Status | None = None
-    trefwoorden: list[str] = []
+    status: Status = Status.alles  # OZ defaults to definitief
+    trefwoorden: str | UnsetType = UNSET
 
 
 class ZaakType(Struct, kw_only=True, rename="camel"):
@@ -56,7 +58,7 @@ class ZaakType(Struct, kw_only=True, rename="camel"):
         },
     )
 )
-class ZaakTypeListView(ListView):
+class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakType]):
     data_type = ZaakType
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
@@ -74,3 +76,9 @@ class ZaakTypeListView(ListView):
                 )
             },
         )
+
+    def parse_query_params(self, request: Request, api_client: APIClient):
+        params = super().parse_query_params(request, api_client)
+        if params.catalogus:
+            params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
+        return params

@@ -57,3 +57,36 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         for row in data["results"]:
             keys_in_fields = set(row.keys()) & field_names
             self.assertSetEqual(keys_in_fields, field_names)
+
+    def test_catalog_filter(self):
+        self.client.force_authenticate(self.user)
+        url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
+
+        response = self.client.get(
+            url, query_params={"catalogus": "ec77ad39-0954-4aeb-bcf2-1beefbadf00d"}
+        )
+
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data["pagination"]["count"], 0)
+        self.assertEqual(data["results"], [])
+
+        response = self.client.get(
+            url, query_params={"catalogus": "ec77ad39-0954-4aeb-bcf2-6f45263cde77"}
+        )
+
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreater(data["pagination"]["count"], 0)
+        self.assertGreater(len(data["results"]), 0)
+
+    def test_datum_geldigheid_filter(self):
+        self.client.force_authenticate(self.user)
+        url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
+
+        response = self.client.get(url, query_params={"datumGeldigheid": "2001-01-01"})
+
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data["pagination"]["count"], 0)
+        self.assertEqual(data["results"], [])
