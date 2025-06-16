@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Profile as ProfileComponent } from "./Profile.tsx";
+import { Profile as ProfileComponent } from "./Profile";
 
 const meta: Meta<typeof ProfileComponent> = {
   title: "Components/Profile",
