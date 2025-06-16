@@ -9,13 +9,69 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDA5Mjc1MCwiZXhwIjoxNzUwMTM1OTUwLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.MjOgNA07DYzUj3y68OnPU8Z53YuwSUvEcnVDmvU9Wt4
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDA5MTE2MiwiZXhwIjoxNzUwMTM0MzYyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.QpcNW7Fzq8MCWdl4L5mkoUa0wQia3mmls7P4BcMUsWk
       Connection:
       - keep-alive
       User-Agent:
       - python-requests/2.32.4
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fec77ad39-0954-4aeb-bcf2-1beefbadf00d&status=alles
+  response:
+    body:
+      string: '{"count":0,"next":null,"previous":null,"results":[]}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '52'
+      Content-Security-Policy:
+      - 'font-src ''self'' fonts.gstatic.com; script-src ''self'' ''unsafe-inline''
+        cdnjs.cloudflare.com cdn.jsdelivr.net; form-action ''self''; img-src ''self''
+        data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; frame-src
+        ''self''; frame-ancestors ''none''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; default-src ''self''; object-src ''none'';
+        connect-src ''self'' raw.githubusercontent.com; worker-src ''self'' blob:;
+        base-uri ''self'''
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Mon, 16 Jun 2025 16:26:02 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.4
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDA5MTE2MiwiZXhwIjoxNzUwMTM0MzYyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.QpcNW7Fzq8MCWdl4L5mkoUa0wQia3mmls7P4BcMUsWk
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.32.4
+    method: GET
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fec77ad39-0954-4aeb-bcf2-6f45263cde77&status=alles
   response:
     body:
       string: '{"count":5,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/607ff443-d92e-4458-9f50-b93bad73e83c","identificatie":"ZAAKTYPE-2018-0000000001","omschrijving":"brand
@@ -61,7 +117,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Mon, 16 Jun 2025 16:52:30 GMT
+      - Mon, 16 Jun 2025 16:26:02 GMT
       Referrer-Policy:
       - same-origin
       Server:

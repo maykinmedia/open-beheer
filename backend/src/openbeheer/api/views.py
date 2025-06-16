@@ -2,10 +2,10 @@ from enum import EnumType
 from types import UnionType
 from typing import Iterable, Mapping, Protocol, Sequence
 
+from ape_pie import APIClient
 from furl import furl
 from msgspec import ValidationError, convert, to_builtins
 from msgspec.json import Encoder, decode
-from msgspec.structs import asdict
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
@@ -100,8 +100,9 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
     "Path part of the ZGW API endpoint url"
 
     def get(self, request: Request, slug: str = "") -> Response:
-        params = self.parse_query_params(request)
-        data, status_code = self.get_data(params, slug=slug)
+        client = ztc_client(slug=slug)
+        params = self.parse_query_params(request, client)
+        data, status_code = self.get_data(client, params)
         match data:
             case ValidatieFout():
                 return Response(data, status=status_code)
@@ -158,7 +159,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
         attrs = get_annotations(self.data_type)
         return [to_ob_field(field, annotation) for field, annotation in attrs.items()]
 
-    def parse_query_params(self, request: Request) -> P:
+    def parse_query_params(self, request: Request, api_client: APIClient) -> P:
         "Parse incoming query parameters into a value of `self.query_type`"
 
         # Sanitize params to prevent list values.
@@ -173,11 +174,11 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
 
     def get_data(
         self,
+        api_client: APIClient,
         query_params: P,
         base_params: Mapping[str, _RequestParamT] = {
             "pageSize": 10,
         },
-        slug: str = "",
     ) -> tuple[
         ZGWResponse[T] | ValidatieFout,
         int,
@@ -192,12 +193,9 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
 
         params: dict[str, _RequestParamT] = {}
         params |= base_params
-        params |= asdict(query_params)
-        with ztc_client(slug) as client:
-            response = client.get(
-                self.endpoint_path,
-                params=params,
-            )
+        params |= to_builtins(query_params)
+        with api_client:
+            response = api_client.get(self.endpoint_path, params=params)
 
         if not response.ok:
             error = decode(response.content, type=ValidatieFout)
