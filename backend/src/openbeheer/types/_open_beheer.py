@@ -1,12 +1,11 @@
 from datetime import datetime
 from functools import singledispatch
 from types import NoneType, UnionType
-from typing import Self, Sequence
+from typing import NotRequired, Self, Sequence
 from msgspec import Struct, UnsetType
 import enum
 from typing import Mapping
 import msgspec
-from django.utils.functional import Promise
 
 
 class OBPagedQueryParams(Struct):
@@ -134,24 +133,6 @@ class OBList[T](Struct):
     'The "rows" in the list. All `fields` MUST be an attribute on each `T`'
 
 
-# TODO: think how we should structure types, also thinking about OBField
-class OBDetailField(Struct):
-    label: str
-    value: str
-    description: str = ""
-    required: bool = False
-
-
-class DataGroup(Struct):
-    label: str | Promise
-    fields: list["str | DataGroup"]
-
-    def __post_init__(self):
-        # TODO: How to better handle translatable strings?
-        # msgspec.to_builtins fails on proxy strings
-        self.label = str(self.label)
-
-
 class VersionSummary(Struct):
     """Summary of the different version of a ZTC resource.
 
@@ -164,7 +145,21 @@ class VersionSummary(Struct):
     concept: bool | None
 
 
+class FrontendFieldSet(Struct):
+    fields: list[str]
+    span: NotRequired[int] | UnsetType = msgspec.UNSET
+
+
+type FrontendFieldsets = list[tuple[str, FrontendFieldSet]]
+
+type JSONPrimitive = str | int | float | bool | None
+
+type JSONValue = JSONPrimitive | JSONObject | Sequence[JSONValue]
+
+type JSONObject = dict[str, JSONValue]
+
+
 class DetailResponse(Struct):
-    item_data: Mapping[str, OBDetailField]
-    data_groups: list[DataGroup]
+    result: Mapping[str, JSONValue]
+    fieldsets: FrontendFieldsets
     versions: list[VersionSummary] | UnsetType = msgspec.UNSET

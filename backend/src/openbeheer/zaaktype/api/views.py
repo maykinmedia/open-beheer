@@ -14,14 +14,13 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from msgspec.structs import fields
 from openbeheer.api.views import DetailView
 from openbeheer.clients import pagination_helper, ztc_client
-from openbeheer.types._open_beheer import DataGroup, VersionSummary
+from openbeheer.types._open_beheer import FrontendFieldsets, JSONValue, VersionSummary
 from openbeheer.types.ztc import (
     PaginatedZaakTypeList,
     ZaakType,
 )
 from furl import furl
-from openbeheer.zaaktype.constants import ZAAKTYPE_DATA_GROUPS
-from openbeheer.types._open_beheer import OBDetailField
+from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
 
 
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="camel"):
@@ -132,20 +131,11 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
 
         return results, response.status_code
 
-    def format_item(self, data: ZaakType) -> Mapping[str, OBDetailField]:
-        item_data = {}
-        for defined_field in fields(ZaakType):
-            extra_json_schema = getattr(defined_field.type, "extra_json_schema", {})
-
-            item_data[defined_field.name] = OBDetailField(
-                label=defined_field.name.replace(
-                    "_", " "
-                ).capitalize(),  # TODO other way of getting label?
-                value=getattr(data, defined_field.name, defined_field.default),
-                description=extra_json_schema.get("description", ""),
-                required=defined_field.required,
-            )
-
+    def format_item(self, data: ZaakType) -> Mapping[str, JSONValue]:
+        item_data = {
+            defined_field.name: getattr(data, defined_field.name, defined_field.default)
+            for defined_field in fields(ZaakType)
+        }
         return item_data
 
     def format_version(self, data: ZaakType) -> VersionSummary:
@@ -162,8 +152,5 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
             concept=data.concept,
         )
 
-    def get_display_groups(self) -> list[DataGroup]:
-        return [
-            ZAAKTYPE_DATA_GROUPS["overview"],
-            ZAAKTYPE_DATA_GROUPS["general"],
-        ]
+    def get_fieldsets(self) -> FrontendFieldsets:
+        return ZAAKTYPE_FIELDSETS
