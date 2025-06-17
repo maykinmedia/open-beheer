@@ -1,0 +1,62 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDE1NjM2OCwiZXhwIjoxNzUwMTk5NTY4LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.G03r4HUiIhfD-sp8E4k101fpPAFaMzJ6ijkSMTdd_dU
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.32.4
+    method: GET
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&status=alles&trefwoorden=foo
+  response:
+    body:
+      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/607ff443-d92e-4458-9f50-b93bad73e83c","identificatie":"ZAAKTYPE-2018-0000000001","omschrijving":"brand
+        world-class initiatives","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":"P0D","opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":["foo","bar"],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/e1b73b12-b2f6-4c4e-8929-94f84dd2a57d","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-06-03","eindeGeldigheid":null,"versiedatum":"2025-06-03","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":["http://localhost:8003/catalogi/api/v1/statustypen/0ac81636-80f2-4864-8499-a9c947341d93"],"resultaattypen":["http://localhost:8003/catalogi/api/v1/resultaattypen/ed37e32c-f5da-483c-9592-13de9f32b755"],"eigenschappen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a8089bdf-72d3-414f-a9cd-953cfa602b6c"],"roltypen":[],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/588d7ec5-89e6-4aa0-a654-7475f0d5ac8e"],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}]}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1924'
+      Content-Security-Policy:
+      - 'font-src ''self'' fonts.gstatic.com; object-src ''none''; connect-src ''self''
+        raw.githubusercontent.com; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
+        cdn.jsdelivr.net; frame-ancestors ''none''; form-action ''self''; base-uri
+        ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; worker-src ''self'' blob:; frame-src ''self''; img-src ''self''
+        data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; default-src
+        ''self'''
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Tue, 17 Jun 2025 10:32:48 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.4
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+version: 1
