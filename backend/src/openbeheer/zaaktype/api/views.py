@@ -14,7 +14,12 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from msgspec.structs import fields
 from openbeheer.api.views import DetailView
 from openbeheer.clients import pagination_helper, ztc_client
-from openbeheer.types._open_beheer import FrontendFieldsets, JSONValue, VersionSummary
+from openbeheer.types._open_beheer import (
+    DetailResponse,
+    FrontendFieldsets,
+    JSONObject,
+    VersionSummary,
+)
 from openbeheer.types.ztc import (
     PaginatedZaakTypeList,
     ZaakType,
@@ -99,6 +104,17 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakType]):
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
 
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Get a zaaktype",
+        description="Retrive a zaaktype from Open Zaak.",
+        responses={
+            "200": DetailResponse,
+            "400": ValidatieFout,
+        },
+    )
+)
 class ZaakTypeDetailView(DetailView[ZaakType]):
     data_type = ZaakType
     endpoint_path = "zaaktypen/{uuid}"
@@ -131,7 +147,7 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
 
         return results, response.status_code
 
-    def format_item(self, data: ZaakType) -> Mapping[str, JSONValue]:
+    def format_item(self, data: ZaakType) -> Mapping[str, JSONObject]:
         item_data = {
             defined_field.name: getattr(data, defined_field.name, defined_field.default)
             for defined_field in fields(ZaakType)

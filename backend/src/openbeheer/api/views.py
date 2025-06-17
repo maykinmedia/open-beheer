@@ -24,7 +24,7 @@ from openbeheer.types import OBOption, as_ob_fieldtype
 from openbeheer.types._open_beheer import (
     DetailResponse,
     FrontendFieldsets,
-    JSONValue,
+    JSONObject,
     VersionSummary,
 )
 from openbeheer.types.ztc import ValidatieFout
@@ -333,7 +333,7 @@ class DetailView[T](MsgspecAPIView, ABC):
     ) -> tuple[list[T] | ValidatieFout, int]: ...
 
     @abstractmethod
-    def format_item(self, data: T) -> Mapping[str, JSONValue]: ...
+    def format_item(self, data: T) -> Mapping[str, JSONObject]: ...
 
     @abstractmethod
     def format_version(self, data: T) -> VersionSummary: ...
