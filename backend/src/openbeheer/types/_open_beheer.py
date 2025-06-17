@@ -1,11 +1,11 @@
+import enum
 from datetime import datetime
 from functools import singledispatch
 from types import NoneType, UnionType
-from typing import NotRequired, Self, Sequence
-from msgspec import Struct, UnsetType
-import enum
-from typing import Mapping
+from typing import Mapping, Self, Sequence
+
 import msgspec
+from msgspec import Struct, UnsetType
 
 
 class OBPagedQueryParams(Struct):
@@ -147,19 +147,21 @@ class VersionSummary(Struct):
 
 class FrontendFieldSet(Struct):
     fields: list[str]
-    span: NotRequired[int] | UnsetType = msgspec.UNSET
+    span: int | UnsetType = msgspec.UNSET
 
 
 type FrontendFieldsets = list[tuple[str, FrontendFieldSet]]
 
 type JSONPrimitive = str | int | float | bool | None
 
-type JSONValue = JSONPrimitive | JSONObject | Sequence[JSONValue]
-
-type JSONObject = dict[str, JSONValue]
+# Note: MsgSpec seems to struggle with recursive types when
+# generating the schema
+type JSONObject = dict[
+    str, JSONPrimitive | list[JSONPrimitive] | dict[str, JSONPrimitive]
+]
 
 
 class DetailResponse(Struct):
-    result: Mapping[str, JSONValue]
+    result: Mapping[str, JSONObject]
     fieldsets: FrontendFieldsets
     versions: list[VersionSummary] | UnsetType = msgspec.UNSET
