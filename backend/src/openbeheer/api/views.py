@@ -162,14 +162,17 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
     def parse_query_params(self, request: Request, api_client: APIClient) -> P:
         "Parse incoming query parameters into a value of `self.query_type`"
 
-        # Sanitize params to prevent list values.
         # TODO: Figure out how to deal with intentional lists?
-        params_dict = {
+        # request.query_params: ⊑ ImmutableMapping[str, list[str]]
+        params_dict: dict[str, str | None] = {
             key: request.query_params.get(key) for key in request.query_params
         }
 
-        # Parse sanitized params.
-        params = convert(params_dict, self.query_type)
+        params = convert(
+            params_dict,
+            self.query_type,
+            strict=False,  # allow all coercions str -> ...
+        )
         return params
 
     def get_data(

@@ -6,6 +6,7 @@ from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.types.ztc import Status
 
 
 class ZaakTypeListViewTest(VCRMixin, APITestCase):
@@ -20,19 +21,16 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
             slug="OZ",
         )
         cls.user = UserFactory.create()
+        cls.url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
 
     def test_not_authenticated(self):
-        endpoint = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
-
-        response = self.client.get(endpoint)
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_retrieve_list(self):
-        endpoint = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
-
         self.client.force_login(self.user)
-        response = self.client.get(endpoint)
+        response = self.client.get(self.url)
 
         data = response.json()
 
@@ -60,10 +58,9 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
 
     def test_catalog_filter(self):
         self.client.force_authenticate(self.user)
-        url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
 
         response = self.client.get(
-            url, query_params={"catalogus": "ec77ad39-0954-4aeb-bcf2-1beefbadf00d"}
+            self.url, query_params={"catalogus": "ec77ad39-0954-4aeb-bcf2-1beefbadf00d"}
         )
 
         data = response.json()
@@ -72,7 +69,7 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         self.assertEqual(data["results"], [])
 
         response = self.client.get(
-            url, query_params={"catalogus": "ec77ad39-0954-4aeb-bcf2-6f45263cde77"}
+            self.url, query_params={"catalogus": "ec77ad39-0954-4aeb-bcf2-6f45263cde77"}
         )
 
         data = response.json()
@@ -90,3 +87,62 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data["pagination"]["count"], 0)
         self.assertEqual(data["results"], [])
+
+    def test_page_request(self):
+        self.client.force_authenticate(self.user)
+
+        response = self.client.get(self.url, query_params={"page": 1})
+
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreater(data["pagination"]["count"], 0)
+        self.assertGreater(len(data["results"]), 0)
+
+        self.assertEqual(data["pagination"]["page"], 1)
+
+    def test_status_filter(self):
+        self.client.force_authenticate(self.user)
+
+        for status_param in Status:
+            with self.subTest(f"{status_param=}"):
+                response = self.client.get(
+                    self.url, query_params={"status": status_param.value}
+                )
+
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_identificatie_filter(self):
+        self.client.force_authenticate(self.user)
+
+        response = self.client.get(
+            self.url, query_params={"identificatie": "ZAAKTYPE-2018-0000000001"}
+        )
+
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreater(data["pagination"]["count"], 0)
+        self.assertGreater(len(data["results"]), 0)
+
+        self.assertSetEqual(
+            {r["identificatie"] for r in data["results"]}, {"ZAAKTYPE-2018-0000000001"}
+        )
+
+    def test_trefwoorden_filter_single_word(self):
+        self.client.force_authenticate(self.user)
+
+        response = self.client.get(self.url, query_params={"trefwoorden": "foo"})
+
+        response.json()  # TODO: Add some to the fixtures?
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_trefwoorden_filter_multi_word(self):
+        self.client.force_authenticate(self.user)
+
+        response = self.client.get(self.url, query_params={"trefwoorden": "foo,bar"})
+
+        response.json()  # TODO: Add some to the fixtures?
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
