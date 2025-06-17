@@ -57,7 +57,7 @@ class CatalogChoicesView(MsgspecAPIView):
     def get(self, request: Request, slug: str) -> Response:
         # TODO for now, we only support one Open Zaak, so the slug
         # is not used.
-        client = ztc_client()
+        client = ztc_client(slug)
 
         response = client.get("catalogussen")
         # TODO error handling on OZ unexpected response (Github #51)
@@ -81,14 +81,10 @@ class CatalogChoicesView(MsgspecAPIView):
                 # OZ API specs say that url is not required, but VNG specs say it is.
                 # In practice, it is always present.
                 url = catalogue.url
+                path = f"{client.base_url}catalogussen/"
+                uuid = url.removeprefix(path)
+                assert uuid
 
-                # Extract the UUID by removing service API root and known endpoint.
-                # We only support 1 ZTC for now.
-                # TODO: Provide util for this?
-                service = Service.objects.get(api_type=APITypes.ztc)
-                value = url.removeprefix(service.api_root + "catalogussen/")
-                assert value
-
-                results.append(OBOption(label=label, value=value))
+                results.append(OBOption(label=label, value=uuid))
 
         return Response(results)
