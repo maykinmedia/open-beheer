@@ -16,6 +16,7 @@ from openbeheer.clients import ztc_client, pagination_helper
 from openbeheer.types.ztc import PaginatedCatalogusList
 
 from openbeheer.types._open_beheer import OBOption
+from openbeheer.utils.decorators import handle_service_errors
 
 
 @extend_schema(
@@ -54,9 +55,8 @@ class ServiceChoicesView(MsgspecAPIView):
     # }
 )
 class CatalogChoicesView(MsgspecAPIView):
+    @handle_service_errors
     def get(self, request: Request, slug: str) -> Response:
-        # TODO for now, we only support one Open Zaak, so the slug
-        # is not used.
         client = ztc_client(slug)
 
         response = client.get("catalogussen")
