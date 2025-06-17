@@ -24,6 +24,8 @@ from typing_extensions import get_annotations
 
 from rest_framework.request import Request
 
+from openbeheer.utils.decorators import handle_service_errors
+
 _ENCODER = Encoder()
 
 # requests query param type
@@ -99,6 +101,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
     endpoint_path: str
     "Path part of the ZGW API endpoint url"
 
+    @handle_service_errors
     def get(self, request: Request, slug: str = "") -> Response:
         params = self.parse_query_params(request)
         data, status_code = self.get_data(params, slug=slug)
