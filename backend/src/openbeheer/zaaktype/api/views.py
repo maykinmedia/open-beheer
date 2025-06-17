@@ -9,6 +9,7 @@ from msgspec import convert
 from openbeheer.api.views import ListView
 from openbeheer.types._zgw import ZGWError, ZGWResponse
 from openbeheer.types.ztc import Status, VertrouwelijkheidaanduidingEnum
+from openbeheer.types._open_beheer import ExternalServiceError
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from openbeheer.api.views import DetailView
@@ -74,6 +75,7 @@ class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
         responses={
             "200": ZGWResponse[ZaakTypeSummary],
             "400": ZGWError,
+            "502": ExternalServiceError,
         },
     )
 )

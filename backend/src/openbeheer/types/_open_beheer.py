@@ -157,6 +157,8 @@ class DetailResponse[T](Struct):
     result: T
     fieldsets: FrontendFieldsets
     versions: list[VersionSummary] | UnsetType = msgspec.UNSET
+
+
 class ExternalServiceError(Struct):
     code: str
     title: str
