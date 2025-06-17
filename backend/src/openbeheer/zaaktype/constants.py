@@ -1,106 +1,53 @@
+from openbeheer.types._open_beheer import FrontendFieldSet, FrontendFieldsets
 from openbeheer.types.ztc import ZaakType
-from openbeheer.types._open_beheer import DataGroup
-from django.utils.translation import gettext_lazy as __
 
-ZAAKTYPE_DATA_GROUPS = {
-    "overview": DataGroup(
-        label=__("Overview"),
-        fields=[
-            ZaakType.identificatie.__name__,
-            ZaakType.omschrijving.__name__,
-            ZaakType.doel.__name__,
-            ZaakType.selectielijst_procestype.__name__,
-        ],
-    ),
-    "general": DataGroup(
-        label=__("General details"),
-        fields=[
-            DataGroup(
-                label=__("Content & Process"),
-                fields=[
-                    ZaakType.doel.__name__,
-                    ZaakType.onderwerp.__name__,
-                    ZaakType.aanleiding.__name__,
-                    DataGroup(
-                        label=__("Process flow"),
-                        fields=[
-                            ZaakType.handeling_initiator.__name__,
-                            ZaakType.handeling_behandelaar.__name__,
-                            ZaakType.verantwoordelijke.__name__,
-                            ZaakType.producten_of_diensten.__name__,
-                            ZaakType.doorlooptijd.__name__,
-                            ZaakType.servicenorm.__name__,
-                        ],
-                    ),
-                ],
-            ),
-            DataGroup(
-                label=__("Publication & Visibility"),
-                fields=[
-                    ZaakType.omschrijving.__name__,
-                    ZaakType.omschrijving_generiek.__name__,
-                    ZaakType.indicatie_intern_of_extern.__name__,
-                    ZaakType.vertrouwelijkheidaanduiding.__name__,
-                    DataGroup(
-                        label=__("Publication"),
-                        fields=[
-                            ZaakType.publicatie_indicatie.__name__,
-                            ZaakType.publicatietekst.__name__,
-                        ],
-                    ),
-                ],
-            ),
-            DataGroup(
-                label=__("Administration & Archiving"),
-                fields=[
-                    DataGroup(
-                        label=__("Municipality selectielijst"),
-                        fields=[
-                            ZaakType.selectielijst_procestype.__name__,
-                            # TODO: fields about selectielijst_procestype that need to be expanded.
-                        ],
-                    ),
-                    DataGroup(
-                        label=__("Reference process"),
-                        fields=[
-                            ZaakType.referentieproces.__name__,
-                            # TODO: expand fields of the referentie process,
-                        ],
-                    ),
-                ],
-            ),
-            DataGroup(
-                label=__("Structure & Connections"),
-                fields=[
-                    DataGroup(
-                        label=__("Zaaktypecode"),
-                        fields=[
-                            ZaakType.identificatie.__name__,
-                            # TODO: Zaaktype UUID
-                        ],
-                    ),
-                    DataGroup(
-                        label=__("Gerelateerde zaaktypen"),
-                        fields=[
-                            ZaakType.gerelateerde_zaaktypen.__name__,
-                            # TODO: expand with some sort of label
-                        ],
-                    ),
-                    DataGroup(
-                        label=__("Source details"),
-                        fields=[
-                            ZaakType.broncatalogus.__name__,
-                            # TODO: expand catalogus
-                        ],
-                    ),
-                ],
-            ),
-            DataGroup(
-                label=__("Validity & Explanation"),
-                fields=[
-                    # TODO: design in progress
-                ],
-            ),
-        ],
-    ),
+
+ZAAKTYPE_FIELDS = {
+    field: getattr(ZaakType, field).__name__ for field in ZaakType.__struct_fields__
 }
+
+ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
+    (
+        "Overview",
+        FrontendFieldSet(
+            fields=[
+                ZAAKTYPE_FIELDS["identificatie"],
+                ZAAKTYPE_FIELDS["omschrijving"],
+                ZAAKTYPE_FIELDS["doel"],
+                ZAAKTYPE_FIELDS["selectielijst_procestype"],
+            ]
+        ),
+    ),
+    (
+        "General details",
+        FrontendFieldSet(
+            fields=[
+                ZAAKTYPE_FIELDS["doel"],
+                ZAAKTYPE_FIELDS["onderwerp"],
+                ZAAKTYPE_FIELDS["aanleiding"],
+                ZAAKTYPE_FIELDS["handeling_initiator"],
+                ZAAKTYPE_FIELDS["handeling_behandelaar"],
+                ZAAKTYPE_FIELDS["verantwoordelijke"],
+                ZAAKTYPE_FIELDS["producten_of_diensten"],
+                ZAAKTYPE_FIELDS["doorlooptijd"],
+                ZAAKTYPE_FIELDS["servicenorm"],
+                ZAAKTYPE_FIELDS["omschrijving"],
+                ZAAKTYPE_FIELDS["omschrijving_generiek"],
+                ZAAKTYPE_FIELDS["indicatie_intern_of_extern"],
+                ZAAKTYPE_FIELDS["vertrouwelijkheidaanduiding"],
+                ZAAKTYPE_FIELDS["publicatie_indicatie"],
+                ZAAKTYPE_FIELDS["publicatietekst"],
+                # TODO: fields about selectielijst_procestype that need to be expanded.
+                ZAAKTYPE_FIELDS["selectielijst_procestype"],
+                # TODO: expand fields of the referentie process,
+                ZAAKTYPE_FIELDS["referentieproces"],
+                # TODO: Zaaktype UUID
+                ZAAKTYPE_FIELDS["identificatie"],
+                # TODO: expand with some sort of label
+                ZAAKTYPE_FIELDS["gerelateerde_zaaktypen"],
+                # TODO: expand catalogus
+                ZAAKTYPE_FIELDS["broncatalogus"],
+            ],
+        ),
+    ),
+]

@@ -22,9 +22,9 @@ from openbeheer.types import (
 )
 from openbeheer.types import OBOption, as_ob_fieldtype
 from openbeheer.types._open_beheer import (
-    DataGroup,
     DetailResponse,
-    OBDetailField,
+    FrontendFieldsets,
+    JSONValue,
     VersionSummary,
 )
 from openbeheer.types.ztc import ValidatieFout
@@ -321,10 +321,11 @@ class DetailView[T](MsgspecAPIView, ABC):
             versions=[self.format_version(version) for version in versions]
             if self.has_versions
             else msgspec.UNSET,
-            item_data=self.format_item(data),
-            data_groups=self.get_display_groups(),
+            result=self.format_item(data),
+            fieldsets=self.get_fieldsets(),
         )
-        return Response(response_data)
+
+        return Response(to_builtins(response_data))
 
     @abstractmethod
     def get_item_versions(
@@ -332,10 +333,10 @@ class DetailView[T](MsgspecAPIView, ABC):
     ) -> tuple[list[T] | ValidatieFout, int]: ...
 
     @abstractmethod
-    def format_item(self, data: T) -> Mapping[str, OBDetailField]: ...
+    def format_item(self, data: T) -> Mapping[str, JSONValue]: ...
 
     @abstractmethod
     def format_version(self, data: T) -> VersionSummary: ...
 
     @abstractmethod
-    def get_display_groups(self) -> list[DataGroup]: ...
+    def get_fieldsets(self) -> FrontendFieldsets: ...
