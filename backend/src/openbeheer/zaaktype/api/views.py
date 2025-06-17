@@ -3,6 +3,7 @@ from typing import Mapping
 
 from msgspec import UNSET, Struct, UnsetType, field
 from openbeheer.api.views import ListView
+from openbeheer.types._open_beheer import ExternalServiceError
 from openbeheer.types._zgw import ZGWResponse
 from openbeheer.types.ztc import Status, ValidatieFout, VertrouwelijkheidaanduidingEnum
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
@@ -53,6 +54,7 @@ class ZaakType(Struct, kw_only=True, rename="camel"):
         responses={
             "200": ZGWResponse[ZaakType],
             "400": ValidatieFout,
+            "502": ExternalServiceError,
         },
     )
 )
