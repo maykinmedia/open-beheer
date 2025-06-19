@@ -1,10 +1,13 @@
+from abc import ABC, abstractmethod
 from enum import EnumType
 from types import UnionType
 from typing import Iterable, Mapping, Protocol, Sequence
+from uuid import UUID
 
 from ape_pie import APIClient
 from furl import furl
 from msgspec import ValidationError, convert, to_builtins
+import msgspec
 from msgspec.json import Encoder, decode
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
@@ -19,7 +22,12 @@ from openbeheer.types import (
     ZGWResponse,
 )
 from openbeheer.types import OBOption, as_ob_fieldtype
-from openbeheer.types.ztc import ValidatieFout
+from openbeheer.types._open_beheer import (
+    DetailResponse,
+    FrontendFieldsets,
+    VersionSummary,
+)
+from openbeheer.types._zgw import ZGWError
 from typing_extensions import get_annotations
 
 from rest_framework.request import Request
@@ -104,7 +112,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
         params = self.parse_query_params(request, client)
         data, status_code = self.get_data(client, params)
         match data:
-            case ValidatieFout():
+            case ZGWError():
                 return Response(data, status=status_code)
             case _:
                 return Response(
@@ -183,7 +191,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
             "pageSize": 10,
         },
     ) -> tuple[
-        ZGWResponse[T] | ValidatieFout,
+        ZGWResponse[T] | ZGWError,
         int,
     ]:
         """Perform request to ZGW service and return parsed response data and status_code.
@@ -201,7 +209,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
             response = api_client.get(self.endpoint_path, params=params)
 
         if not response.ok:
-            error = decode(response.content, type=ValidatieFout)
+            error = decode(response.content, type=ZGWError)
             return error, response.status_code
 
         content = response.content
@@ -212,7 +220,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
                 strict=False,
             ), response.status_code
         except ValidationError as e:
-            return ValidatieFout(
+            return ZGWError(
                 code="Bad response",
                 title="Server returned out of spec response",
                 detail=str(e),
@@ -253,3 +261,121 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
             ),
             results=data.results,
         )
+
+
+class DetailView[T](MsgspecAPIView, ABC):
+    data_type: type[T]
+    has_versions: bool
+    endpoint_path: str
+
+    def get_item_data(self, slug: str, uuid: UUID) -> tuple[T | ZGWError, int]:
+        with ztc_client() as client:
+            response = client.get(
+                self.endpoint_path.format(uuid=uuid),
+            )
+
+        if not response.ok:
+            # error = decode(response.content, type=ValidatieFout) # TODO: the OZ 404 response gives invalid JSON back
+            return ZGWError(
+                code="",
+                title="",
+                detail="",
+                instance="",
+                status=response.status_code,
+                invalid_params=[],
+            ), response.status_code
+
+        content = response.content
+        try:
+            return decode(
+                content,
+                type=self.data_type,
+                strict=False,
+            ), response.status_code
+        except ValidationError as e:
+            return ZGWError(
+                code="Bad response",
+                title="Server returned out of spec response",
+                detail=str(e),
+                instance="",
+                status=500,
+                invalid_params=[],
+            ), 500
+
+    def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
+        data, status_code = self.get_item_data(slug, uuid)
+
+        if isinstance(data, ZGWError):
+            return Response(data, status=status_code)
+
+        versions = []
+        if self.has_versions:
+            versions, status_code = self.get_item_versions(slug, data)
+
+            if isinstance(versions, ZGWError):
+                return Response(versions, status=status_code)
+
+        response_data = DetailResponse(
+            versions=[self.format_version(version) for version in versions]
+            if self.has_versions
+            else msgspec.UNSET,
+            result=data,
+            fieldsets=self.get_fieldsets(),
+        )
+
+        return Response(response_data)
+
+    def update(
+        self, request: Request, slug: str, uuid: str, is_partial: bool = True
+    ) -> Response:
+        with ztc_client(slug) as client:
+            handler = client.patch if is_partial else client.put
+            response = handler(self.endpoint_path.format(uuid=uuid), json=request.data)
+
+        if not response.ok:
+            error = decode(response.content, type=ZGWError)
+            return Response(
+                error,
+                status=response.status_code,
+            )
+
+        data = decode(
+            response.content,
+            type=self.data_type,
+            strict=False,
+        )
+        versions = []
+        if self.has_versions:
+            versions, status_code = self.get_item_versions(slug, data)
+
+            if isinstance(versions, ZGWError):
+                return Response(versions, status=status_code)
+
+        response_data = DetailResponse(
+            versions=[self.format_version(version) for version in versions]
+            if self.has_versions
+            else msgspec.UNSET,
+            result=data,
+            fieldsets=self.get_fieldsets(),
+        )
+
+        return Response(response_data)
+
+    def patch(
+        self, request: Request, slug: str, uuid: str, *args, **kwargs
+    ) -> Response:
+        return self.update(request, slug, uuid, is_partial=True)
+
+    def put(self, request: Request, slug: str, uuid: str, *args, **kwargs) -> Response:
+        return self.update(request, slug, uuid, is_partial=False)
+
+    @abstractmethod
+    def get_item_versions(
+        self, slug: str, data: T
+    ) -> tuple[list[T] | ZGWError, int]: ...
+
+    @abstractmethod
+    def format_version(self, data: T) -> VersionSummary: ...
+
+    @abstractmethod
+    def get_fieldsets(self) -> FrontendFieldsets: ...

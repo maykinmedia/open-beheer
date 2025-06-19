@@ -4,11 +4,26 @@ from typing import Annotated, Mapping
 from ape_pie import APIClient
 from msgspec import UNSET, Meta, Struct, UnsetType
 from rest_framework.request import Request
+from msgspec.json import decode
+from msgspec import convert
 from openbeheer.api.views import ListView
-from openbeheer.types._zgw import ZGWResponse
-from openbeheer.types.ztc import Status, ValidatieFout, VertrouwelijkheidaanduidingEnum
+from openbeheer.types._zgw import ZGWError, ZGWResponse
+from openbeheer.types.ztc import Status, VertrouwelijkheidaanduidingEnum
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from openbeheer.api.views import DetailView
+from openbeheer.clients import pagination_helper, ztc_client
+from openbeheer.types._open_beheer import (
+    DetailResponse,
+    FrontendFieldsets,
+    VersionSummary,
+)
+from openbeheer.types.ztc import (
+    PaginatedZaakTypeList,
+    ZaakType,
+)
+from furl import furl
+from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
 
 
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="camel"):
@@ -24,7 +39,7 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="came
     ] = UNSET
 
 
-class ZaakType(Struct, kw_only=True, rename="camel"):
+class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
     # Identificate
     # Omschrijving
     # Actief ja/nee
@@ -57,13 +72,13 @@ class ZaakType(Struct, kw_only=True, rename="camel"):
         filters=True,
         description="Retrive zaaktypen from Open Zaak.",
         responses={
-            "200": ZGWResponse[ZaakType],
-            "400": ValidatieFout,
+            "200": ZGWResponse[ZaakTypeSummary],
+            "400": ZGWError,
         },
     )
 )
-class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakType]):
-    data_type = ZaakType
+class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
+    data_type = ZaakTypeSummary
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
 
@@ -86,3 +101,88 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakType]):
         if params.catalogus:
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Get a zaaktype",
+        description="Retrive a zaaktype from Open Zaak.",
+        responses={
+            "200": DetailResponse[ZaakType],
+            "400": ZGWError,
+        },
+    ),
+    patch=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Patch a zaaktype",
+        description=(
+            "Partially update a zaaktype from Open Zaak. According to OZ specs, this should only work with"
+            " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
+        ),
+        responses={
+            "200": DetailResponse[ZaakType],
+            "400": ZGWError,
+        },
+    ),
+    put=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Put a zaaktype",
+        description=(
+            "Fully update a zaaktype from Open Zaak. According to OZ specs, this should only work with"
+            " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
+        ),
+        responses={
+            "200": DetailResponse[ZaakType],
+            "400": ZGWError,
+        },
+    ),
+)
+class ZaakTypeDetailView(DetailView[ZaakType]):
+    data_type = ZaakType
+    endpoint_path = "zaaktypen/{uuid}"
+    has_versions = True
+
+    def get_item_versions(
+        self, slug: str, data: ZaakType
+    ) -> tuple[list[ZaakType] | ZGWError, int]:
+        # TODO: Question: should we keep the versions "paginated"? (I don't think so)
+        with ztc_client() as client:
+            response = client.get(
+                "zaaktypen",
+                params={"identificatie": data.identificatie},
+            )
+
+        if not response.ok:
+            error = decode(response.content, type=ZGWError)
+            return error, response.status_code
+
+        results: list[ZaakType] = []
+        for page_data in pagination_helper(
+            client,
+            response.json(),
+        ):
+            decoded_page_data = convert(
+                page_data,
+                type=PaginatedZaakTypeList,
+            )
+            results.extend(decoded_page_data.results)
+
+        return results, response.status_code
+
+    def format_version(self, data: ZaakType) -> VersionSummary:
+        assert (
+            data.url
+        )  # The specs say that it is optional, but in practice it's always present
+        zaaktype_url = furl(data.url)
+        uuid = zaaktype_url.path.segments[-1]
+
+        return VersionSummary(
+            uuid=uuid,
+            begin_geldigheid=data.begin_geldigheid,
+            einde_geldigheid=data.einde_geldigheid,
+            concept=data.concept,
+        )
+
+    def get_fieldsets(self) -> FrontendFieldsets:
+        return ZAAKTYPE_FIELDSETS
