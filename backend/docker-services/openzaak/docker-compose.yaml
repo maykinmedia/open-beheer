@@ -58,16 +58,6 @@ services:
     networks:
       - openzaak-dev
 
-  web-init:
-    image: openzaak/open-zaak:${OPENZAAK_VERSION:-1.21.0}
-    environment: *openzaak_web_env
-    volumes: *openzaak_web_volumes
-    command: ["/bin/sh", "-c", "mkdir -p /app/private-media/uploads/2024/12/ && echo \"This is a destruction report\" > /app/private-media/uploads/2024/12/01219b90-0d13-4e25-b463-ab1545b05f05.bin"]
-    depends_on:
-      - openzaak-web.local
-    networks:
-      - openzaak-dev
-
   celery:
     image: openzaak/open-zaak:${OPENZAAK_VERSION:-1.21.0}
     environment: *openzaak_web_env
