@@ -203,6 +203,8 @@ rpds-py==0.24.0
     #   referencing
 ruamel-yaml==0.18.10
     # via django-setup-configuration
+ruamel-yaml-clib==0.2.12
+    # via ruamel-yaml
 sentry-sdk==2.25.1
     # via -r requirements/base.in
 six==1.17.0
@@ -217,7 +219,9 @@ typing-extensions==4.13.1
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
+    #   pyopenssl
     #   qrcode
+    #   referencing
     #   typing-inspection
     #   zgw-consumers
 typing-inspection==0.4.0
@@ -226,7 +230,7 @@ typing-inspection==0.4.0
     #   pydantic-settings
 uritemplate==4.1.1
     # via drf-spectacular
-urllib3==2.3.0
+urllib3==2.5.0
     # via
     #   elastic-apm
     #   requests
