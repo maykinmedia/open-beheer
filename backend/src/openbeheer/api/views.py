@@ -328,6 +328,50 @@ class DetailView[T](MsgspecAPIView, ABC):
 
         return Response(response_data)
 
+    def update(
+        self, request: Request, slug: str, uuid: str, is_partial: bool = True
+    ) -> Response:
+        with ztc_client(slug) as client:
+            handler = client.patch if is_partial else client.put
+            response = handler(self.endpoint_path.format(uuid=uuid), json=request.data)
+
+        if not response.ok:
+            error = decode(response.content, type=ZGWError)
+            return Response(
+                error,
+                status=response.status_code,
+            )
+
+        data = decode(
+            response.content,
+            type=self.data_type,
+            strict=False,
+        )
+        versions = []
+        if self.has_versions:
+            versions, status_code = self.get_item_versions(slug, data)
+
+            if isinstance(versions, ZGWError):
+                return Response(versions, status=status_code)
+
+        response_data = DetailResponse(
+            versions=[self.format_version(version) for version in versions]
+            if self.has_versions
+            else msgspec.UNSET,
+            result=data,
+            fieldsets=self.get_fieldsets(),
+        )
+
+        return Response(response_data)
+
+    def patch(
+        self, request: Request, slug: str, uuid: str, *args, **kwargs
+    ) -> Response:
+        return self.update(request, slug, uuid, is_partial=True)
+
+    def put(self, request: Request, slug: str, uuid: str, *args, **kwargs) -> Response:
+        return self.update(request, slug, uuid, is_partial=False)
+
     @abstractmethod
     def get_item_versions(
         self, slug: str, data: T
