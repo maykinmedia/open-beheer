@@ -1,16 +1,12 @@
-import { ListTemplate } from "@maykin-ui/admin-ui";
+import { DataGridProps, ListTemplate } from "@maykin-ui/admin-ui";
 import React, { useCallback } from "react";
-import {
-  useNavigate,
-  useNavigation,
-  useOutlet,
-  useSearchParams,
-} from "react-router";
+import { useNavigate, useNavigation, useOutlet } from "react-router";
 import { ListResponse } from "~/api/types";
-import { useBreadcrumbItems } from "~/hooks";
+import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 
 export type ListViewProps<T extends object> = ListResponse<T> & {
   getHref?: (obj: T) => string;
+  toolbarItems?: DataGridProps["toolbarItems"];
 };
 
 /**
@@ -27,18 +23,20 @@ export type ListViewProps<T extends object> = ListResponse<T> & {
  * @param results - The list of items to render in the data grid.
  * @param getHref - A function that if set, receives the row and should return a
  *  URL to navigate to.
+ * @param toolbarItems - Optional extra toolbar items to add to the data grid.
  */
 export function ListView<T extends object>({
   fields,
   pagination,
   results,
   getHref,
+  toolbarItems,
 }: ListViewProps<T>) {
   const navigate = useNavigate();
   const { state } = useNavigation();
   const outlet = useOutlet();
-  const [urlSearchParams, setURLSearchParams] = useSearchParams();
   const breadcrumbItems = useBreadcrumbItems();
+  const [urlSearchParams, setCombinedSearchParams] = useCombinedSearchParams(0);
 
   /**
    * Gets called when the page number changes.
@@ -46,27 +44,7 @@ export function ListView<T extends object>({
    */
   const handlePageChange = useCallback(
     (page: number) => {
-      updateSanitizedURLSearchParams({ page });
-    },
-    [urlSearchParams],
-  );
-
-  /**
-   * Sanitizes, then updates `urlSearchParams`, this causes the loader to refresh the
-   * page.
-   * @param params - The updates to apply to `urlSearchParams`.
-   */
-  const updateSanitizedURLSearchParams = useCallback(
-    (params: Record<string, unknown>) => {
-      const newParams = { ...urlSearchParams, ...params };
-
-      const filteredEntries = Object.fromEntries(
-        Object.entries(newParams)
-          .filter(([, v]) => v !== null)
-          .map(([k, v]) => [k, v.toString()]),
-      );
-
-      setURLSearchParams(filteredEntries);
+      setCombinedSearchParams({ page: page.toString() });
     },
     [urlSearchParams],
   );
@@ -99,6 +77,7 @@ export function ListView<T extends object>({
           fields: fields,
           height: "fill-available-space",
           showPaginator: Boolean(pagination),
+          toolbarItems: toolbarItems,
           loading: state !== "idle",
           paginatorProps: pagination,
           onClick: handleClick,
