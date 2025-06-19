@@ -109,10 +109,34 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         summary="Get a zaaktype",
         description="Retrive a zaaktype from Open Zaak.",
         responses={
-            "200": DetailResponse,
+            "200": DetailResponse[ZaakType],
             "400": ZGWError,
         },
-    )
+    ),
+    patch=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Patch a zaaktype",
+        description=(
+            "Partially update a zaaktype from Open Zaak. According to OZ specs, this should only work with"
+            " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
+        ),
+        responses={
+            "200": DetailResponse[ZaakType],
+            "400": ZGWError,
+        },
+    ),
+    put=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Put a zaaktype",
+        description=(
+            "Fully update a zaaktype from Open Zaak. According to OZ specs, this should only work with"
+            " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
+        ),
+        responses={
+            "200": DetailResponse[ZaakType],
+            "400": ZGWError,
+        },
+    ),
 )
 class ZaakTypeDetailView(DetailView[ZaakType]):
     data_type = ZaakType
