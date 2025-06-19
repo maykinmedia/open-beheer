@@ -30,11 +30,13 @@ export const zaaktypenLoader = loginRequired(
       };
     }
 
+    const searchParams = new URL(loaderFunctionArgs.request.url).searchParams;
     const response = await request<ListResponse<ZaakType>>(
       "GET",
       `/service/${params.serviceSlug}/zaaktypen/`,
       {
         catalogus: params.catalogusId,
+        ...Object.fromEntries(searchParams),
       },
     );
     return { ...response, fieldsets: ZAAKTYPE_FIELDSETS };
