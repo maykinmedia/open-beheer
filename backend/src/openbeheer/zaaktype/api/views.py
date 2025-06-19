@@ -74,12 +74,12 @@ class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
         filters=True,
         description="Retrive zaaktypen from Open Zaak.",
         responses={
-            "200": ZGWResponse[ZaakType],
+            "200": ZGWResponse[ZaakTypeSummary],
             "400": ValidatieFout,
         },
     )
 )
-class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakType]):
+class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
     data_type = ZaakTypeSummary
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
@@ -103,6 +103,7 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakType]):
         if params.catalogus:
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
+
 
 @extend_schema_view(
     get=extend_schema(
