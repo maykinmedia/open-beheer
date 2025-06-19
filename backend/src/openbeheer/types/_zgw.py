@@ -1,5 +1,5 @@
 from typing import Annotated
-from msgspec import Meta, Struct
+from msgspec import UNSET, Meta, Struct, UnsetType
 
 
 class InvalidParam(Struct):
@@ -23,7 +23,7 @@ class ZGWError(Struct, rename="camel"):
             description="URI met referentie naar dit specifiek voorkomen van de fout. Deze kan gebruikt worden in combinatie met server logs, bijvoorbeeld."
         ),
     ]
-    invalid_params: list[InvalidParam]
+    invalid_params: list[InvalidParam] | UnsetType = UNSET
     type: (
         Annotated[
             str,
