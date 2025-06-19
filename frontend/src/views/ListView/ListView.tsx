@@ -1,6 +1,7 @@
 import {
   AttributeGrid,
   Body,
+  DataGridProps,
   FieldSet,
   ListTemplate,
   Modal,
@@ -21,13 +22,13 @@ import {
   useNavigate,
   useNavigation,
   useOutlet,
-  useSearchParams,
 } from "react-router";
 import { ListResponse } from "~/api/types";
-import { useBreadcrumbItems } from "~/hooks";
+import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 
 export type ListViewProps<T extends object> = ListResponse<T> & {
   fieldsets: FieldSet<T>[];
+  toolbarItems?: DataGridProps["toolbarItems"];
 };
 
 /**
@@ -39,24 +40,25 @@ export type ListViewProps<T extends object> = ListResponse<T> & {
  * @typeParam T - The type of items in the list. Must include at least `uuid` and `identificatie` fields.
  *
  * @param fields - The field's configuration.
+ * @param fieldsets - Optional custom fieldsets used for rendering item details.
  * @param pagination - The paginator configuration.
  * @param results - The list of items to render in the data grid.
- * @param fieldsets - Optional custom fieldsets used for rendering item details.
- * @param fieldsets - Optional custom fieldsets used for rendering item details.
+ * @param toolbarItems - Optional extra toolbar items to add to the data grid.
  */
 export function ListView<T extends object>({
   fields,
+  fieldsets,
   pagination,
   results,
-  fieldsets,
+  toolbarItems,
 }: ListViewProps<T>) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { state } = useNavigation();
   const outlet = useOutlet();
-  const [urlSearchParams, setURLSearchParams] = useSearchParams();
   const [activeItem, setActiveItem] = useState<T>();
   const breadcrumbItems = useBreadcrumbItems();
+  const [urlSearchParams, setCombinedSearchParams] = useCombinedSearchParams(0);
 
   // Clean up some OAS/Admin-ui mismatches.
   const sanitizedFields: TypedField<T>[] = useMemo(
@@ -115,7 +117,7 @@ export function ListView<T extends object>({
    */
   const handleFilter = useCallback(
     (data: SerializedFormData) => {
-      updateSanitizedURLSearchParams(data);
+      setCombinedSearchParams(data as Record<string, string>);
     },
     [urlSearchParams],
   );
@@ -126,27 +128,7 @@ export function ListView<T extends object>({
    */
   const handlePageChange = useCallback(
     (page: number) => {
-      updateSanitizedURLSearchParams({ page });
-    },
-    [urlSearchParams],
-  );
-
-  /**
-   * Sanitizes, then updates `urlSearchParams`, this causes the loader to refresh the
-   * page.
-   * @param params - The updates to apply to `urlSearchParams`.
-   */
-  const updateSanitizedURLSearchParams = useCallback(
-    (params: Record<string, unknown>) => {
-      const newParams = { ...urlSearchParams, ...params };
-
-      const filteredEntries = Object.fromEntries(
-        Object.entries(newParams)
-          .filter(([, v]) => v !== null)
-          .map(([k, v]) => [k, v.toString()]),
-      );
-
-      setURLSearchParams(filteredEntries);
+      setCombinedSearchParams({ page: page.toString() });
     },
     [urlSearchParams],
   );
@@ -165,6 +147,7 @@ export function ListView<T extends object>({
           fields: sanitizedFields,
           height: "fill-available-space",
           showPaginator: Boolean(pagination),
+          toolbarItems: toolbarItems,
           loading: state !== "idle",
           paginatorProps: pagination,
           onClick: handleClick,
