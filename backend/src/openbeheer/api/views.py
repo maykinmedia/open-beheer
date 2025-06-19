@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from enum import EnumType
 from types import UnionType
 from typing import Iterable, Mapping, Protocol, Sequence
+from uuid import UUID
 
 from ape_pie import APIClient
 from furl import furl
@@ -24,10 +25,9 @@ from openbeheer.types import OBOption, as_ob_fieldtype
 from openbeheer.types._open_beheer import (
     DetailResponse,
     FrontendFieldsets,
-    JSONObject,
     VersionSummary,
 )
-from openbeheer.types.ztc import ValidatieFout
+from openbeheer.types._zgw import ZGWError
 from typing_extensions import get_annotations
 
 from rest_framework.request import Request
@@ -81,8 +81,6 @@ def _add_mixin(render_class: type[BaseRenderer]) -> type[BaseRenderer]:
 
 
 class MsgspecAPIView(_APIView):
-    renderer_classes: list[type[BaseRenderer]]
-
     def get_renderers(self) -> list[BaseRenderer]:
         render_classes = (_add_mixin(_class) for _class in self.renderer_classes)
         return [MsgspecJSONRenderer()] + [r() for r in render_classes]
@@ -114,7 +112,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
         params = self.parse_query_params(request, client)
         data, status_code = self.get_data(client, params)
         match data:
-            case ValidatieFout():
+            case ZGWError():
                 return Response(data, status=status_code)
             case _:
                 return Response(
@@ -193,7 +191,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
             "pageSize": 10,
         },
     ) -> tuple[
-        ZGWResponse[T] | ValidatieFout,
+        ZGWResponse[T] | ZGWError,
         int,
     ]:
         """Perform request to ZGW service and return parsed response data and status_code.
@@ -211,7 +209,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
             response = api_client.get(self.endpoint_path, params=params)
 
         if not response.ok:
-            error = decode(response.content, type=ValidatieFout)
+            error = decode(response.content, type=ZGWError)
             return error, response.status_code
 
         content = response.content
@@ -222,7 +220,7 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
                 strict=False,
             ), response.status_code
         except ValidationError as e:
-            return ValidatieFout(
+            return ZGWError(
                 code="Bad response",
                 title="Server returned out of spec response",
                 detail=str(e),
@@ -270,7 +268,7 @@ class DetailView[T](MsgspecAPIView, ABC):
     has_versions: bool
     endpoint_path: str
 
-    def get_item_data(self, slug: str, uuid: str) -> tuple[T | ValidatieFout, int]:
+    def get_item_data(self, slug: str, uuid: UUID) -> tuple[T | ZGWError, int]:
         with ztc_client() as client:
             response = client.get(
                 self.endpoint_path.format(uuid=uuid),
@@ -278,7 +276,7 @@ class DetailView[T](MsgspecAPIView, ABC):
 
         if not response.ok:
             # error = decode(response.content, type=ValidatieFout) # TODO: the OZ 404 response gives invalid JSON back
-            return ValidatieFout(
+            return ZGWError(
                 code="",
                 title="",
                 detail="",
@@ -295,7 +293,7 @@ class DetailView[T](MsgspecAPIView, ABC):
                 strict=False,
             ), response.status_code
         except ValidationError as e:
-            return ValidatieFout(
+            return ZGWError(
                 code="Bad response",
                 title="Server returned out of spec response",
                 detail=str(e),
@@ -304,36 +302,33 @@ class DetailView[T](MsgspecAPIView, ABC):
                 invalid_params=[],
             ), 500
 
-    def get(self, request: Request, slug: str, uuid: str, *args, **kwargs) -> Response:
+    def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         data, status_code = self.get_item_data(slug, uuid)
 
-        if isinstance(data, ValidatieFout):
+        if isinstance(data, ZGWError):
             return Response(data, status=status_code)
 
         versions = []
         if self.has_versions:
             versions, status_code = self.get_item_versions(slug, data)
 
-            if isinstance(versions, ValidatieFout):
+            if isinstance(versions, ZGWError):
                 return Response(versions, status=status_code)
 
         response_data = DetailResponse(
             versions=[self.format_version(version) for version in versions]
             if self.has_versions
             else msgspec.UNSET,
-            result=self.format_item(data),
+            result=data,
             fieldsets=self.get_fieldsets(),
         )
 
-        return Response(to_builtins(response_data))
+        return Response(response_data)
 
     @abstractmethod
     def get_item_versions(
         self, slug: str, data: T
-    ) -> tuple[list[T] | ValidatieFout, int]: ...
-
-    @abstractmethod
-    def format_item(self, data: T) -> Mapping[str, JSONObject]: ...
+    ) -> tuple[list[T] | ZGWError, int]: ...
 
     @abstractmethod
     def format_version(self, data: T) -> VersionSummary: ...
