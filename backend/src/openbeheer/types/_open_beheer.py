@@ -1,9 +1,11 @@
+import enum
 from datetime import datetime
 from functools import singledispatch
 from types import NoneType, UnionType
 from typing import Self, Sequence
+
+import msgspec
 from msgspec import Struct, UnsetType
-import enum
 
 
 class OBPagedQueryParams(Struct):
@@ -129,3 +131,29 @@ class OBList[T](Struct):
 
     results: Sequence[T]
     'The "rows" in the list. All `fields` MUST be an attribute on each `T`'
+
+
+class VersionSummary(Struct):
+    """Summary of the different version of a ZTC resource.
+
+    # TODO: what do we need to show per version?
+    """
+
+    uuid: str
+    begin_geldigheid: str
+    einde_geldigheid: str | None
+    concept: bool | None
+
+
+class FrontendFieldSet(Struct):
+    fields: list[str]
+    span: int | UnsetType = msgspec.UNSET
+
+
+type FrontendFieldsets = list[tuple[str, FrontendFieldSet]]
+
+
+class DetailResponse[T](Struct):
+    result: T
+    fieldsets: FrontendFieldsets
+    versions: list[VersionSummary] | UnsetType = msgspec.UNSET
