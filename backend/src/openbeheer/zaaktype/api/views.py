@@ -7,17 +7,15 @@ from rest_framework.request import Request
 from msgspec.json import decode
 from msgspec import convert
 from openbeheer.api.views import ListView
-from openbeheer.types._zgw import ZGWResponse
-from openbeheer.types.ztc import Status, ValidatieFout, VertrouwelijkheidaanduidingEnum
+from openbeheer.types._zgw import ZGWError, ZGWResponse
+from openbeheer.types.ztc import Status, VertrouwelijkheidaanduidingEnum
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from msgspec.structs import fields
 from openbeheer.api.views import DetailView
 from openbeheer.clients import pagination_helper, ztc_client
 from openbeheer.types._open_beheer import (
     DetailResponse,
     FrontendFieldsets,
-    JSONObject,
     VersionSummary,
 )
 from openbeheer.types.ztc import (
@@ -75,7 +73,7 @@ class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
         description="Retrive zaaktypen from Open Zaak.",
         responses={
             "200": ZGWResponse[ZaakTypeSummary],
-            "400": ValidatieFout,
+            "400": ZGWError,
         },
     )
 )
@@ -112,7 +110,7 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         description="Retrive a zaaktype from Open Zaak.",
         responses={
             "200": DetailResponse,
-            "400": ValidatieFout,
+            "400": ZGWError,
         },
     )
 )
@@ -123,7 +121,7 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
 
     def get_item_versions(
         self, slug: str, data: ZaakType
-    ) -> tuple[list[ZaakType] | ValidatieFout, int]:
+    ) -> tuple[list[ZaakType] | ZGWError, int]:
         # TODO: Question: should we keep the versions "paginated"? (I don't think so)
         with ztc_client() as client:
             response = client.get(
@@ -132,7 +130,7 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
             )
 
         if not response.ok:
-            error = decode(response.content, type=ValidatieFout)
+            error = decode(response.content, type=ZGWError)
             return error, response.status_code
 
         results: list[ZaakType] = []
@@ -147,13 +145,6 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
             results.extend(decoded_page_data.results)
 
         return results, response.status_code
-
-    def format_item(self, data: ZaakType) -> Mapping[str, JSONObject]:
-        item_data = {
-            defined_field.name: getattr(data, defined_field.name, defined_field.default)
-            for defined_field in fields(ZaakType)
-        }
-        return item_data
 
     def format_version(self, data: ZaakType) -> VersionSummary:
         assert (
