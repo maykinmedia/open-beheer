@@ -132,6 +132,8 @@ django==5.2.3
     #   django-setup-configuration
     #   django-simple-certmanager
     #   django-solo
+    #   django-stubs
+    #   django-stubs-ext
     #   django-two-factor-auth
     #   djangorestframework
     #   drf-spectacular
@@ -225,6 +227,16 @@ django-solo==2.4.0
     #   -r requirements/ci.txt
     #   mozilla-django-oidc-db
     #   zgw-consumers
+django-stubs==5.2.1
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   djangorestframework-stubs
+django-stubs-ext==5.2.1
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   django-stubs
 django-two-factor-auth==1.17.0
     # via
     #   -c requirements/ci.txt
@@ -240,6 +252,10 @@ djangorestframework==3.16.0
     #   -r requirements/ci.txt
     #   drf-spectacular
 djangorestframework-camel-case==1.4.2
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+djangorestframework-stubs==3.16.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -553,6 +569,7 @@ requests==2.32.4
     #   -r requirements/ci.txt
     #   ape-pie
     #   django-rosetta
+    #   djangorestframework-stubs
     #   mozilla-django-oidc
     #   requests-mock
     #   sphinx
@@ -677,12 +694,26 @@ tomlkit==0.13.2
     # via bump-my-version
 typeguard==4.4.2
     # via inflect
+types-pyyaml==6.0.12.20250516
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   django-stubs
+    #   djangorestframework-stubs
+types-requests==2.32.4.20250611
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   djangorestframework-stubs
 typing-extensions==4.13.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   anyio
     #   beautifulsoup4
+    #   django-stubs
+    #   django-stubs-ext
+    #   djangorestframework-stubs
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
@@ -716,6 +747,7 @@ urllib3==2.5.0
     #   elastic-apm
     #   requests
     #   sentry-sdk
+    #   types-requests
     #   vcrpy
 uwsgi==2.0.28
     # via

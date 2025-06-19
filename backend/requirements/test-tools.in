@@ -15,3 +15,7 @@ vcrpy
 pytest
 sphinx
 sphinx_rtd_theme
+
+# For types
+django-stubs
+djangorestframework-stubs
