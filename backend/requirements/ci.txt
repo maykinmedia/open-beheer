@@ -270,8 +270,6 @@ jsonschema-specifications==2024.10.1
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   jsonschema
-legacy-cgi==2.6.3
-    # via webob
 lxml==5.3.1
     # via pyquery
 markupsafe==3.0.2
@@ -440,6 +438,11 @@ ruamel-yaml==0.18.10
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   django-setup-configuration
+ruamel-yaml-clib==0.2.12
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   ruamel-yaml
 sentry-sdk==2.25.1
     # via
     #   -c requirements/base.txt
@@ -491,7 +494,9 @@ typing-extensions==4.13.1
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
+    #   pyopenssl
     #   qrcode
+    #   referencing
     #   typing-inspection
     #   zgw-consumers
 typing-inspection==0.4.0
@@ -507,7 +512,7 @@ uritemplate==4.1.1
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   drf-spectacular
-urllib3==2.3.0
+urllib3==2.5.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt

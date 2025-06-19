@@ -356,11 +356,6 @@ jsonschema-specifications==2024.10.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   jsonschema
-legacy-cgi==2.6.3
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   webob
 lxml==5.3.1
     # via
     #   -c requirements/ci.txt
@@ -589,6 +584,11 @@ ruamel-yaml==0.18.10
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-setup-configuration
+ruamel-yaml-clib==0.2.12
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   ruamel-yaml
 ruff==0.11.12
     # via -r requirements/dev.in
 sentry-sdk==2.25.1
@@ -681,11 +681,14 @@ typing-extensions==4.13.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   anyio
     #   beautifulsoup4
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
+    #   pyopenssl
     #   qrcode
+    #   referencing
     #   rich-click
     #   typeguard
     #   typing-inspection
@@ -706,7 +709,7 @@ uritemplate==4.1.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   drf-spectacular
-urllib3==2.3.0
+urllib3==2.5.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
