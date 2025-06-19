@@ -34,6 +34,7 @@ class SchemaEndpointTests(APITestCase):
                     200: OBOption[str],  # Generic type
                     201: OBFieldType,  # enum
                     202: OBOption,  # Msgspec struct
+                    203: list[OBOption],  # list of struct
                 }
             )
             def get(self, request, format=None):
@@ -45,6 +46,7 @@ class SchemaEndpointTests(APITestCase):
         self.assertIn("OBFieldType", schemas)
         self.assertIn("OBOption", schemas)
         self.assertIn("OBOption_str_", schemas)
+        self.assertIn("list_OBOption", schemas)
 
         self.assertIn("/dummy", schema["paths"])
 
@@ -61,6 +63,10 @@ class SchemaEndpointTests(APITestCase):
         self.assertEqual(
             responses["202"]["content"]["application/json"]["schema"]["$ref"],
             "#/components/schemas/OBOption",
+        )
+        self.assertEqual(
+            responses["203"]["content"]["application/json"]["schema"]["$ref"],
+            "#/components/schemas/list_OBOption",
         )
 
     def test_query_params_extension(self):

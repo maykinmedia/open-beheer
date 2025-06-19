@@ -5,6 +5,7 @@ from ape_pie import APIClient
 from msgspec import UNSET, Meta, Struct, UnsetType
 from rest_framework.request import Request
 from openbeheer.api.views import ListView
+from openbeheer.types._open_beheer import ExternalServiceError
 from openbeheer.types._zgw import ZGWResponse
 from openbeheer.types.ztc import Status, ValidatieFout, VertrouwelijkheidaanduidingEnum
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
@@ -59,6 +60,7 @@ class ZaakType(Struct, kw_only=True, rename="camel"):
         responses={
             "200": ZGWResponse[ZaakType],
             "400": ValidatieFout,
+            "502": ExternalServiceError,
         },
     )
 )

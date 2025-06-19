@@ -129,3 +129,10 @@ class OBList[T](Struct):
 
     results: Sequence[T]
     'The "rows" in the list. All `fields` MUST be an attribute on each `T`'
+
+
+class ExternalServiceError(Struct):
+    code: str
+    title: str
+    detail: str
+    status: int
