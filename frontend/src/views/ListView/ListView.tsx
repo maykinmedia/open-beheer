@@ -1,12 +1,13 @@
 import { DataGridProps, ListTemplate } from "@maykin-ui/admin-ui";
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { useNavigate, useNavigation, useOutlet } from "react-router";
 import { ListResponse } from "~/api/types";
 import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 
 export type ListViewProps<T extends object> = ListResponse<T> & {
   getHref?: (obj: T) => string;
-  toolbarItems?: DataGridProps["toolbarItems"];
+  datagridProps?: DataGridProps<T>;
+  toolbarItems?: DataGridProps<T>["toolbarItems"];
 };
 
 /**
@@ -18,6 +19,7 @@ export type ListViewProps<T extends object> = ListResponse<T> & {
  * @typeParam T - The type of items in the list. Must include at least `uuid` and
  *  `identificatie` fields.
  *
+ * @param datagridProps - DataGrid props.
  * @param fields - The field's configuration.
  * @param pagination - The paginator configuration.
  * @param results - The list of items to render in the data grid.
@@ -26,6 +28,7 @@ export type ListViewProps<T extends object> = ListResponse<T> & {
  * @param toolbarItems - Optional extra toolbar items to add to the data grid.
  */
 export function ListView<T extends object>({
+  datagridProps,
   fields,
   pagination,
   results,
@@ -79,9 +82,11 @@ export function ListView<T extends object>({
           showPaginator: Boolean(pagination),
           toolbarItems: toolbarItems,
           loading: state !== "idle",
+          page: parseInt(urlSearchParams.get("page") || "1"),
           paginatorProps: pagination,
           onClick: handleClick,
           onPageChange: handlePageChange,
+          ...datagridProps,
         }}
       />
     )
