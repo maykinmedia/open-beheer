@@ -1,10 +1,9 @@
-import { debounce } from "@maykin-ui/client-common";
-import { useRef } from "react";
 import {
   SetURLSearchParams,
   URLSearchParamsInit,
   useSearchParams,
 } from "react-router";
+import { useDebounce } from "~/hooks/useDebounce.tsx";
 
 /**
  * Wraps `useSearchParams()`, combines instead of replaces current URLSearchParams.
@@ -15,8 +14,7 @@ export function useCombinedSearchParams(
   debounceTimeout?: number,
 ): ReturnType<typeof useSearchParams> {
   const [searchParams, setSearchParams] = useSearchParams();
-  const debounced = debounce(handle, debounceTimeout);
-  const setCombinedSearchParams = useRef(debounced);
+  const setCombinedSearchParams = useDebounce(handle, debounceTimeout);
 
   /**
    * Updates combined `searchParams`.
@@ -34,5 +32,5 @@ export function useCombinedSearchParams(
     setSearchParams(new URLSearchParams(activeParams));
   }
 
-  return [searchParams, setCombinedSearchParams.current as SetURLSearchParams];
+  return [searchParams, setCombinedSearchParams as SetURLSearchParams];
 }

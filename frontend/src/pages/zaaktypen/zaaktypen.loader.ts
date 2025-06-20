@@ -25,7 +25,7 @@ export const zaaktypenLoader = loginRequired(
       `/service/${params.serviceSlug}/zaaktypen`,
       {
         catalogus: params.catalogusId,
-        page: searchParams.get("page") || undefined,
+        ...Object.fromEntries(searchParams),
       },
     );
     return { ...response, fieldsets: ZAAKTYPE_FIELDSETS };
