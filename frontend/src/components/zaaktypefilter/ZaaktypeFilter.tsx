@@ -54,6 +54,9 @@ export function ZaaktypeFilter({
   onSubmit,
 }: ZaaktypeFilterProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [statusState, setStatusState] = useState<ZaaktypeStatusEnum | null>(
+    status || null,
+  );
   const [trefwoordenState, setTrefwoordenState] = useState(trefwoorden);
 
   /**
@@ -74,10 +77,11 @@ export function ZaaktypeFilter({
   /**
    * Calls onSubmit with empty values.
    */
-  const handleReset = useCallback(
-    () => onSubmit?.({ status: null, trefwoorden: null, page: 1 }),
-    [onSubmit],
-  );
+  const handleReset = useCallback(() => {
+    setStatusState(null);
+    setTrefwoordenState(null);
+    onSubmit?.({ status: null, trefwoorden: null, page: 1 });
+  }, [onSubmit]);
 
   /**
    * Maps the onSubmit of the Form to onSubmit.
@@ -86,7 +90,7 @@ export function ZaaktypeFilter({
     useDebounce((_: FormEvent, data: SerializedFormData = {}) => {
       const values = data as ZaaktypeFilterValues;
       onSubmit?.({
-        status: values.status || status,
+        status: values.status || statusState,
         trefwoorden: values.trefwoorden,
         page: 1, // Filtering invalidates pagination.
       });
@@ -99,8 +103,11 @@ export function ZaaktypeFilter({
       label: "Status",
       name: "status",
       type: "radio",
-      value: status, // TODO: onReset
+      value: statusState,
       options: StatusChoices,
+      // TODO: Type should be HTMLInputElement as this is a radio.,
+      onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
+        setStatusState(e.target.value as ZaaktypeStatusEnum),
     },
   ];
 
@@ -120,17 +127,17 @@ export function ZaaktypeFilter({
     },
   ];
   return (
-    <>
+    <div className="ob-zaaktype-filter">
       <Input
+        aria-label="Trefwoorden"
         icon={<Solid.MagnifyingGlassIcon />}
         name="trefwoorden"
         placeholder="Trefwoorden"
-        type="search"
         value={trefwoordenState || ""}
         onChange={handleSearch}
       />
       <Dropdown
-        className="ob-zaaktype-filter"
+        className="ob-zaaktype-filter__filter"
         open={isDropDownOpen}
         variant="outline"
         label={
@@ -158,6 +165,6 @@ export function ZaaktypeFilter({
           </Body>
         </Card>
       </Dropdown>
-    </>
+    </div>
   );
 }

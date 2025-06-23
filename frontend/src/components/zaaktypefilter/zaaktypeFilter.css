@@ -1,5 +1,10 @@
 
-.ob-zaaktype-filter__dropdown .mykn-body .mykn-button {
+.ob-zaaktype-filter {
+  display: flex;
+  gap: var(--spacing-s-h);
+}
+
+.ob-zaaktype-filter__filter__dropdown .mykn-body .mykn-button {
   --button-color-background-primary: transparent;
   --button-color-text-primary: var(--page-color-primary);
 
@@ -10,7 +15,7 @@
   --button-color-text-danger: var(--page-color-danger);
 }
 
-.ob-zaaktype-filter__dropdown .mykn-radiogroup {
+.ob-zaaktype-filter__filter__dropdown .mykn-radiogroup {
   column-gap: var(--spacing-s-h);
   display: grid;
   grid-template-rows: repeat(1, auto);
