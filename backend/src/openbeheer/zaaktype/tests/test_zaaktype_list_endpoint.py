@@ -42,6 +42,7 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         self.assertSetEqual(
             field_names,
             {
+                "url",
                 "omschrijving",
                 "identificatie",
                 "eindeGeldigheid",
