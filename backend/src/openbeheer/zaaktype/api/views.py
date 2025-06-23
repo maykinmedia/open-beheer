@@ -47,6 +47,7 @@ class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
     # Omschrijving
     # Vertrouwelijkheidaanduiding
 
+    url: str
     identificatie: str
     omschrijving: str
     # Actief ja/nee: calculated
