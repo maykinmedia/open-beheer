@@ -76,6 +76,7 @@ class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
             "200": ZGWResponse[ZaakTypeSummary],
             "400": ZGWError,
             "502": ExternalServiceError,
+            "504": ExternalServiceError,
         },
     )
 )

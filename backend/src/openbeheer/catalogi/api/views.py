@@ -3,11 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from msgspec import convert
-from zgw_consumers.constants import APITypes
-from zgw_consumers.models import Service
 
 from rest_framework.request import Request
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from openbeheer.api.views import MsgspecAPIView
@@ -22,29 +19,6 @@ from openbeheer.utils.decorators import handle_service_errors
 @extend_schema_view(
     get=extend_schema(
         tags=["Catalogi"],
-        summary=_("Get Open Zaak choices"),
-        description=_(
-            "Get the available Open Zaak catalogi instances. The value is the slug of the configured service, "
-            "while the label is the name of the service."
-        ),
-        responses={"200": list[OBOption[str]]},
-    )
-)
-class ServiceChoicesView(MsgspecAPIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request: Request) -> Response:
-        services = Service.objects.filter(api_type=APITypes.ztc)
-
-        data = [
-            OBOption(label=service.label, value=service.slug) for service in services
-        ]
-        return Response(data)
-
-
-@extend_schema_view(
-    get=extend_schema(
-        tags=["Catalogi"],
         summary=_("Get catalogue choices"),
         description=_(
             "Retrieve the catalogues available in an Open Zaak instance. "
@@ -54,6 +28,7 @@ class ServiceChoicesView(MsgspecAPIView):
         responses={
             "200": list[OBOption[str]],
             "502": ExternalServiceError,
+            "504": ExternalServiceError,
         },
     )
 )
