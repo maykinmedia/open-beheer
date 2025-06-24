@@ -1,17 +1,12 @@
-from typing import Any, Literal, get_args, get_origin
+from typing import Any, Literal
 from drf_spectacular.extensions import OpenApiSerializerExtension
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import Direction
-from msgspec import Struct
 from msgspec.json import schema_components
-from drf_spectacular.plumbing import ResolvedComponent, get_class
+from drf_spectacular.plumbing import ResolvedComponent
 from drf_spectacular.extensions import OpenApiFilterExtension
-import enum
 
 from openbeheer.types._drf_spectacular import QueryParamSchema
-
-
-SUPPORTED_MSG_CLASSES = (Struct, enum.StrEnum)
 
 
 class MsgSpecExtension(OpenApiSerializerExtension):
@@ -19,16 +14,11 @@ class MsgSpecExtension(OpenApiSerializerExtension):
 
     @classmethod
     def _matches(cls, target: Any) -> bool:
-        # For generic types
-        if get_origin(target):
-            if issubclass(get_origin(target), SUPPORTED_MSG_CLASSES):
-                return True
-
-            # Example: list[OBOption] origin is list, and not in SUPPORTED_MSG_CLASSES,
-            # but the argument OBOption is a Struct, so it needs to use this extension.
-            return any(cls._matches(arg) for arg in get_args(target))
-
-        return issubclass(get_class(target), SUPPORTED_MSG_CLASSES)
+        """Match based on whether Msgspec can generate a schema"""
+        try:
+            return bool(schema_components((target,)))
+        except Exception:
+            return False
 
     def map_serializer(
         self, auto_schema: AutoSchema, direction: Direction
@@ -75,7 +65,7 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         if out.get("type") == "array" and "$ref" in out.get("items", {}):
             return f"list_{out['items']['$ref']}"
 
-        return out["$ref"]
+        return out.get("$ref")
 
 
 class MsgSpecFilterBackend:
