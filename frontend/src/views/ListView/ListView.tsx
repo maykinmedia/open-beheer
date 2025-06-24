@@ -1,7 +1,7 @@
-import { FieldSet, ListTemplate } from "@maykin-ui/admin-ui";
-import { useCallback } from "react";
+import { ListTemplate } from "@maykin-ui/admin-ui";
+import React, { useCallback } from "react";
 import {
-  useLocation,
+  useNavigate,
   useNavigation,
   useOutlet,
   useSearchParams,
@@ -10,7 +10,7 @@ import { ListResponse } from "~/api/types";
 import { useBreadcrumbItems } from "~/hooks";
 
 export type ListViewProps<T extends object> = ListResponse<T> & {
-  fieldsets: FieldSet<T>[];
+  getHref?: (obj: T) => string;
 };
 
 /**
@@ -19,20 +19,22 @@ export type ListViewProps<T extends object> = ListResponse<T> & {
  * The primary action (click) shows item details in a side pane.
  * Ctrl+click or Cmd+click navigates to the item's detail route in fullscreen.
  *
- * @typeParam T - The type of items in the list. Must include at least `uuid` and `identificatie` fields.
+ * @typeParam T - The type of items in the list. Must include at least `uuid` and
+ *  `identificatie` fields.
  *
  * @param fields - The field's configuration.
  * @param pagination - The paginator configuration.
  * @param results - The list of items to render in the data grid.
- * @param fieldsets - Optional custom fieldsets used for rendering item details.
- * @param fieldsets - Optional custom fieldsets used for rendering item details.
+ * @param getHref - A function that if set, receives the row and should return a
+ *  URL to navigate to.
  */
 export function ListView<T extends object>({
   fields,
   pagination,
   results,
+  getHref,
 }: ListViewProps<T>) {
-  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { state } = useNavigation();
   const outlet = useOutlet();
   const [urlSearchParams, setURLSearchParams] = useSearchParams();
@@ -69,6 +71,21 @@ export function ListView<T extends object>({
     [urlSearchParams],
   );
 
+  /**
+   * Gets called when a row's identifier is clicked.
+   * @param event - The mouse event.
+   * @param data - The row data.
+   */
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>, data: T) => {
+      event.preventDefault();
+      if (getHref) {
+        navigate(getHref(data));
+      }
+    },
+    [getHref],
+  );
+
   return (
     outlet || (
       <ListTemplate
@@ -76,8 +93,7 @@ export function ListView<T extends object>({
         dataGridProps={{
           objectList: results.map((row) => ({
             ...row,
-            // @ts-expect-error - Assume uuid.
-            href: row.uuid ? `${pathname}/${row.uuid}` : undefined,
+            href: getHref && getHref(row),
           })),
           decorate: true,
           fields: fields,
@@ -85,6 +101,7 @@ export function ListView<T extends object>({
           showPaginator: Boolean(pagination),
           loading: state !== "idle",
           paginatorProps: pagination,
+          onClick: handleClick,
           onPageChange: handlePageChange,
         }}
       />
