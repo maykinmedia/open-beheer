@@ -3,13 +3,20 @@
  * This hook provides functionality to get the current service and update it.
  */
 import { useEffect, useState } from "react";
+import { User } from "~/api";
 import { ServiceChoice, getServiceChoices } from "~/api/service.ts";
 
-export function useService() {
+/**
+ * Returns the first available service.
+ * @param user - Only fetch if truthy.
+ */
+export function useService(user: User | null) {
   const [service, setService] = useState<ServiceChoice | null>(null);
   const [services, setServices] = useState<ServiceChoice[]>([]);
 
   useEffect(() => {
+    if (!user) return;
+
     const controller = new AbortController();
 
     const fetchServices = async () => {
@@ -27,7 +34,7 @@ export function useService() {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [user]);
 
   return { service, services, setService };
 }

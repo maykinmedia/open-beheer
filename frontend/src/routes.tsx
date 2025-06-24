@@ -6,6 +6,7 @@ import {
   ZaaktypenPage,
   loginAction,
   loginLoader,
+  logoutLoader,
   serviceLoader,
   zaaktypeLoader,
   zaaktypenLoader,
@@ -62,6 +63,15 @@ export const routes: RouteObject[] = [
         element: <LoginPage />,
         loader: loginLoader,
         action: loginAction,
+        handle: {
+          hideUi: true,
+        },
+      },
+      {
+        id: "logout",
+        path: "/logout",
+        element: <Navigate to="/login" />,
+        loader: logoutLoader,
         handle: {
           hideUi: true,
         },

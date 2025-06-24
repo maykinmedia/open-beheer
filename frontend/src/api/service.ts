@@ -1,3 +1,4 @@
+import { cacheMemo } from "@maykin-ui/client-common";
 import { request } from "~/api/request.ts";
 
 export type ServiceChoice = {
@@ -9,5 +10,8 @@ export type ServiceChoice = {
  * API call for retrieving service choices.
  */
 export async function getServiceChoices() {
-  return request<ServiceChoice[]>("GET", "/service/choices/");
+  return cacheMemo("getServiceChoices", request<ServiceChoice[]>, [
+    "GET",
+    "/service/choices/",
+  ]);
 }
