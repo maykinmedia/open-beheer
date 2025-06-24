@@ -95,6 +95,17 @@ def as_ob_fieldtype(t: type | UnionType) -> OBFieldType:
     return OBFieldType.string
 
 
+def options(t: type | UnionType) -> list[OBOption]:
+    "Find an enum in the type and turn it into options."
+    match t:
+        case enum.EnumType():
+            return OBOption.from_enum(t)
+        case UnionType():
+            return [option for ut in t.__args__ for option in options(ut)]
+        case _:
+            return []
+
+
 class OBField[T](Struct, rename="camel"):
     """Used by frontend to draw list views"""
 
@@ -103,14 +114,14 @@ class OBField[T](Struct, rename="camel"):
 
     type: OBFieldType
 
-    filter_value: T | None = None
+    filter_value: T | UnsetType = msgspec.UNSET
     'The currently "selected" value'
 
-    filter_lookup: str = ""
+    filter_lookup: str | UnsetType = ""
     """The "lookup" (query parameter) to use for this field while filtering (e.g.
     "omschrijving__icontains")."""
 
-    options: None | list[OBOption[T]] = []
+    options: list[OBOption[T]] | UnsetType = []
     "fields that are not query parameter MAY need options too"
 
     def __post_init__(self):
@@ -149,6 +160,15 @@ class FrontendFieldSet(Struct):
     fields: list[str]
     span: int | UnsetType = msgspec.UNSET
 
+    def __post_init__(self):
+        # camelize value of field names
+        self.fields = [
+            "".join(
+                part.title() if n else part for n, part in enumerate(field.split("_"))
+            )
+            for field in self.fields
+        ]
+
 
 type FrontendFieldsets = list[tuple[str, FrontendFieldSet]]
 
@@ -156,6 +176,7 @@ type FrontendFieldsets = list[tuple[str, FrontendFieldSet]]
 class DetailResponse[T](Struct):
     result: T
     fieldsets: FrontendFieldsets
+    fields: list[OBField]
     versions: list[VersionSummary] | UnsetType = msgspec.UNSET
 
 
