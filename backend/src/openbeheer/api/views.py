@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from enum import EnumType
-from types import UnionType
 from typing import Iterable, Mapping, Protocol, Sequence
 from uuid import UUID
 
@@ -26,6 +24,7 @@ from openbeheer.types._open_beheer import (
     DetailResponse,
     FrontendFieldsets,
     VersionSummary,
+    options,
 )
 from openbeheer.types._zgw import ZGWError
 from typing_extensions import get_annotations
@@ -138,16 +137,6 @@ class ListView[P: OBPagedQueryParams, T](MsgspecAPIView):
                             Options are inferred from the type annotation of
                             `self.data_type`, but that may be set more general.
         """
-
-        def options(t: type | UnionType) -> list[OBOption]:
-            "Find an enum in the type and turn it into options."
-            match t:
-                case EnumType():
-                    return OBOption.from_enum(t)
-                case UnionType():
-                    return [option for ut in t.__args__ for option in options(ut)]
-                case _:
-                    return []
 
         def to_ob_field(name: str, annotation: type) -> OBField:
             # closure over option_overrides
@@ -324,6 +313,7 @@ class DetailView[T](MsgspecAPIView, ABC):
             else msgspec.UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
+            fields=self.get_fields(),
         )
 
         return Response(response_data)
@@ -360,6 +350,7 @@ class DetailView[T](MsgspecAPIView, ABC):
             else msgspec.UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
+            fields=self.get_fields(),
         )
 
         return Response(response_data)
@@ -382,3 +373,6 @@ class DetailView[T](MsgspecAPIView, ABC):
 
     @abstractmethod
     def get_fieldsets(self) -> FrontendFieldsets: ...
+
+    @abstractmethod
+    def get_fields(self) -> list[OBField]: ...
