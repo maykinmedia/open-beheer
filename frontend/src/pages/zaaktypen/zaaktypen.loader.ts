@@ -19,6 +19,17 @@ export const zaaktypenLoader = loginRequired(
     loaderFunctionArgs: LoaderFunctionArgs,
   ): Promise<ZaaktypenLoaderData> => {
     const { params } = loaderFunctionArgs;
+
+    // Skip fetching if detail view is active.
+    if (params.zaaktypeUUID) {
+      return {
+        fields: [],
+        fieldsets: [],
+        pagination: { count: 0, page: 1, pageSize: 0 },
+        results: [],
+      };
+    }
+
     const response = await request<ListResponse<ZaakType>>(
       "GET",
       `/service/${params.serviceSlug}/zaaktypen`,

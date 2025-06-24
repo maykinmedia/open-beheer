@@ -1,4 +1,5 @@
-import { useLoaderData } from "react-router";
+import { useCallback } from "react";
+import { useLoaderData, useLocation } from "react-router";
 import { ZaaktypenLoaderData } from "~/pages";
 import { ListView } from "~/views";
 
@@ -7,5 +8,16 @@ import { ListView } from "~/views";
  */
 export function ZaaktypenPage() {
   const loaderData = useLoaderData<ZaaktypenLoaderData>();
-  return <ListView {...loaderData} />;
+  const { pathname } = useLocation();
+
+  /**
+   * Splits `obj.url` into parts, using the last part as UUID.
+   * @param obj - An object which implements a `url` key.
+   */
+  const getUUID = useCallback(
+    (obj: { url: string }) => `${pathname}/${obj.url.split("/").reverse()[0]}`,
+    [pathname],
+  );
+
+  return <ListView {...loaderData} getHref={getUUID} />;
 }
