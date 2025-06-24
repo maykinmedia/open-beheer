@@ -7,10 +7,10 @@ import {
   Logo,
   Outline,
   Select,
-  ucFirst,
 } from "@maykin-ui/admin-ui";
 // @ts-expect-error - no ts modules
 import "@maykin-ui/admin-ui/style";
+import { string2Title } from "@maykin-ui/client-common";
 import { useEffect, useMemo, useState } from "react";
 import {
   Outlet,
@@ -129,7 +129,7 @@ function App() {
         return {
           active: Boolean(id && matches.map((m) => m.id).includes(id)),
           align: "start",
-          children: ucFirst(path?.split("/").pop()?.trim() || ""),
+          children: string2Title(path?.split("/").pop()?.trim() || ""),
           disabled: !catalogusId,
           onClick: () => {
             navigate(`${serviceSlug}/${catalogusId}/${path}`);
