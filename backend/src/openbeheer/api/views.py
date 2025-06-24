@@ -329,7 +329,7 @@ class DetailView[T](MsgspecAPIView, ABC):
         return Response(response_data)
 
     def update(
-        self, request: Request, slug: str, uuid: str, is_partial: bool = True
+        self, request: Request, slug: str, uuid: UUID, is_partial: bool = True
     ) -> Response:
         with ztc_client(slug) as client:
             handler = client.patch if is_partial else client.put
@@ -365,11 +365,11 @@ class DetailView[T](MsgspecAPIView, ABC):
         return Response(response_data)
 
     def patch(
-        self, request: Request, slug: str, uuid: str, *args, **kwargs
+        self, request: Request, slug: str, uuid: UUID, *args, **kwargs
     ) -> Response:
         return self.update(request, slug, uuid, is_partial=True)
 
-    def put(self, request: Request, slug: str, uuid: str, *args, **kwargs) -> Response:
+    def put(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         return self.update(request, slug, uuid, is_partial=False)
 
     @abstractmethod
