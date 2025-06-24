@@ -44,21 +44,28 @@ export const CATALOGUS_PARAM = "catalogusId";
  * This component serves as the entry point for the React app and renders the main UI structure.
  */
 function App() {
+  const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const params = useParams();
   const matches = useMatches();
   const currentMatch = useCurrentMatch();
   const childRoutes = useChildRoutes(SIDEBAR_INDEX);
-  const { service } = useService();
+  const { service } = useService(user);
   const { catalogiChoices } = useCatalogi(service);
 
   const serviceSlug = params[SERVICE_PARAM];
   const catalogusId = params[CATALOGUS_PARAM];
 
-  const [user, setUser] = useState<User | null>(null);
+  // Determine whether we should render the base UI.
+  const currentMatchHandle = currentMatch.handle as
+    | Record<string, unknown>
+    | undefined;
+  const hideUi = currentMatchHandle?.hideUi;
 
   useEffect(() => {
+    if (hideUi) return;
+
     const controller = new AbortController();
 
     const fetchUser = async () => {
@@ -76,13 +83,7 @@ function App() {
       controller.abort();
       setUser(null);
     };
-  }, []);
-
-  // Determine whether we should render the base UI.
-  const currentMatchHandle = currentMatch.handle as
-    | Record<string, unknown>
-    | undefined;
-  const hideUi = currentMatchHandle?.hideUi;
+  }, [hideUi]);
 
   /**
    * The primary navigation items.

@@ -21,7 +21,7 @@ export const zaaktypenLoader = loginRequired(
     const { params } = loaderFunctionArgs;
     const response = await request<ListResponse<ZaakType>>(
       "GET",
-      `/service/${params.serviceSlug}/zaaktypen`,
+      `/service/${params.serviceSlug}/zaaktypen/`,
       {
         catalogus: params.catalogusId,
       },
