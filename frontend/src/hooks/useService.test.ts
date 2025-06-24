@@ -2,6 +2,7 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import { getServiceChoices } from "~/api/service.ts";
+import { FIXTURE_USER } from "~/fixtures";
 
 import { useService } from "./useService";
 
@@ -19,7 +20,7 @@ describe("useService", () => {
       mockServices,
     );
 
-    const { result } = renderHook(() => useService());
+    const { result } = renderHook(() => useService(FIXTURE_USER));
 
     await waitFor(() => {
       expect(result.current.services.length).toBeGreaterThan(0);
@@ -33,7 +34,7 @@ describe("useService", () => {
   it("sets service to null if no services are returned", async () => {
     (getServiceChoices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
 
-    const { result } = renderHook(() => useService());
+    const { result } = renderHook(() => useService(FIXTURE_USER));
 
     await waitFor(() => {
       expect(result.current.services).toEqual([]);
