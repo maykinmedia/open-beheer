@@ -1,4 +1,4 @@
-import { ucFirst } from "@maykin-ui/admin-ui";
+import { string2Title } from "@maykin-ui/client-common";
 import { useMatches } from "react-router";
 
 /**
@@ -15,7 +15,7 @@ export function useBreadcrumbItems() {
   return matches
     .filter((m) => m.pathname !== "/")
     .map((m) => ({
-      label: ucFirst(m.id),
+      label: string2Title(m.id),
       href: m.pathname,
     }));
 }
