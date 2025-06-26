@@ -1,5 +1,7 @@
 import datetime
 from typing import Annotated, Mapping
+from rest_framework.response import Response
+from rest_framework import status
 from ape_pie import APIClient
 from msgspec import UNSET, Meta, Struct, UnsetType
 from rest_framework.request import Request
@@ -83,7 +85,17 @@ class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
             "502": ExternalServiceError,
             "504": ExternalServiceError,
         },
-    )
+    ),
+    post=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Create a zaaktype",
+        description="Create a zaaktype.",
+        request=ZaakTypeRequest,
+        responses={
+            "201": ZaakType,
+            "400": ZGWError,
+        },
+    ),
 )
 class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
     data_type = ZaakTypeSummary
@@ -109,6 +121,25 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         if params.catalogus:
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
+
+    def post(self, request: Request, slug: str = "") -> Response:
+        with ztc_client(slug) as client:
+            response = client.post(self.endpoint_path, json=request.data)
+
+        if not response.ok:
+            error = decode(response.content, type=ZGWError)
+            return Response(
+                error,
+                status=response.status_code,
+            )
+
+        data = decode(
+            response.content,
+            type=ZaakType,
+            strict=False,
+        )
+
+        return Response(data, status.HTTP_201_CREATED)
 
 
 @extend_schema_view(
@@ -160,7 +191,7 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
         with ztc_client() as client:
             response = client.get(
                 "zaaktypen",
-                params={"identificatie": data.identificatie},
+                params={"identificatie": data.identificatie, "status": "alles"},
             )
 
         if not response.ok:
