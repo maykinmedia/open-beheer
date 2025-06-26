@@ -147,3 +147,85 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         response.json()  # TODO: Add some to the fixtures?
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls) -> None:
+        super().setUpTestData()
+        cls.service = ServiceFactory.create(
+            api_type=APITypes.ztc,
+            api_root="http://localhost:8003/catalogi/api/v1",
+            client_id="test-vcr",
+            secret="test-vcr",
+            slug="OZ",
+        )
+        cls.user = UserFactory.create()
+        cls.url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
+
+    def test_create_zaaktype(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            self.url,
+            data={
+                "omschrijving": "New Zaaktype 001",
+                "vertrouwelijkheidaanduiding": "geheim",
+                "doel": "New Zaaktype 001",
+                "aanleiding": "New Zaaktype 001",
+                "indicatieInternOfExtern": "intern",
+                "handelingInitiator": "aanvragen",
+                "onderwerp": "New Zaaktype 001",
+                "handelingBehandelaar": "handelin",
+                "doorlooptijd": "P40D",
+                "opschortingEnAanhoudingMogelijk": False,
+                "verlengingMogelijk": True,
+                "verlengingstermijn": "P40D",
+                "publicatieIndicatie": False,
+                "productenOfDiensten": ["https://example.com/product/321"],
+                "referentieproces": {"naam": "ReferentieProces 1"},
+                "verantwoordelijke": "200000000",
+                "beginGeldigheid": "2025-06-19",
+                "versiedatum": "2025-06-19",
+                "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                "besluittypen": [],
+                "gerelateerdeZaaktypen": [],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_missing_data(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            self.url,
+            data={
+                # "omschrijving": "New Zaaktype 001", # Missing!
+                "vertrouwelijkheidaanduiding": "geheim",
+                "doel": "New Zaaktype 001",
+                "aanleiding": "New Zaaktype 001",
+                "indicatieInternOfExtern": "intern",
+                "handelingInitiator": "aanvragen",
+                "onderwerp": "New Zaaktype 001",
+                "handelingBehandelaar": "handelin",
+                "doorlooptijd": "P40D",
+                "opschortingEnAanhoudingMogelijk": False,
+                "verlengingMogelijk": True,
+                "verlengingstermijn": "P40D",
+                "publicatieIndicatie": False,
+                "productenOfDiensten": ["https://example.com/product/321"],
+                "referentieproces": {"naam": "ReferentieProces 1"},
+                "verantwoordelijke": "200000000",
+                "beginGeldigheid": "2025-06-19",
+                "versiedatum": "2025-06-19",
+                "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                "besluittypen": [],
+                "gerelateerdeZaaktypen": [],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json()["invalidParams"][0]["name"], "omschrijving")
+        self.assertEqual(response.json()["invalidParams"][0]["code"], "required")
