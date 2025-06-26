@@ -9,11 +9,11 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDE1OTA2MCwiZXhwIjoxNzUwMjAyMjYwLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.N1-QIvpOxCGgbwjhJ2MbT3R2VYXtK6-gqdh7Etu3DSg
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDkzNDI3MSwiZXhwIjoxNzUwOTc3NDcxLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.8MeYBaacFiW-3ySxVGgEqSHHyR2ZzOAz2DamE2aEQe0
       Connection:
       - keep-alive
       User-Agent:
-      - python-requests/2.32.3
+      - python-requests/2.32.4
     method: GET
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487
   response:
@@ -33,19 +33,19 @@ interactions:
       Content-Length:
       - '1764'
       Content-Security-Policy:
-      - 'font-src ''self'' fonts.gstatic.com; script-src ''self'' ''unsafe-inline''
-        cdnjs.cloudflare.com cdn.jsdelivr.net; default-src ''self''; frame-ancestors
-        ''none''; frame-src ''self''; object-src ''none''; style-src ''self'' ''unsafe-inline''
-        fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net; base-uri ''self'';
+      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self''; base-uri
+        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        object-src ''none''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
         img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        connect-src ''self'' raw.githubusercontent.com; worker-src ''self'' blob:;
-        form-action ''self'''
+        frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
+        ''none'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Tue, 17 Jun 2025 11:17:40 GMT
+      - Thu, 26 Jun 2025 10:37:51 GMT
       ETag:
       - '"e06d2051a4000b5bf5bbb65826d67cdf"'
       Referrer-Policy:
@@ -71,13 +71,13 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDE1OTA2MCwiZXhwIjoxNzUwMjAyMjYwLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.N1-QIvpOxCGgbwjhJ2MbT3R2VYXtK6-gqdh7Etu3DSg
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDkzNDI3MSwiZXhwIjoxNzUwOTc3NDcxLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.8MeYBaacFiW-3ySxVGgEqSHHyR2ZzOAz2DamE2aEQe0
       Connection:
       - keep-alive
       User-Agent:
-      - python-requests/2.32.3
+      - python-requests/2.32.4
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2020-0000000001
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2020-0000000001&status=alles
   response:
     body:
       string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
@@ -95,19 +95,19 @@ interactions:
       Content-Length:
       - '1816'
       Content-Security-Policy:
-      - 'font-src ''self'' fonts.gstatic.com; script-src ''self'' ''unsafe-inline''
-        cdnjs.cloudflare.com cdn.jsdelivr.net; default-src ''self''; frame-ancestors
-        ''none''; frame-src ''self''; object-src ''none''; style-src ''self'' ''unsafe-inline''
-        fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net; base-uri ''self'';
+      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self''; base-uri
+        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        object-src ''none''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
         img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        connect-src ''self'' raw.githubusercontent.com; worker-src ''self'' blob:;
-        form-action ''self'''
+        frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
+        ''none'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Tue, 17 Jun 2025 11:17:41 GMT
+      - Thu, 26 Jun 2025 10:37:51 GMT
       Referrer-Policy:
       - same-origin
       Server:
