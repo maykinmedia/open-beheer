@@ -9,7 +9,7 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDM0MTIyOCwiZXhwIjoxNzUwMzg0NDI4LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.0SUEjmUpZrZWCFm24Rc_vgghfGQfE9T0HMJdg89hxOQ
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTAxNDc5NCwiZXhwIjoxNzUxMDU3OTk0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.YOrh8vp8SA054MvkQ9oychnfQLXQqm7bkgi0p5BQ6Io
       Connection:
       - keep-alive
       User-Agent:
@@ -33,19 +33,18 @@ interactions:
       Content-Length:
       - '1740'
       Content-Security-Policy:
-      - 'connect-src ''self'' raw.githubusercontent.com; object-src ''none''; default-src
-        ''self''; base-uri ''self''; font-src ''self'' fonts.gstatic.com; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; frame-src
-        ''self''; frame-ancestors ''none''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; script-src ''self'' ''unsafe-inline''
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; form-action
-        ''self'''
+      - 'frame-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; frame-ancestors ''none''; default-src
+        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        form-action ''self''; object-src ''none''; connect-src ''self'' raw.githubusercontent.com;
+        base-uri ''self''; font-src ''self'' fonts.gstatic.com; worker-src ''self''
+        blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 19 Jun 2025 13:53:48 GMT
+      - Fri, 27 Jun 2025 08:59:54 GMT
       ETag:
       - '"fe061cf88f36939983b723377ada80db"'
       Referrer-Policy:
@@ -71,13 +70,13 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDM0MTIyOCwiZXhwIjoxNzUwMzg0NDI4LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.0SUEjmUpZrZWCFm24Rc_vgghfGQfE9T0HMJdg89hxOQ
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTAxNDc5NCwiZXhwIjoxNzUxMDU3OTk0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.YOrh8vp8SA054MvkQ9oychnfQLXQqm7bkgi0p5BQ6Io
       Connection:
       - keep-alive
       User-Agent:
       - python-requests/2.32.4
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2018-0000000002
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2018-0000000002&status=alles
   response:
     body:
       string: '{"count":2,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ce9feadd-00cb-46c8-a0ef-1d1dfc78586a","identificatie":"ZAAKTYPE-2018-0000000002","omschrijving":"Destruction
@@ -99,19 +98,18 @@ interactions:
       Content-Length:
       - '3264'
       Content-Security-Policy:
-      - 'connect-src ''self'' raw.githubusercontent.com; object-src ''none''; default-src
-        ''self''; base-uri ''self''; font-src ''self'' fonts.gstatic.com; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; frame-src
-        ''self''; frame-ancestors ''none''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; script-src ''self'' ''unsafe-inline''
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; form-action
-        ''self'''
+      - 'frame-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; frame-ancestors ''none''; default-src
+        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        form-action ''self''; object-src ''none''; connect-src ''self'' raw.githubusercontent.com;
+        base-uri ''self''; font-src ''self'' fonts.gstatic.com; worker-src ''self''
+        blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 19 Jun 2025 13:53:49 GMT
+      - Fri, 27 Jun 2025 08:59:54 GMT
       Referrer-Policy:
       - same-origin
       Server:
@@ -135,7 +133,7 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDM0MTIyOSwiZXhwIjoxNzUwMzg0NDI5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.d9Bl3YxXFNeLb9EI1655nSVp0s8icGfRq7LcvSc-5Bs
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTAxNDc5NCwiZXhwIjoxNzUxMDU3OTk0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.YOrh8vp8SA054MvkQ9oychnfQLXQqm7bkgi0p5BQ6Io
       Connection:
       - keep-alive
       Content-Length:
@@ -162,19 +160,18 @@ interactions:
       Content-Length:
       - '1719'
       Content-Security-Policy:
-      - 'connect-src ''self'' raw.githubusercontent.com; object-src ''none''; default-src
-        ''self''; base-uri ''self''; font-src ''self'' fonts.gstatic.com; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; frame-src
-        ''self''; frame-ancestors ''none''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; script-src ''self'' ''unsafe-inline''
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; form-action
-        ''self'''
+      - 'frame-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; frame-ancestors ''none''; default-src
+        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        form-action ''self''; object-src ''none''; connect-src ''self'' raw.githubusercontent.com;
+        base-uri ''self''; font-src ''self'' fonts.gstatic.com; worker-src ''self''
+        blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 19 Jun 2025 13:53:49 GMT
+      - Fri, 27 Jun 2025 08:59:54 GMT
       Referrer-Policy:
       - same-origin
       Server:
@@ -198,13 +195,13 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDM0MTIyOCwiZXhwIjoxNzUwMzg0NDI4LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.0SUEjmUpZrZWCFm24Rc_vgghfGQfE9T0HMJdg89hxOQ
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTAxNDc5NCwiZXhwIjoxNzUxMDU3OTk0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.YOrh8vp8SA054MvkQ9oychnfQLXQqm7bkgi0p5BQ6Io
       Connection:
       - keep-alive
       User-Agent:
       - python-requests/2.32.4
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2018-0000000002
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2018-0000000002&status=alles
   response:
     body:
       string: '{"count":2,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ce9feadd-00cb-46c8-a0ef-1d1dfc78586a","identificatie":"ZAAKTYPE-2018-0000000002","omschrijving":"MODIFIED","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
@@ -225,19 +222,18 @@ interactions:
       Content-Length:
       - '3243'
       Content-Security-Policy:
-      - 'connect-src ''self'' raw.githubusercontent.com; object-src ''none''; default-src
-        ''self''; base-uri ''self''; font-src ''self'' fonts.gstatic.com; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; frame-src
-        ''self''; frame-ancestors ''none''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; script-src ''self'' ''unsafe-inline''
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; form-action
-        ''self'''
+      - 'frame-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; frame-ancestors ''none''; default-src
+        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        form-action ''self''; object-src ''none''; connect-src ''self'' raw.githubusercontent.com;
+        base-uri ''self''; font-src ''self'' fonts.gstatic.com; worker-src ''self''
+        blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 19 Jun 2025 13:53:49 GMT
+      - Fri, 27 Jun 2025 08:59:54 GMT
       Referrer-Policy:
       - same-origin
       Server:
