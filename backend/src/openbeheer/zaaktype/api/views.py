@@ -1,6 +1,5 @@
 import datetime
-from typing import Annotated, Mapping, get_type_hints
-from typing_extensions import get_annotations
+from typing import Annotated, Mapping
 from ape_pie import APIClient
 from msgspec import UNSET, Meta, Struct, UnsetType
 from rest_framework.request import Request
@@ -18,8 +17,6 @@ from openbeheer.types._open_beheer import (
     DetailResponse,
     FrontendFieldsets,
     VersionSummary,
-    as_ob_fieldtype,
-    options,
 )
 from openbeheer.types.ztc import (
     PaginatedZaakTypeList,
@@ -192,19 +189,3 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
-
-    def get_fields(self) -> list[OBField]:
-        ob_fields: list[OBField] = []
-        attrs = get_annotations(ZaakType)
-        for field, annotation in attrs.items():
-            field_options = options(get_type_hints(ZaakType)[field])
-
-            ob_field = OBField(
-                name=field,
-                type=as_ob_fieldtype(annotation),
-                options=field_options or UNSET,
-                filter_lookup=UNSET,
-            )
-            ob_fields.append(ob_field)
-
-        return ob_fields
