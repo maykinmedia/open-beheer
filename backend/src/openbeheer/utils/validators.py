@@ -1,3 +1,4 @@
+import re
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.utils.encoding import force_str
@@ -43,6 +44,7 @@ class CustomRegexValidator(RegexValidator):
         """
         Validates that the input matches the regular expression.
         """
+        assert isinstance(self.regex, re.Pattern)
         if not self.regex.search(force_str(value)):
             message = "{0}: {1}".format(self.message, force_str(value))
             raise ValidationError(message, code=self.code)

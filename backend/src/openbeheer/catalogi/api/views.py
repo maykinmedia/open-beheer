@@ -58,6 +58,7 @@ class CatalogChoicesView(MsgspecAPIView):
                 # OZ API specs say that url is not required, but VNG specs say it is.
                 # In practice, it is always present.
                 url = catalogue.url
+                assert url
                 path = f"{client.base_url}catalogussen/"
                 uuid = url.removeprefix(path)
                 assert uuid
