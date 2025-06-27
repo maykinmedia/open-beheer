@@ -14,6 +14,7 @@
     "start": "npm run dev",
     "test": "vitest",
     "test:coverage": "vitest --coverage --watch=false",
+    "update-types": "npx openapi-typescript http://localhost:8000/api/v1/ -o ./src/types/api.d.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -52,6 +53,7 @@
     "jsdom": "^26.0.0",
     "lint-staged": "^15.5.0",
     "msw-storybook-addon": "^2.0.4",
+    "openapi-typescript": "^7.8.0",
     "playwright": "^1.51.1",
     "prettier": "^3.5.3",
     "storybook": "^8.6.12",

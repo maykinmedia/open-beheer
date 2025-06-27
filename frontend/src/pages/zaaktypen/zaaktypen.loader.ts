@@ -2,9 +2,11 @@ import { LoaderFunctionArgs } from "react-router";
 import { request } from "~/api";
 import { ListResponse } from "~/api/types";
 import { loginRequired } from "~/loaders/loginRequired.loader.ts";
-import { ZaakType } from "~/types";
+import { components } from "~/types";
 
-export type ZaaktypenLoaderData = ListResponse<ZaakType>;
+export type ZaaktypenLoaderData = ListResponse<
+  components["schemas"]["ZaakType"]
+>;
 
 /**
  * Zaaktypen loader.
@@ -26,14 +28,12 @@ export const zaaktypenLoader = loginRequired(
     }
 
     const searchParams = new URL(loaderFunctionArgs.request.url).searchParams;
-    const response = await request<ListResponse<ZaakType>>(
-      "GET",
-      `/service/${params.serviceSlug}/zaaktypen/`,
-      {
-        catalogus: params.catalogusId,
-        ...Object.fromEntries(searchParams),
-      },
-    );
+    const response = await request<
+      ListResponse<components["schemas"]["ZaakType"]>
+    >("GET", `/service/${params.serviceSlug}/zaaktypen/`, {
+      catalogus: params.catalogusId,
+      ...Object.fromEntries(searchParams),
+    });
     return { ...response };
   },
 );

@@ -6,7 +6,7 @@ import eslint_plugin_tsdoc from "eslint-plugin-tsdoc";
 const config = [
   ignoreBuildArtifacts(["build", "storybook-static"]),
   {
-    ignores: ["bin", "coverage", "dist"],
+    ignores: ["bin", "coverage", "dist", "src/types/api.d.ts"],
   },
   ...storybook.configs["flat/recommended"],
   ...maykin,
