@@ -12,3 +12,10 @@ export type ZaakType = {
   zaakcategorie: string | null;
   broncatalogus: string; // URL to the catalog resource
 };
+
+export type ZaakTypeVersion = {
+  uuid: string; // Unique identifier for the version
+  begin_geldigheid: string; // ISO date string (e.g. "2024-01-01")
+  einde_geldigheid: string | null; // ISO date or null
+  concept: boolean | null; // Indicates if this is a concept version
+};

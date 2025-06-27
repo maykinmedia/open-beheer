@@ -1,0 +1,24 @@
+.version-selector__screenreader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+.version-selector__buttons,
+.version-selector__expanded-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.version-selector__buttons {
+  flex-wrap: wrap;
+}
