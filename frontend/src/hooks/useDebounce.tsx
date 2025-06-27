@@ -15,7 +15,6 @@ export function useDebounce<T extends (...args: Parameters<T>) => void>(
   fn: T,
   timeout?: number,
 ) {
-  // @ts-expect-error issue with client-common where debounce fn is incorrectly typed.
   const debouncedRef = useRef(debounce(fn, timeout));
   return debouncedRef.current;
 }
