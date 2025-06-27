@@ -1,10 +1,11 @@
 import { LoaderFunctionArgs } from "react-router";
-import { request } from "~/api";
-import { DetailResponse } from "~/api/types";
+import { DetailResponse, request } from "~/api";
 import { loginRequired } from "~/loaders/loginRequired.loader.ts";
-import { ZaakType } from "~/types";
+import { components } from "~/types";
 
-export type ZaaktypeLoaderData = DetailResponse<ZaakType>;
+export type ZaaktypeLoaderData = DetailResponse<
+  components["schemas"]["ZaakType"]
+>;
 
 /**
  * Zaaktype loader.
@@ -15,10 +16,9 @@ export const zaaktypeLoader = loginRequired(
     loaderFunctionArgs: LoaderFunctionArgs,
   ): Promise<ZaaktypeLoaderData> => {
     const { params } = loaderFunctionArgs;
-    const response = await request<DetailResponse<ZaakType>>(
-      "GET",
-      `/service/${params.serviceSlug}/zaaktypen/${params.zaaktypeUUID}`,
-    );
+    const response = await request<
+      DetailResponse<components["schemas"]["ZaakType"]>
+    >("GET", `/service/${params.serviceSlug}/zaaktypen/${params.zaaktypeUUID}`);
     return { ...response };
   },
 );
