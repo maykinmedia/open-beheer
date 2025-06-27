@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Mapping, Protocol, Sequence
 from uuid import UUID
-
+from typing import get_type_hints
+from typing_extensions import get_annotations
 from ape_pie import APIClient
 from furl import furl
 from msgspec import ValidationError, convert, to_builtins
@@ -27,7 +28,6 @@ from openbeheer.types._open_beheer import (
     options,
 )
 from openbeheer.types._zgw import ZGWError
-from typing_extensions import get_annotations
 
 from rest_framework.request import Request
 
@@ -294,6 +294,22 @@ class DetailView[T](MsgspecAPIView, ABC):
                 invalid_params=[],
             ), 500
 
+    def get_fields(self) -> list[OBField]:
+        ob_fields: list[OBField] = []
+        attrs = get_annotations(self.data_type)
+        for field, annotation in attrs.items():
+            field_options = options(get_type_hints(self.data_type)[field])
+
+            ob_field = OBField(
+                name=field,
+                type=as_ob_fieldtype(annotation),
+                options=field_options or msgspec.UNSET,
+                filter_lookup=msgspec.UNSET,
+            )
+            ob_fields.append(ob_field)
+
+        return ob_fields
+
     def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         data, status_code = self.get_item_data(slug, uuid)
 
@@ -373,6 +389,3 @@ class DetailView[T](MsgspecAPIView, ABC):
 
     @abstractmethod
     def get_fieldsets(self) -> FrontendFieldsets: ...
-
-    @abstractmethod
-    def get_fields(self) -> list[OBField]: ...
