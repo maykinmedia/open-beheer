@@ -1,38 +1,56 @@
-import { Button, Outline, P } from "@maykin-ui/admin-ui";
-import { FC, ReactNode, useState } from "react";
+import { Button, Outline } from "@maykin-ui/admin-ui";
+import { FC, useId, useState } from "react";
+import { ZaakTypeVersion } from "~/types";
 
 import "./VersionSelector.css";
 
-type Version = {
-  id: string;
-  label: string;
-  isCurrent?: boolean;
-  isConcept?: boolean;
-};
-
-type VersionContent = {
-  id: string;
-  children: ReactNode;
-};
-
 interface VersionSelectorProps {
-  versions: Version[];
-  content: VersionContent[];
+  versions: ZaakTypeVersion[];
+  onVersionChange?: (versionId: string) => void;
 }
 
+/**
+ * A reusable component to select a version of a ZaakType.
+ * This component makes a few assumptions:
+ * - The versions are NOT sorted, we expect the backend to provide them in the correct order.
+ * - The current version is the one with a truthy `einde_geldigheid`.
+ * - The concept version is the one with `concept` set to true.
+ * - All other versions are considered historical versions.
+ *
+ * @param versions - An array of versions of a ZaakType as returned by the BFF.
+ * @param onVersionChange - An (optional) callback function to handle version changes.
+ * @returns A section with (collapsible) buttons to select a version.
+ * @example
+ * ```tsx
+ * <VersionSelector
+ *  versions={[
+ *  { uuid: "1", begin_geldigheid: "2023-01-01", einde_geldigheid: null, concept: false },
+ *  { uuid: "2", begin_geldigheid: "2024-01-01", einde_geldigheid: "2023-12-31", concept: false },
+ *  { uuid: "3", begin_geldigheid: "2024-02-01", einde_geldigheid: null, concept: true },
+ *  { uuid: "4", begin_geldigheid: "2024-03-01", einde_geldigheid: null, concept: false },
+ *  ]}
+ *  onVersionChange={(versionId) => console.log("Selected version:", versionId)}
+ *  />
+ * ```
+ *  */
 export const VersionSelector: FC<VersionSelectorProps> = ({
   versions,
-  content,
+  onVersionChange,
 }) => {
-  const currentVersion = versions.find((v) => v.isCurrent);
-  const conceptVersion = versions.find((v) => v.isConcept);
+  const id = useId();
+  const headingId = `version-selector-heading-${id}`;
 
+  const currentVersion = versions.find((v) => v.einde_geldigheid);
+  const conceptVersion = versions.find((v) => v.concept);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedVersionId, setSelectedVersionId] = useState(
-    currentVersion?.id || versions[0]?.id,
-  );
+  const [selectedVersionId, setSelectedVersionId] = useState<
+    string | undefined
+  >(currentVersion?.uuid || currentVersion?.uuid);
 
-  const selectedContent = content.find((item) => item.id === selectedVersionId);
+  const handleVersionChange = (versionId: string) => {
+    setSelectedVersionId(versionId);
+    onVersionChange?.(versionId);
+  };
 
   const getVisibleVersions = () => {
     // If expanded, show all versions
@@ -40,25 +58,31 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
     if (isExpanded) {
       return versions;
     }
-    return versions.filter(
-      (v) =>
-        v.isCurrent ||
-        v.isConcept ||
-        v.id === selectedVersionId ||
-        v.id === currentVersion?.id ||
-        v.id === conceptVersion?.id,
-    );
+
+    return versions.filter((v) => {
+      return (
+        v.einde_geldigheid ||
+        v.concept ||
+        v.uuid === selectedVersionId ||
+        v.uuid === currentVersion?.uuid ||
+        v.uuid === conceptVersion?.uuid
+      );
+    });
+  };
+
+  const getVersionLabel = (version: ZaakTypeVersion) => {
+    if (version.concept) {
+      return `Concept versie ${version.uuid}`;
+    }
+    if (version.einde_geldigheid) {
+      return `Huidige versie ${version.uuid}`;
+    }
+    return `Versie ${version.uuid}`;
   };
 
   return (
-    <section
-      className="version-selector"
-      aria-labelledby="version-selector-heading"
-    >
-      <h2
-        id="version-selector-heading"
-        className="version-selector__screenreader-only"
-      >
+    <section className="version-selector" aria-labelledby={headingId}>
+      <h2 id={headingId} className="version-selector__screenreader-only">
         Kies een versie
       </h2>
 
@@ -69,7 +93,7 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
       >
         <Button
           className="version-selector__toggle-button"
-          variant="secondary"
+          variant="secondary" // TODO: Use "accent" variant when available in Maykin UI
           onClick={() => setIsExpanded((prev) => !prev)}
           aria-expanded={isExpanded}
           aria-label={isExpanded ? "Toon minder versies" : "Toon meer versies"}
@@ -87,30 +111,28 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
           )}
         </Button>
 
-        {getVisibleVersions().map((version) => (
-          <Button
-            key={version.id}
-            className={`version-selector__version-button ${
-              selectedVersionId === version.id
-                ? "version-selector__version-button--active"
-                : ""
-            }`}
-            variant={selectedVersionId === version.id ? "primary" : "secondary"}
-            onClick={() => setSelectedVersionId(version.id)}
-            aria-pressed={selectedVersionId === version.id}
-            aria-label={`Selecteer versie ${version.label}`}
-          >
-            {version.label}
-          </Button>
-        ))}
-      </div>
-
-      <div className="version-selector__content">
-        {selectedContent?.children ?? (
-          <P className="version-selector__no-content" role="status">
-            Geen inhoud gevonden voor versie: {selectedVersionId}
-          </P>
-        )}
+        {getVisibleVersions().map((version) => {
+          const versionLabel = getVersionLabel(version);
+          return (
+            <Button
+              key={version.uuid}
+              className={`version-selector__version-button ${
+                selectedVersionId === version.uuid
+                  ? "version-selector__version-button--active"
+                  : ""
+              }`}
+              variant={
+                selectedVersionId === version.uuid ? "primary" : "secondary"
+              } // TODO: Use "accent" variant when available in Maykin UI
+              onClick={() => handleVersionChange(version.uuid)}
+              aria-pressed={selectedVersionId === version.uuid}
+              aria-label={`Selecteer ${versionLabel}`} // TODO: Need a label from backend?
+            >
+              {/*  TODO: Need a label from backend? */}
+              {versionLabel}
+            </Button>
+          );
+        })}
       </div>
     </section>
   );
