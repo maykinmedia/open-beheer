@@ -1,0 +1,17 @@
+[tool.pyright]
+pythonVersion = "3.12"
+# typeCheckingMode = "strict"
+# # list of files that should keep passing
+include = [
+    "backend/src/"
+]
+exclude = [
+    "backend/src/openbeheer/conf",  # hopeless
+    "backend/src/openbeheer/accounts",  # inherited from default-project
+]
+
+# type: ignore[assignment] is used in tests to make
+# assertions of things that should NOT pass
+# this option makes it errors when they suddenly start passing
+reportUnnecessaryTypeIgnoreComment = true
+# reportMissingTypeStubs = true

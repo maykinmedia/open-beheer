@@ -1,5 +1,6 @@
 -c ci.txt
 -r ci.txt
+-r type-checking.txt
 
 # Helpers
 bump-my-version
