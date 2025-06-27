@@ -1,14 +1,10 @@
-import { FieldSet } from "@maykin-ui/admin-ui";
 import { LoaderFunctionArgs } from "react-router";
 import { request } from "~/api";
 import { ListResponse } from "~/api/types";
-import { ZAAKTYPE_FIELDSETS } from "~/fieldsets";
 import { loginRequired } from "~/loaders/loginRequired.loader.ts";
 import { ZaakType } from "~/types";
 
-export type ZaaktypenLoaderData = ListResponse<ZaakType> & {
-  fieldsets: FieldSet<ZaakType>[];
-};
+export type ZaaktypenLoaderData = ListResponse<ZaakType>;
 
 /**
  * Zaaktypen loader.
@@ -24,7 +20,6 @@ export const zaaktypenLoader = loginRequired(
     if (params.zaaktypeUUID) {
       return {
         fields: [],
-        fieldsets: [],
         pagination: { count: 0, page: 1, pageSize: 0 },
         results: [],
       };
@@ -39,6 +34,6 @@ export const zaaktypenLoader = loginRequired(
         ...Object.fromEntries(searchParams),
       },
     );
-    return { ...response, fieldsets: ZAAKTYPE_FIELDSETS };
+    return { ...response };
   },
 );
