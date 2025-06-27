@@ -15,7 +15,10 @@ from drf_spectacular.extensions import _SchemaType
 
 def _get_drf_spectacular_schema(view: Callable) -> _SchemaType:
     generator = SchemaGenerator()
-    generator.endpoints = [("dummy", "dummy", "GET", view)]
+
+    # drf-stubs says BaseGenerator.endpoints are just list[tuple[path, method, callback]]
+    # spectacular docstring too, but code expects list[tuple[path, path_regex, method, callback]]
+    generator.endpoints = [("dummy", "dummy", "GET", view)]  # type: ignore
     schema = generator.get_schema(public=True)
     return schema
 
@@ -78,7 +81,7 @@ class SchemaEndpointTests(APITestCase):
             query_type = TestQueryParam
 
             @extend_schema(filters=True)
-            def get(self, request, format=None):
+            def get(self, request, slug: str = "") -> Response:
                 return Response()
 
         schema = _get_drf_spectacular_schema(DummyView.as_view())

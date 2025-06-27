@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal, NotRequired, Sequence, TypedDict
 
+from django.utils.functional import Promise
+
 if TYPE_CHECKING:
     from .checks import HealthCheck
 
@@ -8,7 +10,7 @@ if TYPE_CHECKING:
 @dataclass
 class HealthCheckError:
     code: str
-    message: str
+    message: str | Promise
     severity: Literal["error", "warning", "info"]
     exc: str = ""
 
@@ -30,7 +32,7 @@ class HealthCheckResult:
         }
         for error in self.errors:
             serialised_error: HealthCheckSerialisedError = {
-                "message": error.message,
+                "message": str(error.message),
                 "code": error.code,
                 "severity": error.severity,
             }
