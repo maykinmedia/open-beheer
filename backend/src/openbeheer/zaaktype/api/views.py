@@ -30,6 +30,7 @@ from openbeheer.types.ztc import (
     ZaakType,
 )
 from furl import furl
+from openbeheer.utils.decorators import handle_service_errors
 from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
 
 
@@ -122,6 +123,7 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
 
+    @handle_service_errors
     def post(self, request: Request, slug: str = "") -> Response:
         with ztc_client(slug) as client:
             response = client.post(self.endpoint_path, json=request.data)

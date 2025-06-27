@@ -310,6 +310,7 @@ class DetailView[T](MsgspecAPIView, ABC):
 
         return ob_fields
 
+    @handle_service_errors
     def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         data, status_code = self.get_item_data(slug, uuid)
 
@@ -371,11 +372,13 @@ class DetailView[T](MsgspecAPIView, ABC):
 
         return Response(response_data)
 
+    @handle_service_errors
     def patch(
         self, request: Request, slug: str, uuid: UUID, *args, **kwargs
     ) -> Response:
         return self.update(request, slug, uuid, is_partial=True)
 
+    @handle_service_errors
     def put(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         return self.update(request, slug, uuid, is_partial=False)
 
