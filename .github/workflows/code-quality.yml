@@ -73,3 +73,27 @@ jobs:
         run: ruff check
       - name: Check formatting
         run: ruff format --check
+
+  type-checking:
+    name: Type checking (Pyright)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "backend/requirements/type-checking.txt"
+      - name: Install required (stub-)packages
+        run: |
+          uv pip install \
+            --system \
+            -r requirements/type-checking.txt
+        working-directory: backend
+      - uses: jakebailey/pyright-action@v1
+        with:
+          version: 1.1.369
+          project: pyright-ci-pyproject.toml
