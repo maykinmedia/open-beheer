@@ -7,7 +7,12 @@ from msgspec.json import decode
 from msgspec import convert
 from openbeheer.api.views import ListView
 from openbeheer.types._zgw import ZGWError, ZGWResponse
-from openbeheer.types.ztc import Status, VertrouwelijkheidaanduidingEnum
+from openbeheer.types.ztc import (
+    PatchedZaakTypeRequest,
+    Status,
+    VertrouwelijkheidaanduidingEnum,
+    ZaakTypeRequest,
+)
 from openbeheer.types._open_beheer import ExternalServiceError
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -123,6 +128,7 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
             "Partially update a zaaktype from Open Zaak. According to OZ specs, this should only work with"
             " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
         ),
+        request=PatchedZaakTypeRequest,
         responses={
             "200": DetailResponse[ZaakType],
             "400": ZGWError,
@@ -135,6 +141,7 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
             "Fully update a zaaktype from Open Zaak. According to OZ specs, this should only work with"
             " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
         ),
+        request=ZaakTypeRequest,
         responses={
             "200": DetailResponse[ZaakType],
             "400": ZGWError,
