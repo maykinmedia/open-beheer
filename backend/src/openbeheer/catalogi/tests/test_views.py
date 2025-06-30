@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 from rest_framework import status
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
-from vcr.unittest import VCRMixin
+from maykin_common.vcr import VCRMixin
 
 from openbeheer.accounts.tests.factories import UserFactory
 

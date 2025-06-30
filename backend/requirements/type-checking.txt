@@ -183,6 +183,7 @@ idna==3.10
     # via
     #   -r requirements/base.txt
     #   requests
+    #   yarl
 inflection==0.5.1
     # via
     #   -r requirements/base.txt
@@ -201,8 +202,10 @@ jsonschema-specifications==2024.10.1
     #   jsonschema
 maykin-2fa==1.0.2
     # via -r requirements/base.txt
-maykin-common==0.2.0
-    # via -r requirements/base.txt
+maykin-common==0.4.0
+    # via
+    #   -r requirements/base.txt
+    #   -r requirements/type-checking.in
 mozilla-django-oidc==4.0.1
     # via
     #   -r requirements/base.txt
@@ -211,6 +214,8 @@ mozilla-django-oidc-db==0.22.0
     # via -r requirements/base.txt
 msgspec==0.19.0
     # via -r requirements/base.txt
+multidict==6.6.3
+    # via yarl
 orderedmultidict==1.0.1
     # via
     #   -r requirements/base.txt
@@ -225,6 +230,8 @@ polib==1.2.0
     # via
     #   -r requirements/base.txt
     #   django-rosetta
+propcache==0.3.2
+    # via yarl
 psycopg2==2.9.10
     # via -r requirements/base.txt
 pycparser==2.22
@@ -275,6 +282,7 @@ pyyaml==6.0.2
     #   -r requirements/base.txt
     #   drf-spectacular
     #   pydantic-settings
+    #   vcrpy
 qrcode==7.4.2
     # via
     #   -r requirements/base.txt
@@ -294,6 +302,7 @@ requests==2.32.4
     #   ape-pie
     #   django-rosetta
     #   djangorestframework-stubs
+    #   maykin-common
     #   mozilla-django-oidc
     #   zgw-consumers
 rpds-py==0.24.0
@@ -326,7 +335,9 @@ types-pyyaml==6.0.12.20250516
     #   django-stubs
     #   djangorestframework-stubs
 types-requests==2.32.4.20250611
-    # via djangorestframework-stubs
+    # via
+    #   djangorestframework-stubs
+    #   maykin-common
 typing-extensions==4.14.0
     # via
     #   -r requirements/base.txt
@@ -357,8 +368,11 @@ urllib3==2.5.0
     #   requests
     #   sentry-sdk
     #   types-requests
+    #   vcrpy
 uwsgi==2.0.28
     # via -r requirements/base.txt
+vcrpy==7.0.0
+    # via maykin-common
 webauthn==2.5.2
     # via
     #   -r requirements/base.txt
@@ -367,5 +381,8 @@ wrapt==1.17.2
     # via
     #   -r requirements/base.txt
     #   elastic-apm
+    #   vcrpy
+yarl==1.20.1
+    # via vcrpy
 zgw-consumers==0.38.0
     # via -r requirements/base.txt
