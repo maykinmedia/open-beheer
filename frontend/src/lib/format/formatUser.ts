@@ -1,6 +1,9 @@
-import { User } from "~/api";
+import { components } from "~/types";
 
-export function formatUser(user: User, { showUsername = true } = {}) {
+export function formatUser(
+  user: components["schemas"]["User"],
+  { showUsername = true } = {},
+) {
   let displayName = "";
   if (!user) return displayName;
 

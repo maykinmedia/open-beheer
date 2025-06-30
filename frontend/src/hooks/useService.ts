@@ -3,16 +3,20 @@
  * This hook provides functionality to get the current service and update it.
  */
 import { useEffect, useState } from "react";
-import { User } from "~/api";
-import { ServiceChoice, getServiceChoices } from "~/api/service.ts";
+import { getServiceChoices } from "~/api/service.ts";
+import { components } from "~/types";
 
 /**
  * Returns the first available service.
  * @param user - Only fetch if truthy.
  */
-export function useService(user: User | null) {
-  const [service, setService] = useState<ServiceChoice | null>(null);
-  const [services, setServices] = useState<ServiceChoice[]>([]);
+export function useService(user: components["schemas"]["User"] | null) {
+  const [service, setService] = useState<
+    components["schemas"]["OBOption_str_"] | null
+  >(null);
+  const [services, setServices] = useState<
+    components["schemas"]["OBOption_str_"][]
+  >([]);
 
   useEffect(() => {
     if (!user) return;

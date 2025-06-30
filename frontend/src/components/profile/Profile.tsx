@@ -12,11 +12,11 @@ import {
   Solid,
 } from "@maykin-ui/admin-ui";
 import React from "react";
-import { User } from "~/api";
 import { formatUser } from "~/lib/format/formatUser.ts";
+import { components } from "~/types";
 
 type ProfileProps = {
-  user: User | null;
+  user: components["schemas"]["User"] | null;
 };
 
 export const Profile: React.FC<ProfileProps> = ({ user }) => {

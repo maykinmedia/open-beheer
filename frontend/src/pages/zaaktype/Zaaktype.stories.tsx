@@ -5,14 +5,14 @@ import {
   withRouter,
 } from "storybook-addon-remix-react-router";
 import { API_BASE_URL } from "~/api";
-import { DetailResponse, ListResponse } from "~/api/types";
+import { DetailResponse } from "~/api/types";
 import {
   FIXTURE_ZAAKTYPE,
-  FIXTURE_ZAAKTYPEN,
   FIXTURE_ZAAKTYPE_FIELDS,
+  FIXTURE_ZAAKTYPE_FIELDSETS,
 } from "~/fixtures";
 import { routes } from "~/routes.tsx";
-import { ZaakType } from "~/types";
+import { components } from "~/types";
 
 import { ZaaktypePage as ZaaktypePageComponent } from "./Zaaktype";
 
@@ -25,28 +25,22 @@ const meta: Meta<typeof ZaaktypePageComponent> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const zaaktypeUUID = FIXTURE_ZAAKTYPE.url.split("/").pop();
+
 export const ZaaktypePage: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get<PathParams, DefaultBodyType, ListResponse<ZaakType>>(
-          `${API_BASE_URL}/catalogi/zaaktypen`,
+        http.get<
+          PathParams,
+          DefaultBodyType,
+          DetailResponse<components["schemas"]["ZaakType"]>
+        >(
+          `${API_BASE_URL}/service/open-zaak-catalogi-api/zaaktypen/${zaaktypeUUID}`,
           () =>
             HttpResponse.json({
               fields: FIXTURE_ZAAKTYPE_FIELDS,
-              pagination: {
-                count: 3,
-                page: 1,
-                pageSize: 100,
-              },
-              results: FIXTURE_ZAAKTYPEN,
-            }),
-        ),
-        http.get<PathParams, DefaultBodyType, DetailResponse<ZaakType>>(
-          `${API_BASE_URL}/catalogi/zaaktypen/${FIXTURE_ZAAKTYPE.uuid}`,
-          () =>
-            HttpResponse.json({
-              fields: FIXTURE_ZAAKTYPE_FIELDS,
+              fieldsets: FIXTURE_ZAAKTYPE_FIELDSETS,
               result: FIXTURE_ZAAKTYPE,
             }),
         ),
@@ -54,7 +48,7 @@ export const ZaaktypePage: Story = {
     },
     reactRouter: reactRouterParameters({
       location: {
-        path: `/catalogi/zaaktypen/${FIXTURE_ZAAKTYPE.uuid}`,
+        path: `/open-zaak-catalogi-api/85028f4f-3d70-4ce9-8dbe-16a6b8613a54/zaaktypen/${zaaktypeUUID}`,
       },
       routing: routes[0],
     }),
