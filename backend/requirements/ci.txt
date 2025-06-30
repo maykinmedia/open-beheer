@@ -214,6 +214,7 @@ django-solo==2.4.0
     #   zgw-consumers
 django-stubs==5.2.1
     # via
+    #   -r requirements/test-tools.in
     #   -r requirements/type-checking.txt
     #   djangorestframework-stubs
 django-stubs-ext==5.2.1
@@ -240,7 +241,9 @@ djangorestframework-camel-case==1.4.2
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
 djangorestframework-stubs==3.16.0
-    # via -r requirements/type-checking.txt
+    # via
+    #   -r requirements/test-tools.in
+    #   -r requirements/type-checking.txt
 docutils==0.21.2
     # via
     #   -c requirements/base.txt
@@ -335,10 +338,11 @@ maykin-2fa==1.0.2
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
-maykin-common==0.2.0
+maykin-common==0.4.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
+    #   -r requirements/test-tools.in
     #   -r requirements/type-checking.txt
 mozilla-django-oidc==4.0.1
     # via
@@ -356,8 +360,10 @@ msgspec==0.19.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
-multidict==6.4.4
-    # via yarl
+multidict==6.6.3
+    # via
+    #   -r requirements/type-checking.txt
+    #   yarl
 orderedmultidict==1.0.1
     # via
     #   -c requirements/base.txt
@@ -388,7 +394,9 @@ polib==1.2.0
     #   -r requirements/type-checking.txt
     #   django-rosetta
 propcache==0.3.2
-    # via yarl
+    # via
+    #   -r requirements/type-checking.txt
+    #   yarl
 psycopg2==2.9.10
     # via
     #   -c requirements/base.txt
@@ -502,6 +510,7 @@ requests==2.32.4
     #   ape-pie
     #   django-rosetta
     #   djangorestframework-stubs
+    #   maykin-common
     #   mozilla-django-oidc
     #   requests-mock
     #   sphinx
@@ -584,6 +593,7 @@ types-requests==2.32.4.20250611
     # via
     #   -r requirements/type-checking.txt
     #   djangorestframework-stubs
+    #   maykin-common
 typing-extensions==4.14.0
     # via
     #   -c requirements/base.txt
@@ -632,7 +642,9 @@ uwsgi==2.0.28
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
 vcrpy==7.0.0
-    # via -r requirements/test-tools.in
+    # via
+    #   -r requirements/type-checking.txt
+    #   maykin-common
 waitress==3.0.2
     # via webtest
 webauthn==2.5.2
@@ -652,8 +664,10 @@ wrapt==1.17.2
     #   -r requirements/type-checking.txt
     #   elastic-apm
     #   vcrpy
-yarl==1.20.0
-    # via vcrpy
+yarl==1.20.1
+    # via
+    #   -r requirements/type-checking.txt
+    #   vcrpy
 zgw-consumers==0.38.0
     # via
     #   -c requirements/base.txt

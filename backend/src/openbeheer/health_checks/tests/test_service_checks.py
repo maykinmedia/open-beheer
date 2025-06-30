@@ -1,7 +1,9 @@
 from django.test import TestCase, tag
 from django.utils.translation import gettext as _
 
-from vcr.unittest import VCRMixin
+from requests.exceptions import ConnectTimeout
+
+from maykin_common.vcr import VCRMixin
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
@@ -160,7 +162,6 @@ class CatalogueCheckTests(VCRMixin, TestCase):
         self.assertIn("404 Client Error", errors[0].exc)
 
     def test_openzaak_down(self):
-        """When re-recording the cassettes, kill open-zaak for this test."""
         ServiceFactory.create(
             label="ZTC",
             api_type=APITypes.ztc,
@@ -168,9 +169,10 @@ class CatalogueCheckTests(VCRMixin, TestCase):
             client_id="test-vcr",
             secret="test-vcr",
         )
-
         check = CatalogueHealthCheck()
-        result = check.run()
+
+        with self.vcr_raises(ConnectTimeout):
+            result = check.run()
 
         self.assertFalse(result.success)
 

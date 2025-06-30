@@ -135,7 +135,7 @@ jsonschema-specifications==2024.10.1
     # via jsonschema
 maykin-2fa==1.0.2
     # via -r requirements/base.in
-maykin-common==0.2.0
+maykin-common==0.4.0
     # via -r requirements/base.in
 mozilla-django-oidc==4.0.1
     # via mozilla-django-oidc-db

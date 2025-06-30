@@ -1,26 +1,29 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, Mapping, Protocol, Sequence
+from inspect import get_annotations
+from typing import Iterable, Mapping, Protocol, Sequence, get_type_hints
 from uuid import UUID
-from typing import get_type_hints
-from typing_extensions import get_annotations
+
+import msgspec
 from ape_pie import APIClient
 from furl import furl
 from msgspec import ValidationError, convert, to_builtins
-import msgspec
 from msgspec.json import Encoder, decode
 from rest_framework.renderers import BaseRenderer, JSONRenderer
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
+
 from openbeheer.api.drf_spectacular.schema import MsgSpecFilterBackend
 from openbeheer.clients import ztc_client
 from openbeheer.types import (
     OBField,
     OBList,
+    OBOption,
     OBPagedQueryParams,
     OBPagination,
     ZGWResponse,
+    as_ob_fieldtype,
 )
-from openbeheer.types import OBOption, as_ob_fieldtype
 from openbeheer.types._open_beheer import (
     DetailResponse,
     FrontendFieldsets,
@@ -28,9 +31,6 @@ from openbeheer.types._open_beheer import (
     options,
 )
 from openbeheer.types._zgw import ZGWError
-
-from rest_framework.request import Request
-
 from openbeheer.utils.decorators import handle_service_errors
 
 _ENCODER = Encoder()

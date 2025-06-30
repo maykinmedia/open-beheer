@@ -1,0 +1,154 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTM2NDc1NSwiZXhwIjoxNzUxNDA3OTU1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.FdZjwykVrPEWjUEQ-IVm7-zMbf_m7f3fInXc7btwnaA
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.32.4
+    method: GET
+    uri: http://localhost:8003/catalogi/api/v0-alpha-non-existent/
+  response:
+    body:
+      string: "\n\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n
+        \   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1,
+        shrink-to-fit=no\">\n\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/vng_api_common/css/screen.css\">\n
+        \   <link rel=\"stylesheet\" href=\"/static/vng_api_common/libs/fontawesome/css/all.min.css\">\n\n
+        \   <link rel=\"icon\" type=\"image/png\" href=\"/static/ico/favicon.png\">\n\n
+        \   \n\n    <title>API dashboard | Open Zaak</title>\n  </head>\n  <body>\n\n
+        \   \n\n    \n\n  <h1>Sorry, the requested page could not be found (404)</h1>\n\n\n\n
+        \   \n      <div class=\"container\">\n        <footer class=\"footer\">\n
+        \         <div class=\"footer__row\">\n            <div class=\"footer__item
+        footer__logo\">\n              <img src=\"/static/img/logo.png\" alt=\"\"
+        height=\"50\">\n              <small>Ontwikkeld door <a class=\"link\" href=\"https://www.maykinmedia.nl\">Maykin
+        Media</a><br>in opdracht van <a class=link href=\"https://www.dimpact.nl\">Dimpact</a>
+        &copy; 2025</small>\n            </div>\n            <div class=\"footer__item\">\n
+        \             <h5>Open Zaak</h5>\n              <ul class=\"list\">\n                <li><a
+        class=\"link link--muted\" href=\"https://open-zaak.readthedocs.io/en/latest/\">Documentatie</a></li>\n
+        \               <li><a class=\"link link--muted\" href=\"https://github.com/open-zaak/open-zaak\">Code
+        op Github</a></li>\n                <li><a class=\"link link--muted\" href=\"https://vng-realisatie.github.io/gemma-zaken/\">Standaard
+        \"API's voor Zaakgericht werken\"</a></li>\n              </ul>\n            </div>\n
+        \           <div class=\"footer__item\">\n              <h5>Overige</h5>\n
+        \             <ul class=\"list\">\n                <li><a class=\"link link--muted\"
+        href=\"https://www.vngrealisatie.nl/ondersteuningsmiddelen/zaakgericht-werken\">Zaakgericht
+        werken volgen VNG</a></li>\n                <li><a class=\"link link--muted\"
+        href=\"https://www.vngrealisatie.nl/producten/api-standaarden-zaakgericht-werken\">API's
+        voor Zaakgericht werken</a></li>\n                <li><a class=\"link link--muted\"
+        href=\"https://commonground.nl/\">Common Ground</a></li>\n              </ul>\n
+        \           </div>\n          </div>\n\n          \n\n        </footer>\n
+        \     </div>\n    \n\n    \n  </body>\n</html>\n"
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '2203'
+      Content-Security-Policy:
+      - 'script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        frame-src ''self''; object-src ''none''; style-src ''self'' ''unsafe-inline''
+        fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net; default-src ''self'';
+        base-uri ''self''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
+        worker-src ''self'' blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
+        ''none'''
+      Content-Type:
+      - text/html; charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Tue, 01 Jul 2025 10:12:35 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.4
+      Vary:
+      - origin, Cookie
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTM2NDc1NSwiZXhwIjoxNzUxNDA3OTU1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.FdZjwykVrPEWjUEQ-IVm7-zMbf_m7f3fInXc7btwnaA
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.32.4
+    method: GET
+    uri: http://localhost:8003/catalogi/api/v0-alpha-non-existent/catalogussen
+  response:
+    body:
+      string: "\n\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n
+        \   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1,
+        shrink-to-fit=no\">\n\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/vng_api_common/css/screen.css\">\n
+        \   <link rel=\"stylesheet\" href=\"/static/vng_api_common/libs/fontawesome/css/all.min.css\">\n\n
+        \   <link rel=\"icon\" type=\"image/png\" href=\"/static/ico/favicon.png\">\n\n
+        \   \n\n    <title>API dashboard | Open Zaak</title>\n  </head>\n  <body>\n\n
+        \   \n\n    \n\n  <h1>Sorry, the requested page could not be found (404)</h1>\n\n\n\n
+        \   \n      <div class=\"container\">\n        <footer class=\"footer\">\n
+        \         <div class=\"footer__row\">\n            <div class=\"footer__item
+        footer__logo\">\n              <img src=\"/static/img/logo.png\" alt=\"\"
+        height=\"50\">\n              <small>Ontwikkeld door <a class=\"link\" href=\"https://www.maykinmedia.nl\">Maykin
+        Media</a><br>in opdracht van <a class=link href=\"https://www.dimpact.nl\">Dimpact</a>
+        &copy; 2025</small>\n            </div>\n            <div class=\"footer__item\">\n
+        \             <h5>Open Zaak</h5>\n              <ul class=\"list\">\n                <li><a
+        class=\"link link--muted\" href=\"https://open-zaak.readthedocs.io/en/latest/\">Documentatie</a></li>\n
+        \               <li><a class=\"link link--muted\" href=\"https://github.com/open-zaak/open-zaak\">Code
+        op Github</a></li>\n                <li><a class=\"link link--muted\" href=\"https://vng-realisatie.github.io/gemma-zaken/\">Standaard
+        \"API's voor Zaakgericht werken\"</a></li>\n              </ul>\n            </div>\n
+        \           <div class=\"footer__item\">\n              <h5>Overige</h5>\n
+        \             <ul class=\"list\">\n                <li><a class=\"link link--muted\"
+        href=\"https://www.vngrealisatie.nl/ondersteuningsmiddelen/zaakgericht-werken\">Zaakgericht
+        werken volgen VNG</a></li>\n                <li><a class=\"link link--muted\"
+        href=\"https://www.vngrealisatie.nl/producten/api-standaarden-zaakgericht-werken\">API's
+        voor Zaakgericht werken</a></li>\n                <li><a class=\"link link--muted\"
+        href=\"https://commonground.nl/\">Common Ground</a></li>\n              </ul>\n
+        \           </div>\n          </div>\n\n          \n\n        </footer>\n
+        \     </div>\n    \n\n    \n  </body>\n</html>\n"
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '2203'
+      Content-Security-Policy:
+      - 'script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        frame-src ''self''; object-src ''none''; style-src ''self'' ''unsafe-inline''
+        fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net; default-src ''self'';
+        base-uri ''self''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
+        worker-src ''self'' blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
+        ''none'''
+      Content-Type:
+      - text/html; charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Tue, 01 Jul 2025 10:12:35 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.4
+      Vary:
+      - origin, Cookie
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 404
+      message: Not Found
+version: 1

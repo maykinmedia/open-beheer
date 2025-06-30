@@ -3,7 +3,7 @@ from unittest.mock import patch
 from django.test import TestCase, tag
 from django.utils.translation import gettext as _
 
-from vcr.unittest import VCRMixin
+from maykin_common.vcr import VCRMixin
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
