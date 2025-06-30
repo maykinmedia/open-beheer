@@ -20,7 +20,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router";
-import { User, whoAmI } from "~/api";
+import { whoAmI } from "~/api";
 import { Profile } from "~/components";
 import {
   useCatalogi,
@@ -28,6 +28,7 @@ import {
   useCurrentMatch,
   useService,
 } from "~/hooks";
+import { components } from "~/types";
 
 import "./main.css";
 
@@ -44,7 +45,7 @@ export const CATALOGUS_PARAM = "catalogusId";
  * This component serves as the entry point for the React app and renders the main UI structure.
  */
 function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<components["schemas"]["User"] | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const params = useParams();

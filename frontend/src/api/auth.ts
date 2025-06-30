@@ -33,7 +33,7 @@ const CACHE_KEY_WHOAMI = "whoAmI";
  * API call to get the current logged-in user.
  */
 export async function whoAmI(signal?: AbortSignal) {
-  return cacheMemo(CACHE_KEY_WHOAMI, request<components["schemas"]["User"][]>, [
+  return cacheMemo(CACHE_KEY_WHOAMI, request<components["schemas"]["User"]>, [
     "GET",
     "/whoami/",
     undefined,

@@ -2,11 +2,15 @@
  * Hook to manage the catalogi choices and selected catalogi in the application.
  */
 import { useEffect, useState } from "react";
-import { CatalogiChoice, getCatalogiChoices } from "~/api/catalogi.ts";
-import { ServiceChoice } from "~/api/service.ts";
+import { getCatalogiChoices } from "~/api/catalogi.ts";
+import { components } from "~/types";
 
-export function useCatalogi(service: ServiceChoice | null) {
-  const [catalogiChoices, setCatalogiChoices] = useState<CatalogiChoice[]>([]);
+export function useCatalogi(
+  service: components["schemas"]["OBOption_str_"] | null,
+) {
+  const [catalogiChoices, setCatalogiChoices] = useState<
+    components["schemas"]["OBOption_str_"][]
+  >([]);
 
   useEffect(() => {
     const controller = new AbortController();

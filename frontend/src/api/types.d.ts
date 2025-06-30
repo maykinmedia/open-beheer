@@ -1,4 +1,4 @@
-import { PaginatorProps, TypedField } from "@maykin-ui/admin-ui";
+import { FieldSet, PaginatorProps, TypedField } from "@maykin-ui/admin-ui";
 
 export type ListResponse<T extends object = object> = {
   fields: TypedField<T>[];
@@ -8,5 +8,6 @@ export type ListResponse<T extends object = object> = {
 
 export type DetailResponse<T extends object = object> = {
   fields: TypedField<T>[];
+  fieldsets: FieldSet<T>[];
   result: T;
 };
