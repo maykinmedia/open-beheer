@@ -9,6 +9,49 @@ from drf_spectacular.extensions import OpenApiFilterExtension
 from openbeheer.types._drf_spectacular import QueryParamSchema
 
 
+def camelize_serializer_fields(result, generator, request, public):
+    """Simplified version of the bugged
+    drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields
+
+    The original can't handle the "items" of an array be False
+    {'type': 'array', 'minItems': 2, 'maxItems': 2, 'prefixItems': [{'type': 'string'}, {'$ref': '#/components/schemas/FrontendFieldSet'}], 'items': False}
+
+    It is within spec. It says "prefixItems" is complete, and no more items are valid:
+    https://json-schema.org/understanding-json-schema/reference/array
+
+    TODO: use upstream when fixed https://github.com/tfranzel/drf-spectacular/pull/1432
+    """
+
+    def camelize_str(key: str) -> str:
+        if "_" not in key:
+            return key
+        return "".join(s.title() if n else s for n, s in enumerate(key.split("_")))
+
+    def camelize_component(schema: dict, name: str | None = None) -> dict:
+        if schema.get("type") == "object":
+            if "properties" in schema:
+                schema["properties"] = {
+                    camelize_str(field_name): camelize_component(
+                        field_schema, field_name
+                    )
+                    for field_name, field_schema in schema["properties"].items()
+                }
+            if "required" in schema:
+                schema["required"] = [
+                    camelize_str(field) for field in schema["required"]
+                ]
+        elif schema.get("type") == "array" and isinstance(schema["items"], dict):
+            camelize_component(schema["items"])
+        return schema
+
+    for (_, component_type), component in generator.registry._components.items():
+        if component_type == "schemas":
+            camelize_component(component.schema)
+
+    # inplace modification of components also affect result dict, so regeneration is not necessary
+    return result
+
+
 class MsgSpecExtension(OpenApiSerializerExtension):
     """Generate API Schema from MsgSpec types."""
 
