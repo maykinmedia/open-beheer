@@ -566,5 +566,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Open Beheer API",
     "DESCRIPTION": _DESCRIPTION,
     "VERSION": API_VERSION,
-    "POSTPROCESSING_HOOKS": [],
+    "POSTPROCESSING_HOOKS": [
+        "openbeheer.api.drf_spectacular.schema.camelize_serializer_fields",
+    ],
 }
