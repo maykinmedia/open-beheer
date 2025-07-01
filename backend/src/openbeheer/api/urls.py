@@ -42,6 +42,12 @@ urlpatterns = [
         include("openbeheer.zaaktype.urls", namespace="zaaktypen"),
     ),
     path(
+        "v1/service/<slug:slug>/informatieobjecttypen/",
+        include(
+            "openbeheer.informatieobjecttypen.urls", namespace="informatieobjecttypen"
+        ),
+    ),
+    path(
         "v1/service/<slug:slug>/catalogi/",
         include("openbeheer.catalogi.urls", namespace="catalogi"),
     ),
