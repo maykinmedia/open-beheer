@@ -21,7 +21,7 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
             slug="OZ",
         )
         cls.user = UserFactory.create()
-        cls.url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
+        cls.url = reverse("api:zaaktypen:zaaktype-list", kwargs={"slug": "OZ"})
 
     def test_not_authenticated(self):
         response = self.client.get(self.url)
@@ -80,7 +80,7 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
 
     def test_datum_geldigheid_filter(self):
         self.client.force_authenticate(self.user)
-        url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
+        url = reverse("api:zaaktypen:zaaktype-list", kwargs={"slug": "OZ"})
 
         response = self.client.get(url, query_params={"datumGeldigheid": "2001-01-01"})
 
@@ -161,7 +161,7 @@ class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
             slug="OZ",
         )
         cls.user = UserFactory.create()
-        cls.url = reverse("api:zaaktype-list", kwargs={"slug": "OZ"})
+        cls.url = reverse("api:zaaktypen:zaaktype-list", kwargs={"slug": "OZ"})
 
     def test_create_zaaktype(self):
         self.client.force_login(self.user)
