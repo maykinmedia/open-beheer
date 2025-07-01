@@ -23,7 +23,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
     def test_not_authenticated(self):
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487"},
         )
 
@@ -33,7 +33,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
     def test_retrieve_zaaktype(self):
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487"},
         )
 
@@ -138,7 +138,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         reload the fixtures in the docker container of Open Zaak.
         """
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": "ce9feadd-00cb-46c8-a0ef-1d1dfc78586a"},
         )
         self.client.force_login(self.user)
@@ -256,7 +256,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         reload the fixtures in the docker container of Open Zaak.
         """
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": "ce9feadd-00cb-46c8-a0ef-1d1dfc78586a"},
         )
         self.client.force_login(self.user)
@@ -469,7 +469,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
     def test_proxy_error_response(self):
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": "ce9feadd-00cb-46c8-a0ef-1d1dfc78586a"},
         )
         self.client.force_login(self.user)
