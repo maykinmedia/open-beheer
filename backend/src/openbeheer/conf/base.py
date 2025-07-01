@@ -124,6 +124,7 @@ INSTALLED_APPS = [
     "zgw_consumers",
     "simple_certmanager",
     "maykin_common",
+    "django_structlog",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
