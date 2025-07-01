@@ -1,11 +1,16 @@
+from faker import Faker
+from furl import furl
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from maykin_common.vcr import VCRMixin
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
+from msgspec.json import decode
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.clients import ztc_client
+from openbeheer.types.ztc import ZaakType
 
 
 class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
@@ -20,6 +25,45 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             slug="OZ",
         )
         cls.user = UserFactory.create()
+
+    def _create_zaaktype(self) -> ZaakType:
+        faker = Faker()
+
+        with ztc_client("OZ") as client:
+            response = client.post(
+                "zaaktypen",
+                json={
+                    "omschrijving": faker.sentence(),
+                    "vertrouwelijkheidaanduiding": "geheim",
+                    "doel": "New Zaaktype 001",
+                    "aanleiding": "New Zaaktype 001",
+                    "indicatieInternOfExtern": "intern",
+                    "handelingInitiator": "aanvragen",
+                    "onderwerp": "New Zaaktype 001",
+                    "handelingBehandelaar": "handelin",
+                    "doorlooptijd": "P40D",
+                    "opschortingEnAanhoudingMogelijk": False,
+                    "verlengingMogelijk": True,
+                    "verlengingstermijn": "P40D",
+                    "publicatieIndicatie": False,
+                    "productenOfDiensten": ["https://example.com/product/321"],
+                    "referentieproces": {"naam": "ReferentieProces 1"},
+                    "verantwoordelijke": "200000000",
+                    "beginGeldigheid": "2025-06-19",
+                    "versiedatum": "2025-06-19",
+                    "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                    "besluittypen": [],
+                    "gerelateerdeZaaktypen": [],
+                },
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        return decode(
+            response.content,
+            type=ZaakType,
+            strict=False,
+        )
 
     def test_not_authenticated(self):
         endpoint = reverse(
@@ -133,29 +177,21 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             self.assertEqual(len(data["fields"][1]["options"]), 8)
 
     def test_patch_zaaktype(self):
-        """
-        Before re-recording the cassettes for this test, make sure to
-        reload the fixtures in the docker container of Open Zaak.
-        """
+        zaaktype = self._create_zaaktype()
+
+        assert zaaktype.url
+        zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
+
+        # Now modify the zaaktype
         endpoint = reverse(
             "api:zaaktype-detail",
-            kwargs={"slug": "OZ", "uuid": "ce9feadd-00cb-46c8-a0ef-1d1dfc78586a"},
+            kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
         )
         self.client.force_login(self.user)
 
-        response = self.client.get(endpoint)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = response.json()
-
-        with self.subTest("Check the value before modifying it"):
-            self.assertEqual(
-                data["result"]["omschrijving"], "Destruction confirmation type"
-            )
-
-        # Now modify the zaaktype
-        response = self.client.patch(endpoint, data={"omschrijving": "MODIFIED"})
+        response = self.client.patch(
+            endpoint, data={"omschrijving": "MODIFIED by test test_patch_zaaktype"}
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -165,203 +201,77 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.assertIn("result", data)
         self.assertIn("fieldsets", data)
 
-        self.assertEqual(len(data["versions"]), 2)
+        self.assertEqual(len(data["versions"]), 1)
 
         zaaktype = data["result"]
 
         with self.subTest("Modified field"):
-            self.assertEqual(zaaktype["omschrijving"], "MODIFIED")
+            self.assertEqual(
+                zaaktype["omschrijving"], "MODIFIED by test test_patch_zaaktype"
+            )
 
         with self.subTest("Not modified fields"):
-            self.assertFalse(zaaktype["concept"])
-            self.assertEqual(zaaktype["vertrouwelijkheidaanduiding"], "openbaar")
+            self.assertTrue(zaaktype["concept"])
+            self.assertEqual(zaaktype["vertrouwelijkheidaanduiding"], "geheim")
             self.assertEqual(
                 zaaktype["doel"],
-                "To confirm that a destruction list has been correctly processed.",
+                "New Zaaktype 001",
             )
             self.assertEqual(
                 zaaktype["aanleiding"],
-                "When a destructio list is processed by Open Archiefbeheer",
+                "New Zaaktype 001",
             )
-            self.assertEqual(zaaktype["indicatieInternOfExtern"], "extern")
-            self.assertEqual(zaaktype["handelingInitiator"], "indienen")
-            self.assertEqual(zaaktype["onderwerp"], "Destruction")
-            self.assertEqual(zaaktype["handelingBehandelaar"], "uitvoeren")
-            self.assertEqual(zaaktype["doorlooptijd"], "P30D")
-            self.assertTrue(zaaktype["opschortingEnAanhoudingMogelijk"])
-            self.assertFalse(zaaktype["verlengingMogelijk"])
-            self.assertTrue(zaaktype["publicatieIndicatie"])
+            self.assertEqual(zaaktype["indicatieInternOfExtern"], "intern")
+            self.assertEqual(zaaktype["handelingInitiator"], "aanvragen")
+            self.assertEqual(zaaktype["onderwerp"], "New Zaaktype 001")
+            self.assertEqual(zaaktype["handelingBehandelaar"], "handelin")
+            self.assertEqual(zaaktype["doorlooptijd"], "P40D")
+            self.assertFalse(zaaktype["opschortingEnAanhoudingMogelijk"])
+            self.assertTrue(zaaktype["verlengingMogelijk"])
+            self.assertFalse(zaaktype["publicatieIndicatie"])
             self.assertEqual(
-                zaaktype["productenOfDiensten"], ["https://example.com/product/123"]
+                zaaktype["productenOfDiensten"], ["https://example.com/product/321"]
             )
             self.assertEqual(
-                zaaktype["referentieproces"], {"naam": "ReferentieProces 0", "link": ""}
+                zaaktype["referentieproces"], {"naam": "ReferentieProces 1", "link": ""}
             )
-            self.assertEqual(zaaktype["verantwoordelijke"], "100000000")
-            self.assertEqual(zaaktype["beginGeldigheid"], "2025-03-21")
-            self.assertEqual(zaaktype["versiedatum"], "2018-01-01")
+            self.assertEqual(zaaktype["verantwoordelijke"], "200000000")
+            self.assertEqual(zaaktype["beginGeldigheid"], "2025-06-19")
+            self.assertEqual(zaaktype["versiedatum"], "2025-06-19")
             self.assertEqual(
                 zaaktype["catalogus"],
                 "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
             )
             self.assertEqual(zaaktype["besluittypen"], [])
             self.assertEqual(zaaktype["gerelateerdeZaaktypen"], [])
-            self.assertEqual(
-                zaaktype["url"],
-                "http://localhost:8003/catalogi/api/v1/zaaktypen/ce9feadd-00cb-46c8-a0ef-1d1dfc78586a",
-            )
-            self.assertEqual(zaaktype["identificatie"], "ZAAKTYPE-2018-0000000002")
-            self.assertEqual(zaaktype["omschrijvingGeneriek"], "")
-            self.assertEqual(zaaktype["toelichting"], "")
-            self.assertIsNone(zaaktype["servicenorm"])
-            self.assertIsNone(zaaktype["verlengingstermijn"])
-            self.assertEqual(zaaktype["trefwoorden"], [])
-            self.assertEqual(zaaktype["publicatietekst"], "")
-            self.assertEqual(zaaktype["verantwoordingsrelatie"], [])
-            self.assertEqual(
-                zaaktype["selectielijstProcestype"],
-                "https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0",
-            )
-            self.assertIsNone(zaaktype["broncatalogus"])
-            self.assertIsNone(zaaktype["bronzaaktype"])
-            self.assertIsNone(zaaktype["eindeGeldigheid"])
-            self.assertEqual(zaaktype["beginObject"], "2018-01-01")
-            self.assertIsNone(zaaktype["eindeObject"])
-            self.assertEqual(
-                zaaktype["statustypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/statustypen/835a2a13-f52f-4339-83e5-b7250e5ad016"
-                ],
-            )
-            self.assertEqual(
-                zaaktype["resultaattypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/resultaattypen/5d39b8ac-437a-475c-9a76-0f6ae1540d0e"
-                ],
-            )
-            self.assertEqual(zaaktype["eigenschappen"], [])
-            self.assertEqual(
-                zaaktype["informatieobjecttypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/informatieobjecttypen/9dee6712-122e-464a-99a3-c16692de5485"
-                ],
-            )
-            self.assertEqual(zaaktype["roltypen"], [])
-            self.assertEqual(zaaktype["deelzaaktypen"], [])
-            self.assertEqual(zaaktype["zaakobjecttypen"], [])
 
     def test_put_zaaktype(self):
-        """
-        Before re-recording the cassettes for this test, make sure to
-        reload the fixtures in the docker container of Open Zaak.
-        """
+        zaaktype = self._create_zaaktype()
+
+        assert zaaktype.url
+        zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
+
+        # Now modify the zaaktype
         endpoint = reverse(
             "api:zaaktype-detail",
-            kwargs={"slug": "OZ", "uuid": "ce9feadd-00cb-46c8-a0ef-1d1dfc78586a"},
+            kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
         )
         self.client.force_login(self.user)
 
-        response = self.client.get(endpoint)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        zaaktype = response.json()["result"]
-
-        with self.subTest("Check the values before modifying them"):
-            self.assertEqual(zaaktype["omschrijving"], "Destruction confirmation type")
-            self.assertFalse(zaaktype["concept"])
-            self.assertEqual(zaaktype["vertrouwelijkheidaanduiding"], "openbaar")
-            self.assertEqual(
-                zaaktype["doel"],
-                "To confirm that a destruction list has been correctly processed.",
-            )
-            self.assertEqual(
-                zaaktype["aanleiding"],
-                "When a destructio list is processed by Open Archiefbeheer",
-            )
-            self.assertEqual(zaaktype["indicatieInternOfExtern"], "extern")
-            self.assertEqual(zaaktype["handelingInitiator"], "indienen")
-            self.assertEqual(zaaktype["onderwerp"], "Destruction")
-            self.assertEqual(zaaktype["handelingBehandelaar"], "uitvoeren")
-            self.assertEqual(zaaktype["doorlooptijd"], "P30D")
-            self.assertTrue(zaaktype["opschortingEnAanhoudingMogelijk"])
-            self.assertFalse(zaaktype["verlengingMogelijk"])
-            self.assertTrue(zaaktype["publicatieIndicatie"])
-            self.assertEqual(
-                zaaktype["productenOfDiensten"], ["https://example.com/product/123"]
-            )
-            self.assertEqual(
-                zaaktype["referentieproces"], {"naam": "ReferentieProces 0", "link": ""}
-            )
-            self.assertEqual(zaaktype["verantwoordelijke"], "100000000")
-            self.assertEqual(zaaktype["beginGeldigheid"], "2025-03-21")
-            self.assertEqual(zaaktype["versiedatum"], "2018-01-01")
-            self.assertEqual(
-                zaaktype["catalogus"],
-                "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-            )
-            self.assertEqual(zaaktype["besluittypen"], [])
-            self.assertEqual(zaaktype["gerelateerdeZaaktypen"], [])
-            self.assertEqual(
-                zaaktype["url"],
-                "http://localhost:8003/catalogi/api/v1/zaaktypen/ce9feadd-00cb-46c8-a0ef-1d1dfc78586a",
-            )
-            self.assertEqual(zaaktype["identificatie"], "ZAAKTYPE-2018-0000000002")
-            self.assertEqual(zaaktype["omschrijvingGeneriek"], "")
-            self.assertEqual(zaaktype["toelichting"], "")
-            self.assertIsNone(zaaktype["servicenorm"])
-            self.assertIsNone(zaaktype["verlengingstermijn"])
-            self.assertEqual(zaaktype["trefwoorden"], [])
-            self.assertEqual(zaaktype["publicatietekst"], "")
-            self.assertEqual(zaaktype["verantwoordingsrelatie"], [])
-            self.assertEqual(
-                zaaktype["selectielijstProcestype"],
-                "https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0",
-            )
-            self.assertIsNone(zaaktype["broncatalogus"])
-            self.assertIsNone(zaaktype["bronzaaktype"])
-            self.assertIsNone(zaaktype["eindeGeldigheid"])
-            self.assertEqual(zaaktype["beginObject"], "2018-01-01")
-            self.assertIsNone(zaaktype["eindeObject"])
-            self.assertEqual(
-                zaaktype["statustypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/statustypen/835a2a13-f52f-4339-83e5-b7250e5ad016"
-                ],
-            )
-            self.assertEqual(
-                zaaktype["resultaattypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/resultaattypen/5d39b8ac-437a-475c-9a76-0f6ae1540d0e"
-                ],
-            )
-            self.assertEqual(zaaktype["eigenschappen"], [])
-            self.assertEqual(
-                zaaktype["informatieobjecttypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/informatieobjecttypen/9dee6712-122e-464a-99a3-c16692de5485"
-                ],
-            )
-            self.assertEqual(zaaktype["roltypen"], [])
-            self.assertEqual(zaaktype["deelzaaktypen"], [])
-            self.assertEqual(zaaktype["zaakobjecttypen"], [])
-
-        # Now modify the zaaktype
         response = self.client.put(
             endpoint,
             data={
-                "omschrijving": "MODIFIED",
-                "vertrouwelijkheidaanduiding": "geheim",
+                "omschrijving": "MODIFIED by test test_put_zaaktype",
+                "vertrouwelijkheidaanduiding": "openbaar",
                 "doel": "MODIFIED",
                 "aanleiding": "MODIFIED",
-                "indicatieInternOfExtern": "intern",
-                "handelingInitiator": "aanvragen",
+                "indicatieInternOfExtern": "extern",
+                "handelingInitiator": "indienen",
                 "onderwerp": "MODIFIED",
                 "handelingBehandelaar": "handelin",
-                "doorlooptijd": "P40D",
+                "doorlooptijd": "P30D",
                 "opschortingEnAanhoudingMogelijk": False,
-                "verlengingMogelijk": True,
-                "verlengingstermijn": "P40D",
+                "verlengingMogelijk": False,
                 "publicatieIndicatie": False,
                 "productenOfDiensten": ["https://example.com/product/321"],
                 "referentieproces": {"naam": "ReferentieProces 1"},
@@ -383,89 +293,58 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.assertIn("result", data)
         self.assertIn("fieldsets", data)
 
-        self.assertEqual(len(data["versions"]), 2)
+        self.assertEqual(len(data["versions"]), 1)
 
         zaaktype = data["result"]
 
         # Now check the modified values
-        with self.subTest("Now check the modified values"):
-            self.assertEqual(zaaktype["omschrijving"], "MODIFIED")
-            self.assertFalse(zaaktype["concept"])
-            self.assertEqual(zaaktype["vertrouwelijkheidaanduiding"], "geheim")
-            self.assertEqual(
-                zaaktype["doel"],
-                "MODIFIED",
-            )
-            self.assertEqual(
-                zaaktype["aanleiding"],
-                "MODIFIED",
-            )
-            self.assertEqual(zaaktype["indicatieInternOfExtern"], "intern")
-            self.assertEqual(zaaktype["handelingInitiator"], "aanvragen")
-            self.assertEqual(zaaktype["onderwerp"], "MODIFIED")
-            self.assertEqual(zaaktype["handelingBehandelaar"], "handelin")
-            self.assertEqual(zaaktype["doorlooptijd"], "P40D")
-            self.assertFalse(zaaktype["opschortingEnAanhoudingMogelijk"])
-            self.assertTrue(zaaktype["verlengingMogelijk"])
-            self.assertFalse(zaaktype["publicatieIndicatie"])
-            self.assertEqual(
-                zaaktype["productenOfDiensten"], ["https://example.com/product/321"]
-            )
-            self.assertEqual(
-                zaaktype["referentieproces"], {"naam": "ReferentieProces 1", "link": ""}
-            )
-            self.assertEqual(zaaktype["verantwoordelijke"], "200000000")
-            self.assertEqual(zaaktype["beginGeldigheid"], "2025-06-19")
-            self.assertEqual(zaaktype["versiedatum"], "2025-06-19")
-            self.assertEqual(
-                zaaktype["catalogus"],
-                "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-            )
-            self.assertEqual(zaaktype["besluittypen"], [])
-            self.assertEqual(zaaktype["gerelateerdeZaaktypen"], [])
-            self.assertEqual(
-                zaaktype["url"],
-                "http://localhost:8003/catalogi/api/v1/zaaktypen/ce9feadd-00cb-46c8-a0ef-1d1dfc78586a",
-            )
-            self.assertEqual(zaaktype["identificatie"], "ZAAKTYPE-2018-0000000002")
-            self.assertEqual(zaaktype["omschrijvingGeneriek"], "")
-            self.assertEqual(zaaktype["toelichting"], "")
-            self.assertIsNone(zaaktype["servicenorm"])
-            self.assertEqual(zaaktype["verlengingstermijn"], "P40D")
-            self.assertEqual(zaaktype["trefwoorden"], [])
-            self.assertEqual(zaaktype["publicatietekst"], "")
-            self.assertEqual(zaaktype["verantwoordingsrelatie"], [])
-            self.assertEqual(
-                zaaktype["selectielijstProcestype"],
-                "https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0",
-            )
-            self.assertIsNone(zaaktype["broncatalogus"])
-            self.assertIsNone(zaaktype["bronzaaktype"])
-            self.assertIsNone(zaaktype["eindeGeldigheid"])
-            self.assertEqual(zaaktype["beginObject"], "2018-01-01")
-            self.assertIsNone(zaaktype["eindeObject"])
-            self.assertEqual(
-                zaaktype["statustypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/statustypen/835a2a13-f52f-4339-83e5-b7250e5ad016"
-                ],
-            )
-            self.assertEqual(
-                zaaktype["resultaattypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/resultaattypen/5d39b8ac-437a-475c-9a76-0f6ae1540d0e"
-                ],
-            )
-            self.assertEqual(zaaktype["eigenschappen"], [])
-            self.assertEqual(
-                zaaktype["informatieobjecttypen"],
-                [
-                    "http://localhost:8003/catalogi/api/v1/informatieobjecttypen/9dee6712-122e-464a-99a3-c16692de5485"
-                ],
-            )
-            self.assertEqual(zaaktype["roltypen"], [])
-            self.assertEqual(zaaktype["deelzaaktypen"], [])
-            self.assertEqual(zaaktype["zaakobjecttypen"], [])
+        self.assertEqual(zaaktype["omschrijving"], "MODIFIED by test test_put_zaaktype")
+        self.assertTrue(zaaktype["concept"])
+        self.assertEqual(zaaktype["vertrouwelijkheidaanduiding"], "openbaar")
+        self.assertEqual(
+            zaaktype["doel"],
+            "MODIFIED",
+        )
+        self.assertEqual(
+            zaaktype["aanleiding"],
+            "MODIFIED",
+        )
+        self.assertEqual(zaaktype["indicatieInternOfExtern"], "extern")
+        self.assertEqual(zaaktype["handelingInitiator"], "indienen")
+        self.assertEqual(zaaktype["onderwerp"], "MODIFIED")
+        self.assertEqual(zaaktype["handelingBehandelaar"], "handelin")
+        self.assertEqual(zaaktype["doorlooptijd"], "P30D")
+        self.assertFalse(zaaktype["opschortingEnAanhoudingMogelijk"])
+        self.assertFalse(zaaktype["verlengingMogelijk"])
+        self.assertFalse(zaaktype["publicatieIndicatie"])
+        self.assertEqual(
+            zaaktype["productenOfDiensten"], ["https://example.com/product/321"]
+        )
+        self.assertEqual(
+            zaaktype["referentieproces"], {"naam": "ReferentieProces 1", "link": ""}
+        )
+        self.assertEqual(zaaktype["verantwoordelijke"], "200000000")
+        self.assertEqual(zaaktype["beginGeldigheid"], "2025-06-19")
+        self.assertEqual(zaaktype["versiedatum"], "2025-06-19")
+        self.assertEqual(
+            zaaktype["catalogus"],
+            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+        )
+        self.assertEqual(zaaktype["besluittypen"], [])
+        self.assertEqual(zaaktype["gerelateerdeZaaktypen"], [])
+        self.assertEqual(zaaktype["omschrijvingGeneriek"], "")
+        self.assertEqual(zaaktype["toelichting"], "")
+        self.assertIsNone(zaaktype["servicenorm"])
+        self.assertIsNone(
+            zaaktype["verlengingstermijn"]
+        )  # because verlengingMogelijk is false
+        self.assertEqual(zaaktype["trefwoorden"], [])
+        self.assertEqual(zaaktype["publicatietekst"], "")
+        self.assertEqual(zaaktype["verantwoordingsrelatie"], [])
+        self.assertIsNone(zaaktype["broncatalogus"])
+        self.assertIsNone(zaaktype["bronzaaktype"])
+        self.assertIsNone(zaaktype["eindeGeldigheid"])
+        self.assertIsNone(zaaktype["eindeObject"])
 
     def test_proxy_error_response(self):
         endpoint = reverse(
