@@ -3,7 +3,7 @@ from typing import Annotated, Mapping
 from rest_framework.response import Response
 from rest_framework import status
 from ape_pie import APIClient
-from msgspec import UNSET, Meta, Struct, UnsetType
+from msgspec import UNSET, Meta, UnsetType
 from rest_framework.request import Request
 from msgspec.json import decode
 from msgspec import convert
@@ -15,7 +15,7 @@ from openbeheer.types.ztc import (
     VertrouwelijkheidaanduidingEnum,
     ZaakTypeRequest,
 )
-from openbeheer.types._open_beheer import ExternalServiceError
+from openbeheer.types._open_beheer import ExternalServiceError, VersionedResourceSummary
 from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from openbeheer.api.views import DetailView
@@ -47,30 +47,17 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="came
     ] = UNSET
 
 
-class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
-    # Identificate
-    # Omschrijving
-    # Actief ja/nee
-    # Einddatum
-    # Omschrijving
-    # Vertrouwelijkheidaanduiding
-
+class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
     url: str
     identificatie: str
     omschrijving: str
-    # Actief ja/nee: calculated
-    actief: bool | UnsetType = UNSET
-    einde_geldigheid: datetime.date | None = None
     # str, because VertrouwelijkheidaanduidingEnum does not contain "" but OZ does
-    # XXX: the "" is actually a fault in the fixtures!
     vertrouwelijkheidaanduiding: str
     versiedatum: datetime.date
-
-    def __post_init__(self):
-        self.actief = (
-            self.einde_geldigheid is None
-            or datetime.date.today() < self.einde_geldigheid
-        )
+    # Actief true/false: calculated for ja/nee in the frontend
+    actief: bool | UnsetType = UNSET
+    einde_geldigheid: datetime.date | None = None
+    concept: bool | UnsetType = UNSET
 
 
 @extend_schema_view(

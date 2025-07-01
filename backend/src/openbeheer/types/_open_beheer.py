@@ -1,11 +1,11 @@
 import enum
-from datetime import datetime
+import datetime
 from functools import singledispatch
 from types import NoneType, UnionType
 from typing import Self, Sequence
 
 import msgspec
-from msgspec import Struct, UnsetType
+from msgspec import UNSET, Struct, UnsetType
 
 
 class OBPagedQueryParams(Struct):
@@ -185,3 +185,20 @@ class ExternalServiceError(Struct):
     title: str
     detail: str
     status: int
+
+
+class VersionedResourceSummary(Struct):
+    # Actief true/false: calculated for ja/nee in the frontend
+    actief: bool | UnsetType = UNSET
+    einde_geldigheid: datetime.date | None = None
+    concept: bool | UnsetType = UNSET
+
+    def __post_init__(self):
+        self.actief = (
+            (
+                self.einde_geldigheid is None
+                or datetime.date.today() < self.einde_geldigheid
+            )
+            if not self.concept
+            else False
+        )

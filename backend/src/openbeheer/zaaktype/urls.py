@@ -5,7 +5,6 @@ from .api.views import ZaakTypeDetailView, ZaakTypeListView
 app_name = "api:zaaktypen"
 
 urlpatterns = [
-    # ZTC endpoints
     path(
         "",
         ZaakTypeListView.as_view(),
