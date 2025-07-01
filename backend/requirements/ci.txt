@@ -21,6 +21,7 @@ asgiref==3.8.1
     #   -r requirements/type-checking.txt
     #   django
     #   django-axes
+    #   django-structlog
 asn1crypto==1.5.1
     # via
     #   -c requirements/base.txt
@@ -106,6 +107,7 @@ django==5.2.3
     #   django-setup-configuration
     #   django-simple-certmanager
     #   django-solo
+    #   django-structlog
     #   django-stubs
     #   django-stubs-ext
     #   django-two-factor-auth
@@ -142,6 +144,7 @@ django-ipware==7.0.1
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
+    #   django-structlog
 django-jsonform==2.23.2
     # via
     #   -c requirements/base.txt
@@ -212,9 +215,13 @@ django-solo==2.4.0
     #   -r requirements/type-checking.txt
     #   mozilla-django-oidc-db
     #   zgw-consumers
+django-structlog==9.1.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   -r requirements/type-checking.txt
 django-stubs==5.2.1
     # via
-    #   -r requirements/test-tools.in
     #   -r requirements/type-checking.txt
     #   djangorestframework-stubs
 django-stubs-ext==5.2.1
@@ -241,9 +248,7 @@ djangorestframework-camel-case==1.4.2
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
 djangorestframework-stubs==3.16.0
-    # via
-    #   -r requirements/test-tools.in
-    #   -r requirements/type-checking.txt
+    # via -r requirements/type-checking.txt
 docutils==0.21.2
     # via
     #   -c requirements/base.txt
@@ -582,6 +587,12 @@ sqlparse==0.5.3
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django
+structlog==25.4.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   -r requirements/type-checking.txt
+    #   django-structlog
 tblib==3.1.0
     # via -r requirements/test-tools.in
 types-pyyaml==6.0.12.20250516

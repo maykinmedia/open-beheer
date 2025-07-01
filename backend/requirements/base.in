@@ -11,6 +11,7 @@ django-axes[ipware]
 django-hijack
 django-redis
 django-rosetta
+django-structlog
 maykin-2fa
 mozilla-django-oidc-db
 
