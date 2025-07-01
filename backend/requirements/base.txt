@@ -8,6 +8,7 @@ asgiref==3.8.1
     # via
     #   django
     #   django-axes
+    #   django-structlog
 asn1crypto==1.5.1
     # via webauthn
 attrs==25.3.0
@@ -55,6 +56,7 @@ django==5.2.3
     #   django-setup-configuration
     #   django-simple-certmanager
     #   django-solo
+    #   django-structlog
     #   django-two-factor-auth
     #   djangorestframework
     #   drf-spectacular
@@ -74,7 +76,9 @@ django-formtools==2.5.1
 django-hijack==3.7.1
     # via -r requirements/base.in
 django-ipware==7.0.1
-    # via django-axes
+    # via
+    #   django-axes
+    #   django-structlog
 django-jsonform==2.23.2
     # via mozilla-django-oidc-db
 django-ordered-model==3.7.4
@@ -101,6 +105,8 @@ django-solo==2.4.0
     # via
     #   mozilla-django-oidc-db
     #   zgw-consumers
+django-structlog==9.1.1
+    # via -r requirements/base.in
 django-two-factor-auth==1.17.0
     # via maykin-2fa
 djangorestframework==3.16.0
@@ -214,6 +220,8 @@ six==1.17.0
     #   python-dateutil
 sqlparse==0.5.3
     # via django
+structlog==25.4.0
+    # via django-structlog
 typing-extensions==4.14.0
     # via
     #   mozilla-django-oidc-db
