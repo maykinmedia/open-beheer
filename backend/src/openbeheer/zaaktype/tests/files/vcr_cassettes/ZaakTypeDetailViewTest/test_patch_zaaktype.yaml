@@ -1,6 +1,14 @@
 interactions:
 - request:
-    body: null
+    body: '{"omschrijving": "War hope option TV activity way theory crime.", "vertrouwelijkheidaanduiding":
+      "geheim", "doel": "New Zaaktype 001", "aanleiding": "New Zaaktype 001", "indicatieInternOfExtern":
+      "intern", "handelingInitiator": "aanvragen", "onderwerp": "New Zaaktype 001",
+      "handelingBehandelaar": "handelin", "doorlooptijd": "P40D", "opschortingEnAanhoudingMogelijk":
+      false, "verlengingMogelijk": true, "verlengingstermijn": "P40D", "publicatieIndicatie":
+      false, "productenOfDiensten": ["https://example.com/product/321"], "referentieproces":
+      {"naam": "ReferentieProces 1"}, "verantwoordelijke": "200000000", "beginGeldigheid":
+      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+      "besluittypen": [], "gerelateerdeZaaktypen": []}'
     headers:
       Accept:
       - '*/*'
@@ -9,78 +17,24 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTM2MjkwMiwiZXhwIjoxNzUxNDA2MTAyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.1SuSZxdmvuWqnWKOSuHhBg5ozeQgt5YLpvoDldK7omc
       Connection:
       - keep-alive
       Content-Length:
-      - '1473'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
+      - '824'
       Content-Type:
       - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      ETag:
-      - '"00fb93f71063ef920e99bdaf264c3621"'
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
       User-Agent:
       - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/besluittypen?zaaktypen=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ea35404f-27c0-42f9-aa5c-3b652a5c408f","identificatie":"ZAAKTYPE-2025-0000000009","omschrijving":"War
+        hope option TV activity way theory crime.","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"geheim","doel":"New
+        Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
+        Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"","referentieproces":{"naam":"ReferentieProces
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -89,25 +43,26 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '52'
+      - '1306'
       Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
+      - 'object-src ''none''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
+        cdn.jsdelivr.net; base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; frame-src
+        ''self''; font-src ''self'' fonts.gstatic.com; frame-ancestors ''none''; form-action
+        ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
+      - Tue, 01 Jul 2025 09:41:42 GMT
+      Location:
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/ea35404f-27c0-42f9-aa5c-3b652a5c408f
       Referrer-Policy:
       - same-origin
       Server:
-      - nginx/1.27.4
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -115,10 +70,10 @@ interactions:
       X-Frame-Options:
       - DENY
     status:
-      code: 200
-      message: OK
+      code: 201
+      message: Created
 - request:
-    body: null
+    body: '{"omschrijving": "MODIFIED by test test_patch_zaaktype"}'
     headers:
       Accept:
       - '*/*'
@@ -127,439 +82,24 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/statustypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTM2MjkwMiwiZXhwIjoxNzUxNDA2MTAyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.1SuSZxdmvuWqnWKOSuHhBg5ozeQgt5YLpvoDldK7omc
       Connection:
       - keep-alive
       Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/resultaattypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/eigenschappen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/roltypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNSwiZXhwIjoxNzUxNTc2ODI1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.WyFx9tWh1waoD1xUZWJm1ZO0iprZ7eF0k-ZTaEMR9rw
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2018-0000000002TestConcept&status=alles
-  response:
-    body:
-      string: '{"count":6,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/5bb7810b-17d5-4e7c-acdd-7360bdb0bd7d","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/9170753a-19ab-4f0c-affe-efbe0bf3b92a","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/aaa565cd-d92b-4643-984b-2b0891443494","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/73fd9063-f591-47fd-be91-9ab902fcb9a5","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/248bc2af-1009-4d05-90c2-1249075e0d9c","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '8895'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: '{"omschrijving": "MODIFIED"}'
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '28'
+      - '56'
       Content-Type:
       - application/json
       User-Agent:
       - python-requests/2.32.4
     method: PATCH
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/ea35404f-27c0-42f9-aa5c-3b652a5c408f
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"MODIFIED","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ea35404f-27c0-42f9-aa5c-3b652a5c408f","identificatie":"ZAAKTYPE-2025-0000000009","omschrijving":"MODIFIED
+        by test test_patch_zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"geheim","doel":"New
+        Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
+        Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"","referentieproces":{"naam":"ReferentieProces
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -568,25 +108,24 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1452'
+      - '1297'
       Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
+      - 'object-src ''none''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
+        cdn.jsdelivr.net; base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; frame-src
+        ''self''; font-src ''self'' fonts.gstatic.com; frame-ancestors ''none''; form-action
+        ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
+      - Tue, 01 Jul 2025 09:41:42 GMT
       Referrer-Policy:
       - same-origin
       Server:
-      - nginx/1.27.4
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -606,16 +145,20 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTM2MjkwMiwiZXhwIjoxNzUxNDA2MTAyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.1SuSZxdmvuWqnWKOSuHhBg5ozeQgt5YLpvoDldK7omc
       Connection:
       - keep-alive
       User-Agent:
       - python-requests/2.32.4
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/besluittypen?zaaktypen=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2025-0000000009&status=alles
   response:
     body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
+      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ea35404f-27c0-42f9-aa5c-3b652a5c408f","identificatie":"ZAAKTYPE-2025-0000000009","omschrijving":"MODIFIED
+        by test test_patch_zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"geheim","doel":"New
+        Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
+        Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"","referentieproces":{"naam":"ReferentieProces
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}]}'
     headers:
       API-version:
       - 1.3.1
@@ -624,25 +167,24 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '52'
+      - '1349'
       Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
+      - 'object-src ''none''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
+        cdn.jsdelivr.net; base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; frame-src
+        ''self''; font-src ''self'' fonts.gstatic.com; frame-ancestors ''none''; form-action
+        ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
+      - Tue, 01 Jul 2025 09:41:42 GMT
       Referrer-Policy:
       - same-origin
       Server:
-      - nginx/1.27.4
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -653,7 +195,8 @@ interactions:
       code: 200
       message: OK
 - request:
-    body: null
+    body: '{"domein": "YYJWP", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Test catalogus"}'
     headers:
       Accept:
       - '*/*'
@@ -662,16 +205,21 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTk3MDg2MiwiZXhwIjoxNzUyMDE0MDYyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.4O-dy_YcUa_CAr8iQtBYKRHIxbQTxquUOsUy9uG6des
       Connection:
       - keep-alive
+      Content-Length:
+      - '104'
+      Content-Type:
+      - application/json
       User-Agent:
       - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/statustypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/ed49269e-1cdc-4434-b8a4-95e4ec32635c","domein":"YYJWP","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null}'
     headers:
       API-version:
       - 1.3.1
@@ -680,25 +228,26 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '52'
+      - '365'
       Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
+      - 'frame-src ''self''; base-uri ''self''; frame-ancestors ''none''; default-src
+        ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
+        object-src ''none''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; form-action ''self''; worker-src ''self''
+        blob:; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        connect-src ''self'' raw.githubusercontent.com; font-src ''self'' fonts.gstatic.com'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
+      - Tue, 08 Jul 2025 10:34:22 GMT
+      Location:
+      - http://localhost:8003/catalogi/api/v1/catalogussen/ed49269e-1cdc-4434-b8a4-95e4ec32635c
       Referrer-Policy:
       - same-origin
       Server:
-      - nginx/1.27.4
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -706,446 +255,6 @@ interactions:
       X-Frame-Options:
       - DENY
     status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/resultaattypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/eigenschappen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/roltypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '52'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNSwiZXhwIjoxNzUxNTc2ODI1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.WyFx9tWh1waoD1xUZWJm1ZO0iprZ7eF0k-ZTaEMR9rw
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
-    method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2018-0000000002TestConcept&status=alles
-  response:
-    body:
-      string: '{"count":6,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"MODIFIED","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/5bb7810b-17d5-4e7c-acdd-7360bdb0bd7d","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/9170753a-19ab-4f0c-affe-efbe0bf3b92a","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/aaa565cd-d92b-4643-984b-2b0891443494","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/73fd9063-f591-47fd-be91-9ab902fcb9a5","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/248bc2af-1009-4d05-90c2-1249075e0d9c","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '8874'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
-- request:
-    body: '{"url": "http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105",
-      "identificatie": "ZAAKTYPE-2018-0000000002TestConcept", "omschrijving": "Destruction
-      confirmation type", "omschrijvingGeneriek": "", "vertrouwelijkheidaanduiding":
-      "openbaar", "doel": "To confirm that a destruction list has been correctly processed.",
-      "aanleiding": "When a destructio list is processed by Open Archiefbeheer", "toelichting":
-      "", "indicatieInternOfExtern": "extern", "handelingInitiator": "indienen", "onderwerp":
-      "Destruction", "handelingBehandelaar": "uitvoeren", "doorlooptijd": "P30D",
-      "servicenorm": null, "opschortingEnAanhoudingMogelijk": true, "verlengingMogelijk":
-      false, "verlengingstermijn": null, "trefwoorden": [], "publicatieIndicatie":
-      true, "publicatietekst": "", "verantwoordingsrelatie": [], "productenOfDiensten":
-      ["https://example.com/product/123"], "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0",
-      "referentieproces": {"naam": "ReferentieProces 0", "link": ""}, "concept": true,
-      "verantwoordelijke": "100000000", "beginGeldigheid": "2025-03-21", "eindeGeldigheid":
-      null, "versiedatum": "2018-01-01", "beginObject": "2025-03-21", "eindeObject":
-      null, "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-      "statustypen": [], "resultaattypen": [], "eigenschappen": [], "informatieobjecttypen":
-      [], "roltypen": [], "besluittypen": [], "deelzaaktypen": [], "gerelateerdeZaaktypen":
-      [], "zaakobjecttypen": []}'
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Crs:
-      - EPSG:4326
-      Accept-Encoding:
-      - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTUzMzYyNCwiZXhwIjoxNzUxNTc2ODI0LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.eF49DIMaSR-cyGdGu8DqpwSVilpKbRMSiDfpR3xgTco
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '1557'
-      Content-Type:
-      - application/json
-      User-Agent:
-      - python-requests/2.32.4
-    method: PUT
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105
-  response:
-    body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/34f6590e-307f-4af5-9004-58bd47914105","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
-        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
-        confirm that a destruction list has been correctly processed.","aanleiding":"When
-        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
-        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
-    headers:
-      API-version:
-      - 1.3.1
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '1473'
-      Content-Security-Policy:
-      - 'default-src ''self''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
-        cdnjs.cloudflare.com cdn.jsdelivr.net; worker-src ''self'' blob:; connect-src
-        ''self'' raw.githubusercontent.com; form-action ''self''; frame-src ''self'';
-        frame-ancestors ''none''; object-src ''none''; font-src ''self'' fonts.gstatic.com;
-        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org'
-      Content-Type:
-      - application/json
-      Cross-Origin-Opener-Policy:
-      - same-origin
-      Date:
-      - Thu, 03 Jul 2025 09:07:05 GMT
-      Referrer-Policy:
-      - same-origin
-      Server:
-      - nginx/1.27.4
-      Vary:
-      - Accept, origin
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - DENY
-    status:
-      code: 200
-      message: OK
+      code: 201
+      message: Created
 version: 1
