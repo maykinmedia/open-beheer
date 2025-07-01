@@ -144,7 +144,7 @@ class OBList[T](Struct):
     'The "rows" in the list. All `fields` MUST be an attribute on each `T`'
 
 
-class VersionSummary(Struct):
+class VersionSummary(Struct, rename="camel"):
     """Summary of the different version of a ZTC resource.
 
     # TODO: what do we need to show per version?
