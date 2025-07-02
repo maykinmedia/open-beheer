@@ -9,7 +9,7 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDkzNDI3MSwiZXhwIjoxNzUwOTc3NDcxLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.8MeYBaacFiW-3ySxVGgEqSHHyR2ZzOAz2DamE2aEQe0
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTQ3Mjg4OSwiZXhwIjoxNzUxNTE2MDg5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.Co4AhjaKj91LOCsYvQxlHuzoLBRPl5ncb79Dvqcj8ks
       Connection:
       - keep-alive
       User-Agent:
@@ -33,25 +33,25 @@ interactions:
       Content-Length:
       - '1764'
       Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self''; base-uri
-        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
+      - 'form-action ''self''; worker-src ''self'' blob:; default-src ''self''; frame-src
+        ''self''; connect-src ''self'' raw.githubusercontent.com; base-uri ''self'';
+        object-src ''none''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
+        cdn.jsdelivr.net; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; font-src ''self'' fonts.gstatic.com;
         img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
-        ''none'''
+        frame-ancestors ''none'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 26 Jun 2025 10:37:51 GMT
+      - Wed, 02 Jul 2025 16:14:50 GMT
       ETag:
       - '"e06d2051a4000b5bf5bbb65826d67cdf"'
       Referrer-Policy:
       - same-origin
       Server:
-      - nginx/1.27.0
+      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -71,7 +71,7 @@ interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDkzNDI3MSwiZXhwIjoxNzUwOTc3NDcxLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.8MeYBaacFiW-3ySxVGgEqSHHyR2ZzOAz2DamE2aEQe0
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTQ3Mjg4OSwiZXhwIjoxNzUxNTE2MDg5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.Co4AhjaKj91LOCsYvQxlHuzoLBRPl5ncb79Dvqcj8ks
       Connection:
       - keep-alive
       User-Agent:
@@ -80,7 +80,35 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=ZAAKTYPE-2020-0000000001&status=alles
   response:
     body:
-      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+      string: '{"count":8,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/35995613-c56e-4f2f-a83d-e2e246fcf584","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+        resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2018-01-01","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/8c9b7b84-6247-4e40-b628-fcbd3505f88c","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+        resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2018-01-01","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/8a78cbd3-8347-4470-b78b-21d5dced6b47","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+        resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2018-01-01","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/df12d75f-a8a3-4647-9497-ec3cdd156241","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+        resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2018-01-01","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/bbcf5187-b182-4cb2-939f-95a2a3d6505b","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+        resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2018-01-01","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/83e2b93c-696f-45c9-a0e2-554a10412bfb","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+        resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2018-01-01","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/9fc08e37-b20e-4f84-8cc0-9c8e01793293","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
+        resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
+        red compare produce animal. Everything today Democrat student enter. By probably
+        adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2018-01-01","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2018-01-01","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]},{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487","identificatie":"ZAAKTYPE-2020-0000000001","omschrijving":"Testing
         resultaattypen process","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"Trouble
         red compare produce animal. Everything today Democrat student enter. By probably
         adult.","aanleiding":"Couple toward trip old nice memory system instead.","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Evenementvergunning","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
@@ -93,25 +121,106 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1816'
+      - '12288'
       Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self''; base-uri
-        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
+      - 'form-action ''self''; worker-src ''self'' blob:; default-src ''self''; frame-src
+        ''self''; connect-src ''self'' raw.githubusercontent.com; base-uri ''self'';
+        object-src ''none''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
+        cdn.jsdelivr.net; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; font-src ''self'' fonts.gstatic.com;
         img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
-        ''none'''
+        frame-ancestors ''none'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Date:
-      - Thu, 26 Jun 2025 10:37:51 GMT
+      - Wed, 02 Jul 2025 16:14:50 GMT
       Referrer-Policy:
       - same-origin
       Server:
-      - nginx/1.27.0
+      - nginx/1.27.4
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"url": "http://localhost:8003/catalogi/api/v1/zaaktypen/aaa565cd-d92b-4643-984b-2b0891443494",
+      "identificatie": "ZAAKTYPE-2018-0000000002TestConcept", "omschrijving": "Destruction
+      confirmation type", "omschrijvingGeneriek": "", "vertrouwelijkheidaanduiding":
+      "openbaar", "doel": "To confirm that a destruction list has been correctly processed.",
+      "aanleiding": "When a destructio list is processed by Open Archiefbeheer", "toelichting":
+      "", "indicatieInternOfExtern": "extern", "handelingInitiator": "indienen", "onderwerp":
+      "Destruction", "handelingBehandelaar": "uitvoeren", "doorlooptijd": "P30D",
+      "servicenorm": null, "opschortingEnAanhoudingMogelijk": true, "verlengingMogelijk":
+      false, "verlengingstermijn": null, "trefwoorden": [], "publicatieIndicatie":
+      true, "publicatietekst": "", "verantwoordingsrelatie": [], "productenOfDiensten":
+      ["https://example.com/product/123"], "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0",
+      "referentieproces": {"naam": "ReferentieProces 0", "link": ""}, "concept": true,
+      "verantwoordelijke": "100000000", "beginGeldigheid": "2025-03-21", "eindeGeldigheid":
+      null, "versiedatum": "2018-01-01", "beginObject": "2025-03-21", "eindeObject":
+      null, "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+      "statustypen": [], "resultaattypen": [], "eigenschappen": [], "informatieobjecttypen":
+      [], "roltypen": [], "besluittypen": [], "deelzaaktypen": [], "gerelateerdeZaaktypen":
+      [], "zaakobjecttypen": []}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTQ3Mjg4NywiZXhwIjoxNzUxNTE2MDg3LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.882WFp5_Wq0ISgmwYnIxTVXIhVdPTimrOPpWJDc93Os
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1557'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.4
+    method: PUT
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/aaa565cd-d92b-4643-984b-2b0891443494
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/aaa565cd-d92b-4643-984b-2b0891443494","identificatie":"ZAAKTYPE-2018-0000000002TestConcept","omschrijving":"Destruction
+        confirmation type","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"To
+        confirm that a destruction list has been correctly processed.","aanleiding":"When
+        a destructio list is processed by Open Archiefbeheer","toelichting":"","indicatieInternOfExtern":"extern","handelingInitiator":"indienen","onderwerp":"Destruction","handelingBehandelaar":"uitvoeren","doorlooptijd":"P30D","servicenorm":null,"opschortingEnAanhoudingMogelijk":true,"verlengingMogelijk":false,"verlengingstermijn":null,"trefwoorden":[],"publicatieIndicatie":true,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/123"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/c844637e-6393-4202-b030-e1bffb08a9b0","referentieproces":{"naam":"ReferentieProces
+        0","link":""},"concept":true,"verantwoordelijke":"100000000","beginGeldigheid":"2025-03-21","eindeGeldigheid":null,"versiedatum":"2018-01-01","beginObject":"2025-03-21","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1473'
+      Content-Security-Policy:
+      - 'form-action ''self''; worker-src ''self'' blob:; default-src ''self''; frame-src
+        ''self''; connect-src ''self'' raw.githubusercontent.com; base-uri ''self'';
+        object-src ''none''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
+        cdn.jsdelivr.net; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; font-src ''self'' fonts.gstatic.com;
+        img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
+        frame-ancestors ''none'''
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Wed, 02 Jul 2025 16:14:50 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
