@@ -1,4 +1,5 @@
 import { Button, Outline } from "@maykin-ui/admin-ui";
+import { formatDate } from "@storybook/blocks";
 import { FC, useId, useState } from "react";
 import { ZaakTypeVersion } from "~/types";
 
@@ -68,11 +69,30 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
   };
 
   const getVisibleVersions = () => {
+    const isHistorical = (v: ZaakTypeVersion) =>
+      !v.concept &&
+      new Date(v.beginGeldigheid) < today &&
+      (v.eindeGeldigheid ? new Date(v.eindeGeldigheid) <= today : false);
+
+    const historicalVersions = versions
+      .filter(isHistorical)
+      .sort(
+        (a, b) =>
+          new Date(a.beginGeldigheid).getTime() -
+          new Date(b.beginGeldigheid).getTime(),
+      );
+
+    const fullList = [
+      ...historicalVersions,
+      ...(currentVersion ? [currentVersion] : []),
+      ...(conceptVersion ? [conceptVersion] : []),
+    ];
+
     if (isExpanded) {
-      return versions;
+      return fullList;
     }
 
-    return versions.filter((v) => {
+    return fullList.filter((v) => {
       return (
         v.uuid === currentVersion?.uuid ||
         v.uuid === conceptVersion?.uuid ||
@@ -94,10 +114,10 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
     const isCurrent = beginDate <= today && (!endDate || endDate > today);
 
     if (isCurrent) {
-      return `Huidige versie ${version.uuid}`;
+      return `Actueel`;
     }
 
-    return `Historische versie ${version.uuid}`;
+    return `${formatDate(beginDate)}${endDate ? ` - ${formatDate(endDate)}` : ""}`;
   };
 
   return (

@@ -16,25 +16,31 @@ export const VersionSelector: Story = {
   args: {
     versions: [
       {
-        uuid: "v1",
-        concept: false,
-        beginGeldigheid: "2024-01-01",
-        eindeGeldigheid: "2025-12-31",
-      },
-      {
         uuid: "v0",
         concept: false,
         beginGeldigheid: "2022-01-01",
+        eindeGeldigheid: "2022-12-31",
+      },
+      {
+        uuid: "v0.1",
+        concept: false,
+        beginGeldigheid: "2023-01-01",
         eindeGeldigheid: "2023-12-31",
       },
       {
-        uuid: "v2",
+        uuid: "v0.2",
         concept: false,
-        beginGeldigheid: "2026-01-01",
-        eindeGeldigheid: null,
+        beginGeldigheid: "2024-01-01",
+        eindeGeldigheid: "2024-12-31",
       },
       {
-        uuid: "v2-draft",
+        uuid: "v1",
+        concept: false,
+        beginGeldigheid: "2025-01-01",
+        eindeGeldigheid: "2025-12-31",
+      },
+      {
+        uuid: "v2",
         concept: true,
         beginGeldigheid: "2025-08-01",
         eindeGeldigheid: null,
@@ -44,8 +50,7 @@ export const VersionSelector: Story = {
   },
   play: async ({ canvasElement }) => {
     const fixedNow = new Date("2025-07-01").valueOf();
-    const originalDateNow = Date.now;
-    Date.now = () => fixedNow; // Mocking the currentt date
+    Date.now = () => fixedNow;
 
     const canvas = within(canvasElement);
 
@@ -54,11 +59,21 @@ export const VersionSelector: Story = {
     });
     await userEvent.click(expandButton);
 
-    const historicalBtn = await canvas.findByRole("button", {
-      name: /selecteer historische versie v0/i,
+    const selecteerButtons = await canvas.findAllByRole("button", {
+      name: /selecteer/i,
     });
-    await userEvent.click(historicalBtn);
+    await userEvent.click(selecteerButtons[4]);
+    await userEvent.click(selecteerButtons[3]);
+    await userEvent.click(selecteerButtons[2]);
+    await userEvent.click(selecteerButtons[1]);
+    await userEvent.click(selecteerButtons[0]);
 
-    Date.now = originalDateNow;
+    await userEvent.click(expandButton);
+
+    // Check if button 0 is still selected
+    const actueelButton = await canvas.findByRole("button", {
+      name: /actueel/i,
+    });
+    await userEvent.click(actueelButton);
   },
 };
