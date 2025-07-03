@@ -1,14 +1,16 @@
 from functools import cache
-from typing import Generator, NoReturn
+from typing import Iterator, NoReturn, Protocol
+
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as __
+
 from ape_pie import APIClient
+from msgspec.json import decode
 from zgw_consumers.client import build_client
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
-from zgw_consumers.utils import PaginatedResponseData
 
 
 @cache
@@ -36,19 +38,18 @@ def _(sender, instance, **_):
         ztc_client.cache_clear()
 
 
-def pagination_helper(
-    client: APIClient, paginated_response: PaginatedResponseData, **kwargs
-) -> Generator[PaginatedResponseData, None, None]:
-    def _iter(
-        _data: PaginatedResponseData,
-    ) -> Generator[PaginatedResponseData, None, None]:
-        yield _data
+class ZGWPagedResponseProtocol[T](Protocol):
+    next: str | None
+    results: list[T]
 
-        if next_url := _data.get("next"):
-            response = client.get(next_url, **kwargs)
-            response.raise_for_status()
-            data = response.json()
 
-            yield from _iter(data)
+def iter_pages[T](
+    client: APIClient, response: ZGWPagedResponseProtocol[T]
+) -> Iterator[T]:
+    yield from response.results
 
-    return _iter(paginated_response)
+    while next_url := response.next:
+        resp = client.get(next_url)
+        resp.raise_for_status()
+        response = decode(resp.content, type=response.__class__, strict=False)
+        yield from response.results
