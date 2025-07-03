@@ -26,9 +26,9 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         )
         cls.user = UserFactory.create()
 
-        cls.cleanup_cassette = cls._get_vcr(cls()).use_cassette("setUpTestData.yaml")
+        _vcr = cls._get_vcr(cls())
 
-        with cls.cleanup_cassette, ztc_client("OZ") as client:
+        with _vcr.use_cassette("setUpTestData.yaml"), ztc_client("OZ") as client:
             template = client.get(
                 "zaaktypen/ce9feadd-00cb-46c8-a0ef-1d1dfc78586a"
             ).json()
@@ -39,7 +39,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             cls.fresh_concept = client.post("zaaktypen", json=template).json()
 
         def cleanup():
-            with cls.cleanup_cassette, ztc_client("OZ") as client:
+            with _vcr.use_cassette("class_cleanup.yaml"), ztc_client("OZ") as client:
                 client.delete(cls.fresh_concept["url"])
 
         cls.addClassCleanup(cleanup)
@@ -55,11 +55,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         super().setUp()
 
         def reset():
-            assert (
-                ztc_client("OZ")
-                .put(self.fresh_concept["url"], json=self.fresh_concept)
-                .ok
-            )
+            ztc_client("OZ").put(self.fresh_concept["url"], json=self.fresh_concept)
 
         self.addCleanup(reset)
 
@@ -89,8 +85,12 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.assertIn("fields", data)
 
         fields = {f["name"] for f in data["fields"]}
-        self.assertSetEqual(fields & {"_expand", "Expand"}, set())
-        self.assertSetEqual(fields, set(data["result"].keys()))
+        # misspelled too, to catch camelize bugs
+        expand = {"_expand", "Expand"}
+        # fields are still undefined for expansion
+        self.assertSetEqual(fields & expand, set())
+        # all fields should exist on the result
+        self.assertSetEqual(fields, set(data["result"].keys()) - {"_expand"})
 
         self.assertEqual(len(data["versions"]), 8)
 
@@ -171,6 +171,97 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             self.assertEqual(zaaktype["deelzaaktypen"], [])
             self.assertEqual(zaaktype["zaakobjecttypen"], [])
 
+            self.assertEqual(
+                zaaktype["_expand"],
+                {
+                    "besluittypen": [],
+                    "eigenschappen": [],
+                    "informatieobjecttypen": [],
+                    "resultaattypen": [
+                        {
+                            "archiefactietermijn": None,
+                            "archiefnominatie": "",
+                            "beginGeldigheid": None,
+                            "beginObject": None,
+                            "besluittypeOmschrijving": [],
+                            "besluittypen": [],
+                            "brondatumArchiefprocedure": {
+                                "afleidingswijze": "",
+                                "datumkenmerk": "",
+                                "einddatumBekend": False,
+                                "objecttype": "",
+                                "procestermijn": None,
+                                "registratie": "",
+                            },
+                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                            "eindeGeldigheid": None,
+                            "eindeObject": None,
+                            "indicatieSpecifiek": None,
+                            "informatieobjecttypeOmschrijving": [],
+                            "informatieobjecttypen": [],
+                            "omschrijving": "Lopend",
+                            "omschrijvingGeneriek": "",
+                            "procesobjectaard": "",
+                            "procestermijn": None,
+                            "resultaattypeomschrijving": "Lopend",
+                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/cc5ae4e3-a9e6-4386-bcee-46be4986a829",
+                            "toelichting": "",
+                            "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/7759dcb7-de9a-4543-99e3-81472c488f32",
+                            "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487",
+                            "zaaktypeIdentificatie": "ZAAKTYPE-2020-0000000001",
+                        },
+                        {
+                            "archiefactietermijn": None,
+                            "archiefnominatie": "",
+                            "beginGeldigheid": None,
+                            "beginObject": None,
+                            "besluittypeOmschrijving": [],
+                            "besluittypen": [],
+                            "brondatumArchiefprocedure": {
+                                "afleidingswijze": "",
+                                "datumkenmerk": "",
+                                "einddatumBekend": False,
+                                "objecttype": "",
+                                "procestermijn": None,
+                                "registratie": "",
+                            },
+                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                            "eindeGeldigheid": None,
+                            "eindeObject": None,
+                            "indicatieSpecifiek": None,
+                            "informatieobjecttypeOmschrijving": [],
+                            "informatieobjecttypen": [],
+                            "omschrijving": "Afgehandeld",
+                            "omschrijvingGeneriek": "",
+                            "procesobjectaard": "",
+                            "procestermijn": None,
+                            "resultaattypeomschrijving": "Afgehandeld",
+                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/1bb001e9-5eab-4f10-8940-8781e11f180f",
+                            "toelichting": "",
+                            "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/b9109699-67cd-4c2e-a2cf-76b311d40e25",
+                            "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487",
+                            "zaaktypeIdentificatie": "ZAAKTYPE-2020-0000000001",
+                        },
+                    ],
+                    "roltypen": [
+                        {
+                            "beginGeldigheid": None,
+                            "beginObject": None,
+                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                            "eindeGeldigheid": None,
+                            "eindeObject": None,
+                            "omschrijving": "Behandelend afdeling",
+                            "omschrijvingGeneriek": "behandelaar",
+                            "url": "http://localhost:8003/catalogi/api/v1/roltypen/ae39e60c-0e4b-4432-a830-8755ed083fda",
+                            "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487",
+                            "zaaktypeIdentificatie": "ZAAKTYPE-2020-0000000001",
+                        }
+                    ],
+                    "statustypen": [],
+                    "zaakobjecttypen": [],
+                },
+            )
+
         with self.subTest("fields"):
             self.assertEqual(data["fields"][1]["name"], "vertrouwelijkheidaanduiding")
             self.assertEqual(len(data["fields"][1]["options"]), 8)
@@ -214,10 +305,10 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             self.assertEqual(zaaktype["omschrijving"], "MODIFIED")
 
         for key, before_value in before["result"].items():
-            if key == "omschrijving":
+            if key in "omschrijving":
                 continue
             with self.subTest(f"{key} not modified"):
-                self.assertEqual(before_value, zaaktype[key])
+                self.assertEqual(before_value, zaaktype[key], f"{key=}")
 
     def test_put_zaaktype(self):
         """
