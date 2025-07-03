@@ -1,19 +1,33 @@
 from django.utils.translation import gettext_lazy as _
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
-
-from msgspec import convert
-
+from msgspec.json import decode
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from openbeheer.api.views import MsgspecAPIView
-from openbeheer.clients import ztc_client, pagination_helper
-
-from openbeheer.types.ztc import PaginatedCatalogusList
-
-from openbeheer.types._open_beheer import ExternalServiceError, OBOption
+from openbeheer.clients import iter_pages, ztc_client
+from openbeheer.types import ExternalServiceError, OBOption, as_ob_option
+from openbeheer.types.ztc import PaginatedCatalogusList, Catalogus
 from openbeheer.utils.decorators import handle_service_errors
+
+
+# Shouldn't this have an inverse? Currently there is no way to go from
+# the option.value back to the correct Catalogus; you'll always need the
+# (option, client) pair.
+@as_ob_option.register
+def _as_option(catalogue: Catalogus, client) -> OBOption[str]:
+    label = (
+        f"{catalogue.naam} ({catalogue.domein})" if catalogue.naam else catalogue.domein
+    )
+    # OZ API specs say that url is not required, but VNG specs say it is.
+    # In practice, it is always present.
+    url = catalogue.url
+    assert url
+    path = f"{client.base_url}catalogussen/"
+    uuid = url.removeprefix(path)
+    assert uuid
+    return OBOption(label=label, value=uuid)
 
 
 @extend_schema_view(
@@ -35,34 +49,17 @@ from openbeheer.utils.decorators import handle_service_errors
 class CatalogChoicesView(MsgspecAPIView):
     @handle_service_errors
     def get(self, request: Request, slug: str) -> Response:
-        client = ztc_client(slug)
+        with ztc_client(slug) as client:
+            response = client.get("catalogussen")
+            response.raise_for_status()
 
-        response = client.get("catalogussen")
-        response.raise_for_status()
-
-        results: list[OBOption[str]] = []
-        for page_data in pagination_helper(
-            client,
-            response.json(),
-        ):
-            decoded_page_data = convert(
-                page_data,
+            catalogues = decode(
+                response.content,
                 type=PaginatedCatalogusList,
             )
-            for catalogue in decoded_page_data.results:
-                label = (
-                    f"{catalogue.naam} ({catalogue.domein})"
-                    if catalogue.naam
-                    else catalogue.domein
-                )
-                # OZ API specs say that url is not required, but VNG specs say it is.
-                # In practice, it is always present.
-                url = catalogue.url
-                assert url
-                path = f"{client.base_url}catalogussen/"
-                uuid = url.removeprefix(path)
-                assert uuid
-
-                results.append(OBOption(label=label, value=uuid))
+            results = [
+                as_ob_option(catalogue, client)
+                for catalogue in iter_pages(client, catalogues)
+            ]
 
         return Response(results)
