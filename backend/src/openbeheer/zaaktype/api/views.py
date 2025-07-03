@@ -1,35 +1,45 @@
 import datetime
 from typing import Annotated, Mapping
-from rest_framework.response import Response
-from rest_framework import status
+
 from ape_pie import APIClient
-from msgspec import UNSET, Meta, Struct, UnsetType
-from rest_framework.request import Request
-from msgspec.json import decode
-from msgspec import convert
-from openbeheer.api.views import ListView
-from openbeheer.types._zgw import ZGWError, ZGWResponse
-from openbeheer.types.ztc import (
-    PatchedZaakTypeRequest,
-    Status,
-    VertrouwelijkheidaanduidingEnum,
-    ZaakTypeRequest,
-)
-from openbeheer.types._open_beheer import ExternalServiceError
-from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from openbeheer.api.views import DetailView
-from openbeheer.clients import pagination_helper, ztc_client
+from furl import furl
+from msgspec import UNSET, Meta, Struct, UnsetType, field
+from msgspec.json import decode
+from rest_framework import status
+from rest_framework.request import Request
+from rest_framework.response import Response
+
+from openbeheer.api.views import (
+    DetailView,
+    ListView,
+    mk_expandable,
+    mk_expansion,
+)
+from openbeheer.clients import iter_pages, ztc_client
+from openbeheer.types import OBField, OBOption, OBPagedQueryParams
 from openbeheer.types._open_beheer import (
     DetailResponse,
+    ExternalServiceError,
     FrontendFieldsets,
     VersionSummary,
 )
+from openbeheer.types._zgw import ZGWError, ZGWResponse
 from openbeheer.types.ztc import (
+    BesluitType,
+    Eigenschap,
+    InformatieObjectType,
     PaginatedZaakTypeList,
+    PatchedZaakTypeRequest,
+    ResultaatType,
+    RolType,
+    Status,
+    StatusType,
+    VertrouwelijkheidaanduidingEnum,
+    ZaakObjectType,
     ZaakType,
+    ZaakTypeRequest,
 )
-from furl import furl
 from openbeheer.utils.decorators import handle_service_errors
 from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
 
@@ -47,20 +57,13 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="came
     ] = UNSET
 
 
-class ZaakTypeSummary(Struct, kw_only=True, rename="camel"):
-    # Identificate
-    # Omschrijving
-    # Actief ja/nee
-    # Einddatum
-    # Omschrijving
-    # Vertrouwelijkheidaanduiding
-
+class ZaakTypeSummary(Struct, kw_only=True):
     url: str
     identificatie: str
     omschrijving: str
     # Actief ja/nee: calculated
     actief: bool | UnsetType = UNSET
-    einde_geldigheid: datetime.date | None = None
+    einde_geldigheid: datetime.date | None = field(default=None, name="eindeGeldigheid")
     # str, because VertrouwelijkheidaanduidingEnum does not contain "" but OZ does
     # XXX: the "" is actually a fault in the fixtures!
     vertrouwelijkheidaanduiding: str
@@ -144,13 +147,34 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         return Response(data, status.HTTP_201_CREATED)
 
 
+ExpandableZaakType = mk_expandable(
+    ZaakType,
+    {
+        "besluittypen": list[BesluitType],
+        # Not invented here:
+        # "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+        # Posssibly Not invented here:
+        # "gerelateerde_zaaktypen": null,
+        # "broncatalogus.url": null,
+        # "bronzaaktype.url": null,
+        "statustypen": list[StatusType],
+        "resultaattypen": list[ResultaatType],
+        "eigenschappen": list[Eigenschap],
+        "informatieobjecttypen": list[InformatieObjectType],
+        "roltypen": list[RolType],
+        # "deelzaaktypen": [],  # XXX: Are these URLs?
+        "zaakobjecttypen": list[ZaakObjectType],
+    },
+)
+
+
 @extend_schema_view(
     get=extend_schema(
         tags=["Zaaktypen"],
         summary="Get a zaaktype",
         description="Retrive a zaaktype from Open Zaak.",
         responses={
-            "200": DetailResponse[ZaakType],
+            "200": DetailResponse[ExpandableZaakType],
             "400": ZGWError,
         },
     ),
@@ -163,7 +187,7 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         ),
         request=PatchedZaakTypeRequest,
         responses={
-            "200": DetailResponse[ZaakType],
+            "200": DetailResponse[ExpandableZaakType],
             "400": ZGWError,
         },
     ),
@@ -176,15 +200,38 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         ),
         request=ZaakTypeRequest,
         responses={
-            "200": DetailResponse[ZaakType],
+            "200": DetailResponse[ExpandableZaakType],
             "400": ZGWError,
         },
     ),
 )
-class ZaakTypeDetailView(DetailView[ZaakType]):
-    data_type = ZaakType
+class ZaakTypeDetailView(DetailView[ExpandableZaakType]):
+    data_type = ExpandableZaakType
     endpoint_path = "zaaktypen/{uuid}"
     has_versions = True
+
+    @staticmethod
+    def _key(zaaktype: ZaakType):
+        return {"zaaktype": zaaktype.url}
+
+    expansions = {
+        "besluittypen": mk_expansion(
+            "besluittypen",
+            # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
+            # it actually accepts multiple so we can't use a __in
+            lambda zt: {"zaaktypen": zt.url},  # pyright: ignore[reportAttributeAccessIssue]
+            BesluitType,
+        ),
+        "statustypen": mk_expansion("statustypen", _key, StatusType),
+        # TODO investigate bad OZ response
+        "resultaattypen": mk_expansion("resultaattypen", _key, dict),
+        "eigenschappen": mk_expansion("eigenschappen", _key, Eigenschap),
+        "informatieobjecttypen": mk_expansion(
+            "informatieobjecttypen", _key, InformatieObjectType
+        ),
+        "roltypen": mk_expansion("roltypen", _key, RolType),
+        "zaakobjecttypen": mk_expansion("zaakobjecttypen", _key, ZaakObjectType),
+    }
 
     def get_item_versions(
         self, slug: str, data: ZaakType
@@ -200,16 +247,9 @@ class ZaakTypeDetailView(DetailView[ZaakType]):
             error = decode(response.content, type=ZGWError)
             return error, response.status_code
 
-        results: list[ZaakType] = []
-        for page_data in pagination_helper(
-            client,
-            response.json(),
-        ):
-            decoded_page_data = convert(
-                page_data,
-                type=PaginatedZaakTypeList,
-            )
-            results.extend(decoded_page_data.results)
+        zaaktypen = decode(response.content, type=PaginatedZaakTypeList)
+
+        results = list(iter_pages(client, zaaktypen))
 
         return results, response.status_code
 
