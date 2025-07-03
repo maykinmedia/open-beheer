@@ -74,7 +74,7 @@ class MsgspecJSONRenderer(JSONRenderer):
                 try:
                     return _ENCODER.encode(data)
                 except TypeError:  # raised errors contain DRF types
-                    return super().render(data, *_, *__)
+                    return super().render(data, *_, **__)
 
 
 class _Renderer(Protocol):
@@ -112,22 +112,44 @@ class MsgspecAPIView(_APIView):
         return [MsgspecJSONRenderer()] + [r() for r in render_classes]
 
 
-def mk_expandable[T: Type[Struct]](t: T, fields: Mapping[str, type]) -> T:
+def make_expandable[T: Type[Struct]](t: T, fields: Mapping[str, type]) -> T:
+    """
+    Return a version of t that has an .expand attribute with the specified `fields`.
+
+    :param t: The *class* you want to make expandable
+    :param fields: Map of attribute name -> attribute type
+
+    ``mk_expandable(Foo, {"bar": bool})`` returns a
+
+        class ExpandableFoo(Foo):
+            _expand: FooExpansion = FooExpansion()
+
+    where:
+
+        class FooExpansion(Struct):
+            bar: bool | UnsetType = UNSET
+    """
     expansion = defstruct(
         name=f"{t.__name__}Expansion",
-        fields=[(f, t | UnsetType, UNSET) for f, t in fields.items()],  # type: ignore UnionType t | UnsetType seems to work
+        fields=[(f, t | UnsetType, UNSET) for f, t in fields.items()],  # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
         # module="" should we pass in the caller module name?
         frozen=True,  # don't want to mutate the default value
         rename="camel",
     )
-    return defstruct(
+    return defstruct(  # pyright: ignore[reportReturnType]  # t is in bases!
         name=f"Expandable{t.__name__}",
-        fields=[("_expand", expansion, expansion())],  # type: ignore UnionType t | UnsetType seems to work
+        fields=[("_expand", expansion, expansion())],
         bases=(t,),
     )
 
 
 type Expansion[T: Struct, R] = Callable[[APIClient, Iterable[T]], Iterable[R]]
+
+
+def fetch_one[T](client: APIClient, path: str, result_type: type[T]) -> T | NoReturn:
+    response = client.get(path)
+    response.raise_for_status()
+    return decode(response.content, type=result_type)
 
 
 def fetch_response[T](
@@ -149,9 +171,21 @@ def fetch_all[T](
     return list(iter_pages(client, fetch_response(client, path, params, result_type)))
 
 
-def mk_expansion[T: Struct, R](
+def make_expansion[T: Struct, R](
     path: str, key: Callable[[T], dict], result_type: type[R]
 ) -> Expansion[T, list[R]]:
+    """
+    :param path: path or full url that will get passed to APIClient
+    :param key: function T -> query param dict that will get passed to APIClient
+    :param result_type: type used to decode the .results of the paginated response
+                        expand_many will set this result *as is* on the .expand
+
+    Any HTTP/ValidationError will be raised.
+
+    You COULD set result_type to `dict` if you want to just pass-through
+    the JSON object from the response
+    """
+
     # TODO: handle returning 1 R?
     def expand(client: APIClient, objects: Iterable[T]) -> Iterable[list[R]]:
         return (fetch_all(client, path, key(obj), result_type) for obj in objects)

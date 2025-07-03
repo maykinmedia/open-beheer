@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 import datetime
 from typing import Annotated, Mapping
 
@@ -13,8 +14,9 @@ from rest_framework.response import Response
 from openbeheer.api.views import (
     DetailView,
     ListView,
-    mk_expandable,
-    mk_expansion,
+    fetch_one,
+    make_expandable,
+    make_expansion,
 )
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import OBField, OBOption, OBPagedQueryParams
@@ -147,7 +149,7 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         return Response(data, status.HTTP_201_CREATED)
 
 
-ExpandableZaakType = mk_expandable(
+ExpandableZaakType = make_expandable(
     ZaakType,
     {
         "besluittypen": list[BesluitType],
@@ -162,10 +164,22 @@ ExpandableZaakType = mk_expandable(
         "eigenschappen": list[Eigenschap],
         "informatieobjecttypen": list[InformatieObjectType],
         "roltypen": list[RolType],
-        # "deelzaaktypen": [],  # XXX: Are these URLs?
+        "deelzaaktypen": list[ZaakType],
         "zaakobjecttypen": list[ZaakObjectType],
     },
 )
+
+
+def expand_deelzaaktype(
+    client: APIClient, zaaktypen: Iterable[ZaakType]
+) -> list[list[ZaakType | None]]:
+    return [
+        [
+            fetch_one(client, dz_url, ZaakType) if dz_url else None
+            for dz_url in (zt.deelzaaktypen or [])
+        ]
+        for zt in zaaktypen
+    ]
 
 
 @extend_schema_view(
@@ -215,22 +229,23 @@ class ZaakTypeDetailView(DetailView[ExpandableZaakType]):
         return {"zaaktype": zaaktype.url}
 
     expansions = {
-        "besluittypen": mk_expansion(
+        "besluittypen": make_expansion(
             "besluittypen",
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
             lambda zt: {"zaaktypen": zt.url},  # pyright: ignore[reportAttributeAccessIssue]
             BesluitType,
         ),
-        "statustypen": mk_expansion("statustypen", _key, StatusType),
+        "statustypen": make_expansion("statustypen", _key, StatusType),
         # TODO investigate bad OZ response
-        "resultaattypen": mk_expansion("resultaattypen", _key, dict),
-        "eigenschappen": mk_expansion("eigenschappen", _key, Eigenschap),
-        "informatieobjecttypen": mk_expansion(
+        "resultaattypen": make_expansion("resultaattypen", _key, dict),
+        "eigenschappen": make_expansion("eigenschappen", _key, Eigenschap),
+        "informatieobjecttypen": make_expansion(
             "informatieobjecttypen", _key, InformatieObjectType
         ),
-        "roltypen": mk_expansion("roltypen", _key, RolType),
-        "zaakobjecttypen": mk_expansion("zaakobjecttypen", _key, ZaakObjectType),
+        "roltypen": make_expansion("roltypen", _key, RolType),
+        "deelzaaktypen": expand_deelzaaktype,
+        "zaakobjecttypen": make_expansion("zaakobjecttypen", _key, ZaakObjectType),
     }
 
     def get_item_versions(

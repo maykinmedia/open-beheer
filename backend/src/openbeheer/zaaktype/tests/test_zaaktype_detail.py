@@ -258,6 +258,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                         }
                     ],
                     "statustypen": [],
+                    "deelzaaktypen": [],
                     "zaakobjecttypen": [],
                 },
             )
