@@ -13,7 +13,6 @@ interface VersionSelectorProps {
 /**
  * A reusable component to select a version of a ZaakType.
  * This component makes a few assumptions:
- * - The versions are sorted in this component by date, in case the BFF does not return them sorted.
  * - The current version is the one that is not a concept and has a begin date in the past and no end date, or an end date in the future.
  * - The concept version is the one with `concept` set to true.
  * - All other versions are considered historical versions.
