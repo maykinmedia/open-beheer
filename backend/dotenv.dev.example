@@ -20,3 +20,6 @@ OIDC_REDIRECT_ALLOWED_HOSTS=localhost:5173
 PLAYWRIGHT_BROWSER=firefox
 PLAYWRIGHT_HEADLESS=no
 
+# For recording VCR cassettes
+# VCR_RECORD_MODE=new_episodes
+
