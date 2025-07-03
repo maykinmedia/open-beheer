@@ -551,6 +551,10 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.parser.CamelCaseFormParser",
         "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
     ],
+    "JSON_UNDERSCOREIZE": {
+        "ignore_fields": [],
+        "ignore_keys": ["_expand"],
+    },
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
