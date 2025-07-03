@@ -1,12 +1,19 @@
 from typing import Any, Literal
-from drf_spectacular.extensions import OpenApiSerializerExtension
+
+import structlog
+from drf_spectacular.extensions import (
+    OpenApiFilterExtension,
+    OpenApiSerializerExtension,
+)
 from drf_spectacular.openapi import AutoSchema
+from drf_spectacular.plumbing import ResolvedComponent
 from drf_spectacular.utils import Direction
 from msgspec.json import schema_components
-from drf_spectacular.plumbing import ResolvedComponent
-from drf_spectacular.extensions import OpenApiFilterExtension
+from rest_framework.serializers import Serializer
 
 from openbeheer.types._drf_spectacular import QueryParamSchema
+
+logger = structlog.get_logger(__name__)
 
 
 def camelize_serializer_fields(result, generator, request, public):
@@ -23,7 +30,7 @@ def camelize_serializer_fields(result, generator, request, public):
     """
 
     def camelize_str(key: str) -> str:
-        if "_" not in key:
+        if "_" not in key or key == "_expand":
             return key
         return "".join(s.title() if n else s for n, s in enumerate(key.split("_")))
 
@@ -60,7 +67,9 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         """Match based on whether Msgspec can generate a schema"""
         try:
             return bool(schema_components((target,)))
-        except Exception:
+        except Exception as e:
+            if not isinstance(target, Serializer):
+                logger.debug("msgspec can't make schema", target=target, exc_info=e)
             return False
 
     def map_serializer(

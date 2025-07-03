@@ -30,6 +30,7 @@ class AfleidingswijzeEnum(Enum):
 class ArchiefnominatieEnum(Enum):
     blijvend_bewaren = "blijvend_bewaren"
     vernietigen = "vernietigen"
+    field_ = ""
 
 
 class BesluitType(Struct, kw_only=True):
@@ -745,6 +746,7 @@ class ObjecttypeEnum(Enum):
     woz_waarde = "woz_waarde"
     zakelijk_recht = "zakelijk_recht"
     overige = "overige"
+    field_ = ""
 
 
 class OmschrijvingGeneriek(Struct, kw_only=True):
@@ -2142,7 +2144,7 @@ class BrondatumArchiefprocedure(Struct, kw_only=True):
     ) = field(name="einddatumBekend", default=None)
     objecttype: (
         Annotated[
-            ObjecttypeEnum | BlankEnum,
+            ObjecttypeEnum,  # | BlankEnum,
             Meta(
                 description="Het soort object in de registratie dat het procesobject representeert.\n\nUitleg bij mogelijke waarden:\n\n* `adres` - Adres\n* `besluit` - Besluit\n* `buurt` - Buurt\n* `enkelvoudig_document` - Enkelvoudig document\n* `gemeente` - Gemeente\n* `gemeentelijke_openbare_ruimte` - Gemeentelijke openbare ruimte\n* `huishouden` - Huishouden\n* `inrichtingselement` - Inrichtingselement\n* `kadastrale_onroerende_zaak` - Kadastrale onroerende zaak\n* `kunstwerkdeel` - Kunstwerkdeel\n* `maatschappelijke_activiteit` - Maatschappelijke activiteit\n* `medewerker` - Medewerker\n* `natuurlijk_persoon` - Natuurlijk persoon\n* `niet_natuurlijk_persoon` - Niet-natuurlijk persoon\n* `openbare_ruimte` - Openbare ruimte\n* `organisatorische_eenheid` - Organisatorische eenheid\n* `pand` - Pand\n* `spoorbaandeel` - Spoorbaandeel\n* `status` - Status\n* `terreindeel` - Terreindeel\n* `terrein_gebouwd_object` - Terrein gebouwd object\n* `vestiging` - Vestiging\n* `waterdeel` - Waterdeel\n* `wegdeel` - Wegdeel\n* `wijk` - Wijk\n* `woonplaats` - Woonplaats\n* `woz_deelobject` - Woz deel object\n* `woz_object` - Woz object\n* `woz_waarde` - Woz waarde\n* `zakelijk_recht` - Zakelijk recht\n* `overige` - Overige"
             ),
@@ -2199,7 +2201,7 @@ class BrondatumArchiefprocedureRequest(Struct, kw_only=True):
     ) = field(name="einddatumBekend", default=None)
     objecttype: (
         Annotated[
-            ObjecttypeEnum | BlankEnum,
+            ObjecttypeEnum,  # | BlankEnum,
             Meta(
                 description="Het soort object in de registratie dat het procesobject representeert.\n\nUitleg bij mogelijke waarden:\n\n* `adres` - Adres\n* `besluit` - Besluit\n* `buurt` - Buurt\n* `enkelvoudig_document` - Enkelvoudig document\n* `gemeente` - Gemeente\n* `gemeentelijke_openbare_ruimte` - Gemeentelijke openbare ruimte\n* `huishouden` - Huishouden\n* `inrichtingselement` - Inrichtingselement\n* `kadastrale_onroerende_zaak` - Kadastrale onroerende zaak\n* `kunstwerkdeel` - Kunstwerkdeel\n* `maatschappelijke_activiteit` - Maatschappelijke activiteit\n* `medewerker` - Medewerker\n* `natuurlijk_persoon` - Natuurlijk persoon\n* `niet_natuurlijk_persoon` - Niet-natuurlijk persoon\n* `openbare_ruimte` - Openbare ruimte\n* `organisatorische_eenheid` - Organisatorische eenheid\n* `pand` - Pand\n* `spoorbaandeel` - Spoorbaandeel\n* `status` - Status\n* `terreindeel` - Terreindeel\n* `terrein_gebouwd_object` - Terrein gebouwd object\n* `vestiging` - Vestiging\n* `waterdeel` - Waterdeel\n* `wegdeel` - Wegdeel\n* `wijk` - Wijk\n* `woonplaats` - Woonplaats\n* `woz_deelobject` - Woz deel object\n* `woz_object` - Woz object\n* `woz_waarde` - Woz waarde\n* `zakelijk_recht` - Zakelijk recht\n* `overige` - Overige"
             ),
@@ -2694,7 +2696,7 @@ class PatchedResultaatTypeRequest(Struct, kw_only=True):
     ) = None
     archiefnominatie: (
         Annotated[
-            ArchiefnominatieEnum | BlankEnum,
+            ArchiefnominatieEnum,  # | BlankEnum,
             Meta(
                 description="Aanduiding die aangeeft of ZAAKen met een resultaat van dit RESULTAATTYPE blijvend moeten worden bewaard of (op termijn) moeten worden vernietigd. Indien niet expliciet opgegeven wordt dit gevuld vanuit de selectielijst.\n\nUitleg bij mogelijke waarden:\n\n* `blijvend_bewaren` - Het zaakdossier moet bewaard blijven en op de Archiefactiedatum overgedragen worden naar een archiefbewaarplaats.\n* `vernietigen` - Het zaakdossier moet op of na de Archiefactiedatum vernietigd worden."
             ),
@@ -3207,7 +3209,7 @@ class ResultaatType(Struct, kw_only=True):
     ) = None
     archiefnominatie: (
         Annotated[
-            ArchiefnominatieEnum | BlankEnum,
+            ArchiefnominatieEnum,  # | BlankEnum,
             Meta(
                 description="Aanduiding die aangeeft of ZAAKen met een resultaat van dit RESULTAATTYPE blijvend moeten worden bewaard of (op termijn) moeten worden vernietigd. Indien niet expliciet opgegeven wordt dit gevuld vanuit de selectielijst.\n\nUitleg bij mogelijke waarden:\n\n* `blijvend_bewaren` - Het zaakdossier moet bewaard blijven en op de Archiefactiedatum overgedragen worden naar een archiefbewaarplaats.\n* `vernietigen` - Het zaakdossier moet op of na de Archiefactiedatum vernietigd worden."
             ),
@@ -3374,7 +3376,7 @@ class ResultaatTypeRequest(Struct, kw_only=True):
     ) = None
     archiefnominatie: (
         Annotated[
-            ArchiefnominatieEnum | BlankEnum,
+            ArchiefnominatieEnum,  # | BlankEnum,
             Meta(
                 description="Aanduiding die aangeeft of ZAAKen met een resultaat van dit RESULTAATTYPE blijvend moeten worden bewaard of (op termijn) moeten worden vernietigd. Indien niet expliciet opgegeven wordt dit gevuld vanuit de selectielijst.\n\nUitleg bij mogelijke waarden:\n\n* `blijvend_bewaren` - Het zaakdossier moet bewaard blijven en op de Archiefactiedatum overgedragen worden naar een archiefbewaarplaats.\n* `vernietigen` - Het zaakdossier moet op of na de Archiefactiedatum vernietigd worden."
             ),

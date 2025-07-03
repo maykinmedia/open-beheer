@@ -124,6 +124,7 @@ INSTALLED_APPS = [
     "zgw_consumers",
     "simple_certmanager",
     "maykin_common",
+    "django_structlog",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
@@ -550,6 +551,10 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.parser.CamelCaseFormParser",
         "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
     ],
+    "JSON_UNDERSCOREIZE": {
+        "ignore_fields": [],
+        "ignore_keys": ["_expand"],
+    },
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
