@@ -1,0 +1,197 @@
+interactions:
+- request:
+    body: '{"domein": "ZPEMN", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Test catalogus"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTU1MTE3NSwiZXhwIjoxNzUxNTk0Mzc1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.2pbTR0nwA3wBvK_2zJOuQMcFpiIXAXXCFCuJrasd2VM
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '104'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.4
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/catalogussen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/bbdae442-1031-4481-ab15-f1abc038b51a","domein":"ZPEMN","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '365'
+      Content-Security-Policy:
+      - 'img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
+        style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; frame-src ''self''; font-src ''self'' fonts.gstatic.com;
+        form-action ''self''; object-src ''none''; worker-src ''self'' blob:; frame-ancestors
+        ''none''; base-uri ''self''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        default-src ''self'''
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Thu, 03 Jul 2025 13:59:35 GMT
+      Location:
+      - http://localhost:8003/catalogi/api/v1/catalogussen/bbdae442-1031-4481-ab15-f1abc038b51a
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.0
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/bbdae442-1031-4481-ab15-f1abc038b51a",
+      "omschrijving": "Omschrijving A", "vertrouwelijkheidaanduiding": "openbaar",
+      "beginGeldigheid": "2025-07-01", "informatieobjectcategorie": "Blue"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTU1MTE3NSwiZXhwIjoxNzUxNTk0Mzc1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.2pbTR0nwA3wBvK_2zJOuQMcFpiIXAXXCFCuJrasd2VM
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '251'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.4
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/0c2b5eba-02f6-417f-9c26-177008d2fbb8","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/bbdae442-1031-4481-ab15-f1abc038b51a","omschrijving":"Omschrijving
+        A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '770'
+      Content-Security-Policy:
+      - 'img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
+        style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; frame-src ''self''; font-src ''self'' fonts.gstatic.com;
+        form-action ''self''; object-src ''none''; worker-src ''self'' blob:; frame-ancestors
+        ''none''; base-uri ''self''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        default-src ''self'''
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Thu, 03 Jul 2025 13:59:35 GMT
+      Location:
+      - http://localhost:8003/catalogi/api/v1/informatieobjecttypen/0c2b5eba-02f6-417f-9c26-177008d2fbb8
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.0
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTU1MTE3NSwiZXhwIjoxNzUxNTk0Mzc1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.2pbTR0nwA3wBvK_2zJOuQMcFpiIXAXXCFCuJrasd2VM
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.32.4
+    method: GET
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?pageSize=10&page=1&status=alles
+  response:
+    body:
+      string: '{"count":35,"next":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen?page=2&pageSize=10&status=alles","previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/0c2b5eba-02f6-417f-9c26-177008d2fbb8","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/bbdae442-1031-4481-ab15-f1abc038b51a","omschrijving":"Omschrijving
+        A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/eac50c80-59c3-4a57-a48f-2193d3ab80d8","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/2fc91ad8-4555-4583-8c68-1a9f911496ee","omschrijving":"test_retrieve_with_filter_catalogus
+        3","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/8ecf8671-dda3-41ed-b1d2-84d67f467466","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/7cd79480-0e13-4657-bcc7-ec53c37da97a","omschrijving":"test_retrieve_with_filter_catalogus
+        2","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/7f549e37-8c48-45e1-b13f-c9090c4450ff","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/7cd79480-0e13-4657-bcc7-ec53c37da97a","omschrijving":"test_retrieve_with_filter_catalogus
+        1","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/578302b0-fdb2-4f5a-a220-e694653a4f78","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b6d0e45f-1aaf-4c60-8a3e-b3a070d02c9d","omschrijving":"test_retrieve_with_filter_zaaktype
+        3","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/ebb922dc-9b3a-4d8b-a491-4a017e4ea72f","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b6d0e45f-1aaf-4c60-8a3e-b3a070d02c9d","omschrijving":"test_retrieve_with_filter_zaaktype
+        2","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/cdcecd5f-462e-40ae-9e09-a1cbcdd9a0c1"],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/b42a243d-f3fd-4707-bd89-b9917be827a1","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b6d0e45f-1aaf-4c60-8a3e-b3a070d02c9d","omschrijving":"test_retrieve_with_filter_zaaktype
+        1","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/cdcecd5f-462e-40ae-9e09-a1cbcdd9a0c1"],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/73672dd2-fb6e-48b3-95bd-568f2ce30c19","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/3c40abec-8f59-490d-bb28-5af06d076346","omschrijving":"Omschrijving
+        A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/53d1c64d-ed8f-4c58-a33f-dd8085d33410","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/fb8f5394-ab48-45ee-9d1a-d56dd45db6e8","omschrijving":"test_retrieve_with_filter_zaaktype
+        3","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null},{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/e32d1f9b-f8fe-45bf-a438-11a190989885","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/fb8f5394-ab48-45ee-9d1a-d56dd45db6e8","omschrijving":"test_retrieve_with_filter_zaaktype
+        2","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/538e8c3a-9a63-428d-b80a-dc9593fd83ab"],"beginObject":"2025-07-01","eindeObject":null}]}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '8288'
+      Content-Security-Policy:
+      - 'img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
+        style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
+        cdn.jsdelivr.net; frame-src ''self''; font-src ''self'' fonts.gstatic.com;
+        form-action ''self''; object-src ''none''; worker-src ''self'' blob:; frame-ancestors
+        ''none''; base-uri ''self''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        default-src ''self'''
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Thu, 03 Jul 2025 13:59:35 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.0
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+version: 1

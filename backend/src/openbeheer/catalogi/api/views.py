@@ -1,5 +1,5 @@
 from django.utils.translation import gettext_lazy as _
-
+from furl import furl
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from msgspec import convert
@@ -57,11 +57,9 @@ class CatalogChoicesView(MsgspecAPIView):
                 )
                 # OZ API specs say that url is not required, but VNG specs say it is.
                 # In practice, it is always present.
-                url = catalogue.url
-                assert url
-                path = f"{client.base_url}catalogussen/"
-                uuid = url.removeprefix(path)
-                assert uuid
+                assert catalogue.url
+
+                uuid = furl(catalogue.url).path.segments[-1]
 
                 results.append(OBOption(label=label, value=uuid))
 
