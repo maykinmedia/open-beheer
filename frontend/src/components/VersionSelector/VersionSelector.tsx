@@ -7,14 +7,14 @@ import "./VersionSelector.css";
 
 interface VersionSelectorProps {
   versions: ZaakTypeVersion[];
-  onVersionChange?: (versionId: string) => void;
+  onVersionChange?: (version: ZaakTypeVersion) => void;
 }
 
 /**
  * A reusable component to select a version of a ZaakType.
  * This component makes a few assumptions:
- * - The versions are NOT sorted, we expect the backend to provide them in the correct order.
- * - The current version is the one with a truthy `einde_geldigheid`.
+ * - The versions are sorted in this component by date, in case the BFF does not return them sorted.
+ * - The current version is the one that is not a concept and has a begin date in the past and no end date, or an end date in the future.
  * - The concept version is the one with `concept` set to true.
  * - All other versions are considered historical versions.
  *
@@ -43,29 +43,29 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
 
   const today = new Date();
 
-  const currentVersion = versions.find((v) => {
+  const sortedVersions = [...versions].sort(
+    (a, b) =>
+      new Date(a.beginGeldigheid).getTime() -
+      new Date(b.beginGeldigheid).getTime(),
+  );
+
+  const currentVersion = sortedVersions.find((v) => {
     const beginDate = new Date(v.beginGeldigheid);
     const endDate = v.eindeGeldigheid ? new Date(v.eindeGeldigheid) : null;
 
     return !v.concept && beginDate <= today && (!endDate || endDate > today);
   });
 
-  const conceptVersion = versions
-    .filter((v) => v.concept)
-    .sort(
-      (a, b) =>
-        new Date(b.beginGeldigheid).getTime() -
-        new Date(a.beginGeldigheid).getTime(),
-    )[0];
+  const conceptVersion = sortedVersions.filter((v) => v.concept)[0];
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedVersionId, setSelectedVersionId] = useState<
     string | undefined
   >(currentVersion?.uuid || conceptVersion?.uuid);
 
-  const handleVersionChange = (versionId: string) => {
-    setSelectedVersionId(versionId);
-    onVersionChange?.(versionId);
+  const handleVersionChange = (version: ZaakTypeVersion) => {
+    setSelectedVersionId(version.uuid);
+    onVersionChange?.(version);
   };
 
   const getVisibleVersions = () => {
@@ -74,13 +74,7 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
       new Date(v.beginGeldigheid) < today &&
       (v.eindeGeldigheid ? new Date(v.eindeGeldigheid) <= today : false);
 
-    const historicalVersions = versions
-      .filter(isHistorical)
-      .sort(
-        (a, b) =>
-          new Date(a.beginGeldigheid).getTime() -
-          new Date(b.beginGeldigheid).getTime(),
-      );
+    const historicalVersions = sortedVersions.filter(isHistorical);
 
     const fullList = [
       ...historicalVersions,
@@ -164,7 +158,7 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
               variant={
                 selectedVersionId === version.uuid ? "primary" : "secondary"
               } // TODO: Use "accent" variant when available in Maykin UI
-              onClick={() => handleVersionChange(version.uuid)}
+              onClick={() => handleVersionChange(version)}
               aria-pressed={selectedVersionId === version.uuid}
               aria-label={`Selecteer ${versionLabel}`} // TODO: Need a label from backend?
             >
