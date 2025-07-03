@@ -49,6 +49,7 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
                 "versiedatum",
                 "vertrouwelijkheidaanduiding",
                 "actief",
+                "concept",
             },
         )
 
