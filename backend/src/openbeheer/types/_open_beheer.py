@@ -4,6 +4,7 @@ from functools import singledispatch
 from types import NoneType, UnionType
 from typing import Self, Sequence
 
+from ape_pie import APIClient
 import msgspec
 from msgspec import Struct, UnsetType
 
@@ -41,7 +42,7 @@ class OBOption[T](Struct, frozen=True):
 
 
 @singledispatch
-def as_ob_option[T](arg: T, /) -> OBOption[T]:
+def as_ob_option(arg, /, client: APIClient | None = None) -> OBOption:
     """Create OBOption of `arg`
 
     Example:
@@ -56,7 +57,7 @@ def as_ob_option[T](arg: T, /) -> OBOption[T]:
         Registering an implementation for `Catalogus`:
 
             >>> @as_ob_option.register
-            ... def __(arg: Catalogus) -> OBOption[int]:
+            ... def __(arg: Catalogus) -> OBOption[str]:
             ...     return OBOption(label=arg.naam, value=arg.url)
     """
     # uses singledispatch because both

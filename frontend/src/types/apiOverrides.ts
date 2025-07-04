@@ -4,7 +4,10 @@
 import { components as generatedComponents } from "~/types/api";
 
 // https://github.com/open-zaak/open-zaak/issues/2085
-type ZaakType = Omit<generatedComponents["schemas"]["ZaakType"], "url"> & {
+type ZaakType = Omit<
+  generatedComponents["schemas"]["ExpandableZaakType"],
+  "url"
+> & {
   url: string;
 };
 
@@ -13,8 +16,8 @@ type User = Omit<
   generatedComponents["schemas"]["User"],
   "first_name" | "last_name"
 > & {
-  firstName: generatedComponents["schemas"]["User"]["first_name"];
-  lastName: generatedComponents["schemas"]["User"]["last_name"];
+  firstName: generatedComponents["schemas"]["User"]["firstName"];
+  lastName: generatedComponents["schemas"]["User"]["lastName"];
 };
 
 export type components = Omit<generatedComponents, "schemas"> & {

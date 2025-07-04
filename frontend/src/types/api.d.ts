@@ -179,11 +179,64 @@ export interface components {
          * @enum {unknown}
          */
         AardRelatieEnum: "bijdrage" | "onderwerp" | "vervolg";
+         /**
+         * AfleidingswijzeEnum
+         * @enum {unknown}
+         */
+        AfleidingswijzeEnum: "afgehandeld" | "ander_datumkenmerk" | "eigenschap" | "gerelateerde_zaak" | "hoofdzaak" | "ingangsdatum_besluit" | "termijn" | "vervaldatum_besluit" | "zaakobject";
+        /**
+         * ArchiefnominatieEnum
+         * @enum {unknown}
+         */
+        ArchiefnominatieEnum: "" | "blijvend_bewaren" | "vernietigen";
         Auth: {
             /** Gebruikersnaam */
             username: string;
             /** Wachtwoord */
             password: string;
+        };
+        /** BesluitType */
+        BesluitType: {
+            /** @description URL-referentie naar de CATALOGUS waartoe dit BESLUITTYPE behoort. */
+            catalogus: string;
+            /** @description Aanduiding of BESLUITen van dit BESLUITTYPE gepubliceerd moeten worden. */
+            publicatieIndicatie: boolean;
+            /** @description URL-referenties naar het INFORMATIEOBJECTTYPE van informatieobjecten waarin besluiten van dit BESLUITTYPE worden vastgelegd. */
+            informatieobjecttypen: string[];
+            /** @description De datum waarop het is ontstaan. */
+            beginGeldigheid: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypen: string[] | null;
+            /** @default null */
+            omschrijving: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            besluitcategorie: string | null;
+            /** @default null */
+            reactietermijn: string | null;
+            /** @default null */
+            publicatietekst: string | null;
+            /** @default null */
+            publicatietermijn: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            concept: boolean | null;
+            /** @default null */
+            resultaattypen: string[] | null;
+            /** @default null */
+            resultaattypenOmschrijving: string[] | null;
+            /** @default null */
+            vastgelegdIn: string[] | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
         };
         /** BronCatalogus */
         BronCatalogus: {
@@ -221,15 +274,218 @@ export interface components {
             /** @default null */
             url: string | null;
         };
-        /** DetailResponse[ZaakType] */
-        DetailResponse_ZaakType_: {
-            result: components["schemas"]["ZaakType"];
+        /** BrondatumArchiefprocedure */
+        BrondatumArchiefprocedure: {
+            /**
+             * Afleidingswijze brondatum
+             * @description Wijze van bepalen van de brondatum.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `afgehandeld` - (Afgehandeld) De termijn start op de datum waarop de zaak is afgehandeld (ZAAK.Einddatum in het RGBZ).
+             *     * `ander_datumkenmerk` - (Ander datumkenmerk) De termijn start op de datum die is vastgelegd in een ander datumveld dan de datumvelden waarop de overige waarden (van deze attribuutsoort) betrekking hebben. `Objecttype`, `Registratie` en `Datumkenmerk` zijn niet leeg.
+             *     * `eigenschap` - (Eigenschap) De termijn start op de datum die is vastgelegd in een ander datumveld dan de datumvelden waarop de overige waarden (van deze attribuutsoort) betrekking hebben. `Objecttype`, `Registratie` en `Datumkenmerk` zijn niet leeg.
+             *     * `gerelateerde_zaak` - (Gerelateerde zaak) De termijn start op de datum waarop de gerelateerde zaak is afgehandeld (`ZAAK.Einddatum` of `ZAAK.Gerelateerde_zaak.Einddatum` in het RGBZ). `ResultaatType.ZaakType` heeft gerelateerd `ZaakType`
+             *     * `hoofdzaak` - (Hoofdzaak) De termijn start op de datum waarop de gerelateerde zaak is afgehandeld, waarvan de zaak een deelzaak is (`ZAAK.Einddatum` van de hoofdzaak in het RGBZ). ResultaatType.ZaakType is deelzaaktype van ZaakType.
+             *     * `ingangsdatum_besluit` - (Ingangsdatum besluit) De termijn start op de datum waarop het besluit van kracht wordt (`BESLUIT.Ingangsdatum` in het RGBZ).	ResultaatType.ZaakType heeft relevant BesluitType
+             *     * `termijn` - (Termijn) De termijn start een vast aantal jaren na de datum waarop de zaak is afgehandeld (`ZAAK.Einddatum` in het RGBZ).
+             *     * `vervaldatum_besluit` - (Vervaldatum besluit) De termijn start op de dag na de datum waarop het besluit vervalt (`BESLUIT.Vervaldatum` in het RGBZ). ResultaatType.ZaakType heeft relevant BesluitType
+             *     * `zaakobject` - (Zaakobject) De termijn start op de einddatum geldigheid van het zaakobject waarop de zaak betrekking heeft (bijvoorbeeld de overlijdendatum van een Persoon). M.b.v. de attribuutsoort `Objecttype` wordt vastgelegd om welke zaakobjecttype het gaat; m.b.v. de attribuutsoort `Datumkenmerk` wordt vastgelegd welke datum-attribuutsoort van het zaakobjecttype het betreft.
+             */
+            afleidingswijze: components["schemas"]["AfleidingswijzeEnum"];
+            /** @default null */
+            datumkenmerk: string | null;
+            /** @default null */
+            einddatumBekend: boolean | null;
+            /** @default null */
+            objecttype: components["schemas"]["ObjecttypeEnum"] | null;
+            /** @default null */
+            registratie: string | null;
+            /** @default null */
+            procestermijn: string | null;
+        };
+        /** CheckListItem */
+        CheckListItem: {
+            /** @description De betekenisvolle benaming van het checklistitem */
+            itemnaam: string;
+            /** @description Een betekenisvolle vraag waaruit blijkt waarop het aandachtspunt gecontroleerd moet worden. */
+            vraagstelling: string;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            verplicht: boolean | null;
+        };
+        /** DetailResponse[ExpandableZaakType] */
+        DetailResponse_ExpandableZaakType_: {
+            result: components["schemas"]["ExpandableZaakType"];
             fieldsets: [
                 string,
                 components["schemas"]["FrontendFieldSet"]
             ][];
             fields: components["schemas"]["OBField"][];
             versions?: components["schemas"]["VersionSummary"][];
+        };
+        /** Eigenschap */
+        Eigenschap: {
+            /** @description De naam van de EIGENSCHAP */
+            naam: string;
+            /** @description De beschrijving van de betekenis van deze EIGENSCHAP */
+            definitie: string;
+            specificatie: components["schemas"]["EigenschapSpecificatie"];
+            /** @description URL-referentie naar het ZAAKTYPE van de ZAAKen waarvoor deze EIGENSCHAP van belang is. */
+            zaaktype: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** EigenschapSpecificatie */
+        EigenschapSpecificatie: {
+            /** @description Het soort tekens waarmee waarden van de EIGENSCHAP kunnen worden vastgelegd.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `tekst` - Tekst
+             *     * `getal` - Getal
+             *     * `datum` - Datum
+             *     * `datum_tijd` - Datum/tijd */
+            formaat: components["schemas"]["FormaatEnum"];
+            /** @description Het aantal karakters (lengte) waarmee waarden van de EIGENSCHAP worden vastgelegd. */
+            lengte: string;
+            /** @description Het aantal mogelijke voorkomens van waarden van deze EIGENSCHAP bij een zaak van het ZAAKTYPE. */
+            kardinaliteit: string;
+            /** @default null */
+            groep: string | null;
+            /** @default null */
+            waardenverzameling: string[] | null;
+        };
+        /** ExpandableZaakType */
+        ExpandableZaakType: {
+            /** @default {} */
+            _expand: components["schemas"]["ZaakTypeExpansion"];
+            /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
+            omschrijving: string;
+            /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `openbaar` - Openbaar
+             *     * `beperkt_openbaar` - Beperkt openbaar
+             *     * `intern` - Intern
+             *     * `zaakvertrouwelijk` - Zaakvertrouwelijk
+             *     * `vertrouwelijk` - Vertrouwelijk
+             *     * `confidentieel` - Confidentieel
+             *     * `geheim` - Geheim
+             *     * `zeer_geheim` - Zeer geheim */
+            vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
+            /** @description Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype. */
+            doel: string;
+            /** @description Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE. */
+            aanleiding: string;
+            /** @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `inkomend` - Inkomend
+             *     * `intern` - Intern
+             *     * `uitgaand` - Uitgaand */
+            indicatieInternOfExtern: components["schemas"]["IndicatieInternOfExternEnum"];
+            /** @description Werkwoord dat hoort bij de handeling die de initiator verricht bij dit zaaktype. Meestal 'aanvragen', 'indienen' of 'melden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_initiator */
+            handelingInitiator: string;
+            /** @description Het onderwerp van ZAAKen van dit ZAAKTYPE. In veel gevallen nauw gerelateerd aan de product- of dienstnaam uit de Producten- en Dienstencatalogus (PDC). Bijvoorbeeld: 'Evenementenvergunning', 'Geboorte', 'Klacht'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.onderwerp */
+            onderwerp: string;
+            /** @description Werkwoord dat hoort bij de handeling die de behandelaar verricht bij het afdoen van ZAAKen van dit ZAAKTYPE. Meestal 'behandelen', 'uitvoeren', 'vaststellen' of 'onderhouden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_behandelaar */
+            handelingBehandelaar: string;
+            /** @description De periode waarbinnen volgens wet- en regelgeving een ZAAK van het ZAAKTYPE afgerond dient te zijn, in kalenderdagen. */
+            doorlooptijd: string;
+            /**
+             * Opschorting/aanhouding mogelijk
+             * @description Aanduiding die aangeeft of ZAAKen van dit mogelijk ZAAKTYPE kunnen worden opgeschort en/of aangehouden.
+             */
+            opschortingEnAanhoudingMogelijk: boolean;
+            /** @description Aanduiding die aangeeft of de Doorlooptijd behandeling van ZAAKen van dit ZAAKTYPE kan worden verlengd. */
+            verlengingMogelijk: boolean;
+            /** @description Aanduiding of (het starten van) een ZAAK dit ZAAKTYPE gepubliceerd moet worden. */
+            publicatieIndicatie: boolean;
+            /** @description Het product of de dienst die door ZAAKen van dit ZAAKTYPE wordt voortgebracht. */
+            productenOfDiensten: string[];
+            /** @description Het Referentieproces dat ten grondslag ligt aan dit ZAAKTYPE. */
+            referentieproces: components["schemas"]["ReferentieProces"];
+            /** @description De (soort) organisatorische eenheid of (functie van) medewerker die verantwoordelijk is voor de uitvoering van zaken van het ZAAKTYPE. */
+            verantwoordelijke: string;
+            /** @description De datum waarop het is ontstaan. */
+            beginGeldigheid: string;
+            /** @description De datum waarop de (gewijzigde) kenmerken van het ZAAKTYPE geldig zijn geworden */
+            versiedatum: string;
+            /** @description URL-referentie naar de CATALOGUS waartoe dit ZAAKTYPE behoort. */
+            catalogus: string;
+            /**
+             * heeft relevante besluittypen
+             * @description URL-referenties naar de BESLUITTYPEN die mogelijk zijn binnen dit ZAAKTYPE.
+             */
+            besluittypen: string[];
+            /** @description De ZAAKTYPEn van zaken die relevant zijn voor zaken van dit ZAAKTYPE. */
+            gerelateerdeZaaktypen: components["schemas"]["ZaakTypenRelatie"][];
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            identificatie: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            servicenorm: string | null;
+            /** @default null */
+            verlengingstermijn: string | null;
+            /** @default null */
+            trefwoorden: string[] | null;
+            /** @default null */
+            publicatietekst: string | null;
+            /** @default null */
+            verantwoordingsrelatie: string[] | null;
+            /** @default null */
+            selectielijstProcestype: string | null;
+            /** @default null */
+            concept: boolean | null;
+            /** @default null */
+            broncatalogus: null | components["schemas"]["BronCatalogus"];
+            /** @default null */
+            bronzaaktype: null | components["schemas"]["BronZaaktype"];
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+            /** @default null */
+            statustypen: string[] | null;
+            /** @default null */
+            resultaattypen: string[] | null;
+            /** @default null */
+            eigenschappen: string[] | null;
+            /** @default null */
+            informatieobjecttypen: string[] | null;
+            /** @default null */
+            roltypen: string[] | null;
+            /** @default null */
+            deelzaaktypen: (string | null)[] | null;
+            /** @default null */
+            zaakobjecttypen: string[] | null;
         };
         /** ExternalServiceError */
         ExternalServiceError: {
@@ -238,6 +494,11 @@ export interface components {
             detail: string;
             status: number;
         };
+        /**
+         * FormaatEnum
+         * @enum {unknown}
+         */
+        FormaatEnum: "datum" | "datum_tijd" | "getal" | "tekst";
         /** FrontendFieldSet */
         FrontendFieldSet: {
             fields: string[];
@@ -262,6 +523,51 @@ export interface components {
          * @enum {unknown}
          */
         IndicatieInternOfExternEnum: "extern" | "intern";
+        /** InformatieObjectType */
+        InformatieObjectType: {
+            /** @description URL-referentie naar de CATALOGUS waartoe dit INFORMATIEOBJECTTYPE behoort. */
+            catalogus: string;
+            /** @description Omschrijving van de aard van informatieobjecten van dit INFORMATIEOBJECTTYPE. */
+            omschrijving: string;
+            /** @description Aanduiding van de mate waarin informatieobjecten van dit INFORMATIEOBJECTTYPE voor de openbaarheid bestemd zijn.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `openbaar` - Openbaar
+             *     * `beperkt_openbaar` - Beperkt openbaar
+             *     * `intern` - Intern
+             *     * `zaakvertrouwelijk` - Zaakvertrouwelijk
+             *     * `vertrouwelijk` - Vertrouwelijk
+             *     * `confidentieel` - Confidentieel
+             *     * `geheim` - Geheim
+             *     * `zeer_geheim` - Zeer geheim */
+            vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
+            /** @description De datum waarop het is ontstaan. */
+            beginGeldigheid: string;
+            /**
+             * Categorie
+             * @description Typering van de aard van informatieobjecten van dit INFORMATIEOBJECTTYPE.
+             */
+            informatieobjectcategorie: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            concept: boolean | null;
+            /** @default null */
+            besluittypen: string[] | null;
+            /** @default null */
+            trefwoord: string[] | null;
+            /** @default null */
+            omschrijvingGeneriek: null | components["schemas"]["OmschrijvingGeneriek"];
+            /** @default null */
+            zaaktypen: string[] | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
         /** InvalidParam */
         InvalidParam: {
             /** @description Naam van het veld met ongeldige gegevens */
@@ -307,6 +613,38 @@ export interface components {
             label: string;
             value: string;
         };
+        /**
+         * ObjecttypeEnum
+         * @enum {unknown}
+         */
+        ObjecttypeEnum: "" | "adres" | "besluit" | "buurt" | "enkelvoudig_document" | "gemeente" | "gemeentelijke_openbare_ruimte" | "huishouden" | "inrichtingselement" | "kadastrale_onroerende_zaak" | "kunstwerkdeel" | "maatschappelijke_activiteit" | "medewerker" | "natuurlijk_persoon" | "niet_natuurlijk_persoon" | "openbare_ruimte" | "organisatorische_eenheid" | "overige" | "pand" | "spoorbaandeel" | "status" | "terrein_gebouwd_object" | "terreindeel" | "vestiging" | "waterdeel" | "wegdeel" | "wijk" | "woonplaats" | "woz_deelobject" | "woz_object" | "woz_waarde" | "zakelijk_recht";
+        /** OmschrijvingGeneriek */
+        OmschrijvingGeneriek: {
+            /** @description Algemeen gehanteerde omschrijving van het type informatieobject. */
+            informatieobjecttypeOmschrijvingGeneriek: string;
+            /**
+             * Definitie
+             * @description Nauwkeurige beschrijving van het generieke type informatieobject
+             */
+            definitieInformatieobjecttypeOmschrijvingGeneriek: string;
+            /**
+             * Herkomst
+             * @description De naam van de waardenverzameling, of van de beherende organisatie daarvan, waaruit de waarde is overgenomen.
+             */
+            herkomstInformatieobjecttypeOmschrijvingGeneriek: string;
+            /**
+             * Hierarchie
+             * @description De plaats in de rangorde van het informatieobjecttype.
+             */
+            hierarchieInformatieobjecttypeOmschrijvingGeneriek: string;
+            /** @default null */
+            opmerkingInformatieobjecttypeOmschrijvingGeneriek: string | null;
+        };
+        /**
+         * OmschrijvingGeneriekEnum
+         * @enum {unknown}
+         */
+        OmschrijvingGeneriekEnum: "adviseur" | "behandelaar" | "belanghebbende" | "beslisser" | "initiator" | "klantcontacter" | "mede_initiator" | "zaakcoordinator";
         /** PatchedZaakTypeRequest */
         PatchedPatchedZaakTypeRequest: {
             /** @default null */
@@ -396,11 +734,138 @@ export interface components {
             /** @default null */
             link: string | null;
         };
+        /** ResultaatType */
+        ResultaatType: {
+            /**
+             * is van
+             * @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin resultaten van dit RESULTAATTYPE bereikt kunnen worden.
+             */
+            zaaktype: string;
+            /** @description Omschrijving van de aard van resultaten van het RESULTAATTYPE. */
+            omschrijving: string;
+            /** @description Algemeen gehanteerde omschrijving van de aard van resultaten van het RESULTAATTYPE. Dit moet een URL-referentie zijn naar de referenlijst van generieke resultaattypeomschrijvingen. Im ImZTC heet dit 'omschrijving generiek' */
+            resultaattypeomschrijving: string;
+            /** @description URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie. */
+            selectielijstklasse: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            archiefnominatie: components["schemas"]["ArchiefnominatieEnum"] | null;
+            /** @default null */
+            archiefactietermijn: string | null;
+            /** @default null */
+            brondatumArchiefprocedure: null | components["schemas"]["BrondatumArchiefprocedure"];
+            /** @default null */
+            procesobjectaard: string | null;
+            /** @default null */
+            indicatieSpecifiek: boolean | null;
+            /** @default null */
+            procestermijn: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            besluittypen: (string | null)[] | null;
+            /** @default null */
+            besluittypeOmschrijving: string[] | null;
+            /** @default null */
+            informatieobjecttypen: (string | null)[] | null;
+            /** @default null */
+            informatieobjecttypeOmschrijving: string[] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** RolType */
+        RolType: {
+            /** @description URL-referentie naar het ZAAKTYPE waar deze ROLTYPEn betrokken kunnen zijn. */
+            zaaktype: string;
+            /** @description Omschrijving van de aard van de ROL. */
+            omschrijving: string;
+            /** @description Algemeen gehanteerde omschrijving van de aard van de ROL.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `adviseur` - (Adviseur) Kennis in dienst stellen van de behandeling van (een deel van) een zaak.
+             *     * `behandelaar` - (Behandelaar) De vakinhoudelijke behandeling doen van (een deel van) een zaak.
+             *     * `belanghebbende` - (Belanghebbende) Vanuit eigen en objectief belang rechtstreeks betrokken zijn bij de behandeling en/of de uitkomst van een zaak.
+             *     * `beslisser` - (Beslisser) Nemen van besluiten die voor de uitkomst van een zaak noodzakelijk zijn.
+             *     * `initiator` - (Initiator) Aanleiding geven tot de start van een zaak ..
+             *     * `klantcontacter` - (Klantcontacter) Het eerste aanspreekpunt zijn voor vragen van burgers en bedrijven ..
+             *     * `zaakcoordinator` - (Zaakcoördinator) Er voor zorg dragen dat de behandeling van de zaak in samenhang uitgevoerd wordt conform de daarover gemaakte afspraken.
+             *     * `mede_initiator` - (Mede-initiator)  */
+            omschrijvingGeneriek: components["schemas"]["OmschrijvingGeneriekEnum"];
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
         /**
          * Status
          * @enum {unknown}
          */
         Status: "alles" | "concept" | "definitief";
+        /** StatusType */
+        StatusType: {
+            /** @description Een korte, voor de initiator van de zaak relevante, omschrijving van de aard van de STATUS van zaken van een ZAAKTYPE. */
+            omschrijving: string;
+            /** @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin STATUSsen van dit STATUSTYPE bereikt kunnen worden. */
+            zaaktype: string;
+            /** @description Een volgnummer voor statussen van het STATUSTYPE binnen een zaak. */
+            volgnummer: number;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            statustekst: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            isEindstatus: boolean | null;
+            /** @default null */
+            informeren: boolean | null;
+            /** @default null */
+            doorlooptijd: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            checklistitemStatustype: components["schemas"]["CheckListItem"][] | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            eigenschappen: string[] | null;
+            /** @default null */
+            zaakobjecttypen: string[] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
         User: {
             /** ID */
             readonly pk: number;
@@ -410,9 +875,9 @@ export interface components {
              */
             username: string;
             /** Voornaam */
-            first_name?: string;
+            firstName?: string;
             /** Achternaam */
-            last_name?: string;
+            lastName?: string;
             /**
              * E-mailadres
              * Format: email
@@ -423,12 +888,12 @@ export interface components {
          * VersionSummary
          * @description Summary of the different version of a ZTC resource.
          *
-         *         # TODO: what do we need to show per version?
+         *     # TODO: what do we need to show per version?
          */
         VersionSummary: {
             uuid: string;
-            begin_geldigheid: string;
-            einde_geldigheid: string | null;
+            beginGeldigheid: string;
+            eindeGeldigheid: string | null;
             concept: boolean | null;
         };
         /**
@@ -458,6 +923,35 @@ export interface components {
             next: string | null;
             previous: string | null;
             results: components["schemas"]["ZaakTypeSummary"][];
+        };
+        /** ZaakObjectType */
+        ZaakObjectType: {
+            /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
+            anderObjecttype: boolean;
+            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            objecttype: string;
+            /** @description Omschrijving van de betrekking van het Objecttype op zaken van het gerelateerde ZAAKTYPE. */
+            relatieOmschrijving: string;
+            /** @description URL-referentie naar de ZAAKTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            zaaktype: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            resultaattypen: string[] | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
         };
         /** ZaakType */
         ZaakType: {
@@ -570,6 +1064,16 @@ export interface components {
             deelzaaktypen: (string | null)[] | null;
             /** @default null */
             zaakobjecttypen: string[] | null;
+        };
+        /** ZaakTypeExpansion */
+        ZaakTypeExpansion: {
+            besluittypen?: components["schemas"]["BesluitType"][];
+            statustypen?: components["schemas"]["StatusType"][];
+            resultaattypen?: components["schemas"]["ResultaatType"][];
+            eigenschappen?: components["schemas"]["Eigenschap"][];
+            informatieobjecttypen?: components["schemas"]["InformatieObjectType"][];
+            roltypen?: components["schemas"]["RolType"][];
+            zaakobjecttypen?: components["schemas"]["ZaakObjectType"][];
         };
         /** ZaakTypeRequest */
         ZaakTypeRequest: {
@@ -918,7 +1422,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DetailResponse_ZaakType_"];
+                    "application/json": components["schemas"]["DetailResponse_ExpandableZaakType_"];
                 };
             };
             400: {
@@ -954,7 +1458,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DetailResponse_ZaakType_"];
+                    "application/json": components["schemas"]["DetailResponse_ExpandableZaakType_"];
                 };
             };
             400: {
@@ -990,7 +1494,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DetailResponse_ZaakType_"];
+                    "application/json": components["schemas"]["DetailResponse_ExpandableZaakType_"];
                 };
             };
             400: {
