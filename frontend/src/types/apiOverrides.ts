@@ -7,16 +7,24 @@ import { components as generatedComponents } from "~/types/api";
 type ZaakType = Omit<generatedComponents["schemas"]["ZaakType"], "url"> & {
   url: string;
 };
-type DetailResponse_ZaakType_ = Omit<
-  generatedComponents["schemas"]["DetailResponse_ZaakType_"],
+type ExpandableZaakType = Omit<
+  generatedComponents["schemas"]["ExpandableZaakType"],
+  "url"
+> & {
+  url: string;
+};
+
+type DetailResponse_ExpandableZaakType_ = Omit<
+  generatedComponents["schemas"]["DetailResponse_ExpandableZaakType_"],
   "result"
 > & {
-  result: ZaakType;
+  result: ExpandableZaakType;
 };
 
 export type components = Omit<generatedComponents, "schemas"> & {
   schemas: Omit<generatedComponents["schemas"], "ZaakType"> & {
     ZaakType: ZaakType;
-    DetailResponse_ZaakType_: DetailResponse_ZaakType_;
+    ExpandableZaakType: ExpandableZaakType;
+    DetailResponse_ExpandableZaakType_: DetailResponse_ExpandableZaakType_;
   };
 };

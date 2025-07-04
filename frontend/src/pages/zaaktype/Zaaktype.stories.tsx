@@ -33,7 +33,7 @@ export const ZaaktypePage: Story = {
         http.get<
           PathParams,
           DefaultBodyType,
-          components["schemas"]["DetailResponse_ZaakType_"]
+          components["schemas"]["DetailResponse_ExpandableZaakType_"]
         >(
           `${API_BASE_URL}/service/open-zaak-catalogi-api/zaaktypen/${zaaktypeUUID}`,
           () =>
@@ -41,7 +41,7 @@ export const ZaaktypePage: Story = {
               fields: FIXTURE_ZAAKTYPE_FIELDS,
               fieldsets: FIXTURE_ZAAKTYPE_FIELDSETS,
               result: FIXTURE_ZAAKTYPE,
-            } as components["schemas"]["DetailResponse_ZaakType_"]),
+            } as components["schemas"]["DetailResponse_ExpandableZaakType_"]),
         ),
       ],
     },
