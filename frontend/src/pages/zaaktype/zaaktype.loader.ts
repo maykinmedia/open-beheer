@@ -4,7 +4,7 @@ import { loginRequired } from "~/loaders/loginRequired.loader.ts";
 import { components } from "~/types";
 
 export type ZaaktypeLoaderData =
-  components["schemas"]["DetailResponse_ZaakType_"];
+  components["schemas"]["DetailResponse_ExpandableZaakType_"];
 
 /**
  * Zaaktype loader.
@@ -15,9 +15,8 @@ export const zaaktypeLoader = loginRequired(
     loaderFunctionArgs: LoaderFunctionArgs,
   ): Promise<ZaaktypeLoaderData> => {
     const { params } = loaderFunctionArgs;
-    return await request<components["schemas"]["DetailResponse_ZaakType_"]>(
-      "GET",
-      `/service/${params.serviceSlug}/zaaktypen/${params.zaaktypeUUID}`,
-    );
+    return await request<
+      components["schemas"]["DetailResponse_ExpandableZaakType_"]
+    >("GET", `/service/${params.serviceSlug}/zaaktypen/${params.zaaktypeUUID}`);
   },
 );
