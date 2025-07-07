@@ -12,7 +12,7 @@ import {
   Solid,
 } from "@maykin-ui/admin-ui";
 import React from "react";
-import { formatUser } from "~/lib/format/formatUser.ts";
+import { formatUser } from "~/lib";
 import { components } from "~/types";
 
 type ProfileProps = {
@@ -24,15 +24,13 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
     return null;
   }
 
+  const name = user ? formatUser(user, { showUsername: false }) : "";
+
   return (
     <Dropdown
       aria-label="Profiel"
       key="account"
-      label={
-        <IconInitials
-          name={user ? formatUser(user, { showUsername: false }) : ""}
-        />
-      }
+      label={<IconInitials name={name} />}
       pad="v"
       variant="transparent"
     >
@@ -42,15 +40,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
           <Hr />
           <Grid>
             <Column containerType="normal" span={2}>
-              <IconInitials
-                name={
-                  user
-                    ? formatUser(user, {
-                        showUsername: false,
-                      })
-                    : ""
-                }
-              />
+              <IconInitials name={name} />
             </Column>
             <Column span={8}>
               <Grid gutter={false}>

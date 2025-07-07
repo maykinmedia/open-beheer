@@ -5,7 +5,6 @@ import {
   withRouter,
 } from "storybook-addon-remix-react-router";
 import { API_BASE_URL } from "~/api";
-import { DetailResponse } from "~/api/types";
 import {
   FIXTURE_ZAAKTYPE,
   FIXTURE_ZAAKTYPE_FIELDS,
@@ -34,7 +33,7 @@ export const ZaaktypePage: Story = {
         http.get<
           PathParams,
           DefaultBodyType,
-          DetailResponse<components["schemas"]["ZaakType"]>
+          components["schemas"]["DetailResponse_ZaakType_"]
         >(
           `${API_BASE_URL}/service/open-zaak-catalogi-api/zaaktypen/${zaaktypeUUID}`,
           () =>
@@ -42,7 +41,7 @@ export const ZaaktypePage: Story = {
               fields: FIXTURE_ZAAKTYPE_FIELDS,
               fieldsets: FIXTURE_ZAAKTYPE_FIELDSETS,
               result: FIXTURE_ZAAKTYPE,
-            }),
+            } as components["schemas"]["DetailResponse_ZaakType_"]),
         ),
       ],
     },

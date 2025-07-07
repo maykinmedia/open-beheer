@@ -410,9 +410,9 @@ export interface components {
              */
             username: string;
             /** Voornaam */
-            first_name?: string;
+            firstName?: string;
             /** Achternaam */
-            last_name?: string;
+            lastName?: string;
             /**
              * E-mailadres
              * Format: email
@@ -427,8 +427,8 @@ export interface components {
          */
         VersionSummary: {
             uuid: string;
-            begin_geldigheid: string;
-            einde_geldigheid: string | null;
+            beginGeldigheid: string;
+            eindeGeldigheid: string | null;
             concept: boolean | null;
         };
         /**
