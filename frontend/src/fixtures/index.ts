@@ -1,2 +1,3 @@
-export * from "./user.ts";
-export * from "./zaaktype.ts";
+export * from "./user";
+export * from "./versions";
+export * from "./zaaktype";
