@@ -18,8 +18,9 @@ const FIELDSETS_OVERVIEW: FieldSet<components["schemas"]["ZaakType"]>[] = [
   [
     "",
     {
-      fields: ["identificatie"],
+      fields: ["identificatie", "omschrijving"],
       span: 12,
+      colSpan: 6,
     },
   ],
 
@@ -27,79 +28,23 @@ const FIELDSETS_OVERVIEW: FieldSet<components["schemas"]["ZaakType"]>[] = [
     "",
     {
       fields: ["doel"],
-      span: 6,
+      span: 12,
     },
   ],
 
   [
     "",
     {
-      fields: ["omschrijving"],
-      span: 6,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["statustypen"],
-      span: 4,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["informatieobjecttypen"],
-      span: 4,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["roltypen"],
-      span: 4,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["resultaattypen"],
-      span: 4,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["eigenschappen"],
-      span: 4,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["gerelateerdeZaaktypen"],
-      span: 4,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["zaakobjecttypen"],
-      span: 4,
-    },
-  ],
-
-  [
-    "",
-    {
-      fields: ["selectielijstProcestype"],
-      span: 4,
+      fields: [
+        "statustypen",
+        "informatieobjecttypen",
+        "resultaattypen",
+        "eigenschappen",
+        "zaakobjecttypen",
+        "selectielijstProcestype",
+      ],
+      span: 12,
+      colSpan: 6,
     },
   ],
 ];
@@ -127,7 +72,10 @@ export function ZaaktypePage() {
   return (
     <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
       <Body>
-        <H2>{ucFirst(result.omschrijving)}</H2>
+        <H2>
+          {ucFirst(result.identificatie || "")}{" "}
+          {result.omschrijving ? `(${result.omschrijving})` : null}
+        </H2>
         <Tabs>
           <Tab label="Overzicht">
             <AttributeGrid
