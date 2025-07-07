@@ -14,6 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 export const VersionSelector: Story = {
   args: {
+    currentVersionUUID: "37454e74-99cd-4689-9589-c819ad8f1b88",
     versions: [
       {
         uuid: "09d7c3b6-153e-4bcf-b8cd-55c11ffd2c76",

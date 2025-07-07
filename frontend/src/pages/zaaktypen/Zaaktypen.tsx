@@ -6,6 +6,7 @@ import {
   ZaaktypeStatusEnum,
 } from "~/components";
 import { useCombinedSearchParams } from "~/hooks";
+import { getZaaktypeUUID } from "~/lib";
 import { ZaaktypenLoaderData } from "~/pages";
 import { ListView } from "~/views";
 
@@ -24,8 +25,8 @@ export function ZaaktypenPage() {
    * Splits `obj.url` into parts, using the last part as UUID.
    * @param obj - An object which implements a `url` key.
    */
-  const getUUID = useCallback(
-    (obj: { url: string }) => `${pathname}/${obj.url.split("/").reverse()[0]}`,
+  const getAbsolutePath = useCallback(
+    (obj: { url: string }) => `${pathname}/${getZaaktypeUUID(obj)}`,
     [pathname],
   );
 
@@ -41,7 +42,7 @@ export function ZaaktypenPage() {
   return (
     <ListView
       {...loaderData}
-      getHref={getUUID}
+      getHref={getAbsolutePath}
       toolbarItems={[
         <ZaaktypeFilter
           key="zaaktypefilter"

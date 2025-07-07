@@ -7,19 +7,16 @@ import { components as generatedComponents } from "~/types/api";
 type ZaakType = Omit<generatedComponents["schemas"]["ZaakType"], "url"> & {
   url: string;
 };
-
-// https://github.com/maykinmedia/open-beheer/issues/94
-type User = Omit<
-  generatedComponents["schemas"]["User"],
-  "first_name" | "last_name"
+type DetailResponse_ZaakType_ = Omit<
+  generatedComponents["schemas"]["DetailResponse_ZaakType_"],
+  "result"
 > & {
-  firstName: generatedComponents["schemas"]["User"]["first_name"];
-  lastName: generatedComponents["schemas"]["User"]["last_name"];
+  result: ZaakType;
 };
 
 export type components = Omit<generatedComponents, "schemas"> & {
   schemas: Omit<generatedComponents["schemas"], "ZaakType"> & {
-    User: User;
     ZaakType: ZaakType;
+    DetailResponse_ZaakType_: DetailResponse_ZaakType_;
   };
 };
