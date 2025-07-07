@@ -6,7 +6,7 @@ import { components } from "~/types";
 import "./VersionSelector.css";
 
 interface VersionSelectorProps {
-  currentVersionUUID: string;
+  selectedVersionUUID: string;
   versions: components["schemas"]["VersionSummary"][];
   onVersionChange?: (version: components["schemas"]["VersionSummary"]) => void;
 }
@@ -33,7 +33,7 @@ interface VersionSelectorProps {
  * ```
  *  */
 export const VersionSelector: FC<VersionSelectorProps> = ({
-  currentVersionUUID,
+  selectedVersionUUID,
   versions,
   onVersionChange,
 }) => {
@@ -108,7 +108,7 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
       return (
         v.uuid === currentVersion?.uuid ||
         v.uuid === conceptVersion?.uuid ||
-        v.uuid === currentVersionUUID
+        v.uuid === selectedVersionUUID
       );
     });
   }, [historicalVersions, currentVersion, conceptVersion, isExpanded]);
@@ -178,15 +178,15 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
             <Button
               key={version.uuid}
               className={`version-selector__version-button ${
-                currentVersionUUID === version.uuid
+                selectedVersionUUID === version.uuid
                   ? "version-selector__version-button--active"
                   : ""
               }`}
               variant={
-                currentVersionUUID === version.uuid ? "primary" : "secondary"
+                selectedVersionUUID === version.uuid ? "primary" : "secondary"
               } // TODO: Use "accent" variant when available in Maykin UI
               onClick={() => handleVersionChange(version)}
-              aria-pressed={currentVersionUUID === version.uuid}
+              aria-pressed={selectedVersionUUID === version.uuid}
               aria-label={`Selecteer ${versionLabel}`} // TODO: Need a label from backend?
             >
               {/*  TODO: Need a label from backend? */}
