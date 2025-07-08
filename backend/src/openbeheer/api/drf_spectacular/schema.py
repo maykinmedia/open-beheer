@@ -1,19 +1,25 @@
-from typing import Any, Literal
+from __future__ import annotations
 
-import structlog
+from inspect import isclass
+from typing import TYPE_CHECKING, Any, Literal
+
 from drf_spectacular.extensions import (
     OpenApiFilterExtension,
     OpenApiSerializerExtension,
 )
-from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.plumbing import ResolvedComponent
-from drf_spectacular.utils import Direction
 from msgspec.json import schema_components
 from rest_framework.serializers import Serializer
+from structlog import get_logger
 
 from openbeheer.types._drf_spectacular import QueryParamSchema
 
-logger = structlog.get_logger(__name__)
+if TYPE_CHECKING:
+    from drf_spectacular.openapi import AutoSchema
+    from drf_spectacular.utils import Direction
+
+
+logger = get_logger(__name__)
 
 
 def camelize_serializer_fields(result, generator, request, public):
@@ -93,6 +99,20 @@ class MsgSpecExtension(OpenApiSerializerExtension):
                 object=sub_name,
                 schema=sub_schema,
             )
+            # we register strings here, but extend_schema registers objects
+            # using try because drf throws warnings in the __contains__
+            try:
+                registry_object = auto_schema.registry[sub_component].object
+            except KeyError:
+                pass
+            else:
+                registry_name = (
+                    registry_object.__name__
+                    if isclass(registry_object)
+                    else registry_object
+                )
+                if registry_name == sub_name:
+                    continue
             auto_schema.registry.register_on_missing(sub_component)
 
         # This is a JSON schema and not an OpenAPI schema. We might need to convert it.
@@ -141,9 +161,27 @@ class MsgSpecQueryParamsExtension(OpenApiFilterExtension):
         component_name = out["$ref"].replace("#/components/schemas/", "")
         component_schema = components.pop(component_name)
 
+        def inline_ref(prop_schema, components):
+            # $refs should not have siblings other than "summary" or "description"
+            # https://quobix.com/vacuum/rules/schemas/oas3-no-ref-siblings/
+            #
+            # inline the ref if it does
+            # TODO: This should be fixed upstream, I think
+            match prop_schema:
+                case {"$ref": ref, **siblings} if set(siblings) - {
+                    "summary",
+                    "description",
+                }:
+                    ref_name = ref.replace("#/components/schemas/", "")
+                    return components[ref_name] | siblings
+                case _:
+                    return prop_schema
+
         # Manually construct the schema for the query params
         results = [
-            QueryParamSchema.from_json_schema(query_name, query_schema)
+            QueryParamSchema.from_json_schema(
+                query_name, inline_ref(query_schema, components)
+            )
             for query_name, query_schema in component_schema["properties"].items()
         ]
 

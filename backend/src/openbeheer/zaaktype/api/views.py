@@ -184,6 +184,7 @@ def expand_deelzaaktype(
 
 @extend_schema_view(
     get=extend_schema(
+        operation_id="service_zaaktype_retrieve_one",
         tags=["Zaaktypen"],
         summary="Get a zaaktype",
         description="Retrive a zaaktype from Open Zaak.",

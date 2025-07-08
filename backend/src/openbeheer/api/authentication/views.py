@@ -39,6 +39,8 @@ class LoginView(APIView):
     },
 )
 class LogoutView(APIView):
+    serializer_class = None
+
     def post(self, request: Request, *args, **kwargs):
         logout(request)
 

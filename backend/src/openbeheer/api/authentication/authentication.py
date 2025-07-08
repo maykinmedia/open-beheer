@@ -1,4 +1,5 @@
 from rest_framework import authentication
+from drf_spectacular.authentication import SessionScheme
 
 
 class AnonCSRFSessionAuthentication(authentication.SessionAuthentication):
@@ -17,3 +18,9 @@ class AnonCSRFSessionAuthentication(authentication.SessionAuthentication):
         if result is None:
             self.enforce_csrf(request)
         return result
+
+
+class AnonCSRFSessionAuthScheme(SessionScheme):
+    target_class = AnonCSRFSessionAuthentication
+    name = "anonCSRFSession"
+    # no extra requirements the csrf token is read from the Session
