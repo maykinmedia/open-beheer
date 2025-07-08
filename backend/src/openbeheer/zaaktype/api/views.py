@@ -234,6 +234,10 @@ class ZaakTypeDetailView(DetailView[ExpandableZaakType]):
     has_versions = True
 
     @staticmethod
+    def _get_params_with_status(zaaktype: ZaakType):
+        return {"zaaktype": zaaktype.url, "status": "alles"}
+
+    @staticmethod
     def _key(zaaktype: ZaakType):
         return {"zaaktype": zaaktype.url}
 
@@ -242,17 +246,23 @@ class ZaakTypeDetailView(DetailView[ExpandableZaakType]):
             "besluittypen",
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
-            lambda zt: {"zaaktypen": zt.url},  # pyright: ignore[reportAttributeAccessIssue]
+            lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
             BesluitType,
         ),
-        "statustypen": make_expansion("statustypen", _key, StatusType),
-        # TODO investigate bad OZ response
-        "resultaattypen": make_expansion("resultaattypen", _key, dict),
-        "eigenschappen": make_expansion("eigenschappen", _key, Eigenschap),
-        "informatieobjecttypen": make_expansion(
-            "informatieobjecttypen", _key, InformatieObjectType
+        "statustypen": make_expansion(
+            "statustypen", _get_params_with_status, StatusType
         ),
-        "roltypen": make_expansion("roltypen", _key, RolType),
+        # TODO investigate bad OZ response
+        "resultaattypen": make_expansion(
+            "resultaattypen", _get_params_with_status, dict
+        ),
+        "eigenschappen": make_expansion(
+            "eigenschappen", _get_params_with_status, Eigenschap
+        ),
+        "informatieobjecttypen": make_expansion(
+            "informatieobjecttypen", _get_params_with_status, InformatieObjectType
+        ),
+        "roltypen": make_expansion("roltypen", _get_params_with_status, RolType),
         "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": make_expansion("zaakobjecttypen", _key, ZaakObjectType),
     }
