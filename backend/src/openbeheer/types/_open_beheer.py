@@ -4,8 +4,8 @@ from functools import singledispatch
 from types import NoneType, UnionType
 from typing import Self, Sequence
 
-from ape_pie import APIClient
 import msgspec
+from ape_pie import APIClient
 from msgspec import Struct, UnsetType
 
 

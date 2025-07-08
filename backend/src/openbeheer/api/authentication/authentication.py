@@ -1,5 +1,5 @@
-from rest_framework import authentication
 from drf_spectacular.authentication import SessionScheme
+from rest_framework import authentication
 
 
 class AnonCSRFSessionAuthentication(authentication.SessionAuthentication):

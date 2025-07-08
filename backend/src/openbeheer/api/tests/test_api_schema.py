@@ -1,21 +1,22 @@
 from contextlib import redirect_stderr
-from io import StringIO
 from enum import Enum
-from msgspec import Struct, field
+from io import StringIO
 from typing import Callable
-from rest_framework import status
-from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
-from drf_spectacular.generators import SchemaGenerator
 
 from django.core.management import call_command
 
+from drf_spectacular.extensions import _SchemaType
+from drf_spectacular.generators import SchemaGenerator
+from drf_spectacular.utils import extend_schema
+from msgspec import Struct, field
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.test import APITestCase
+from rest_framework.views import APIView
+
 from openbeheer.api.views import ListView
 from openbeheer.types import OBFieldType, OBOption
-from drf_spectacular.extensions import _SchemaType
 
 
 def _get_drf_spectacular_schema(view: Callable) -> _SchemaType:

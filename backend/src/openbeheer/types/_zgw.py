@@ -1,4 +1,5 @@
 from typing import Annotated
+
 from msgspec import UNSET, Meta, Struct, UnsetType
 
 

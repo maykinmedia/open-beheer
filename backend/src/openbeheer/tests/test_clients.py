@@ -1,7 +1,7 @@
-from ape_pie import APIClient
 from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 
+from ape_pie import APIClient
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 

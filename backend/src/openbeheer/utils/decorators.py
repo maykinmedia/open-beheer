@@ -1,7 +1,8 @@
 from functools import wraps
 from typing import Callable, ParamSpec
-from rest_framework.response import Response
+
 from requests.exceptions import ConnectionError, ReadTimeout
+from rest_framework.response import Response
 
 from openbeheer.types import ExternalServiceError
 
