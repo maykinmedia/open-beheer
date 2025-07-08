@@ -567,6 +567,7 @@ _DESCRIPTION = "Open Beheer"
 API_VERSION = "0.1.0"
 
 SPECTACULAR_SETTINGS = {
+    "OAS_VERSION": "3.1.1",
     "SCHEMA_PATH_PREFIX": "/api/v1",
     "TITLE": "Open Beheer API",
     "DESCRIPTION": _DESCRIPTION,

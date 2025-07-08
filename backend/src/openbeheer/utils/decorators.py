@@ -3,7 +3,7 @@ from typing import Callable, ParamSpec
 from rest_framework.response import Response
 from requests.exceptions import ConnectionError, ReadTimeout
 
-from openbeheer.types._open_beheer import ExternalServiceError
+from openbeheer.types import ExternalServiceError
 
 Params = ParamSpec("Params")
 

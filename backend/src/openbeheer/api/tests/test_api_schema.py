@@ -1,3 +1,6 @@
+from contextlib import redirect_stderr
+from io import StringIO
+from enum import Enum
 from msgspec import Struct, field
 from typing import Callable
 from rest_framework import status
@@ -8,8 +11,10 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.generators import SchemaGenerator
 
+from django.core.management import call_command
+
 from openbeheer.api.views import ListView
-from openbeheer.types._open_beheer import OBFieldType, OBOption
+from openbeheer.types import OBFieldType, OBOption
 from drf_spectacular.extensions import _SchemaType
 
 
@@ -101,3 +106,45 @@ class SchemaEndpointTests(APITestCase):
             int_query_param["schema"],
             {"anyOf": [{"type": "integer"}, {"type": "null"}], "default": None},
         )
+
+    def test_query_params_enums(self):
+        # https://quobix.com/vacuum/rules/schemas/oas3-no-ref-siblings/
+
+        class SomeEnum(Enum):
+            a = "a"
+            eh = "eh"
+
+        class TestQueryParam(Struct, kw_only=True):
+            some_enum: SomeEnum = SomeEnum.a
+
+        class DummyView(ListView):
+            query_type = TestQueryParam
+
+            @extend_schema(filters=True)
+            def get(self, request, slug: str = "") -> Response:
+                return Response()
+
+        schema = _get_drf_spectacular_schema(DummyView.as_view())
+        query_parameters = schema["paths"]["/dummy"]["get"]["parameters"]
+
+        enum_schema = query_parameters[0]["schema"]
+        self.assertFalse(
+            "$ref" in enum_schema and "default" in enum_schema,
+            f'"default" is ignored if schema is a "$ref", both are found in {enum_schema!r}',
+        )
+
+    def test_basic_linting(self):
+        # drf-spectacular should build without warnings
+        # alternatively we could let these warning and error just happen and
+        # write the `--file` and lint it with vacuum
+        # https://quobix.com/vacuum/
+        stderr = StringIO()
+
+        # using redirect
+        # call_command accepts both `stdout` *and* `stderr` params, but it does
+        # nothing with the latter :thisisfine:
+        with redirect_stderr(stderr):
+            call_command("spectacular", ["--validate", "--file=/dev/null"])
+
+        stderr.seek(0)
+        self.assertEqual(stderr.read(), "")
