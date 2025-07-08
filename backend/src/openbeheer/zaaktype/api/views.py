@@ -26,8 +26,6 @@ from openbeheer.types import (
     ZGWError,
 )
 from openbeheer.types._open_beheer import (
-    ExternalServiceError,
-    OBList,
     VersionedResourceSummary,
 )
 from openbeheer.types.ztc import (
@@ -88,13 +86,7 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
         summary="Get zaaktypen",
         parameters=[],
         filters=True,
-        description="Retrive zaaktypen from Open Zaak.",
-        responses={
-            "200": OBList[ZaakTypeSummary],
-            "400": ZGWError,
-            "502": ExternalServiceError,
-            "504": ExternalServiceError,
-        },
+        description="Retrieve zaaktypen from Open Zaak.",
     ),
     post=extend_schema(
         tags=["Zaaktypen"],

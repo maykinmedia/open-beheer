@@ -18,6 +18,7 @@ from typing import (
 
 import structlog
 from ape_pie import APIClient
+from drf_spectacular.utils import extend_schema
 from furl import furl
 from msgspec import (
     UNSET,
@@ -37,21 +38,20 @@ from rest_framework.views import APIView as _APIView
 from openbeheer.api.drf_spectacular.schema import MsgSpecFilterBackend
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import (
+    DetailResponse,
+    ExternalServiceError,
+    FrontendFieldsets,
     OBField,
     OBList,
     OBOption,
     OBPagedQueryParams,
     OBPagination,
+    VersionSummary,
+    ZGWError,
     ZGWResponse,
     as_ob_fieldtype,
-)
-from openbeheer.types._open_beheer import (
-    DetailResponse,
-    FrontendFieldsets,
-    VersionSummary,
     options,
 )
-from openbeheer.types._zgw import ZGWError
 from openbeheer.utils.decorators import handle_service_errors
 
 if TYPE_CHECKING:
@@ -260,6 +260,22 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
 
     expansions: Mapping[str, Expansion[T, object]] = {}
     "Maps T._expand.'attribute_name` to fetch functions"
+
+    def __init__(self, **kwargs):
+        # XXX: maybe consider making this an
+        # __init_subclass__(cls, list_type: type[T], query_type: type[P], post_type: Struct): ...
+        # so all required class vars are always set, and we can do the post method here too
+
+        super().__init__(**kwargs)
+
+        self.get = extend_schema(
+            responses={
+                "200": OBList[self.data_type],
+                "400": ZGWError,
+                "502": ExternalServiceError,
+                "504": ExternalServiceError,
+            },
+        )(self.get)
 
     @handle_service_errors
     def get(self, request: Request, slug: str = "") -> Response:

@@ -1,21 +1,23 @@
 from contextlib import redirect_stderr
-from io import StringIO
 from enum import Enum
-from msgspec import Struct, field
+from io import StringIO
 from typing import Callable
-from rest_framework import status
-from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
-from drf_spectacular.generators import SchemaGenerator
 
 from django.core.management import call_command
 
+from drf_spectacular.extensions import _SchemaType
+from drf_spectacular.generators import SchemaGenerator
+from drf_spectacular.utils import extend_schema
+from msgspec import Struct, field
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.test import APITestCase
+from rest_framework.views import APIView
+
 from openbeheer.api.views import ListView
 from openbeheer.types import OBFieldType, OBOption
-from drf_spectacular.extensions import _SchemaType
+from openbeheer.zaaktype.api.views import ZaakTypeListView
 
 
 def _get_drf_spectacular_schema(view: Callable) -> _SchemaType:
@@ -83,6 +85,7 @@ class SchemaEndpointTests(APITestCase):
             some_string: str = field(name="some_field", default="bla")
 
         class DummyView(ListView):
+            data_type = TestQueryParam  # Echo endpoint :)
             query_type = TestQueryParam
 
             @extend_schema(filters=True)
@@ -118,6 +121,7 @@ class SchemaEndpointTests(APITestCase):
             some_enum: SomeEnum = SomeEnum.a
 
         class DummyView(ListView):
+            data_type = TestQueryParam  # Echo endpoint :)
             query_type = TestQueryParam
 
             @extend_schema(filters=True)
@@ -148,3 +152,72 @@ class SchemaEndpointTests(APITestCase):
 
         stderr.seek(0)
         self.assertEqual(stderr.read(), "")
+
+    def test_zaaktype_list_get_has_correct_schema(self):
+        schema = _get_drf_spectacular_schema(ZaakTypeListView.as_view())
+
+        responses = schema["paths"]["/dummy"]["get"]["responses"]
+        self.assertEqual(
+            responses,
+            {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OBList_ZaakTypeSummary_"
+                            }
+                        }
+                    },
+                    "description": "",
+                },
+                "400": {
+                    "content": {
+                        "application/json": {
+                            "schema": {"$ref": "#/components/schemas/ZGWError"}
+                        }
+                    },
+                    "description": "",
+                },
+                "502": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ExternalServiceError"
+                            }
+                        }
+                    },
+                    "description": "",
+                },
+                "504": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ExternalServiceError"
+                            }
+                        }
+                    },
+                    "description": "",
+                },
+            },
+        )
+
+        self.assertEqual(
+            schema["components"]["schemas"]["OBList_ZaakTypeSummary_"],
+            {
+                "title": "OBList[ZaakTypeSummary]",
+                "description": "Used to draw list views on the frontend.",
+                "type": "object",
+                "properties": {
+                    "fields": {
+                        "type": "array",
+                        "items": {"$ref": "#/components/schemas/OBField"},
+                    },
+                    "pagination": {"$ref": "#/components/schemas/OBPagination"},
+                    "results": {
+                        "type": "array",
+                        "items": {"$ref": "#/components/schemas/ZaakTypeSummary"},
+                    },
+                },
+                "required": ["fields", "pagination", "results"],
+            },
+        )
