@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.utils.translation import gettext_lazy as _
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -8,8 +12,11 @@ from rest_framework.response import Response
 from openbeheer.api.views import MsgspecAPIView
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import ExternalServiceError, OBOption, as_ob_option
-from openbeheer.types.ztc import PaginatedCatalogusList, Catalogus
+from openbeheer.types.ztc import Catalogus, PaginatedCatalogusList
 from openbeheer.utils.decorators import handle_service_errors
+
+if TYPE_CHECKING:
+    from rest_framework.request import Request
 
 
 # Shouldn't this have an inverse? Currently there is no way to go from

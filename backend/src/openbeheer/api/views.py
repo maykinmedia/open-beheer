@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial, reduce
 from inspect import get_annotations
 from operator import or_
 from typing import (
+    TYPE_CHECKING,
     Iterable,
     Mapping,
     NoReturn,
@@ -12,7 +15,6 @@ from typing import (
     Type,
     get_type_hints,
 )
-from uuid import UUID
 
 import structlog
 from ape_pie import APIClient
@@ -29,7 +31,6 @@ from msgspec import (
 )
 from msgspec.json import Encoder, decode
 from rest_framework.renderers import BaseRenderer, JSONRenderer
-from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
 
@@ -52,6 +53,11 @@ from openbeheer.types._open_beheer import (
 )
 from openbeheer.types._zgw import ZGWError
 from openbeheer.utils.decorators import handle_service_errors
+
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from rest_framework.request import Request
 
 logger = structlog.stdlib.get_logger(__name__)
 
