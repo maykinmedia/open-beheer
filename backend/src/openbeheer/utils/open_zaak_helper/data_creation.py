@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 from typing import Type
-from uuid import UUID
-from msgspec import UNSET, UnsetType
 from msgspec.json import decode
 from openbeheer.clients import ztc_client
 from openbeheer.types.ztc import (
@@ -19,18 +17,6 @@ import string
 @dataclass
 class OpenZaakDataCreationHelper:
     service_identifier: str
-    catalogus_uuid: UUID | UnsetType = UNSET
-
-    @property
-    def catalogus_url(self) -> str:
-        if not self.catalogus_uuid:
-            return ""
-
-        with ztc_client(self.service_identifier) as client:
-            return f"{client.base_url}catalogussen/{self.catalogus_uuid}"
-
-    def set_catalogus_uuid(self, catalogus_uuid: UUID) -> None:
-        self.catalogus_uuid = catalogus_uuid
 
     def _create_resource[T](
         self, data: dict[str, str], resource_path: str, resource_type: Type[T]
@@ -47,7 +33,7 @@ class OpenZaakDataCreationHelper:
         )
 
     def _get_catalogus(self, data: dict | None = None) -> str:
-        catalogus_url = self.catalogus_url or (data and data.get("catalogus", ""))
+        catalogus_url = data and data.get("catalogus", "")
         if not catalogus_url:
             catalogus = self.create_catalogus()
             catalogus_url = catalogus.url
