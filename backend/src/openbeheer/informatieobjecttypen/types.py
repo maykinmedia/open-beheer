@@ -1,12 +1,10 @@
-from openbeheer.types._open_beheer import OBPagedQueryParams, VersionedResourceSummary
-from openbeheer.types.ztc import Status
-
+import datetime
+from typing import Annotated
 
 from msgspec import UNSET, Meta, UnsetType
 
-
-import datetime
-from typing import Annotated
+from openbeheer.types._open_beheer import OBPagedQueryParams, VersionedResourceSummary
+from openbeheer.types.ztc import Status
 
 
 class InformatieObjectTypenGetParametersQuery(

@@ -1,6 +1,10 @@
+import string
 from dataclasses import dataclass
+from random import choice
 from typing import Type
+
 from msgspec.json import decode
+
 from openbeheer.clients import ztc_client
 from openbeheer.types.ztc import (
     Catalogus,
@@ -10,8 +14,6 @@ from openbeheer.types.ztc import (
     ZaakType,
     ZaakTypeInformatieObjectType,
 )
-from random import choice
-import string
 
 
 @dataclass
