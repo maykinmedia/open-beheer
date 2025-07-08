@@ -1,6 +1,7 @@
-from openbeheer.types._open_beheer import FrontendFieldSet, FrontendFieldsets
-from openbeheer.types.ztc import ZaakType
+from __future__ import annotations
 
+from openbeheer.types import FrontendFieldSet, FrontendFieldsets
+from openbeheer.types.ztc import ZaakType
 
 ZAAKTYPE_FIELDS = {
     field: getattr(ZaakType, field).__name__ for field in ZaakType.__struct_fields__

@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from openbeheer.api.views import MsgspecAPIView
 
-from openbeheer.types._open_beheer import OBOption
+from openbeheer.types import OBOption
 from rest_framework.response import Response
 
 from drf_spectacular.utils import extend_schema_view

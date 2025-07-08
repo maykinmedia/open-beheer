@@ -122,7 +122,7 @@ class OBField[T](Struct, rename="camel"):
     """The "lookup" (query parameter) to use for this field while filtering (e.g.
     "omschrijving__icontains")."""
 
-    options: list[OBOption[T]] | UnsetType = []
+    options: list[OBOption] | UnsetType = []
     "fields that are not query parameter MAY need options too"
 
     def __post_init__(self):

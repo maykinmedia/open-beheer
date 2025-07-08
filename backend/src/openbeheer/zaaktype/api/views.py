@@ -1,6 +1,7 @@
-from collections.abc import Iterable
+from __future__ import annotations
+
 import datetime
-from typing import Annotated, Mapping
+from typing import TYPE_CHECKING, Annotated, Iterable, Mapping
 
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -19,14 +20,17 @@ from openbeheer.api.views import (
     make_expansion,
 )
 from openbeheer.clients import iter_pages, ztc_client
-from openbeheer.types import OBField, OBOption, OBPagedQueryParams
-from openbeheer.types._open_beheer import (
+from openbeheer.types import (
     DetailResponse,
     ExternalServiceError,
     FrontendFieldsets,
+    OBField,
+    OBOption,
+    OBPagedQueryParams,
     VersionSummary,
+    ZGWError,
+    ZGWResponse,
 )
-from openbeheer.types._zgw import ZGWError, ZGWResponse
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -44,6 +48,10 @@ from openbeheer.types.ztc import (
 )
 from openbeheer.utils.decorators import handle_service_errors
 from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
+
+if TYPE_CHECKING:
+    from ape_pie import APIClient
+    from rest_framework.request import Request
 
 
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="camel"):
