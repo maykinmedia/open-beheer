@@ -6,11 +6,9 @@ from rest_framework.test import APITestCase
 from maykin_common.vcr import VCRMixin
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
-from msgspec.json import decode
 
 from openbeheer.accounts.tests.factories import UserFactory
-from openbeheer.clients import ztc_client
-from openbeheer.types.ztc import ZaakType
+from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
 
 
 @tag("vcr")
@@ -27,42 +25,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         )
         cls.user = UserFactory.create()
 
-    def _create_zaaktype(self) -> ZaakType:
-        with ztc_client("OZ") as client:
-            response = client.post(
-                "zaaktypen",
-                json={
-                    "omschrijving": "Another test zaaktype",
-                    "vertrouwelijkheidaanduiding": "geheim",
-                    "doel": "New Zaaktype 001",
-                    "aanleiding": "New Zaaktype 001",
-                    "indicatieInternOfExtern": "intern",
-                    "handelingInitiator": "aanvragen",
-                    "onderwerp": "New Zaaktype 001",
-                    "handelingBehandelaar": "handelin",
-                    "doorlooptijd": "P40D",
-                    "opschortingEnAanhoudingMogelijk": False,
-                    "verlengingMogelijk": True,
-                    "verlengingstermijn": "P40D",
-                    "publicatieIndicatie": False,
-                    "productenOfDiensten": ["https://example.com/product/321"],
-                    "referentieproces": {"naam": "ReferentieProces 1"},
-                    "verantwoordelijke": "200000000",
-                    "beginGeldigheid": "2025-06-19",
-                    "versiedatum": "2025-06-19",
-                    "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-                    "besluittypen": [],
-                    "gerelateerdeZaaktypen": [],
-                },
-            )
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        return decode(
-            response.content,
-            type=ZaakType,
-            strict=False,
-        )
+        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
 
     def test_not_authenticated(self):
         endpoint = reverse(
@@ -75,7 +38,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.assertEqual(self.cassette.play_count, 0)
 
     def test_retrieve_zaaktype(self):
-        zaaktype = self._create_zaaktype()
+        zaaktype = self.helper.create_zaaktype()
 
         assert zaaktype.url
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
@@ -250,7 +213,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             self.assertEqual(len(data["fields"][1]["options"]), 8)
 
     def test_patch_zaaktype(self):
-        zaaktype = self._create_zaaktype()
+        zaaktype = self.helper.create_zaaktype()
 
         assert zaaktype.url
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
@@ -319,7 +282,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             self.assertEqual(zaaktype["gerelateerdeZaaktypen"], [])
 
     def test_put_zaaktype(self):
-        zaaktype = self._create_zaaktype()
+        zaaktype = self.helper.create_zaaktype()
 
         assert zaaktype.url
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
@@ -420,7 +383,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.assertIsNone(zaaktype["eindeObject"])
 
     def test_proxy_error_response(self):
-        zaaktype = self._create_zaaktype()
+        zaaktype = self.helper.create_zaaktype()
 
         assert zaaktype.url
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
