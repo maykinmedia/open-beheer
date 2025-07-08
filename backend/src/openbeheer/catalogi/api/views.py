@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from django.utils.translation import gettext_lazy as _
+
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from msgspec.json import decode
 from rest_framework.request import Request

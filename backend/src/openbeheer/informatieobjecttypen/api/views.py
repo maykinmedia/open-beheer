@@ -1,8 +1,13 @@
 from typing import Mapping
+
+from ape_pie import APIClient
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework.request import Request
+
 from openbeheer.api.views import ListView
 from openbeheer.informatieobjecttypen.types import (
-    InformatieObjectTypeSummary,
     InformatieObjectTypenGetParametersQuery,
+    InformatieObjectTypeSummary,
 )
 from openbeheer.types._open_beheer import (
     ExternalServiceError,
@@ -12,9 +17,6 @@ from openbeheer.types._open_beheer import (
 )
 from openbeheer.types._zgw import ZGWError
 from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
-from ape_pie import APIClient
-from rest_framework.request import Request
-from drf_spectacular.utils import extend_schema, extend_schema_view
 
 
 @extend_schema_view(

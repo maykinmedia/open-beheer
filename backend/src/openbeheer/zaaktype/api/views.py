@@ -8,6 +8,10 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
 from msgspec import UNSET, Meta, UnsetType
 from msgspec.json import decode
+from rest_framework import status
+from rest_framework.request import Request
+from rest_framework.response import Response
+
 from openbeheer.api.views import (
     DetailView,
     ListView,
@@ -45,9 +49,6 @@ from openbeheer.types.ztc import (
 )
 from openbeheer.utils.decorators import handle_service_errors
 from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
-from rest_framework import status
-from rest_framework.request import Request
-from rest_framework.response import Response
 
 if TYPE_CHECKING:
     from ape_pie import APIClient
