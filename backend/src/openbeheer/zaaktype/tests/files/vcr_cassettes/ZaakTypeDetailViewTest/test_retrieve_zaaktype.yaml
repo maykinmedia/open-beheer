@@ -273,4 +273,67 @@ interactions:
     status:
       code: 200
       message: OK
+- request:
+    body: '{"domein": "CAKPH", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Test catalogus"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTk3MDg2MiwiZXhwIjoxNzUyMDE0MDYyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.4O-dy_YcUa_CAr8iQtBYKRHIxbQTxquUOsUy9uG6des
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '104'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.4
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/catalogussen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/f7b16304-7306-4054-8f0b-cd82f358e199","domein":"CAKPH","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '365'
+      Content-Security-Policy:
+      - 'frame-src ''self''; base-uri ''self''; frame-ancestors ''none''; default-src
+        ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
+        object-src ''none''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com
+        cdnjs.cloudflare.com cdn.jsdelivr.net; form-action ''self''; worker-src ''self''
+        blob:; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        connect-src ''self'' raw.githubusercontent.com; font-src ''self'' fonts.gstatic.com'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Tue, 08 Jul 2025 10:34:23 GMT
+      Location:
+      - http://localhost:8003/catalogi/api/v1/catalogussen/f7b16304-7306-4054-8f0b-cd82f358e199
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - nginx/1.27.0
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
 version: 1
