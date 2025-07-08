@@ -38,7 +38,34 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.assertEqual(self.cassette.play_count, 0)
 
     def test_retrieve_zaaktype(self):
-        zaaktype = self.helper.create_zaaktype()
+        zaaktype = self.helper.create_zaaktype(
+            overrides={
+                "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
+            }
+        )
+        self.helper.create_resultaattype(
+            overrides={
+                "zaaktype": zaaktype.url,
+                "omschrijving": "Toegekend",
+                "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/fb65d251-1518-4185-865f-b8bdcfad07b1",
+                "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
+            }
+        )
+        self.helper.create_resultaattype(
+            overrides={
+                "zaaktype": zaaktype.url,
+                "omschrijving": "Afgehandeld",
+                "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
+                "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
+            }
+        )
+        self.helper.create_roltype(
+            overrides={
+                "zaaktype": zaaktype.url,
+                "omschrijving": "Behandelend afdeling",
+                "omschrijvingGeneriek": "behandelaar",
+            }
+        )
 
         assert zaaktype.url
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
@@ -67,7 +94,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         # all fields should exist on the result
         self.assertSetEqual(fields, set(data["result"].keys()) - {"_expand"})
 
-        self.assertEqual(len(data["versions"]), 8)
+        self.assertEqual(len(data["versions"]), 1)
 
         zaaktype = data["result"]
 
@@ -125,7 +152,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                     "resultaattypen": [
                         {
                             "archiefactietermijn": None,
-                            "archiefnominatie": "",
+                            "archiefnominatie": "vernietigen",
                             "beginGeldigheid": None,
                             "beginObject": None,
                             "besluittypeOmschrijving": [],
@@ -144,12 +171,12 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                             "indicatieSpecifiek": None,
                             "informatieobjecttypeOmschrijving": [],
                             "informatieobjecttypen": [],
-                            "omschrijving": "Lopend",
+                            "omschrijving": "Toegekend",
                             "omschrijvingGeneriek": "",
                             "procesobjectaard": "",
                             "procestermijn": None,
-                            "resultaattypeomschrijving": "Lopend",
-                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/cc5ae4e3-a9e6-4386-bcee-46be4986a829",
+                            "resultaattypeomschrijving": "Toegekend",
+                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
                             "toelichting": "",
                             "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/7759dcb7-de9a-4543-99e3-81472c488f32",
                             "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487",
@@ -157,7 +184,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                         },
                         {
                             "archiefactietermijn": None,
-                            "archiefnominatie": "",
+                            "archiefnominatie": "vernietigen",
                             "beginGeldigheid": None,
                             "beginObject": None,
                             "besluittypeOmschrijving": [],
@@ -181,7 +208,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                             "procesobjectaard": "",
                             "procestermijn": None,
                             "resultaattypeomschrijving": "Afgehandeld",
-                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/1bb001e9-5eab-4f10-8940-8781e11f180f",
+                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
                             "toelichting": "",
                             "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/b9109699-67cd-4c2e-a2cf-76b311d40e25",
                             "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487",
