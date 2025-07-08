@@ -7,6 +7,8 @@ from openbeheer.clients import ztc_client
 from openbeheer.types.ztc import (
     Catalogus,
     InformatieObjectType,
+    ResultaatType,
+    RolType,
     ZaakType,
     ZaakTypeInformatieObjectType,
 )
@@ -53,6 +55,16 @@ class OpenZaakDataCreationHelper:
 
         assert isinstance(catalogus_url, str)
         return catalogus_url
+
+    def _get_zaaktype(self, data: dict | None = None) -> str:
+        zaaktype_url = data and data.get("zaaktype", "")
+        if not zaaktype_url:
+            zaaktype = self.create_zaaktype()
+            zaaktype_url = zaaktype.url
+            assert zaaktype_url
+
+        assert isinstance(zaaktype_url, str)
+        return zaaktype_url
 
     # Can't use the Patched requests for the type of the overrides, because the unset
     # values are filled with the default values  when converting to the dict type
@@ -127,8 +139,42 @@ class OpenZaakDataCreationHelper:
             "catalogus": self._get_catalogus(overrides),
             "besluittypen": [],
             "gerelateerdeZaaktypen": [],
+            "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
         }
         if overrides:
             data.update(overrides)
 
         return self._create_resource(data, "zaaktypen", ZaakType)
+
+    def create_resultaattype(self, overrides: dict | None = None) -> ResultaatType:
+        data = {
+            "zaaktype": self._get_zaaktype(overrides),
+            "omschrijving": "Gegrond",
+            "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c",
+            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
+            "archiefnominatie": "vernietigen",
+            "brondatumArchiefprocedure": {
+                "afleidingswijze": "afgehandeld",
+                "procestermijn": None,
+                "datumkenmerk": "",
+                "einddatumBekend": False,
+                "objecttype": "",
+                "registratie": "",
+            },
+        }
+        if overrides:
+            data.update(overrides)
+
+        return self._create_resource(data, "resultaattypen", ResultaatType)
+
+    def create_roltype(self, overrides: dict | None = None) -> RolType:
+        data = {
+            "zaaktype": self._get_zaaktype(overrides),
+            "omschrijving": "Vastgesteld",
+            "omschrijvingGeneriek": "Beleidsplan met externe werking",
+        }
+
+        if overrides:
+            data.update(overrides)
+
+        return self._create_resource(data, "roltypen", RolType)
