@@ -72,7 +72,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.client.force_login(self.user)
 
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
         )
         response = self.client.get(endpoint)
@@ -247,7 +247,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
         # Now modify the zaaktype
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
         )
         self.client.force_login(self.user)
@@ -312,7 +312,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
         # Now modify the zaaktype
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
         )
         self.client.force_login(self.user)
@@ -413,7 +413,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
         self.client.force_login(self.user)
         endpoint = reverse(
-            "api:zaaktype-detail",
+            "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
         )
 
