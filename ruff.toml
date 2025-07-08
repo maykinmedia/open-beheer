@@ -33,6 +33,8 @@ select = [
     "FURB",
     # pep8-naming
     "N",
+    # isort
+    "I",
 ]
 ignore = [
     "E501", # line too long
