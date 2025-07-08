@@ -1,7 +1,7 @@
+from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from maykin_common.vcr import VCRMixin
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 

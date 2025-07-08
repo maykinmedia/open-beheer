@@ -4,8 +4,10 @@
 #   version:   0.30.1
 
 from __future__ import annotations
+
 from enum import Enum
 from typing import Annotated, List
+
 from msgspec import Meta, Struct, field
 
 

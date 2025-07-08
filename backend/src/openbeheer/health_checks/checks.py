@@ -1,9 +1,9 @@
 import traceback
 from abc import ABC, abstractmethod
 from typing import Union
-from django.utils.functional import Promise
 
 from django.conf import settings
+from django.utils.functional import Promise
 from django.utils.translation import gettext_lazy as _
 
 from requests.exceptions import ConnectionError, HTTPError

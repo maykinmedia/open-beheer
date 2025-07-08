@@ -1,6 +1,6 @@
 from django.urls import path
-from .api.views import CatalogChoicesView
 
+from .api.views import CatalogChoicesView
 
 app_name = "catalogi"
 

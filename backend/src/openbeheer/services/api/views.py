@@ -1,19 +1,14 @@
 from django.utils.translation import gettext_lazy as _
 
-from drf_spectacular.utils import extend_schema
-
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
+from rest_framework.response import Response
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 
-from rest_framework.request import Request
-from rest_framework.permissions import IsAuthenticated
-
 from openbeheer.api.views import MsgspecAPIView
-
 from openbeheer.types import OBOption
-from rest_framework.response import Response
-
-from drf_spectacular.utils import extend_schema_view
 
 
 @extend_schema_view(

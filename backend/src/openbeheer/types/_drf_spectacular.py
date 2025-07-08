@@ -1,5 +1,5 @@
-from msgspec import field, Struct, to_builtins
 from drf_spectacular.extensions import _SchemaType
+from msgspec import Struct, field, to_builtins
 
 
 class QueryParamSchema(Struct):
