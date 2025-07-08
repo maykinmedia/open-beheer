@@ -1,31 +1,13 @@
 from __future__ import annotations
 
-import datetime
+import datetime  # noqa: TC003
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping
 
 from ape_pie import APIClient
-from msgspec import UNSET, Meta, UnsetType
-from rest_framework.request import Request
-from msgspec.json import decode
-from msgspec import convert
-from openbeheer.api.views import ListView
-from openbeheer.types._zgw import ZGWError, ZGWResponse
-from openbeheer.types.ztc import (
-    PatchedZaakTypeRequest,
-    Status,
-    VertrouwelijkheidaanduidingEnum,
-    ZaakTypeRequest,
-)
-from openbeheer.types._open_beheer import ExternalServiceError, VersionedResourceSummary
-from openbeheer.types import OBPagedQueryParams, OBField, OBOption
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
-from msgspec import UNSET, Meta, Struct, UnsetType, field
+from msgspec import UNSET, Meta, UnsetType
 from msgspec.json import decode
-from rest_framework import status
-from rest_framework.request import Request
-from rest_framework.response import Response
-
 from openbeheer.api.views import (
     DetailView,
     ListView,
@@ -36,7 +18,6 @@ from openbeheer.api.views import (
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import (
     DetailResponse,
-    ExternalServiceError,
     FrontendFieldsets,
     OBField,
     OBOption,
@@ -45,6 +26,7 @@ from openbeheer.types import (
     ZGWError,
     ZGWResponse,
 )
+from openbeheer.types._open_beheer import ExternalServiceError, VersionedResourceSummary
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -62,6 +44,9 @@ from openbeheer.types.ztc import (
 )
 from openbeheer.utils.decorators import handle_service_errors
 from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
+from rest_framework import status
+from rest_framework.request import Request
+from rest_framework.response import Response
 
 if TYPE_CHECKING:
     from ape_pie import APIClient
