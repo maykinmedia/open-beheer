@@ -174,16 +174,7 @@ const ZaaktypeTab = ({
     );
   }
 
-  return (
-    <DataGrid
-      objectList={
-        (result._expand?.[tabConfig.key] as
-          | Record<ExpandItemKeys, object | Primitive>[]
-          | undefined) ?? []
-      }
-      fields={tabConfig.allowedFields}
-    />
-  );
+  return expandedOverrides[tabConfig.key as keyof TargetType];
 };
 
 type RelatedObjectRendererProps = {
