@@ -24,9 +24,12 @@ from openbeheer.types import (
     OBPagedQueryParams,
     VersionSummary,
     ZGWError,
-    ZGWResponse,
 )
-from openbeheer.types._open_beheer import ExternalServiceError, VersionedResourceSummary
+from openbeheer.types._open_beheer import (
+    ExternalServiceError,
+    OBList,
+    VersionedResourceSummary,
+)
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -87,7 +90,7 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
         filters=True,
         description="Retrive zaaktypen from Open Zaak.",
         responses={
-            "200": ZGWResponse[ZaakTypeSummary],
+            "200": OBList[ZaakTypeSummary],
             "400": ZGWError,
             "502": ExternalServiceError,
             "504": ExternalServiceError,
