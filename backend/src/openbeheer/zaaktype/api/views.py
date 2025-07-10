@@ -10,7 +10,6 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
 from msgspec import UNSET, Meta, UnsetType
 from msgspec.json import decode
-from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -51,7 +50,6 @@ from openbeheer.types.ztc import (
     ZaakType,
     ZaakTypeRequest,
 )
-from openbeheer.utils.decorators import handle_service_errors
 from openbeheer.zaaktype.constants import (
     TEMPLATES,
     ZAAKTYPE_FIELDSETS,
@@ -112,7 +110,7 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
     ),
 )
 class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
-    data_type = ZaakTypeSummary
+    return_data_type = ZaakTypeSummary
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
 
@@ -135,26 +133,6 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         if params.catalogus:
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
-
-    @handle_service_errors
-    def post(self, request: Request, slug: str = "") -> Response:
-        with ztc_client(slug) as client:
-            response = client.post(self.endpoint_path, json=request.data)
-
-        if not response.ok:
-            error = decode(response.content, type=ZGWError)
-            return Response(
-                error,
-                status=response.status_code,
-            )
-
-        data = decode(
-            response.content,
-            type=ZaakType,
-            strict=False,
-        )
-
-        return Response(data, status.HTTP_201_CREATED)
 
 
 ExpandableZaakType = make_expandable(
