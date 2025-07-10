@@ -588,15 +588,16 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
         versions = []
         if self.has_versions:
+            assert isinstance(self, DetailWithVersions)
             versions, status_code = self.get_item_versions(slug, data)
 
             if isinstance(versions, ZGWError):
                 return Response(versions, status=status_code)
 
+            versions = [self.format_version(version) for version in versions]
+
         response_data = DetailResponse(
-            versions=[self.format_version(version) for version in versions]
-            if self.has_versions
-            else UNSET,
+            versions=versions if self.has_versions else UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
             fields=self.get_fields(),

@@ -178,6 +178,7 @@ def expand_deelzaaktype(
         tags=["Zaaktypen"],
         summary="Get a zaaktype",
         description="Retrive a zaaktype from Open Zaak.",
+        request=None,
         responses={
             "200": DetailResponse[ExpandableZaakType],
             "400": ZGWError,
@@ -213,6 +214,7 @@ def expand_deelzaaktype(
 class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     data_type = ExpandableZaakType
     endpoint_path = "zaaktypen/{uuid}"
+    serializer_class = None
 
     @staticmethod
     def _get_params_with_status(zaaktype: ZaakType):
