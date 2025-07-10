@@ -26,7 +26,7 @@ export const VersionSelector: Story = {
     const canvas = within(canvasElement);
 
     const expandButton = await canvas.findByRole("button", {
-      name: /toon meer/i,
+      name: /toon alle versies/i,
     });
     await userEvent.click(expandButton);
 
