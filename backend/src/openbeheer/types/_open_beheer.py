@@ -1,12 +1,17 @@
+# because of the runtime defined OptionalZaakType OAS generation will fail with
+# ForwardRefs so no future annotations here.
+# I think it could be fixed upstream
+# from __future__ import annotations
+
 import datetime
 import enum
 from functools import singledispatch
 from types import NoneType, UnionType
-from typing import Self, Sequence
+from typing import Self, Sequence, Type
 
 import msgspec
 from ape_pie import APIClient
-from msgspec import UNSET, Struct, UnsetType
+from msgspec import UNSET, Struct, UnsetType, structs
 
 
 class OBPagedQueryParams(Struct):
@@ -203,3 +208,20 @@ class VersionedResourceSummary(Struct):
             if not self.concept
             else False
         )
+
+
+def make_fields_optional(t: Type[Struct]) -> Type[Struct]:
+    "Return a Struct OptionalT with all previously required fields f: f | UnsetType = UNSET"
+    return msgspec.defstruct(
+        f"Optional{t.__name__}",
+        [
+            (field_info.name, field_info.type | UnsetType, UNSET)  # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
+            for field_info in structs.fields(t)
+            if (
+                field_info.default == structs.NODEFAULT
+                and field_info.default_factory == structs.NODEFAULT
+            )
+        ],
+        bases=(t,),
+        rename="camel",
+    )
