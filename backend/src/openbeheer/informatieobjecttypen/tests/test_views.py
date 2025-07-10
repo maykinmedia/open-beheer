@@ -131,3 +131,22 @@ class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
         self.assertEqual(
             "test_retrieve_with_filter_zaaktype 1", data["results"][0]["omschrijving"]
         )
+
+    def test_create(self):
+        catalogus = self.helper.create_catalogus()
+        assert catalogus.url
+
+        self.client.force_login(self.user)
+        response = self.client.post(
+            self.endpoint,
+            data={
+                "catalogus": catalogus.url,
+                "omschrijving": "Testing IOT",
+                "vertrouwelijkheidaanduiding": "openbaar",
+                "beginGeldigheid": "2025-07-10",
+                "informatieobjectcategorie": "no idea what this should be ¯\\_(ツ)_/¯",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
