@@ -22,12 +22,24 @@ import {
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
+import { TAB_CONFIG_ALGEMEEN } from "~/pages/zaaktype/tabs/algemeen.ts";
+import { TAB_CONFIG_DOCUMENTTYPEN } from "~/pages/zaaktype/tabs/documenttypen.ts";
+import { TAB_CONFIG_EIGENSCHAPPEN } from "~/pages/zaaktype/tabs/eigenschappen.ts";
+import { TAB_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.ts";
+import { TAB_CONFIG_RESULTAATTYPEN } from "~/pages/zaaktype/tabs/resultaattypen.ts";
+import { TAB_CONFIG_ROLTYPEN } from "~/pages/zaaktype/tabs/roltypen.ts";
 import { TAB_CONFIG_STATUSTYPEN } from "~/pages/zaaktype/tabs/statustypen.ts";
 import { components } from "~/types";
 
 const TAB_CONFIGS: TabConfig<TargetType>[] = [
   TAB_CONFIG_OVERVIEW,
+  TAB_CONFIG_ALGEMEEN,
   TAB_CONFIG_STATUSTYPEN,
+  TAB_CONFIG_OBJECTTYPEN,
+  TAB_CONFIG_DOCUMENTTYPEN,
+  TAB_CONFIG_ROLTYPEN,
+  TAB_CONFIG_RESULTAATTYPEN,
+  TAB_CONFIG_EIGENSCHAPPEN,
 ];
 
 /**
@@ -141,7 +153,6 @@ export function ZaaktypePage() {
             onVersionChange={handleVersionChange}
           />
         )}
-
         <Tabs activeTabIndex={activeTabIndex} onTabChange={setActiveTabIndex}>
           {renderedTabs.map(({ label, element }) => (
             <Tab key={label} label={label}>
