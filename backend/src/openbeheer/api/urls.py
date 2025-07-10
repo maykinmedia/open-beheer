@@ -8,7 +8,6 @@ from drf_spectacular.views import (
 
 from openbeheer.accounts.api.views import WhoAmIView
 from openbeheer.health_checks.api.views import HealthChecksView
-from openbeheer.zaaktype.api.views import ZaakTypeDetailView, ZaakTypeListView
 
 app_name = "api"
 
@@ -37,17 +36,16 @@ urlpatterns = [
         "v1/auth/",
         include("openbeheer.api.authentication.urls", namespace="authentication"),
     ),
-    # ZTC endpoints
     path("v1/service/", include("openbeheer.services.urls", namespace="services")),
     path(
         "v1/service/<slug:slug>/zaaktypen/",
-        ZaakTypeListView.as_view(),
-        name="zaaktype-list",
+        include("openbeheer.zaaktype.urls", namespace="zaaktypen"),
     ),
     path(
-        "v1/service/<slug:slug>/zaaktypen/<uuid:uuid>",
-        ZaakTypeDetailView.as_view(),
-        name="zaaktype-detail",
+        "v1/service/<slug:slug>/informatieobjecttypen/",
+        include(
+            "openbeheer.informatieobjecttypen.urls", namespace="informatieobjecttypen"
+        ),
     ),
     path(
         "v1/service/<slug:slug>/catalogi/",

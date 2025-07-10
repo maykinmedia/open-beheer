@@ -1,19 +1,16 @@
 from __future__ import annotations
 
-import datetime
+import datetime  # noqa: TC003
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping
 
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
-from msgspec import UNSET, Meta, Struct, UnsetType, field
+from msgspec import UNSET, Meta, UnsetType
 from msgspec.json import decode
-from rest_framework import status
-from rest_framework.request import Request
-from rest_framework.response import Response
-
 from openbeheer.api.views import (
     DetailView,
+    DetailWithVersions,
     ListView,
     fetch_one,
     make_expandable,
@@ -22,7 +19,6 @@ from openbeheer.api.views import (
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import (
     DetailResponse,
-    ExternalServiceError,
     FrontendFieldsets,
     OBField,
     OBOption,
@@ -31,6 +27,7 @@ from openbeheer.types import (
     ZGWError,
     ZGWResponse,
 )
+from openbeheer.types._open_beheer import ExternalServiceError, VersionedResourceSummary
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -46,8 +43,8 @@ from openbeheer.types.ztc import (
     ZaakType,
     ZaakTypeRequest,
 )
-from openbeheer.utils.decorators import handle_service_errors
 from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
+from rest_framework.request import Request
 
 if TYPE_CHECKING:
     from ape_pie import APIClient
@@ -67,23 +64,17 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="came
     ] = UNSET
 
 
-class ZaakTypeSummary(Struct, kw_only=True):
+class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
     url: str
     identificatie: str
     omschrijving: str
-    # Actief ja/nee: calculated
-    actief: bool | UnsetType = UNSET
-    einde_geldigheid: datetime.date | None = field(default=None, name="eindeGeldigheid")
     # str, because VertrouwelijkheidaanduidingEnum does not contain "" but OZ does
-    # XXX: the "" is actually a fault in the fixtures!
     vertrouwelijkheidaanduiding: str
     versiedatum: datetime.date
-
-    def __post_init__(self):
-        self.actief = (
-            self.einde_geldigheid is None
-            or datetime.date.today() < self.einde_geldigheid
-        )
+    # Actief true/false: calculated for ja/nee in the frontend
+    actief: bool | UnsetType = UNSET
+    einde_geldigheid: datetime.date | None = None
+    concept: bool | UnsetType = UNSET
 
 
 @extend_schema_view(
@@ -111,8 +102,11 @@ class ZaakTypeSummary(Struct, kw_only=True):
         },
     ),
 )
-class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
-    data_type = ZaakTypeSummary
+class ZaakTypeListView(
+    ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary, ZaakType]
+):
+    return_data_type = ZaakTypeSummary
+    data_type = ZaakType
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
 
@@ -135,26 +129,6 @@ class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
         if params.catalogus:
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
-
-    @handle_service_errors
-    def post(self, request: Request, slug: str = "") -> Response:
-        with ztc_client(slug) as client:
-            response = client.post(self.endpoint_path, json=request.data)
-
-        if not response.ok:
-            error = decode(response.content, type=ZGWError)
-            return Response(
-                error,
-                status=response.status_code,
-            )
-
-        data = decode(
-            response.content,
-            type=ZaakType,
-            strict=False,
-        )
-
-        return Response(data, status.HTTP_201_CREATED)
 
 
 ExpandableZaakType = make_expandable(
@@ -196,6 +170,7 @@ def expand_deelzaaktype(
         tags=["Zaaktypen"],
         summary="Get a zaaktype",
         description="Retrive a zaaktype from Open Zaak.",
+        request=None,
         responses={
             "200": DetailResponse[ExpandableZaakType],
             "400": ZGWError,
@@ -228,10 +203,10 @@ def expand_deelzaaktype(
         },
     ),
 )
-class ZaakTypeDetailView(DetailView[ExpandableZaakType]):
+class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     data_type = ExpandableZaakType
     endpoint_path = "zaaktypen/{uuid}"
-    has_versions = True
+    serializer_class = None
 
     @staticmethod
     def _get_params_with_status(zaaktype: ZaakType):

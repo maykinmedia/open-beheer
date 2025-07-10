@@ -14,6 +14,7 @@ from typing import (
     Sequence,
     Type,
     get_type_hints,
+    runtime_checkable,
 )
 
 import structlog
@@ -33,6 +34,7 @@ from msgspec.json import Encoder, decode
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
+from rest_framework import status
 
 from openbeheer.api.drf_spectacular.schema import MsgSpecFilterBackend
 from openbeheer.clients import iter_pages, ztc_client
@@ -237,14 +239,17 @@ def expand_one[T: Struct, R](
     return result
 
 
-class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
-    data_type: type[T]
-    """Core ZGW datatype. e.g. Zaaktype
+class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
+    return_data_type: type[T]
+    """The datatype that the endpoints return
 
     This is where you can "whitelist/expose" fields.
-    Fields not on the `data_type` will be ignored from respones from the Service
+    Fields not on the `return_data_type` will be ignored from respones from the Service
     and cannot be returned to the front-end.
     """
+
+    data_type: type[S]
+    """The core ZGW datatype"""
 
     query_type: type[P]
     "Query parameters we accept"
@@ -280,6 +285,26 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
                     status=status_code,
                 )
 
+    @handle_service_errors
+    def post(self, request: Request, slug: str = "") -> Response:
+        with ztc_client(slug) as client:
+            response = client.post(self.endpoint_path, json=request.data)
+
+        if not response.ok:
+            error = decode(response.content, type=ZGWError)
+            return Response(
+                error,
+                status=response.status_code,
+            )
+
+        data = decode(
+            response.content,
+            type=self.data_type,
+            strict=False,
+        )
+
+        return Response(data, status.HTTP_201_CREATED)
+
     def parse_ob_fields(
         self, params: P, option_overrides: Mapping[str, list[OBOption]] = {}
     ) -> list[OBField]:
@@ -309,7 +334,7 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
 
             return ob_field
 
-        attrs = get_annotations(self.data_type)
+        attrs = get_annotations(self.return_data_type)
         return [to_ob_field(field, annotation) for field, annotation in attrs.items()]
 
     def parse_query_params(self, request: Request, api_client: APIClient) -> P:
@@ -367,7 +392,7 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
             try:
                 data = decode(
                     content,
-                    type=ZGWResponse[self.data_type],
+                    type=ZGWResponse[self.return_data_type],
                     strict=False,
                 )
                 data.results = expand_many(api_client, expansions, data.results)
@@ -415,6 +440,22 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
             ),
             results=data.results,
         )
+
+
+@runtime_checkable
+class DetailWithVersions[T: Struct](Protocol):
+    has_versions: bool = True
+
+    def get_item_versions(
+        self, slug: str, data: T
+    ) -> tuple[list[T] | ZGWError, int]: ...
+
+    def format_version(self, data: T) -> VersionSummary: ...
+
+
+@runtime_checkable
+class DetailViewWithoutVersions(Protocol):
+    has_versions: bool = False
 
 
 class DetailView[T: Struct](MsgspecAPIView, ABC):
@@ -489,15 +530,16 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
         versions = []
         if self.has_versions:
+            assert isinstance(self, DetailWithVersions)
             versions, status_code = self.get_item_versions(slug, data)
 
             if isinstance(versions, ZGWError):
                 return Response(versions, status=status_code)
 
+            versions = [self.format_version(version) for version in versions]
+
         response_data = DetailResponse(
-            versions=[self.format_version(version) for version in versions]
-            if self.has_versions
-            else UNSET,
+            versions=(versions if self.has_versions else UNSET),
             result=data,
             fieldsets=self.get_fieldsets(),
             fields=self.get_fields(),
@@ -530,15 +572,16 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
         versions = []
         if self.has_versions:
+            assert isinstance(self, DetailWithVersions)
             versions, status_code = self.get_item_versions(slug, data)
 
             if isinstance(versions, ZGWError):
                 return Response(versions, status=status_code)
 
+            versions = [self.format_version(version) for version in versions]
+
         response_data = DetailResponse(
-            versions=[self.format_version(version) for version in versions]
-            if self.has_versions
-            else UNSET,
+            versions=versions if self.has_versions else UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
             fields=self.get_fields(),
@@ -556,13 +599,21 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def put(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         return self.update(request, slug, uuid, is_partial=False)
 
-    @abstractmethod
-    def get_item_versions(
-        self, slug: str, data: T
-    ) -> tuple[list[T] | ZGWError, int]: ...
+    @handle_service_errors
+    def delete(
+        self, request: Request, slug: str, uuid: UUID, *args, **kwargs
+    ) -> Response:
+        with ztc_client(slug) as client:
+            response = client.delete(self.endpoint_path.format(uuid=uuid))
 
-    @abstractmethod
-    def format_version(self, data: T) -> VersionSummary: ...
+            if not response.ok:
+                error = decode(response.content, type=ZGWError)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @abstractmethod
     def get_fieldsets(self) -> FrontendFieldsets: ...

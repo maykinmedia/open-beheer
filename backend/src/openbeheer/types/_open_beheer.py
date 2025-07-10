@@ -1,12 +1,12 @@
 import enum
-from datetime import datetime
+import datetime
 from functools import singledispatch
 from types import NoneType, UnionType
 from typing import Self, Sequence
 
 from ape_pie import APIClient
 import msgspec
-from msgspec import Struct, UnsetType
+from msgspec import UNSET, Struct, UnsetType
 
 
 class OBPagedQueryParams(Struct):
@@ -181,8 +181,33 @@ class DetailResponse[T](Struct):
     versions: list[VersionSummary] | UnsetType = msgspec.UNSET
 
 
+# Added otherwise API docs shows the versions as a non-required field
+# while it is not present for resources without versions.
+class DetailResponseWithoutVersions[T](Struct):
+    result: T
+    fieldsets: FrontendFieldsets
+    fields: list[OBField]
+
+
 class ExternalServiceError(Struct):
     code: str
     title: str
     detail: str
     status: int
+
+
+class VersionedResourceSummary(Struct):
+    # Actief true/false: calculated for ja/nee in the frontend
+    actief: bool | UnsetType = UNSET
+    einde_geldigheid: datetime.date | None = None
+    concept: bool | UnsetType = UNSET
+
+    def __post_init__(self):
+        self.actief = (
+            (
+                self.einde_geldigheid is None
+                or datetime.date.today() < self.einde_geldigheid
+            )
+            if not self.concept
+            else False
+        )
