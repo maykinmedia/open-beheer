@@ -146,7 +146,7 @@ function App() {
         options={catalogiChoices}
         placeholder="Selecteer catalogus"
         value={catalogusId}
-        variant="accent"
+        variant="secondary"
         onChange={({ target }) => {
           const { value } = target;
 
