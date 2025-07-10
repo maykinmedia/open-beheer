@@ -42,9 +42,14 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
     ),
 )
 class InformatieObjectTypeListView(
-    ListView[InformatieObjectTypenGetParametersQuery, InformatieObjectTypeSummary]
+    ListView[
+        InformatieObjectTypenGetParametersQuery,
+        InformatieObjectTypeSummary,
+        InformatieObjectType,
+    ]
 ):
-    data_type = InformatieObjectTypeSummary
+    data_type = InformatieObjectType
+    return_data_type = InformatieObjectTypeSummary
     query_type = InformatieObjectTypenGetParametersQuery
     endpoint_path = "informatieobjecttypen"
 

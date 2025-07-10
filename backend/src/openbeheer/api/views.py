@@ -238,7 +238,7 @@ def expand_one[T: Struct, R](
     return result
 
 
-class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
+class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
     return_data_type: type[T]
     """The datatype that the endpoints return
 
@@ -247,7 +247,7 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
     and cannot be returned to the front-end.
     """
 
-    data_type: type[T]
+    data_type: type[S]
     """The core ZGW datatype"""
 
     query_type: type[P]
