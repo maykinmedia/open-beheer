@@ -31,6 +31,7 @@ from msgspec import (
     to_builtins,
 )
 from msgspec.json import Encoder, decode
+from rest_framework import status
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
@@ -238,13 +239,16 @@ def expand_one[T: Struct, R](
 
 
 class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
-    data_type: type[T]
-    """Core ZGW datatype. e.g. Zaaktype
+    return_data_type: type[T]
+    """The datatype that the endpoints return
 
     This is where you can "whitelist/expose" fields.
-    Fields not on the `data_type` will be ignored from respones from the Service
+    Fields not on the `return_data_type` will be ignored from respones from the Service
     and cannot be returned to the front-end.
     """
+
+    data_type: type[T]
+    """The core ZGW datatype"""
 
     query_type: type[P]
     "Query parameters we accept"
@@ -296,6 +300,26 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
                     status=status_code,
                 )
 
+    @handle_service_errors
+    def post(self, request: Request, slug: str = "") -> Response:
+        with ztc_client(slug) as client:
+            response = client.post(self.endpoint_path, json=request.data)
+
+        if not response.ok:
+            error = decode(response.content, type=ZGWError)
+            return Response(
+                error,
+                status=response.status_code,
+            )
+
+        data = decode(
+            response.content,
+            type=self.data_type,
+            strict=False,
+        )
+
+        return Response(data, status.HTTP_201_CREATED)
+
     def parse_ob_fields(
         self, params: P, option_overrides: Mapping[str, list[OBOption]] = {}
     ) -> list[OBField]:
@@ -325,7 +349,7 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
 
             return ob_field
 
-        attrs = get_annotations(self.data_type)
+        attrs = get_annotations(self.return_data_type)
         return [to_ob_field(field, annotation) for field, annotation in attrs.items()]
 
     def parse_query_params(self, request: Request, api_client: APIClient) -> P:
@@ -383,7 +407,7 @@ class ListView[P: OBPagedQueryParams, T: Struct](MsgspecAPIView):
             try:
                 data = decode(
                     content,
-                    type=ZGWResponse[self.data_type],
+                    type=ZGWResponse[self.return_data_type],
                     strict=False,
                 )
                 data.results = expand_many(api_client, expansions, data.results)
