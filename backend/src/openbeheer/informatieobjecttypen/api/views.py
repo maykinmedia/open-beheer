@@ -4,8 +4,13 @@ from openbeheer.informatieobjecttypen.types import (
     InformatieObjectTypeSummary,
     InformatieObjectTypenGetParametersQuery,
 )
-from openbeheer.types._open_beheer import ExternalServiceError, OBField, OBOption
-from openbeheer.types._zgw import ZGWError, ZGWResponse
+from openbeheer.types._open_beheer import (
+    ExternalServiceError,
+    OBField,
+    OBList,
+    OBOption,
+)
+from openbeheer.types._zgw import ZGWError
 from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
 from ape_pie import APIClient
 from rest_framework.request import Request
@@ -20,7 +25,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
         filters=True,
         description="Retrive informatieobjecttypen from Open Zaak.",
         responses={
-            "200": ZGWResponse[InformatieObjectTypeSummary],
+            "200": OBList[InformatieObjectTypeSummary],
             "400": ZGWError,
             "502": ExternalServiceError,
             "504": ExternalServiceError,
