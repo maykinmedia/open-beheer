@@ -3,14 +3,21 @@ from __future__ import annotations
 import datetime  # noqa: TC003
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping
 
+from django.utils.translation import gettext as _
+
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
 from msgspec import UNSET, Meta, UnsetType
 from msgspec.json import decode
+from rest_framework import status
+from rest_framework.request import Request
+from rest_framework.response import Response
+
 from openbeheer.api.views import (
     DetailView,
     ListView,
+    MsgspecAPIView,
     fetch_one,
     make_expandable,
     make_expansion,
@@ -24,6 +31,7 @@ from openbeheer.types import (
     OBPagedQueryParams,
     VersionSummary,
     ZGWError,
+    ZGWResponse,
 )
 from openbeheer.types._open_beheer import (
     VersionedResourceSummary,
@@ -44,12 +52,16 @@ from openbeheer.types.ztc import (
     ZaakTypeRequest,
 )
 from openbeheer.utils.decorators import handle_service_errors
-from openbeheer.zaaktype.constants import ZAAKTYPE_FIELDSETS
-from rest_framework import status
-from rest_framework.request import Request
-from rest_framework.response import Response
+from openbeheer.zaaktype.constants import (
+    ZAAKTYPE_FIELDSETS,
+    TEMPLATES,
+    OptionalZaakType,
+    Sjabloon,
+)
 
 if TYPE_CHECKING:
+    from uuid import UUID
+
     from ape_pie import APIClient
     from rest_framework.request import Request
 
@@ -291,3 +303,47 @@ class ZaakTypeDetailView(DetailView[ExpandableZaakType]):
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
+
+
+@extend_schema_view(
+    get=extend_schema(
+        operation_id="template_zaaktype_list",
+        tags=["Sjablonen"],
+        summary="Get ZaakTypeSjablonen",
+        responses={200: ZGWResponse[Sjabloon[OptionalZaakType]]},
+    )
+)
+class ZaakTypeTemplateListView(MsgspecAPIView):
+    def get(self, request: Request) -> Response:
+        results = list(TEMPLATES.values())
+        return Response(
+            data=ZGWResponse(
+                count=len(results),
+                next=None,
+                previous=None,
+                results=results,
+            )
+        )
+
+
+@extend_schema_view(
+    get=extend_schema(
+        tags=["Sjablonen"],
+        summary="Get ZaakTypeSjabloon",
+        responses={200: Sjabloon[OptionalZaakType]},
+    )
+)
+class ZaakTypeTemplateView(MsgspecAPIView):
+    def get(self, request: Request, uuid: UUID) -> Response:
+        try:
+            return Response(data=TEMPLATES[uuid])
+        except KeyError:
+            return Response(
+                data=ZGWError(
+                    title=_("Not Found"),
+                    detail=_("Unknown ZaakTypeTemplate {uuid}").format(uuid=str(uuid)),
+                    code="not_found",
+                    instance="",
+                    status=404,
+                )
+            )

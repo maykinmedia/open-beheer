@@ -14,6 +14,7 @@ from ._open_beheer import (
     VersionSummary,
     as_ob_fieldtype,
     as_ob_option,
+    make_fields_optional,
     options,
 )
 from ._zgw import ZGWError, ZGWResponse
@@ -34,5 +35,6 @@ __all__ = [
     "ZGWResponse",
     "as_ob_fieldtype",
     "as_ob_option",
+    "make_fields_optional",
     "options",
 ]
