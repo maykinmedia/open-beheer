@@ -10,6 +10,7 @@ from msgspec import UNSET, Meta, UnsetType
 from msgspec.json import decode
 from openbeheer.api.views import (
     DetailView,
+    DetailWithVersions,
     ListView,
     fetch_one,
     make_expandable,
@@ -201,10 +202,9 @@ def expand_deelzaaktype(
         },
     ),
 )
-class ZaakTypeDetailView(DetailView[ExpandableZaakType]):
+class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     data_type = ExpandableZaakType
     endpoint_path = "zaaktypen/{uuid}"
-    has_versions = True
 
     @staticmethod
     def _get_params_with_status(zaaktype: ZaakType):
