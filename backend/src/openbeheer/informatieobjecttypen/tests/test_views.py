@@ -24,7 +24,7 @@ class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
         )
         cls.user = UserFactory.create()
         cls.endpoint = reverse(
-            "api:informatieobjecttypenn:informatieobjecttypen-list",
+            "api:informatieobjecttypen:informatieobjecttypen-list",
             kwargs={"slug": "OZ"},
         )
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
@@ -171,7 +171,7 @@ class InformatieObjectTypeDetailViewTest(VCRMixin, APITestCase):
 
     def test_not_authenticated(self):
         endpoint = reverse(
-            "api:informatieobjecttypen:informatieobjecttype-detail",
+            "api:informatieobjecttypen:informatieobjecttypen-detail",
             kwargs={"slug": "OZ", "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487"},
         )
         response = self.client.get(endpoint)
