@@ -28,7 +28,7 @@ interface VersionSelectorProps {
  *  { uuid: "3", begin_geldigheid: "2024-02-01", einde_geldigheid: null, concept: true },
  *  { uuid: "4", begin_geldigheid: "2024-03-01", einde_geldigheid: null, concept: false },
  *  ]}
- *  onVersionChange={(versionId) => console.log("Selected version:", versionId)}
+ *  onVersionChange={(version) => console.log("Selected version:", version)}
  *  />
  * ```
  *  */
@@ -125,7 +125,7 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
       : null;
 
     if (version.concept) {
-      return `Concept versie ${version.uuid}`;
+      return `Concept`;
     }
 
     const isCurrent = beginDate <= today && (!endDate || endDate > today);
@@ -150,13 +150,14 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
       >
         {historicalVersions.length > 0 && (
           <Button
-            className="version-selector__toggle-button"
-            variant="secondary" // TODO: Use "accent" variant when available in Maykin UI
-            onClick={() => setIsExpanded((prev) => !prev)}
             aria-expanded={isExpanded}
             aria-label={
-              isExpanded ? "Toon minder versies" : "Toon meer versies"
+              isExpanded ? "Toon minder versies" : "Toon alle versies"
             }
+            className="version-selector__toggle-button"
+            size="xs"
+            variant="secondary"
+            onClick={() => setIsExpanded((prev) => !prev)}
           >
             {isExpanded ? (
               <>
@@ -166,7 +167,7 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
             ) : (
               <>
                 <Outline.PlusIcon aria-hidden="true" />
-                <span>Toon meer</span>
+                <span>Toon alle versies</span>
               </>
             )}
           </Button>
@@ -177,19 +178,20 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
           return (
             <Button
               key={version.uuid}
+              aria-pressed={selectedVersionUUID === version.uuid}
+              aria-label={`Selecteer ${versionLabel}`} // TODO: Need a label from backend?
               className={`version-selector__version-button ${
                 selectedVersionUUID === version.uuid
                   ? "version-selector__version-button--active"
                   : ""
               }`}
+              muted={selectedVersionUUID !== version.uuid}
               variant={
-                selectedVersionUUID === version.uuid ? "primary" : "secondary"
-              } // TODO: Use "accent" variant when available in Maykin UI
+                selectedVersionUUID === version.uuid ? "secondary" : undefined
+              }
+              size="xs"
               onClick={() => handleVersionChange(version)}
-              aria-pressed={selectedVersionUUID === version.uuid}
-              aria-label={`Selecteer ${versionLabel}`} // TODO: Need a label from backend?
             >
-              {/*  TODO: Need a label from backend? */}
               {versionLabel}
             </Button>
           );
