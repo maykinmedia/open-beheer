@@ -109,8 +109,11 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
         },
     ),
 )
-class ZaakTypeListView(ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary]):
+class ZaakTypeListView(
+    ListView[ZaaktypenGetParametersQuery, ZaakTypeSummary, ZaakType]
+):
     return_data_type = ZaakTypeSummary
+    data_type = ZaakType
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
 
