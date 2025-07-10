@@ -186,6 +186,14 @@ class DetailResponse[T](Struct):
     versions: list[VersionSummary] | UnsetType = msgspec.UNSET
 
 
+# Added otherwise API docs shows the versions as a non-required field
+# while it is not present for resources without versions.
+class DetailResponseWithoutVersions[T](Struct):
+    result: T
+    fieldsets: FrontendFieldsets
+    fields: list[OBField]
+
+
 class ExternalServiceError(Struct):
     code: str
     title: str
