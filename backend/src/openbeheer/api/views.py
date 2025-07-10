@@ -614,5 +614,21 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def put(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         return self.update(request, slug, uuid, is_partial=False)
 
+    @handle_service_errors
+    def delete(
+        self, request: Request, slug: str, uuid: UUID, *args, **kwargs
+    ) -> Response:
+        with ztc_client(slug) as client:
+            response = client.delete(self.endpoint_path.format(uuid=uuid))
+
+            if not response.ok:
+                error = decode(response.content, type=ZGWError)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
     @abstractmethod
     def get_fieldsets(self) -> FrontendFieldsets: ...

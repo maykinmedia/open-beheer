@@ -6,13 +6,14 @@ from rest_framework.request import Request
 
 from openbeheer.api.views import DetailView, DetailViewWithoutVersions, ListView
 from openbeheer.types import (
-    DetailResponse,
+    ExternalServiceError,
     FrontendFieldsets,
     OBField,
     OBOption,
     ZGWError,
 )
 from openbeheer.types._open_beheer import (
+    DetailResponseWithoutVersions,
     OBField,
     OBOption,
 )
@@ -46,7 +47,8 @@ from ..types import (
         request=InformatieObjectTypeRequest,
         responses={
             "201": InformatieObjectType,  # TODO: Will probably change
-            "400": ZGWError,
+            "502": ExternalServiceError,
+            "504": ExternalServiceError,
         },
     ),
 )
@@ -94,35 +96,44 @@ class InformatieObjectTypeListView(
         summary="Get an informatieobjecttype",
         description="Retrive an informatieobjecttype from Open Zaak.",
         responses={
-            "200": DetailResponse[InformatieObjectType],
+            "200": DetailResponseWithoutVersions[InformatieObjectType],
             "400": ZGWError,
         },
     ),
     patch=extend_schema(
-        tags=["Informatieobjecttype"],
+        tags=["Informatieobjecttypen"],
         summary="Patch an informatieobjecttype",
         description=(
             "Partially update a informatieobjecttype from Open Zaak. This will work only with "
-            "an Open Zaak API token with the `catalogi.geforceerd-schrijven` permission if the informatieobjecttype is"
+            "an Open Zaak API token with the `catalogi.geforceerd-schrijven` permission if the informatieobjecttype is "
             "not a concept. Otherwise will return a 400."
         ),
         request=PatchedInformatieObjectTypeRequest,
         responses={
-            "200": DetailResponse[InformatieObjectType],
+            "200": DetailResponseWithoutVersions[InformatieObjectType],
             "400": ZGWError,
         },
     ),
     put=extend_schema(
         tags=["Informatieobjecttypen"],
-        summary="Put a informatieobjecttype",
+        summary="Put an informatieobjecttype",
         description=(
-            "Fully update a informatieobjecttype from Open Zaak. This will work only with "
-            "an Open Zaak API token with the `catalogi.geforceerd-schrijven` permission if the informatieobjecttype is"
+            "Fully update an informatieobjecttype from Open Zaak. This will work only with "
+            "an Open Zaak API token with the `catalogi.geforceerd-schrijven` permission if the informatieobjecttype is "
             "not a concept. Otherwise will return a 400."
         ),
-        request=PatchedInformatieObjectTypeRequest,
+        request=InformatieObjectTypeRequest,
         responses={
-            "200": DetailResponse[InformatieObjectType],
+            "200": DetailResponseWithoutVersions[InformatieObjectType],
+            "400": ZGWError,
+        },
+    ),
+    delete=extend_schema(
+        tags=["Informatieobjecttypen"],
+        summary="Delete an informatieobjecttype",
+        description=("Remove permanently an informatieobjecttype from OZ."),
+        responses={
+            "204": None,
             "400": ZGWError,
         },
     ),
