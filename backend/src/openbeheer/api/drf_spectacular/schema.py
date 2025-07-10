@@ -1,7 +1,15 @@
 from __future__ import annotations
+from collections.abc import MutableMapping, Sequence
 
 from inspect import isclass
-from typing import TYPE_CHECKING, Any, Literal
+from itertools import chain
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Iterator,
+    Literal,
+    get_args,
+)
 
 from drf_spectacular.extensions import (
     OpenApiFilterExtension,
@@ -9,7 +17,7 @@ from drf_spectacular.extensions import (
 )
 from drf_spectacular.plumbing import ResolvedComponent
 from msgspec.json import schema_components
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import Serializer, Field
 from structlog import get_logger
 
 from openbeheer.types._drf_spectacular import QueryParamSchema
@@ -74,7 +82,7 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         try:
             return bool(schema_components((target,)))
         except Exception as e:
-            if not isinstance(target, Serializer):
+            if isclass(target) and not isinstance(target, (Serializer, Field)):
                 logger.debug("msgspec can't make schema", target=target, exc_info=e)
             return False
 
@@ -91,12 +99,24 @@ class MsgSpecExtension(OpenApiSerializerExtension):
             component_name = out["$ref"].replace("#/components/schemas/", "")
             component_schema = components.pop(component_name)
 
+        def iter_generics(t):
+            yield getattr(t, "__name__", str(t)), t
+            for arg in get_args(t):
+                yield from iter_generics(arg)
+
+        names, ts = zip(*iter_generics(self.target), strict=True)
+        last = len(ts) - 1
+        name_map = {
+            "_".join(names[i:]) + ("" if i == last else "_"): t
+            for i, t in enumerate(ts)
+        }
+
         # Extracting and registering sub components
         for sub_name, sub_schema in components.items():
             sub_component = ResolvedComponent(
                 name=sub_name,
                 type=ResolvedComponent.SCHEMA,
-                object=sub_name,
+                object=name_map.get(sub_name, sub_name),
                 schema=sub_schema,
             )
             # we register strings here, but extend_schema registers objects
@@ -161,32 +181,15 @@ class MsgSpecQueryParamsExtension(OpenApiFilterExtension):
         component_name = out["$ref"].replace("#/components/schemas/", "")
         component_schema = components.pop(component_name)
 
-        def inline_ref(prop_schema, components):
-            # $refs should not have siblings other than "summary" or "description"
-            # https://quobix.com/vacuum/rules/schemas/oas3-no-ref-siblings/
-            #
-            # inline the ref if it does
-            # TODO: This should be fixed upstream, I think
-            match prop_schema:
-                case {"$ref": ref, **siblings} if set(siblings) - {
-                    "summary",
-                    "description",
-                }:
-                    ref_name = ref.replace("#/components/schemas/", "")
-                    return components[ref_name] | siblings
-                case _:
-                    return prop_schema
-
         # Manually construct the schema for the query params
         results = [
-            QueryParamSchema.from_json_schema(
-                query_name, inline_ref(query_schema, components)
-            )
+            QueryParamSchema.from_json_schema(query_name, query_schema)
             for query_name, query_schema in component_schema["properties"].items()
         ]
 
         # Register any additional component needed for the schema of the query parameters
         for sub_name, sub_schema in components.items():
+            logger.debug("query_param sub_name", sub_name=sub_name)
             sub_component = ResolvedComponent(
                 name=sub_name,
                 type=ResolvedComponent.SCHEMA,
@@ -196,3 +199,90 @@ class MsgSpecQueryParamsExtension(OpenApiFilterExtension):
             auto_schema.registry.register_on_missing(sub_component)
 
         return results
+
+
+def _is_type(schema_type: Sequence, expected: str) -> bool:
+    """A JSONSchema "type" can be multiple, akin to typing.Union"""
+    return (
+        schema_type == expected
+        if isinstance(schema_type, str)
+        else expected in schema_type  # eg "type": ["string", "number"]
+    )
+
+
+def _sub_schemas(schema: MutableMapping) -> Iterator[MutableMapping]:  # noqa: C901
+    """
+    Walk the schema definitions recursively so that each schema can be processed.
+    """
+    # adapted from
+    # https://github.com/maykinmedia/django-common/blob/800f64d72e2cdd4ad062394e083e62c32ad66575/maykin_common/drf_spectacular/hooks.py
+
+    logger.debug("iterating sub_schemas", schema=schema)
+    match schema:
+        # array schema type variants
+        case {"type": Sequence() as types} if _is_type(types, "array"):
+            if item_schema := schema.get("items"):
+                logger.debug("yield array item", item_schema=item_schema)
+                yield item_schema
+                yield from _sub_schemas(item_schema)
+
+            if prefix_items := schema.get("prefixItems"):
+                for item_schema in prefix_items:
+                    logger.debug("yield array prefixItems", item_schema=item_schema)
+                    yield item_schema
+                    yield from _sub_schemas(item_schema)
+        # object schema type
+        case {"properties": props}:
+            yield from _sub_schemas(props)
+        # any other actual schema that has a 'type' key. At this point, it cannot
+        # be a container, as these have been handled before.
+        case {"type": Sequence()} | {"$ref": str()}:
+            logger.debug("yield schema/ref", schema=schema)
+            yield schema
+        case {"oneOf": nested} | {"allOf": nested} | {"anyOf": nested}:
+            for child in nested:
+                yield from _sub_schemas(child)
+        case MutableMapping():
+            for nested in schema.values():
+                if isinstance(nested, MutableMapping):
+                    yield from _sub_schemas(nested)
+        case _:
+            logger.debug("not yielding", schema=schema)
+
+
+def _inline_ref_with_siblings[Schema: MutableMapping](
+    prop_schema: Schema, components
+) -> Schema:
+    # $refs should not have siblings other than "summary" or "description"
+    # https://quobix.com/vacuum/rules/schemas/oas3-no-ref-siblings/
+    #
+    # inline the ref if it does
+    match prop_schema:
+        case {"$ref": ref, **siblings} if set(siblings) - {
+            "summary",
+            "description",
+        }:
+            ref_name = ref.replace("#/components/schemas/", "")
+            del prop_schema["$ref"]
+            prop_schema.update(components[ref_name] | siblings)
+
+    return prop_schema
+
+
+def post_process_hook(result: MutableMapping, *args, **kwargs):  # noqa: C901
+    parameter_objects = (
+        param["schema"]
+        for path in result["paths"].values()
+        for operation in path.values()
+        for param in operation.get("parameters", [])
+    )
+
+    schema_objects = result.get("components", {}).get("schemas", {})
+    if not schema_objects:
+        logger.debug("no OAS Schema Objects!")
+
+    for schema in chain(parameter_objects, _sub_schemas(schema_objects)):
+        _inline_ref_with_siblings(schema, schema_objects)
+        ...
+
+    return result
