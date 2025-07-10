@@ -6,7 +6,11 @@ from openbeheer.informatieobjecttypen.types import (
 )
 from openbeheer.types._open_beheer import ExternalServiceError, OBField, OBOption
 from openbeheer.types._zgw import ZGWError, ZGWResponse
-from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
+from openbeheer.types.ztc import (
+    InformatieObjectType,
+    InformatieObjectTypeRequest,
+    VertrouwelijkheidaanduidingEnum,
+)
 from ape_pie import APIClient
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -24,6 +28,16 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
             "400": ZGWError,
             "502": ExternalServiceError,
             "504": ExternalServiceError,
+        },
+    ),
+    post=extend_schema(
+        tags=["Informatieobjecttypen"],
+        summary="Create an informatieobjecttypen",
+        description="Create an informatieobjecttypen.",
+        request=InformatieObjectTypeRequest,
+        responses={
+            "201": InformatieObjectType,  # TODO: Will probably change
+            "400": ZGWError,
         },
     ),
 )
