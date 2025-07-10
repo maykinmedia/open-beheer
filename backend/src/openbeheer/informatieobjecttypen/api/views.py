@@ -16,7 +16,11 @@ from openbeheer.types._open_beheer import (
     OBOption,
 )
 from openbeheer.types._zgw import ZGWError
-from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
+from openbeheer.types.ztc import (
+    InformatieObjectType,
+    InformatieObjectTypeRequest,
+    VertrouwelijkheidaanduidingEnum,
+)
 
 
 @extend_schema_view(
@@ -31,6 +35,16 @@ from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
             "400": ZGWError,
             "502": ExternalServiceError,
             "504": ExternalServiceError,
+        },
+    ),
+    post=extend_schema(
+        tags=["Informatieobjecttypen"],
+        summary="Create an informatieobjecttypen",
+        description="Create an informatieobjecttypen.",
+        request=InformatieObjectTypeRequest,
+        responses={
+            "201": InformatieObjectType,  # TODO: Will probably change
+            "400": ZGWError,
         },
     ),
 )
