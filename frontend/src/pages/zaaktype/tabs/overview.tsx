@@ -1,5 +1,5 @@
 import { FieldSet } from "@maykin-ui/admin-ui";
-import { TabConfig, TargetType } from "~/pages";
+import { NestedTabConfig, TargetType } from "~/pages";
 
 export const FIELDSETS_OVERVIEW: FieldSet<TargetType>[] = [
   [
@@ -36,9 +36,14 @@ export const FIELDSETS_OVERVIEW: FieldSet<TargetType>[] = [
   ],
 ];
 
-export const TAB_CONFIG_OVERVIEW: TabConfig<TargetType> = {
-  allowedFields: ["naam", "omschrijving"],
+export const TABS_CONFIG_OVERVIEW: NestedTabConfig<TargetType> = {
   label: "Overzicht",
-  view: "AttributeGrid",
-  fieldsets: FIELDSETS_OVERVIEW,
+  tabs: [
+    {
+      allowedFields: ["naam", "omschrijving"],
+      label: "Overzicht",
+      view: "AttributeGrid",
+      fieldsets: FIELDSETS_OVERVIEW,
+    },
+  ],
 };

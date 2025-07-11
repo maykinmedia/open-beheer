@@ -3,13 +3,18 @@ import {
   Badge,
   Body,
   CardBaseTemplate,
+  Column,
   DataGrid,
+  Grid,
   H2,
+  P,
   Primitive,
+  Sidebar,
   Tab,
   Tabs,
+  Toolbar,
 } from "@maykin-ui/admin-ui";
-import { ucFirst } from "@maykin-ui/client-common";
+import { slugify, ucFirst } from "@maykin-ui/client-common";
 import { ReactNode, useCallback, useMemo, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
@@ -17,29 +22,30 @@ import { useBreadcrumbItems } from "~/hooks";
 import { getZaaktypeUUID, isPrimitive } from "~/lib";
 import {
   ExpandItemKeys,
-  TAB_CONFIG_OVERVIEW,
-  TabConfig,
+  LeafTabConfig,
+  NestedTabConfig,
+  TABS_CONFIG_ALGEMEEN,
+  TABS_CONFIG_DOCUMENTTYPEN,
+  TABS_CONFIG_EIGENSCHAPPEN,
+  TABS_CONFIG_OVERVIEW,
+  TABS_CONFIG_RELATIES,
+  TABS_CONFIG_ROLTYPEN,
+  TABS_CONFIG_STATUSTYPEN,
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
-import { TAB_CONFIG_ALGEMEEN } from "~/pages/zaaktype/tabs/algemeen.ts";
-import { TAB_CONFIG_DOCUMENTTYPEN } from "~/pages/zaaktype/tabs/documenttypen.ts";
-import { TAB_CONFIG_EIGENSCHAPPEN } from "~/pages/zaaktype/tabs/eigenschappen.ts";
-import { TAB_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.ts";
-import { TAB_CONFIG_RESULTAATTYPEN } from "~/pages/zaaktype/tabs/resultaattypen.ts";
-import { TAB_CONFIG_ROLTYPEN } from "~/pages/zaaktype/tabs/roltypen.ts";
-import { TAB_CONFIG_STATUSTYPEN } from "~/pages/zaaktype/tabs/statustypen.ts";
+import { TABS_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.tsx";
 import { components } from "~/types";
 
-const TAB_CONFIGS: TabConfig<TargetType>[] = [
-  TAB_CONFIG_OVERVIEW,
-  TAB_CONFIG_ALGEMEEN,
-  TAB_CONFIG_STATUSTYPEN,
-  TAB_CONFIG_OBJECTTYPEN,
-  TAB_CONFIG_DOCUMENTTYPEN,
-  TAB_CONFIG_ROLTYPEN,
-  TAB_CONFIG_RESULTAATTYPEN,
-  TAB_CONFIG_EIGENSCHAPPEN,
+export const TABS_CONFIG: NestedTabConfig<TargetType>[] = [
+  TABS_CONFIG_OVERVIEW,
+  TABS_CONFIG_ALGEMEEN,
+  TABS_CONFIG_STATUSTYPEN,
+  TABS_CONFIG_OBJECTTYPEN,
+  TABS_CONFIG_DOCUMENTTYPEN,
+  TABS_CONFIG_ROLTYPEN,
+  TABS_CONFIG_EIGENSCHAPPEN,
+  TABS_CONFIG_RELATIES,
 ];
 
 /**
@@ -49,8 +55,31 @@ export function ZaaktypePage() {
   const navigate = useNavigate();
   const breadcrumbItems = useBreadcrumbItems();
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [activeSubTabIndex, setActiveSubTabIndex] = useState(0);
+
+  const activeSubTabConfig = useMemo(() => {
+    return TABS_CONFIG[activeTabIndex].tabs[activeSubTabIndex];
+  }, [activeTabIndex, activeSubTabIndex]);
+  const doesActiveTabHaveMultipleSubTabs = useMemo(() => {
+    return TABS_CONFIG[activeTabIndex].tabs.length > 1;
+  }, [activeTabIndex]);
 
   const { fields, result, versions } = useLoaderData() as ZaaktypeLoaderData;
+
+  const handleTabChange = useCallback(
+    (index: number) => {
+      setActiveTabIndex(index);
+      setActiveSubTabIndex(0); // Reset sub-tab index when changing main tab
+    },
+    [setActiveTabIndex, setActiveSubTabIndex],
+  );
+
+  const handleSubTabChange = useCallback(
+    (index: number) => {
+      setActiveSubTabIndex(index);
+    },
+    [setActiveSubTabIndex],
+  );
 
   /**
    * Extracts an array of related objects from the expansion map.
@@ -100,7 +129,7 @@ export function ZaaktypePage() {
       overrides[fieldName] = (
         <RelatedObjectRenderer
           relatedObjects={relatedObjects}
-          config={TAB_CONFIGS[activeTabIndex]}
+          config={activeSubTabConfig}
         />
       );
     }
@@ -127,17 +156,60 @@ export function ZaaktypePage() {
   }, [result.identificatie]);
 
   const renderedTabs = useMemo(() => {
-    return TAB_CONFIGS.map((tabConfig) => ({
+    return TABS_CONFIG.map((tabConfig) => ({
       label: tabConfig.label,
       element: (
-        <ZaaktypeTab
-          tabConfig={tabConfig}
-          result={result}
-          expandedOverrides={expandedOverrides}
-        />
+        <>
+          {doesActiveTabHaveMultipleSubTabs ? (
+            <Grid>
+              <Column span={2}>
+                <Sidebar
+                  border={false}
+                  expandable={false}
+                  minWidth={false}
+                  sticky={false}
+                >
+                  <Toolbar
+                    align="start"
+                    direction="vertical"
+                    items={tabConfig.tabs.map((subTabConfig, index) => ({
+                      active: activeSubTabIndex === index,
+                      children: (
+                        <P size="xs">
+                          {subTabConfig.icon}
+                          {"\u00A0\u00A0"}
+                          {"\u00A0\u00A0"}
+                          {subTabConfig.label}
+                        </P>
+                      ),
+                      key: slugify(subTabConfig.label),
+                      onClick: () => {
+                        handleSubTabChange(index);
+                      },
+                    }))}
+                    variant="transparent"
+                  />
+                </Sidebar>
+              </Column>
+              <Column span={10}>
+                <ZaaktypeTab
+                  expandedOverrides={expandedOverrides}
+                  result={result}
+                  tabConfig={activeSubTabConfig}
+                />
+              </Column>
+            </Grid>
+          ) : (
+            <ZaaktypeTab
+              expandedOverrides={expandedOverrides}
+              result={result}
+              tabConfig={tabConfig.tabs[0]}
+            />
+          )}
+        </>
       ),
     }));
-  }, [result, expandedOverrides]);
+  }, [result, expandedOverrides, activeSubTabIndex]);
   return (
     <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
       <Body>
@@ -153,7 +225,7 @@ export function ZaaktypePage() {
             onVersionChange={handleVersionChange}
           />
         )}
-        <Tabs activeTabIndex={activeTabIndex} onTabChange={setActiveTabIndex}>
+        <Tabs activeTabIndex={activeTabIndex} onTabChange={handleTabChange}>
           {renderedTabs.map(({ label, element }) => (
             <Tab key={label} label={label}>
               {element}
@@ -166,7 +238,7 @@ export function ZaaktypePage() {
 }
 
 type ZaaktypeTabProps = {
-  tabConfig: TabConfig<TargetType>;
+  tabConfig: LeafTabConfig<TargetType>;
   result: TargetType;
   expandedOverrides: Partial<Record<keyof TargetType, ReactNode>>;
 };
@@ -190,7 +262,7 @@ const ZaaktypeTab = ({
 
 type RelatedObjectRendererProps = {
   relatedObjects: Record<ExpandItemKeys, Primitive | object>[];
-  config: TabConfig<TargetType>;
+  config: LeafTabConfig<TargetType>;
 };
 
 /**

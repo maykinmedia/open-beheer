@@ -1,4 +1,5 @@
 import { FieldSet } from "@maykin-ui/admin-ui";
+import { ReactNode } from "react";
 import { ZaaktypeLoaderData } from "~/pages";
 
 /**
@@ -17,38 +18,51 @@ export type TargetType = ZaaktypeLoaderData["result"];
 export type Expand = NonNullable<TargetType["_expand"]>;
 
 /**
- * `TabConfig<T>`:
- * A union type representing a configuration for a single tab inside a tabbed view.
+ * `LeafTabConfig<T>` is a discriminated union that describes a single tab in a tabbed interface.
  *
- * Tabs can either:
- * - Show attributes of a single object (`view: "attribute"`)
- * - Show related data in tabular form (`view: "data"`)
+ * Each tab can render one of the following views:
+ * - `"AttributeGrid"`: Displays fields from a single object, grouped into fieldsets.
+ * - `"DataGrid"`: Displays related objects from the `_expand` section of the main object.
  *
- * ### Shared fields:
- * - `label`: The visible label of the tab.
- * - `allowedFields`: The subset of fields allowed to be rendered in the tab. Can be:
- *   - Fields from the main object (`ZaaktypeLoaderData["result"]`)
+ * ## Common properties
+ * - `allowedFields`: List of field names allowed to be displayed in this tab.
+ * - `icon`: Optional icon to render alongside the label.
+ * - `label`: Label shown in the tab header.
  *
- * ### For `view: "attribute"`:
- * - `fieldsets`: Defines how the fields are grouped when rendered in an AttributeGrid.
+ * ## When `view: "AttributeGrid"`
+ * - `allowedFields`: For the properties containing a related _expand_ object, this specifies what property of those it takes as a replacement (by priority).
+ * - `fieldsets`: Defines how fields are grouped for rendering in the `AttributeGrid`.
  *
- * ### For `view: "data"`:
- * - `key`: The property of `_expand` whose list of related objects will be rendered in a DataGrid.
+ * ## When `view: "DataGrid"`
+ * - `allowedFields`: Specifies which fields from the related objects can be displayed in the grid.
+ * - `fieldsets`: Must be omitted.
+ * - `key`: Specifies which property of the `_expand` object to use as data source.
  */
-export type TabConfig<T extends object> =
+export type LeafTabConfig<T extends object> =
   | {
       view: "AttributeGrid";
-      label: string;
       allowedFields: ExpandItemKeys[];
       fieldsets: FieldSet<T>[];
+      icon?: ReactNode;
+      label: string;
     }
   | {
       view: "DataGrid";
-      label: string;
-      key: keyof TargetType["_expand"];
       allowedFields: ExpandItemKeys[];
       fieldsets?: never;
+      icon?: ReactNode;
+      key: keyof TargetType["_expand"];
+      label: string;
     };
+
+/**
+ * `NestedTabConfig<T>` defines the structure for a tabbed UI layout.
+ * Each tab is configured using a `LeafTabConfig`.
+ */
+export type NestedTabConfig<T extends object> = {
+  label: string;
+  tabs: LeafTabConfig<T>[];
+};
 
 /**
  * `ExpandItemKeys`:
