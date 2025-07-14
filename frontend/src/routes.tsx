@@ -11,6 +11,7 @@ import {
   zaaktypeLoader,
   zaaktypenLoader,
 } from "~/pages";
+import { zaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 
 /**
  * Available routes.
@@ -49,6 +50,7 @@ export const routes: RouteObject[] = [
                     id: "zaaktype",
                     path: ":zaaktypeUUID",
                     element: <ZaaktypePage />,
+                    action: zaaktypeAction,
                     loader: zaaktypeLoader,
                     shouldRevalidate: ({ currentUrl, nextUrl }) => {
                       const baseCurrent =
