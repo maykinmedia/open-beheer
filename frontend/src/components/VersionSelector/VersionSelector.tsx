@@ -71,7 +71,7 @@ export const VersionSelector: FC<VersionSelectorProps> = ({
   // The (last) concept version, we assume there should be max 1.
   const conceptVersion = useMemo(() => {
     const concepts = sortedVersions.filter((v) => v.concept);
-    return concepts[concepts.length - 1];
+    return concepts[0];
   }, [sortedVersions]);
 
   const handleVersionChange = (

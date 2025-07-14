@@ -2,6 +2,7 @@ import {
   AttributeGrid,
   Badge,
   Body,
+  Button,
   CardBaseTemplate,
   Column,
   DataGrid,
@@ -9,16 +10,18 @@ import {
   H2,
   Primitive,
   Sidebar,
+  Solid,
   Tab,
   Tabs,
   Toolbar,
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
 import { ReactNode, useCallback, useMemo } from "react";
-import { useLoaderData, useNavigate } from "react-router";
+import { useLoaderData, useParams } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
 import { useBreadcrumbItems } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
+import { useSubmitAction } from "~/hooks/useSubmitAction.ts";
 import { getZaaktypeUUID, isPrimitive } from "~/lib";
 import {
   AttributeGridSection,
@@ -36,7 +39,7 @@ import {
   ZaaktypeLoaderData,
 } from "~/pages";
 import { TABS_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.tsx";
-import { components } from "~/types";
+import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 
 export const TABS_CONFIG: TabConfig<TargetType>[] = [
   TABS_CONFIG_OVERVIEW,
@@ -53,14 +56,16 @@ export const TABS_CONFIG: TabConfig<TargetType>[] = [
  * Renders the detail view for a single zaaktype, with tabs for attributes and related data.
  */
 export function ZaaktypePage() {
-  const navigate = useNavigate();
+  const { fields, result, versions } = useLoaderData() as ZaaktypeLoaderData;
+
+  const { serviceSlug } = useParams();
+  const breadcrumbItems = useBreadcrumbItems();
   const [tabHash, setTabHash] = useHashParam("tab", "0");
   const [sectionHash, setSectionHash] = useHashParam("section", "0");
+  const submitAction = useSubmitAction<ZaaktypeAction>();
 
   const activeTabIndex = parseInt(tabHash);
   const activeSectionIndex = parseInt(sectionHash);
-
-  const breadcrumbItems = useBreadcrumbItems();
 
   const activeSectionConfig = useMemo(() => {
     return TABS_CONFIG[activeTabIndex].sections[activeSectionIndex];
@@ -69,8 +74,6 @@ export function ZaaktypePage() {
   const doesActiveTabHaveMultipleSubTabs = useMemo(() => {
     return TABS_CONFIG[activeTabIndex].sections.length > 1;
   }, [activeTabIndex]);
-
-  const { fields, result, versions } = useLoaderData() as ZaaktypeLoaderData;
 
   const handleTabChange = useCallback(
     (index: number) => {
@@ -145,18 +148,6 @@ export function ZaaktypePage() {
     // TODO: Optimize this by inspecting if the field is part of the active tab.
   }, [fields, result, activeTabIndex]);
 
-  /**
-   * Navigate to the selected version of this zaaktype.
-   *
-   * @param version - The version selected by the user
-   */
-  const handleVersionChange = useCallback(
-    (version: components["schemas"]["VersionSummary"]) => {
-      navigate(`../${version.uuid}`);
-    },
-    [],
-  );
-
   const displayTitle = useMemo(() => {
     const id = result.identificatie ?? "";
     return ucFirst(id);
@@ -220,8 +211,13 @@ export function ZaaktypePage() {
     }));
   }, [result, expandedOverrides, activeSectionIndex]);
   return (
-    <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
-      <Body>
+    <CardBaseTemplate
+      breadcrumbItems={breadcrumbItems}
+      cardProps={{
+        justify: "space-between",
+      }}
+    >
+      <Body fullHeight>
         <H2>
           {displayTitle}{" "}
           {result.omschrijving ? `(${result.omschrijving})` : null}
@@ -231,7 +227,12 @@ export function ZaaktypePage() {
           <VersionSelector
             selectedVersionUUID={getZaaktypeUUID(result)}
             versions={versions}
-            onVersionChange={handleVersionChange}
+            onVersionChange={({ uuid }) =>
+              submitAction({
+                type: "SELECT_VERSION",
+                payload: { uuid },
+              })
+            }
           />
         )}
         <Tabs activeTabIndex={activeTabIndex} onTabChange={handleTabChange}>
@@ -242,6 +243,23 @@ export function ZaaktypePage() {
           ))}
         </Tabs>
       </Body>
+
+      <Toolbar align="end" pad variant="alt" sticky={"bottom"}>
+        {serviceSlug && (
+          <Button
+            variant="primary"
+            onClick={() =>
+              submitAction({
+                type: "CREATE_VERSION",
+                payload: { serviceSlug: serviceSlug, zaaktype: result },
+              })
+            }
+          >
+            <Solid.PlusIcon />
+            Nieuwe versie
+          </Button>
+        )}
+      </Toolbar>
     </CardBaseTemplate>
   );
 }
