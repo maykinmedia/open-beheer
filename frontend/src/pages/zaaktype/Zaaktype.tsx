@@ -7,7 +7,6 @@ import {
   DataGrid,
   Grid,
   H2,
-  P,
   Primitive,
   Sidebar,
   Tab,
@@ -184,11 +183,10 @@ export function ZaaktypePage() {
                       (subTabConfig, index: number) => ({
                         active: activeSectionIndex === index,
                         children: (
-                          <P size="xs">
+                          <>
                             {subTabConfig.icon}
-                            &nbsp; &nbsp;
                             {subTabConfig.label}
-                          </P>
+                          </>
                         ),
                         key: slugify(subTabConfig.label),
                         onClick: () => {
