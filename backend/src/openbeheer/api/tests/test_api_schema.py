@@ -56,7 +56,7 @@ class SchemaEndpointTests(APITestCase):
         self.assertIn("OBFieldType", schemas)
         self.assertIn("OBOption", schemas)
         self.assertIn("OBOption_str_", schemas)
-        self.assertIn("list_OBOption", schemas)
+        self.assertIn("list_OBOption_", schemas)
 
         self.assertIn("/dummy", schema["paths"])
 
@@ -76,7 +76,7 @@ class SchemaEndpointTests(APITestCase):
         )
         self.assertEqual(
             responses["203"]["content"]["application/json"]["schema"]["$ref"],
-            "#/components/schemas/list_OBOption",
+            "#/components/schemas/list_OBOption_",
         )
 
     def test_query_params_extension(self):
