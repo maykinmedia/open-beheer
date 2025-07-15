@@ -1,10 +1,11 @@
-import { NestedTabConfig, TargetType } from "~/pages";
+import { TabConfig, TargetType } from "~/pages";
 
-export const TABS_CONFIG_RESULTAATTYPEN: NestedTabConfig<TargetType> = {
+export const TABS_CONFIG_RESULTAATTYPEN: TabConfig<TargetType> = {
   label: "Resultaattypen",
-  tabs: [
+  view: "DataGrid",
+  sections: [
     {
-      allowedFields: [
+      expandFields: [
         "resultaattypenOmschrijving",
         "resultaattypeomschrijving",
         "selectielijstklasse",
@@ -12,7 +13,6 @@ export const TABS_CONFIG_RESULTAATTYPEN: NestedTabConfig<TargetType> = {
       ], // TODO: Missing "uuid"
       label: "Resultaattypen",
       key: "resultaattypen",
-      view: "DataGrid",
     },
   ],
 };

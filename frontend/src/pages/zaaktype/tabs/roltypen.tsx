@@ -1,15 +1,15 @@
-import { NestedTabConfig, TargetType } from "~/pages";
+import { TabConfig, TargetType } from "~/pages";
 
-export const TABS_CONFIG_ROLTYPEN: NestedTabConfig<TargetType> = {
+export const TABS_CONFIG_ROLTYPEN: TabConfig<TargetType> = {
   label: "Roltypen",
-  tabs: [
+  view: "DataGrid",
+  sections: [
     {
-      allowedFields: [
+      expandFields: [
         // TODO: Missing "Roltypen", "Roltypen Omschrijving", "Roltypen UUID"
       ],
       label: "Roltypen",
       key: "roltypen",
-      view: "DataGrid",
     },
   ],
 };
