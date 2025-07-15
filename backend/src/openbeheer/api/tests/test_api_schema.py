@@ -85,7 +85,7 @@ class SchemaEndpointTests(APITestCase):
             some_string: str = field(name="some_field", default="bla")
 
         class DummyView(ListView):
-            data_type = TestQueryParam  # Echo endpoint :)
+            return_data_type = TestQueryParam  # Echo endpoint :)
             query_type = TestQueryParam
 
             @extend_schema(filters=True)
@@ -121,7 +121,7 @@ class SchemaEndpointTests(APITestCase):
             some_enum: SomeEnum = SomeEnum.a
 
         class DummyView(ListView):
-            data_type = TestQueryParam  # Echo endpoint :)
+            return_data_type = TestQueryParam  # Echo endpoint :)
             query_type = TestQueryParam
 
             @extend_schema(filters=True)

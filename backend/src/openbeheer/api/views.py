@@ -274,7 +274,7 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
 
         self.get = extend_schema(
             responses={
-                "200": OBList[self.data_type],
+                "200": OBList[self.return_data_type],
                 "400": ZGWError,
                 "502": ExternalServiceError,
                 "504": ExternalServiceError,

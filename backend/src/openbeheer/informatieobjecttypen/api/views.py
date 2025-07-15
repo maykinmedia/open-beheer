@@ -10,9 +10,7 @@ from openbeheer.informatieobjecttypen.types import (
     InformatieObjectTypeSummary,
 )
 from openbeheer.types._open_beheer import (
-    ExternalServiceError,
     OBField,
-    OBList,
     OBOption,
 )
 from openbeheer.types._zgw import ZGWError
@@ -30,12 +28,6 @@ from openbeheer.types.ztc import (
         parameters=[],
         filters=True,
         description="Retrive informatieobjecttypen from Open Zaak.",
-        responses={
-            "200": OBList[InformatieObjectTypeSummary],
-            "400": ZGWError,
-            "502": ExternalServiceError,
-            "504": ExternalServiceError,
-        },
     ),
     post=extend_schema(
         tags=["Informatieobjecttypen"],
