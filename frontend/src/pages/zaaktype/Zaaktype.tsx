@@ -15,10 +15,11 @@ import {
   Toolbar,
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
-import { ReactNode, useCallback, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
 import { useBreadcrumbItems } from "~/hooks";
+import { useHashParam } from "~/hooks/useHashParam.ts";
 import { getZaaktypeUUID, isPrimitive } from "~/lib";
 import {
   AttributeGridSection,
@@ -54,13 +55,18 @@ export const TABS_CONFIG: TabConfig<TargetType>[] = [
  */
 export function ZaaktypePage() {
   const navigate = useNavigate();
-  const breadcrumbItems = useBreadcrumbItems();
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [activeSubTabIndex, setActiveSubTabIndex] = useState(0);
+  const [tabHash, setTabHash] = useHashParam("tab", "0");
+  const [sectionHash, setSectionHash] = useHashParam("section", "0");
 
-  const activeSubTabConfig = useMemo(() => {
-    return TABS_CONFIG[activeTabIndex].sections[activeSubTabIndex];
-  }, [activeTabIndex, activeSubTabIndex]);
+  const activeTabIndex = parseInt(tabHash);
+  const activeSectionIndex = parseInt(sectionHash);
+
+  const breadcrumbItems = useBreadcrumbItems();
+
+  const activeSectionConfig = useMemo(() => {
+    return TABS_CONFIG[activeTabIndex].sections[activeSectionIndex];
+  }, [activeTabIndex, activeSectionIndex]);
+
   const doesActiveTabHaveMultipleSubTabs = useMemo(() => {
     return TABS_CONFIG[activeTabIndex].sections.length > 1;
   }, [activeTabIndex]);
@@ -69,17 +75,17 @@ export function ZaaktypePage() {
 
   const handleTabChange = useCallback(
     (index: number) => {
-      setActiveTabIndex(index);
-      setActiveSubTabIndex(0); // Reset sub-tab index when changing main tab
+      setTabHash(index.toString());
+      setSectionHash("0");
     },
-    [setActiveTabIndex, setActiveSubTabIndex],
+    [setTabHash, setSectionHash],
   );
 
-  const handleSubTabChange = useCallback(
+  const handleSectionChange = useCallback(
     (index: number) => {
-      setActiveSubTabIndex(index);
+      setSectionHash(index.toString());
     },
-    [setActiveSubTabIndex],
+    [setSectionHash],
   );
 
   /**
@@ -130,7 +136,7 @@ export function ZaaktypePage() {
       overrides[fieldName] = (
         <RelatedObjectRenderer
           relatedObjects={relatedObjects}
-          config={activeSubTabConfig}
+          config={activeSectionConfig}
           view={TABS_CONFIG[activeTabIndex].view}
         />
       );
@@ -176,18 +182,17 @@ export function ZaaktypePage() {
                     direction="vertical"
                     items={tabConfig.sections.map(
                       (subTabConfig, index: number) => ({
-                        active: activeSubTabIndex === index,
+                        active: activeSectionIndex === index,
                         children: (
                           <P size="xs">
                             {subTabConfig.icon}
-                            {"\u00A0\u00A0"}
-                            {"\u00A0\u00A0"}
+                            &nbsp; &nbsp;
                             {subTabConfig.label}
                           </P>
                         ),
                         key: slugify(subTabConfig.label),
                         onClick: () => {
-                          handleSubTabChange(index);
+                          handleSectionChange(index);
                         },
                       }),
                     )}
@@ -200,7 +205,7 @@ export function ZaaktypePage() {
                   view={tabConfig.view}
                   expandedOverrides={expandedOverrides}
                   result={result}
-                  tabConfig={activeSubTabConfig}
+                  tabConfig={activeSectionConfig}
                 />
               </Column>
             </Grid>
@@ -215,7 +220,7 @@ export function ZaaktypePage() {
         </>
       ),
     }));
-  }, [result, expandedOverrides, activeSubTabIndex]);
+  }, [result, expandedOverrides, activeSectionIndex]);
   return (
     <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
       <Body>

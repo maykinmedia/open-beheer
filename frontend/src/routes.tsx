@@ -50,6 +50,9 @@ export const routes: RouteObject[] = [
                     path: ":zaaktypeUUID",
                     element: <ZaaktypePage />,
                     loader: zaaktypeLoader,
+                    shouldRevalidate: ({ currentUrl, nextUrl }) => {
+                      return currentUrl.pathname !== nextUrl.pathname;
+                    },
                   },
                 ],
               },
