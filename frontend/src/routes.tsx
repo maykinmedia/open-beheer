@@ -51,7 +51,23 @@ export const routes: RouteObject[] = [
                     element: <ZaaktypePage />,
                     loader: zaaktypeLoader,
                     shouldRevalidate: ({ currentUrl, nextUrl }) => {
-                      return currentUrl.pathname !== nextUrl.pathname;
+                      const baseCurrent =
+                        currentUrl.origin +
+                        currentUrl.pathname +
+                        currentUrl.search;
+                      const baseNext =
+                        nextUrl.origin + nextUrl.pathname + nextUrl.search;
+
+                      // If base is the same but hash differs, do NOT revalidate
+                      if (
+                        baseCurrent === baseNext &&
+                        currentUrl.hash !== nextUrl.hash
+                      ) {
+                        return false;
+                      }
+
+                      // Otherwise, revalidate
+                      return true;
                     },
                   },
                 ],
