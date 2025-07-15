@@ -1,6 +1,6 @@
 from __future__ import annotations
-from collections.abc import MutableMapping, Sequence
 
+from collections.abc import MutableMapping, Sequence
 from inspect import isclass
 from itertools import chain
 from typing import (
@@ -17,7 +17,7 @@ from drf_spectacular.extensions import (
 )
 from drf_spectacular.plumbing import ResolvedComponent
 from msgspec.json import schema_components
-from rest_framework.serializers import Serializer, Field
+from rest_framework.serializers import Field, Serializer
 from structlog import get_logger
 
 from openbeheer.types._drf_spectacular import QueryParamSchema
@@ -86,6 +86,27 @@ class MsgSpecExtension(OpenApiSerializerExtension):
                 logger.debug("msgspec can't make schema", target=target, exc_info=e)
             return False
 
+    def __init__(self, target):
+        super().__init__(target)
+
+        def iter_generics(t):
+            yield getattr(t, "__name__", str(t)), t
+            for arg in get_args(t):
+                yield from iter_generics(arg)
+
+        names, ts = zip(*iter_generics(self.target), strict=True)
+        last = len(ts) - 1
+
+        self.__identity_map: dict[str, Any] = {}
+        self.__name_map: dict[Any, str] = {}
+
+        for i, t in enumerate(ts):
+            name = "_".join(names[i:]) + ("" if i == last else "_")
+            # currently mimics the msgspec.schema_components naming scheme
+            self.__name_map[t] = name
+            # the reverse map so the serializer can map (sub) names back to the type
+            self.__identity_map[name] = t
+
     def map_serializer(
         self, auto_schema: AutoSchema, direction: Direction
     ) -> dict[str, Any]:
@@ -99,24 +120,12 @@ class MsgSpecExtension(OpenApiSerializerExtension):
             component_name = out["$ref"].replace("#/components/schemas/", "")
             component_schema = components.pop(component_name)
 
-        def iter_generics(t):
-            yield getattr(t, "__name__", str(t)), t
-            for arg in get_args(t):
-                yield from iter_generics(arg)
-
-        names, ts = zip(*iter_generics(self.target), strict=True)
-        last = len(ts) - 1
-        name_map = {
-            "_".join(names[i:]) + ("" if i == last else "_"): t
-            for i, t in enumerate(ts)
-        }
-
         # Extracting and registering sub components
         for sub_name, sub_schema in components.items():
             sub_component = ResolvedComponent(
                 name=sub_name,
                 type=ResolvedComponent.SCHEMA,
-                object=name_map.get(sub_name, sub_name),
+                object=self.__identity_map.get(sub_name, sub_name),
                 schema=sub_schema,
             )
             # we register strings here, but extend_schema registers objects
@@ -143,21 +152,7 @@ class MsgSpecExtension(OpenApiSerializerExtension):
         auto_schema: AutoSchema,
         direction: Literal["request"] | Literal["response"],
     ) -> str | None:
-        """Get a name for a component
-
-        Msgspec builds the names for the classes, we can extract it from the schema. The name
-        is used by other components with internal references, so it is important that it is predictable.
-
-        However, if we are building the name for a type like ``list[SomeStruct]``, ``out`` will not have a ``$ref``
-        key, but it will be in the shape ``{"type": "array", "items": {"$ref": "ref/to/SomeStruct"}}``.
-        So in this case we need to create the name ourselves.
-        """
-
-        (out,), components = schema_components((self.target,), ref_template="{name}")
-        if out.get("type") == "array" and "$ref" in out.get("items", {}):
-            return f"list_{out['items']['$ref']}"
-
-        return out.get("$ref")
+        return self.__name_map.get(self.target)
 
 
 class MsgSpecFilterBackend:
@@ -233,6 +228,7 @@ def _sub_schemas(schema: MutableMapping) -> Iterator[MutableMapping]:  # noqa: C
                     yield from _sub_schemas(item_schema)
         # object schema type
         case {"properties": props}:
+            yield schema
             yield from _sub_schemas(props)
         # any other actual schema that has a 'type' key. At this point, it cannot
         # be a container, as these have been handled before.
@@ -269,6 +265,17 @@ def _inline_ref_with_siblings[Schema: MutableMapping](
     return prop_schema
 
 
+def _cleanup_ref_title[Schema: MutableMapping](
+    prop_schema: Schema, components
+) -> Schema:
+    # cleanup the python import path from schema titles
+    match prop_schema:
+        case {"title": title} if "openbeheer." in title:
+            new = "[".join(t.split(".")[-1] for t in title.split("["))
+            prop_schema["title"] = new
+    return prop_schema
+
+
 def post_process_hook(result: MutableMapping, *args, **kwargs):  # noqa: C901
     parameter_objects = (
         param["schema"]
@@ -282,7 +289,7 @@ def post_process_hook(result: MutableMapping, *args, **kwargs):  # noqa: C901
         logger.debug("no OAS Schema Objects!")
 
     for schema in chain(parameter_objects, _sub_schemas(schema_objects)):
+        _cleanup_ref_title(schema, schema_objects)
         _inline_ref_with_siblings(schema, schema_objects)
-        ...
 
     return result
