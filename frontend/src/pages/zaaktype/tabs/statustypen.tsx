@@ -1,13 +1,13 @@
-import { NestedTabConfig, TargetType } from "~/pages";
+import { TabConfig, TargetType } from "~/pages";
 
-export const TABS_CONFIG_STATUSTYPEN: NestedTabConfig<TargetType> = {
+export const TABS_CONFIG_STATUSTYPEN: TabConfig<TargetType> = {
   label: "Statustypen",
-  tabs: [
+  view: "DataGrid",
+  sections: [
     {
-      allowedFields: ["volgnummer", "statustype", "url"], // TODO: Should be uuid instead of URL
+      expandFields: ["volgnummer", "statustype", "url"], // TODO: Should be uuid instead of URL
       label: "Statustypen",
       key: "statustypen",
-      view: "DataGrid",
     },
   ],
 };

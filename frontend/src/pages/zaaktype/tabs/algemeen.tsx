@@ -1,5 +1,5 @@
 import { FieldSet, Outline } from "@maykin-ui/admin-ui";
-import { NestedTabConfig, TargetType } from "~/pages";
+import { TabConfig, TargetType } from "~/pages";
 
 export const FIELDSETS_ALGEMENE_INFORMATIE: FieldSet<TargetType>[] = [
   [
@@ -142,35 +142,32 @@ export const FIELDSETS_PUBLICATIE: FieldSet<TargetType>[] = [
   ],
 ];
 
-export const TABS_CONFIG_ALGEMEEN: NestedTabConfig<TargetType> = {
+export const TABS_CONFIG_ALGEMEEN: TabConfig<TargetType> = {
   label: "Algemeen",
-  tabs: [
+  view: "AttributeGrid",
+  sections: [
     {
-      view: "AttributeGrid",
       label: "Algemeen",
       icon: <Outline.DocumentIcon />,
-      allowedFields: ["naam", "omschrijving"],
+      expandFields: ["naam", "omschrijving"],
       fieldsets: FIELDSETS_ALGEMENE_INFORMATIE,
     },
     {
-      view: "AttributeGrid",
       label: "Behandeling en proces",
       icon: <Outline.ArrowPathIcon />,
-      allowedFields: ["naam", "omschrijving"],
+      expandFields: ["naam", "omschrijving"],
       fieldsets: FIELDSETS_BEHANDELING_EN_PROCES,
     },
     {
-      view: "AttributeGrid",
       label: "Bronnen en relaties",
       icon: <Outline.LinkIcon />,
-      allowedFields: ["naam", "omschrijving"],
+      expandFields: ["naam", "omschrijving"],
       fieldsets: FIELDSETS_BRONNEN_EN_RELATIES,
     },
     {
-      view: "AttributeGrid",
       label: "Publicatie",
       icon: <Outline.ArchiveBoxIcon />,
-      allowedFields: ["naam", "omschrijving"],
+      expandFields: ["naam", "omschrijving"],
       fieldsets: FIELDSETS_PUBLICATIE,
     },
   ],

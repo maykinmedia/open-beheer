@@ -21,9 +21,9 @@ import { VersionSelector } from "~/components/VersionSelector";
 import { useBreadcrumbItems } from "~/hooks";
 import { getZaaktypeUUID, isPrimitive } from "~/lib";
 import {
+  AttributeGridSection,
+  DataGridSection,
   ExpandItemKeys,
-  LeafTabConfig,
-  NestedTabConfig,
   TABS_CONFIG_ALGEMEEN,
   TABS_CONFIG_DOCUMENTTYPEN,
   TABS_CONFIG_EIGENSCHAPPEN,
@@ -31,13 +31,14 @@ import {
   TABS_CONFIG_RELATIES,
   TABS_CONFIG_ROLTYPEN,
   TABS_CONFIG_STATUSTYPEN,
+  TabConfig,
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
 import { TABS_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.tsx";
 import { components } from "~/types";
 
-export const TABS_CONFIG: NestedTabConfig<TargetType>[] = [
+export const TABS_CONFIG: TabConfig<TargetType>[] = [
   TABS_CONFIG_OVERVIEW,
   TABS_CONFIG_ALGEMEEN,
   TABS_CONFIG_STATUSTYPEN,
@@ -58,10 +59,10 @@ export function ZaaktypePage() {
   const [activeSubTabIndex, setActiveSubTabIndex] = useState(0);
 
   const activeSubTabConfig = useMemo(() => {
-    return TABS_CONFIG[activeTabIndex].tabs[activeSubTabIndex];
+    return TABS_CONFIG[activeTabIndex].sections[activeSubTabIndex];
   }, [activeTabIndex, activeSubTabIndex]);
   const doesActiveTabHaveMultipleSubTabs = useMemo(() => {
-    return TABS_CONFIG[activeTabIndex].tabs.length > 1;
+    return TABS_CONFIG[activeTabIndex].sections.length > 1;
   }, [activeTabIndex]);
 
   const { fields, result, versions } = useLoaderData() as ZaaktypeLoaderData;
@@ -130,6 +131,7 @@ export function ZaaktypePage() {
         <RelatedObjectRenderer
           relatedObjects={relatedObjects}
           config={activeSubTabConfig}
+          view={TABS_CONFIG[activeTabIndex].view}
         />
       );
     }
@@ -172,27 +174,30 @@ export function ZaaktypePage() {
                   <Toolbar
                     align="start"
                     direction="vertical"
-                    items={tabConfig.tabs.map((subTabConfig, index) => ({
-                      active: activeSubTabIndex === index,
-                      children: (
-                        <P size="xs">
-                          {subTabConfig.icon}
-                          {"\u00A0\u00A0"}
-                          {"\u00A0\u00A0"}
-                          {subTabConfig.label}
-                        </P>
-                      ),
-                      key: slugify(subTabConfig.label),
-                      onClick: () => {
-                        handleSubTabChange(index);
-                      },
-                    }))}
+                    items={tabConfig.sections.map(
+                      (subTabConfig, index: number) => ({
+                        active: activeSubTabIndex === index,
+                        children: (
+                          <P size="xs">
+                            {subTabConfig.icon}
+                            {"\u00A0\u00A0"}
+                            {"\u00A0\u00A0"}
+                            {subTabConfig.label}
+                          </P>
+                        ),
+                        key: slugify(subTabConfig.label),
+                        onClick: () => {
+                          handleSubTabChange(index);
+                        },
+                      }),
+                    )}
                     variant="transparent"
                   />
                 </Sidebar>
               </Column>
               <Column span={10}>
                 <ZaaktypeTab
+                  view={tabConfig.view}
                   expandedOverrides={expandedOverrides}
                   result={result}
                   tabConfig={activeSubTabConfig}
@@ -201,9 +206,10 @@ export function ZaaktypePage() {
             </Grid>
           ) : (
             <ZaaktypeTab
+              view={tabConfig.view}
               expandedOverrides={expandedOverrides}
               result={result}
-              tabConfig={tabConfig.tabs[0]}
+              tabConfig={tabConfig.sections[0]}
             />
           )}
         </>
@@ -237,18 +243,28 @@ export function ZaaktypePage() {
   );
 }
 
+function isAttributeGridSection(
+  view: string,
+  // @ts-expect-error - TypeScript unhappy with unused, but necessary for type guard
+  tabConfig: AttributeGridSection<TargetType> | DataGridSection,
+): tabConfig is AttributeGridSection<TargetType> {
+  return view === "AttributeGrid";
+}
+
 type ZaaktypeTabProps = {
-  tabConfig: LeafTabConfig<TargetType>;
+  tabConfig: AttributeGridSection<TargetType> | DataGridSection;
+  view: "AttributeGrid" | "DataGrid";
   result: TargetType;
   expandedOverrides: Partial<Record<keyof TargetType, ReactNode>>;
 };
 /** Renders a single tab */
 const ZaaktypeTab = ({
   tabConfig,
+  view,
   result,
   expandedOverrides,
 }: ZaaktypeTabProps) => {
-  if (tabConfig.view === "AttributeGrid") {
+  if (isAttributeGridSection(view, tabConfig)) {
     return (
       <AttributeGrid
         object={{ ...result, ...expandedOverrides } as TargetType}
@@ -257,12 +273,13 @@ const ZaaktypeTab = ({
     );
   }
 
-  return expandedOverrides[tabConfig.key as keyof TargetType];
+  return expandedOverrides[tabConfig.key];
 };
 
 type RelatedObjectRendererProps = {
   relatedObjects: Record<ExpandItemKeys, Primitive | object>[];
-  config: LeafTabConfig<TargetType>;
+  view: "AttributeGrid" | "DataGrid";
+  config: AttributeGridSection<TargetType> | DataGridSection;
 };
 
 /**
@@ -270,17 +287,19 @@ type RelatedObjectRendererProps = {
  * depending on the tab configuration.
  *
  * @param relatedObjects - The array of objects to render
+ * @param view - The view type, either "DataGrid" or "AttributeGrid"
  * @param config - Tab configuration indicating view type and allowed fields
  */
 function RelatedObjectRenderer({
   relatedObjects,
+  view,
   config,
 }: RelatedObjectRendererProps) {
-  if (config.view === "DataGrid") {
+  if (!isAttributeGridSection(view, config)) {
     return (
       <DataGrid
         objectList={relatedObjects}
-        fields={config.allowedFields}
+        fields={config.expandFields}
         urlFields={[]}
       />
     );
@@ -294,7 +313,7 @@ function RelatedObjectRenderer({
             typeof relatedObject.url === "string" ? relatedObject.url : index
           }
           relatedObject={relatedObject}
-          allowedFields={config.allowedFields}
+          allowedFields={config.expandFields}
         />
       ))}
     </>
@@ -319,9 +338,11 @@ function RelatedObjectBadge({
   relatedObject,
   allowedFields,
 }: RelatedObjectBadgeProps) {
-  const key = Object.keys(relatedObject).find((k): k is ExpandItemKeys =>
-    allowedFields.includes(k as ExpandItemKeys),
-  );
+  const objectKeys = Object.keys(
+    relatedObject,
+  ) as (keyof typeof relatedObject)[];
+
+  const key = objectKeys.find((k) => allowedFields.includes(k));
   // Bail early, no renderable data.
   if (!key) {
     throw new InvalidRelatedObjectError({

@@ -1,15 +1,15 @@
-import { NestedTabConfig, TargetType } from "~/pages";
+import { TabConfig, TargetType } from "~/pages";
 
-export const TABS_CONFIG_DOCUMENTTYPEN: NestedTabConfig<TargetType> = {
+export const TABS_CONFIG_DOCUMENTTYPEN: TabConfig<TargetType> = {
   label: "Documenttypen",
-  tabs: [
+  view: "DataGrid",
+  sections: [
     {
-      allowedFields: [
+      expandFields: [
         // TODO: Missing design
       ],
       label: "Documenttypen",
       key: "zaakobjecttypen", // TODO: Missing "documenttypen" key
-      view: "DataGrid",
     },
   ],
 };
