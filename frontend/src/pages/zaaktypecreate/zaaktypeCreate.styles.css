@@ -1,0 +1,23 @@
+.zaaktypecreate__card {
+  display: flex;
+  flex: 1;
+}
+
+.zaaktypecreate__card-column-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.zaaktypecreate__card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.zaaktypecreate__link {
+  margin-top: auto;
+}
+
+.zaaktypecreate__link a {
+  text-decoration: none;
+}

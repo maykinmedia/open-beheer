@@ -2,12 +2,14 @@ import { Navigate, Outlet, RouteObject } from "react-router";
 import App, { CATALOGUS_PARAM, SERVICE_PARAM, SIDEBAR_INDEX } from "~/App.tsx";
 import {
   LoginPage,
+  ZaaktypeCreatePage,
   ZaaktypePage,
   ZaaktypenPage,
   loginAction,
   loginLoader,
   logoutLoader,
   serviceLoader,
+  zaaktypeCreateLoader,
   zaaktypeLoader,
   zaaktypenLoader,
 } from "~/pages";
@@ -46,6 +48,12 @@ export const routes: RouteObject[] = [
                 element: <ZaaktypenPage />,
                 loader: zaaktypenLoader,
                 children: [
+                  {
+                    id: "new-zaaktype",
+                    path: "new",
+                    element: <ZaaktypeCreatePage />,
+                    loader: zaaktypeCreateLoader,
+                  },
                   {
                     id: "zaaktype",
                     path: ":zaaktypeUUID",

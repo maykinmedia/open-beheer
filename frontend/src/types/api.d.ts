@@ -78,6 +78,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/service/{slug}/informatieobjecttypen/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get informatieobjecttypen
+         * @description Retrive informatieobjecttypen from Open Zaak.
+         */
+        get: operations["service_informatieobjecttypen_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/service/{slug}/zaaktypen/": {
         parameters: {
             query?: never;
@@ -87,7 +107,7 @@ export interface paths {
         };
         /**
          * Get zaaktypen
-         * @description Retrive zaaktypen from Open Zaak.
+         * @description Retrieve zaaktypen from Open Zaak.
          */
         get: operations["service_zaaktypen_retrieve"];
         put?: never;
@@ -102,7 +122,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{uuid}": {
+    "/api/v1/service/{slug}/zaaktypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -113,7 +133,7 @@ export interface paths {
          * Get a zaaktype
          * @description Retrive a zaaktype from Open Zaak.
          */
-        get: operations["service_zaaktypen_retrieve_2"];
+        get: operations["service_zaaktype_retrieve_one"];
         /**
          * Put a zaaktype
          * @description Fully update a zaaktype from Open Zaak. According to OZ specs, this should only work with draft zaaktypen. In practice, it modifies also the non-draft zaaktypen.
@@ -142,6 +162,40 @@ export interface paths {
          * @description Get the available Open Zaak catalogi instances. The value is the slug of the configured service, while the label is the name of the service.
          */
         get: operations["service_choices_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/template/zaaktype/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get ZaakTypeSjablonen */
+        get: operations["template_zaaktype_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/template/zaaktype/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get ZaakTypeSjabloon */
+        get: operations["template_zaaktype_retrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -179,7 +233,7 @@ export interface components {
          * @enum {unknown}
          */
         AardRelatieEnum: "bijdrage" | "onderwerp" | "vervolg";
-         /**
+        /**
          * AfleidingswijzeEnum
          * @enum {unknown}
          */
@@ -291,8 +345,9 @@ export interface components {
              *     * `termijn` - (Termijn) De termijn start een vast aantal jaren na de datum waarop de zaak is afgehandeld (`ZAAK.Einddatum` in het RGBZ).
              *     * `vervaldatum_besluit` - (Vervaldatum besluit) De termijn start op de dag na de datum waarop het besluit vervalt (`BESLUIT.Vervaldatum` in het RGBZ). ResultaatType.ZaakType heeft relevant BesluitType
              *     * `zaakobject` - (Zaakobject) De termijn start op de einddatum geldigheid van het zaakobject waarop de zaak betrekking heeft (bijvoorbeeld de overlijdendatum van een Persoon). M.b.v. de attribuutsoort `Objecttype` wordt vastgelegd om welke zaakobjecttype het gaat; m.b.v. de attribuutsoort `Datumkenmerk` wordt vastgelegd welke datum-attribuutsoort van het zaakobjecttype het betreft.
+             * @enum {unknown}
              */
-            afleidingswijze: components["schemas"]["AfleidingswijzeEnum"];
+            afleidingswijze: "afgehandeld" | "ander_datumkenmerk" | "eigenschap" | "gerelateerde_zaak" | "hoofdzaak" | "ingangsdatum_besluit" | "termijn" | "vervaldatum_besluit" | "zaakobject";
             /** @default null */
             datumkenmerk: string | null;
             /** @default null */
@@ -375,8 +430,20 @@ export interface components {
         };
         /** ExpandableZaakType */
         ExpandableZaakType: {
-            /** @default {} */
-            _expand: components["schemas"]["ZaakTypeExpansion"];
+            /**
+             * ZaakTypeExpansion
+             * @default {}
+             */
+            _expand: {
+                besluittypen?: components["schemas"]["BesluitType"][];
+                statustypen?: components["schemas"]["StatusType"][];
+                resultaattypen?: components["schemas"]["ResultaatType"][];
+                eigenschappen?: components["schemas"]["Eigenschap"][];
+                informatieobjecttypen?: components["schemas"]["InformatieObjectType"][];
+                roltypen?: components["schemas"]["RolType"][];
+                deelzaaktypen?: components["schemas"]["ZaakType"][];
+                zaakobjecttypen?: components["schemas"]["ZaakObjectType"][];
+            };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
             /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
@@ -568,6 +635,16 @@ export interface components {
             /** @default null */
             eindeObject: string | null;
         };
+        /** InformatieObjectTypeSummary */
+        InformatieObjectTypeSummary: {
+            actief?: boolean;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            concept?: boolean;
+            url: string;
+            omschrijving: string;
+            vertrouwelijkheidaanduiding: string;
+        };
         /** InvalidParam */
         InvalidParam: {
             /** @description Naam van het veld met ongeldige gegevens */
@@ -577,7 +654,7 @@ export interface components {
             /** @description Uitleg wat er precies fout is met de gegevens */
             reason: string;
         };
-        NoneType: null;
+        None: null;
         /**
          * OBField
          * @description Used by frontend to draw list views
@@ -589,7 +666,7 @@ export interface components {
             /** @default  */
             filterLookup: string;
             /** @default [] */
-            options: components["schemas"]["OBOption_T_"][];
+            options: components["schemas"]["OBOption"][];
         };
         /**
          * OBFieldType
@@ -598,10 +675,28 @@ export interface components {
          */
         OBFieldType: "boolean" | "date" | "number" | "string";
         /**
-         * OBOption[T]
+         * OBList[InformatieObjectTypeSummary]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_InformatieObjectTypeSummary_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["InformatieObjectTypeSummary"][];
+        };
+        /**
+         * OBList[ZaakTypeSummary]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_ZaakTypeSummary_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["ZaakTypeSummary"][];
+        };
+        /**
+         * OBOption
          * @description The label, value pair for when a `T` has to be presented in some selection
          */
-        OBOption_T_: {
+        OBOption: {
             label: string;
             value: unknown;
         };
@@ -612,6 +707,14 @@ export interface components {
         OBOption_str_: {
             label: string;
             value: string;
+        };
+        /** OBPagination */
+        OBPagination: {
+            count: number;
+            page: number;
+            pageSize: number;
+            next: string | null;
+            previous: string | null;
         };
         /**
          * ObjecttypeEnum
@@ -645,6 +748,118 @@ export interface components {
          * @enum {unknown}
          */
         OmschrijvingGeneriekEnum: "adviseur" | "behandelaar" | "belanghebbende" | "beslisser" | "initiator" | "klantcontacter" | "mede_initiator" | "zaakcoordinator";
+        /** OptionalZaakType */
+        OptionalZaakType: {
+            /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
+            omschrijving?: string;
+            /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `openbaar` - Openbaar
+             *     * `beperkt_openbaar` - Beperkt openbaar
+             *     * `intern` - Intern
+             *     * `zaakvertrouwelijk` - Zaakvertrouwelijk
+             *     * `vertrouwelijk` - Vertrouwelijk
+             *     * `confidentieel` - Confidentieel
+             *     * `geheim` - Geheim
+             *     * `zeer_geheim` - Zeer geheim */
+            vertrouwelijkheidaanduiding?: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
+            /** @description Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype. */
+            doel?: string;
+            /** @description Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE. */
+            aanleiding?: string;
+            /** @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `inkomend` - Inkomend
+             *     * `intern` - Intern
+             *     * `uitgaand` - Uitgaand */
+            indicatieInternOfExtern?: components["schemas"]["IndicatieInternOfExternEnum"];
+            /** @description Werkwoord dat hoort bij de handeling die de initiator verricht bij dit zaaktype. Meestal 'aanvragen', 'indienen' of 'melden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_initiator */
+            handelingInitiator?: string;
+            /** @description Het onderwerp van ZAAKen van dit ZAAKTYPE. In veel gevallen nauw gerelateerd aan de product- of dienstnaam uit de Producten- en Dienstencatalogus (PDC). Bijvoorbeeld: 'Evenementenvergunning', 'Geboorte', 'Klacht'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.onderwerp */
+            onderwerp?: string;
+            /** @description Werkwoord dat hoort bij de handeling die de behandelaar verricht bij het afdoen van ZAAKen van dit ZAAKTYPE. Meestal 'behandelen', 'uitvoeren', 'vaststellen' of 'onderhouden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_behandelaar */
+            handelingBehandelaar?: string;
+            /** @description De periode waarbinnen volgens wet- en regelgeving een ZAAK van het ZAAKTYPE afgerond dient te zijn, in kalenderdagen. */
+            doorlooptijd?: string;
+            /**
+             * Opschorting/aanhouding mogelijk
+             * @description Aanduiding die aangeeft of ZAAKen van dit mogelijk ZAAKTYPE kunnen worden opgeschort en/of aangehouden.
+             */
+            opschortingEnAanhoudingMogelijk?: boolean;
+            /** @description Aanduiding die aangeeft of de Doorlooptijd behandeling van ZAAKen van dit ZAAKTYPE kan worden verlengd. */
+            verlengingMogelijk?: boolean;
+            /** @description Aanduiding of (het starten van) een ZAAK dit ZAAKTYPE gepubliceerd moet worden. */
+            publicatieIndicatie?: boolean;
+            /** @description Het product of de dienst die door ZAAKen van dit ZAAKTYPE wordt voortgebracht. */
+            productenOfDiensten?: string[];
+            /** @description Het Referentieproces dat ten grondslag ligt aan dit ZAAKTYPE. */
+            referentieproces?: components["schemas"]["ReferentieProces"];
+            /** @description De (soort) organisatorische eenheid of (functie van) medewerker die verantwoordelijk is voor de uitvoering van zaken van het ZAAKTYPE. */
+            verantwoordelijke?: string;
+            /** @description De datum waarop het is ontstaan. */
+            beginGeldigheid?: string;
+            /** @description De datum waarop de (gewijzigde) kenmerken van het ZAAKTYPE geldig zijn geworden */
+            versiedatum?: string;
+            /** @description URL-referentie naar de CATALOGUS waartoe dit ZAAKTYPE behoort. */
+            catalogus?: string;
+            /**
+             * heeft relevante besluittypen
+             * @description URL-referenties naar de BESLUITTYPEN die mogelijk zijn binnen dit ZAAKTYPE.
+             */
+            besluittypen?: string[];
+            /** @description De ZAAKTYPEn van zaken die relevant zijn voor zaken van dit ZAAKTYPE. */
+            gerelateerdeZaaktypen?: components["schemas"]["ZaakTypenRelatie"][];
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            identificatie: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            servicenorm: string | null;
+            /** @default null */
+            verlengingstermijn: string | null;
+            /** @default null */
+            trefwoorden: string[] | null;
+            /** @default null */
+            publicatietekst: string | null;
+            /** @default null */
+            verantwoordingsrelatie: string[] | null;
+            /** @default null */
+            selectielijstProcestype: string | null;
+            /** @default null */
+            concept: boolean | null;
+            /** @default null */
+            broncatalogus: null | components["schemas"]["BronCatalogus"];
+            /** @default null */
+            bronzaaktype: null | components["schemas"]["BronZaaktype"];
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+            /** @default null */
+            statustypen: string[] | null;
+            /** @default null */
+            resultaattypen: string[] | null;
+            /** @default null */
+            eigenschappen: string[] | null;
+            /** @default null */
+            informatieobjecttypen: string[] | null;
+            /** @default null */
+            roltypen: string[] | null;
+            /** @default null */
+            deelzaaktypen: (string | null)[] | null;
+            /** @default null */
+            zaakobjecttypen: string[] | null;
+        };
         /** PatchedZaakTypeRequest */
         PatchedPatchedZaakTypeRequest: {
             /** @default null */
@@ -821,6 +1036,22 @@ export interface components {
             eindeObject: string | null;
         };
         /**
+         * Sjabloon[OptionalZaakType]
+         * @description Een SJABLOON
+         */
+        Sjabloon_OptionalZaakType_: {
+            /** @description Korte titel van het sjabloon */
+            naam: string;
+            /** @description Beknopte omschrijving van het sjabloon */
+            omschrijving: string;
+            /** @description Voorbeelden van toepassingen */
+            voorbeelden: string[];
+            /** @description De vooringevulde waarden */
+            waarden: components["schemas"]["OptionalZaakType"];
+            /** Format: uuid */
+            uuid?: string;
+        };
+        /**
          * Status
          * @enum {unknown}
          */
@@ -917,12 +1148,12 @@ export interface components {
             /** @default null */
             type: string | null;
         };
-        /** ZGWResponse[ZaakTypeSummary] */
-        ZGWResponse_ZaakTypeSummary_: {
+        /** ZGWResponse[Sjabloon[OptionalZaakType]] */
+        ZGWResponse_Sjabloon_OptionalZaakType_: {
             count: number;
             next: string | null;
             previous: string | null;
-            results: components["schemas"]["ZaakTypeSummary"][];
+            results: components["schemas"]["Sjabloon_OptionalZaakType_"][];
         };
         /** ZaakObjectType */
         ZaakObjectType: {
@@ -1073,6 +1304,7 @@ export interface components {
             eigenschappen?: components["schemas"]["Eigenschap"][];
             informatieobjecttypen?: components["schemas"]["InformatieObjectType"][];
             roltypen?: components["schemas"]["RolType"][];
+            deelzaaktypen?: components["schemas"]["ZaakType"][];
             zaakobjecttypen?: components["schemas"]["ZaakObjectType"][];
         };
         /** ZaakTypeRequest */
@@ -1169,12 +1401,13 @@ export interface components {
         };
         /** ZaakTypeSummary */
         ZaakTypeSummary: {
-            url: string;
-            identificatie: string;
-            omschrijving: string;
             actief?: boolean;
             /** @default null */
             eindeGeldigheid: string | null;
+            concept?: boolean;
+            url: string;
+            identificatie: string;
+            omschrijving: string;
             vertrouwelijkheidaanduiding: string;
             /** Format: date */
             versiedatum: string;
@@ -1209,7 +1442,7 @@ export interface components {
             /** @default null */
             toelichting: string | null;
         };
-        list_HealthCheckSerialisedResult: components["schemas"]["HealthCheckSerialisedResult"][];
+        list_HealthCheckSerialisedResult_: components["schemas"]["HealthCheckSerialisedResult"][];
         list_OBOption_str_: components["schemas"]["OBOption_str_"][];
     };
     responses: never;
@@ -1276,7 +1509,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["list_HealthCheckSerialisedResult"];
+                    "application/json": components["schemas"]["list_HealthCheckSerialisedResult_"];
                 };
             };
         };
@@ -1318,6 +1551,59 @@ export interface operations {
             };
         };
     };
+    service_informatieobjecttypen_retrieve: {
+        parameters: {
+            query?: {
+                catalogus?: string;
+                datumGeldigheid?: string;
+                identificatie?: string;
+                page?: number;
+                status?: "alles" | "concept" | "definitief";
+                trefwoorden?: string;
+                zaaktype?: string;
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OBList_InformatieObjectTypeSummary_"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
     service_zaaktypen_retrieve: {
         parameters: {
             query?: {
@@ -1325,7 +1611,7 @@ export interface operations {
                 datumGeldigheid?: string;
                 identificatie?: string;
                 page?: number;
-                status?: components["schemas"]["Status"];
+                status?: "alles" | "concept" | "definitief";
                 trefwoorden?: string;
             };
             header?: never;
@@ -1341,7 +1627,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZGWResponse_ZaakTypeSummary_"];
+                    "application/json": components["schemas"]["OBList_ZaakTypeSummary_"];
                 };
             };
             400: {
@@ -1405,7 +1691,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_retrieve_2: {
+    service_zaaktype_retrieve_one: {
         parameters: {
             query?: never;
             header?: never;
@@ -1522,6 +1808,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["list_OBOption_str_"];
+                };
+            };
+        };
+    };
+    template_zaaktype_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWResponse_Sjabloon_OptionalZaakType_"];
+                };
+            };
+        };
+    };
+    template_zaaktype_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                uuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Sjabloon_OptionalZaakType_"];
                 };
             };
         };

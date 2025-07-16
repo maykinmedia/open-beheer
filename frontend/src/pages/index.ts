@@ -3,4 +3,5 @@ export * from "./login";
 export * from "./logout";
 export * from "./service";
 export * from "./zaaktype";
+export * from "./zaaktypecreate";
 export * from "./zaaktypen";
