@@ -6,18 +6,13 @@ from rest_framework.request import Request
 
 from openbeheer.api.views import DetailView, DetailViewWithoutVersions, ListView
 from openbeheer.types import (
+    DetailResponseWithoutVersions,
     ExternalServiceError,
     FrontendFieldsets,
     OBField,
     OBOption,
     ZGWError,
 )
-from openbeheer.types._open_beheer import (
-    DetailResponseWithoutVersions,
-    OBField,
-    OBOption,
-)
-from openbeheer.types._zgw import ZGWError
 from openbeheer.types.ztc import (
     InformatieObjectType,
     InformatieObjectTypeRequest,
