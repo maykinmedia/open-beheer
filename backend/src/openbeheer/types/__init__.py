@@ -2,6 +2,7 @@
 
 from ._open_beheer import (
     DetailResponse,
+    DetailResponseWithoutVersions,
     ExternalServiceError,
     FrontendFieldSet,
     FrontendFieldsets,
@@ -21,6 +22,7 @@ from ._zgw import ZGWError, ZGWResponse
 
 __all__ = [
     "DetailResponse",
+    "DetailResponseWithoutVersions",
     "ExternalServiceError",
     "FrontendFieldSet",
     "FrontendFieldsets",

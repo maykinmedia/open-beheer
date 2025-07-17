@@ -14,6 +14,7 @@ from typing import (
     Sequence,
     Type,
     get_type_hints,
+    runtime_checkable,
 )
 
 import structlog
@@ -457,6 +458,22 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
         )
 
 
+@runtime_checkable
+class DetailWithVersions[T: Struct](Protocol):
+    has_versions: bool = True
+
+    def get_item_versions(
+        self, slug: str, data: T
+    ) -> tuple[list[T] | ZGWError, int]: ...
+
+    def format_version(self, data: T) -> VersionSummary: ...
+
+
+@runtime_checkable
+class DetailViewWithoutVersions(Protocol):
+    has_versions: bool = False
+
+
 class DetailView[T: Struct](MsgspecAPIView, ABC):
     data_type: type[T]
     has_versions: bool
@@ -529,15 +546,16 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
         versions = []
         if self.has_versions:
+            assert isinstance(self, DetailWithVersions)
             versions, status_code = self.get_item_versions(slug, data)
 
             if isinstance(versions, ZGWError):
                 return Response(versions, status=status_code)
 
+            versions = [self.format_version(version) for version in versions]
+
         response_data = DetailResponse(
-            versions=[self.format_version(version) for version in versions]
-            if self.has_versions
-            else UNSET,
+            versions=(versions if self.has_versions else UNSET),
             result=data,
             fieldsets=self.get_fieldsets(),
             fields=self.get_fields(),
@@ -570,15 +588,16 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
         versions = []
         if self.has_versions:
+            assert isinstance(self, DetailWithVersions)
             versions, status_code = self.get_item_versions(slug, data)
 
             if isinstance(versions, ZGWError):
                 return Response(versions, status=status_code)
 
+            versions = [self.format_version(version) for version in versions]
+
         response_data = DetailResponse(
-            versions=[self.format_version(version) for version in versions]
-            if self.has_versions
-            else UNSET,
+            versions=versions if self.has_versions else UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
             fields=self.get_fields(),
@@ -596,13 +615,21 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def put(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         return self.update(request, slug, uuid, is_partial=False)
 
-    @abstractmethod
-    def get_item_versions(
-        self, slug: str, data: T
-    ) -> tuple[list[T] | ZGWError, int]: ...
+    @handle_service_errors
+    def delete(
+        self, request: Request, slug: str, uuid: UUID, *args, **kwargs
+    ) -> Response:
+        with ztc_client(slug) as client:
+            response = client.delete(self.endpoint_path.format(uuid=uuid))
 
-    @abstractmethod
-    def format_version(self, data: T) -> VersionSummary: ...
+            if not response.ok:
+                error = decode(response.content, type=ZGWError)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @abstractmethod
     def get_fieldsets(self) -> FrontendFieldsets: ...
