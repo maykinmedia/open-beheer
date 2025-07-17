@@ -1,3 +1,5 @@
+from django.test import tag
+
 from furl import furl
 from maykin_common.vcr import VCRMixin
 from rest_framework import status
@@ -8,7 +10,6 @@ from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
-from django.test import tag
 
 
 class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
