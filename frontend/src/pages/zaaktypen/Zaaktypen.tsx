@@ -1,3 +1,4 @@
+import { ButtonLink, Outline } from "@maykin-ui/admin-ui";
 import { useCallback, useState } from "react";
 import { useLoaderData, useLocation } from "react-router";
 import {
@@ -52,6 +53,9 @@ export function ZaaktypenPage() {
           trefwoorden={filterState.trefwoorden}
           onSubmit={handleSubmit}
         />,
+        <ButtonLink href="zaaktypen/new" key="new-zaaktype" variant="primary">
+          <Outline.PlusIcon /> Nieuw zaaktype
+        </ButtonLink>,
       ]}
     />
   );

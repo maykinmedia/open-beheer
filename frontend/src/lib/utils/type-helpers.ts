@@ -11,3 +11,14 @@ import { Primitive } from "@maykin-ui/admin-ui";
 export function isPrimitive(value: Primitive | object): value is Primitive {
   return Object(value) !== value;
 }
+
+/**
+ * Recursively makes all properties of a type optional, including nested objects and arrays.
+ */
+export type PartialDeep<T> = {
+  [P in keyof T]?: T[P] extends Array<infer U>
+    ? Array<PartialDeep<U>>
+    : T[P] extends object
+      ? PartialDeep<T[P]>
+      : T[P];
+};

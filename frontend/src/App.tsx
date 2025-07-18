@@ -5,6 +5,7 @@ import {
   H2,
   Hr,
   Logo,
+  ModalService,
   Outline,
   Select,
 } from "@maykin-ui/admin-ui";
@@ -167,11 +168,13 @@ function App() {
       sidebarItems={sidebarItems}
       grid={!hideUi}
     >
-      <ConfigContext.Provider
-        value={{ templatesContentOnly: true, templatesGrid: false }}
-      >
-        <Outlet />
-      </ConfigContext.Provider>
+      <ModalService>
+        <ConfigContext.Provider
+          value={{ templatesContentOnly: true, templatesGrid: false }}
+        >
+          <Outlet />
+        </ConfigContext.Provider>
+      </ModalService>
     </BaseTemplate>
   );
 }
