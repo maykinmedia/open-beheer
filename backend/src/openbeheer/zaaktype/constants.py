@@ -228,6 +228,93 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                 gerelateerde_zaaktypen=[],
             ),
         ),
+        Sjabloon(
+            naam="Bla",
+            omschrijving="Voor Interne gemeentelijke of organisatorische werkstromen.",
+            voorbeelden=[
+                "inkoopaanvraag",
+                "medewerker onboarding",
+                "contractverlenging",
+            ],
+            waarden=OptionalZaakType(
+                omschrijving="engage best-of-breed synergies",
+                vertrouwelijkheidaanduiding="openbaar",
+                doel=(
+                    "Table hope production think fast here law soon. "
+                    "Energy our admit month either check very. "
+                    "Investment nothing property social rich low role number."
+                ),
+                aanleiding=(
+                    "Instead imagine federal cause wall sometimes. "
+                    "Game modern control bit shake. Can red full decade finish final rest."
+                ),
+                indicatie_intern_of_extern="extern",
+                handeling_initiator="melden",
+                onderwerp="Klacht",
+                handeling_behandelaar="onderhouden",
+                doorlooptijd="P30D",
+                opschorting_en_aanhouding_mogelijk=False,
+                verlenging_mogelijk=False,
+                publicatie_indicatie=True,
+                producten_of_diensten=[
+                    "https://example.com/product/123",
+                ],
+                referentieproces=ReferentieProces(
+                    naam="ReferentieProces 999",
+                    link=""
+                ),
+                verantwoordelijke="100000999",
+                begin_geldigheid="2018-01-01",
+                versiedatum="2018-01-01",
+                catalogus=(
+                    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/"
+                    "catalogussen/85028f4f-3d70-4ce9-8dbe-16a6b8613a54"
+                ),
+                besluittypen=[],
+                gerelateerde_zaaktypen=[],
+                bronzaaktype={
+                    "identificatie": "bla",
+                    "omschrijving": "bla",
+                    "naam": "bla",
+                    "link": (
+                        "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/"
+                        "zaaktypen/58d0d3bb-efb6-4dfe-b654-8f465d51d310"
+                    ),
+                },
+                identificatie="Zaaktype-999",
+                omschrijving_generiek="",
+                toelichting="",
+                servicenorm=None,
+                verlengingstermijn=None,
+                trefwoorden=[],
+                publicatietekst="",
+                verantwoordingsrelatie=[],
+                selectielijst_procestype=(
+                    "https://selectielijst.openzaak.nl/api/v1/procestypen/"
+                    "aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
+                ),
+                concept=True,
+                broncatalogus={
+                    "rsin": 123456782,
+                    "domein": "FDFD",
+                    "naam": "bla",
+                    "link": (
+                        "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/"
+                        "catalogussen/85028f4f-3d70-4ce9-8dbe-16a6b8613a54"
+                    ),
+                },
+                einde_geldigheid=None,
+                begin_object="2018-01-01",
+                einde_object=None,
+                statustypen=[],
+                resultaattypen=[],
+                eigenschappen=[],
+                informatieobjecttypen=[],
+                roltypen=[],
+                deelzaaktypen=[],
+                zaakobjecttypen=[],
+            ),
+        )
     ]
     if template.uuid
 }

@@ -56,7 +56,7 @@ export async function createZaaktypeVersionAction(
       return v !== null && !invalidKeys.includes(k);
     }),
   );
-  console.log({ zaaktype, payload, bronCatalogus: zaaktype.bronCatalogus });
+
   await request(
     "POST",
     `/service/${payload.serviceSlug}/zaaktypen/`,
