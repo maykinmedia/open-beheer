@@ -9,6 +9,7 @@ import {
   loginLoader,
   logoutLoader,
   serviceLoader,
+  zaaktypeCreateAction,
   zaaktypeCreateLoader,
   zaaktypeLoader,
   zaaktypenLoader,
@@ -53,6 +54,7 @@ export const routes: RouteObject[] = [
                     path: "new",
                     element: <ZaaktypeCreatePage />,
                     loader: zaaktypeCreateLoader,
+                    action: zaaktypeCreateAction,
                   },
                   {
                     id: "zaaktype",
