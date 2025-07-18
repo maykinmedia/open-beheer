@@ -217,6 +217,7 @@ export const ZaaktypeCreateCard: React.FC<ZaaktypeCreateCardProps> = ({
       className="zaaktypecreate__card"
       onClick={() => setSelectedTemplate(result.uuid || null)}
       border={true}
+      asTitle={H2}
       title={result.naam}
       actions={[
         {
