@@ -259,10 +259,7 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                 producten_of_diensten=[
                     "https://example.com/product/123",
                 ],
-                referentieproces=ReferentieProces(
-                    naam="ReferentieProces 999",
-                    link=""
-                ),
+                referentieproces=ReferentieProces(naam="ReferentieProces 999", link=""),
                 verantwoordelijke="100000999",
                 begin_geldigheid="2018-01-01",
                 versiedatum="2018-01-01",
@@ -314,7 +311,7 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                 deelzaaktypen=[],
                 zaakobjecttypen=[],
             ),
-        )
+        ),
     ]
     if template.uuid
 }
