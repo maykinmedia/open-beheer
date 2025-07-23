@@ -141,9 +141,13 @@ export function ZaaktypeCreatePage() {
 
   return (
     <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
-      <Modal open={isFillingForm} onClose={() => setIsFillingForm(false)}>
-        <Body>
-          <H2>Er zijn nog enkele velden nodig om het zaaktype aan te maken</H2>
+      <Modal
+        size="s"
+        open={isFillingForm}
+        onClose={() => setIsFillingForm(false)}
+      >
+        <Body fullHeight>
+          <H2>Er zijn nog enkele velden nodig</H2>
           <Form
             key={`zaaktypecreate-form-${valuesState.uuid || ""}`}
             aria-label="Zaaktype aanmaken"
@@ -185,7 +189,7 @@ export function ZaaktypeCreatePage() {
           ))}
           <Column span={12}>
             <Button
-              variant="secondary"
+              variant="primary"
               disabled={!valuesState.uuid}
               onClick={() => setIsFillingForm(true)}
             >
