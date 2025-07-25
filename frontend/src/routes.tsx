@@ -50,8 +50,8 @@ export const routes: RouteObject[] = [
                 loader: zaaktypenLoader,
                 children: [
                   {
-                    id: "new-zaaktype",
-                    path: "new",
+                    id: "create-zaaktype",
+                    path: "create",
                     element: <ZaaktypeCreatePage />,
                     loader: zaaktypeCreateLoader,
                     action: zaaktypeCreateAction,

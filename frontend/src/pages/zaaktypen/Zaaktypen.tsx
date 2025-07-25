@@ -53,7 +53,11 @@ export function ZaaktypenPage() {
           trefwoorden={filterState.trefwoorden}
           onSubmit={handleSubmit}
         />,
-        <ButtonLink href="zaaktypen/new" key="new-zaaktype" variant="primary">
+        <ButtonLink
+          href="zaaktypen/create"
+          key="create-zaaktype"
+          variant="primary"
+        >
           <Outline.PlusIcon /> Nieuw zaaktype
         </ButtonLink>,
       ]}
