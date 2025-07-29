@@ -1,6 +1,7 @@
 import { FieldSet } from "@maykin-ui/admin-ui";
 import { ReactNode } from "react";
 import { ZaaktypeLoaderData } from "~/pages";
+import { Expand, ExpandItemKeys, Expanded } from "~/types";
 
 /**
  * `TargetType`:
@@ -8,14 +9,6 @@ import { ZaaktypeLoaderData } from "~/pages";
  * This is the base type used when referencing the data rendered inside a tab.
  */
 export type TargetType = ZaaktypeLoaderData["result"];
-
-/**
- * `Expand`:
- * Extracts the non-nullable `_expand` field from the `TargetType`.
- * `_expand` contains related resources (e.g., statustypen, resultaattypen)
- * which are rendered differently depending on the tab.
- */
-export type Expand = NonNullable<TargetType["_expand"]>;
 
 /**
  * The type a the primary tab.
@@ -29,45 +22,19 @@ export type TabConfig<T extends object> =
   | {
       label: string;
       view: "DataGrid";
-      sections: DataGridSection[];
+      sections: DataGridSection<Expanded<T>>[];
     };
 
-export type BaseTabSection = {
-  expandFields: ExpandItemKeys[];
+export type BaseTabSection<T extends object> = {
+  expandFields: ExpandItemKeys<T>[];
   icon?: ReactNode;
   label: string;
 };
 
-export type AttributeGridSection<T extends object> = BaseTabSection & {
-  fieldsets: FieldSet<T>[];
+export type AttributeGridSection<T extends object> = BaseTabSection<T> & {
+  fieldsets: FieldSet<Expanded<T>>[];
 };
 
-export type DataGridSection = BaseTabSection & {
-  key: keyof TargetType["_expand"];
+export type DataGridSection<T extends object> = BaseTabSection<T> & {
+  key: keyof Expand<Expanded<T>>;
 };
-
-/**
- * `ExpandItemKeys`:
- * A union of all possible field names across all related resource types in `_expand`.
- *
- * For example, if `_expand` looks like:
- * ```ts
- * {
- *   statustypen?: StatusType[];
- *   resultaattypen?: ResultaatType[];
- * }
- * ```
- * Then this type will evaluate to:
- * ```ts
- * keyof (StatusType | ResultaatType)
- * ```
- *
- * This enables strongly typed `allowedFields` even when accessing dynamic or nested data.
- */
-export type ExpandItemKeys = NonNullable<
-  {
-    [K in keyof Expand]: Expand[K] extends (infer U)[] | undefined
-      ? keyof U
-      : never;
-  }[keyof Expand]
->;
