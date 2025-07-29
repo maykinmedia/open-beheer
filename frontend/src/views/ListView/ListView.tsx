@@ -58,7 +58,7 @@ export function ListView<T extends object>({
    * @param data - The row data.
    */
   const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>, data: T) => {
+    (event: React.MouseEvent, data: T) => {
       event.preventDefault();
       if (getHref) {
         navigate(getHref(data));

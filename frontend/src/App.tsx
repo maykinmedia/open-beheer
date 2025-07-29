@@ -140,7 +140,7 @@ function App() {
       });
     return [
       <H2 key="product-name">Open Beheer</H2>,
-      <Hr key="hr" size="xxl" />,
+      <Hr key="hr" margin="xs" />,
       <Select
         key="catalogi-select"
         disabled={catalogiChoices.length === 0}

@@ -1,4 +1,4 @@
-import { delay } from "@maykin-ui/client-common/delay";
+import { delay } from "@maykin-ui/client-common";
 import { act, renderHook } from "@testing-library/react";
 import { expect } from "vitest";
 
