@@ -1,14 +1,11 @@
 import {
   AttributeGrid,
-  Badge,
   Body,
   Button,
   CardBaseTemplate,
   Column,
-  DataGrid,
   Grid,
   H2,
-  Primitive,
   Sidebar,
   Solid,
   Tab,
@@ -19,14 +16,14 @@ import { slugify, ucFirst } from "@maykin-ui/client-common";
 import { ReactNode, useCallback, useMemo } from "react";
 import { useLoaderData, useParams } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
+import { RelatedObjectRenderer } from "~/components/related";
 import { useBreadcrumbItems } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { useSubmitAction } from "~/hooks/useSubmitAction.ts";
-import { getZaaktypeUUID, isPrimitive } from "~/lib";
+import { getZaaktypeUUID } from "~/lib";
 import {
   AttributeGridSection,
   DataGridSection,
-  ExpandItemKeys,
   TABS_CONFIG_ALGEMEEN,
   TABS_CONFIG_DOCUMENTTYPEN,
   TABS_CONFIG_EIGENSCHAPPEN,
@@ -40,6 +37,7 @@ import {
 } from "~/pages";
 import { TABS_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.tsx";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
+import { Expand } from "~/types";
 
 export const TABS_CONFIG: TabConfig<TargetType>[] = [
   TABS_CONFIG_OVERVIEW,
@@ -91,28 +89,6 @@ export function ZaaktypePage() {
   );
 
   /**
-   * Extracts an array of related objects from the expansion map.
-   *
-   * @param expand - The `_expand` map from loader data
-   * @param field - The name of the field to extract from `expand`
-   * @returns An array of related objects, or empty if none
-   */
-  function extractRelatedObjects(
-    expand: ZaaktypeLoaderData["result"]["_expand"],
-    field: keyof ZaaktypeLoaderData["result"],
-  ): Record<ExpandItemKeys, Primitive | object>[] {
-    const value = expand?.[field as keyof typeof expand];
-    if (!Array.isArray(value)) {
-      console.error(
-        `Expected an array for field "${field}" in _expand, but got:`,
-        value,
-      );
-      return [];
-    }
-    return value as Record<ExpandItemKeys, Primitive | object>[];
-  }
-
-  /**
    * Memoizes a version of the result object where expandable fields
    * are replaced by React nodes rendering related data.
    *
@@ -131,14 +107,11 @@ export function ZaaktypePage() {
       // Skip if the field is not expandable or has no value.
       if (!(fieldName in expand) || originalValue === null) continue;
 
-      const relatedObjects = extractRelatedObjects(expand, fieldName);
-      // Skip if no related objects are found.
-      if (!relatedObjects.length) continue;
-
       overrides[fieldName] = (
         <RelatedObjectRenderer
-          relatedObjects={relatedObjects}
-          config={activeSectionConfig}
+          expandFields={activeSectionConfig.expandFields}
+          field={fieldName as keyof Expand<typeof result>}
+          object={result}
           view={TABS_CONFIG[activeTabIndex].view}
         />
       );
@@ -148,11 +121,17 @@ export function ZaaktypePage() {
     // TODO: Optimize this by inspecting if the field is part of the active tab.
   }, [fields, result, activeTabIndex]);
 
+  /**
+   * Memoizes the title.
+   */
   const displayTitle = useMemo(() => {
     const id = result.identificatie ?? "";
     return ucFirst(id);
   }, [result.identificatie]);
 
+  /**
+   * Memoizes the the rendered tabs.
+   */
   const renderedTabs = useMemo(() => {
     return TABS_CONFIG.map((tabConfig) => ({
       label: tabConfig.label,
@@ -194,7 +173,7 @@ export function ZaaktypePage() {
                   view={tabConfig.view}
                   expandedOverrides={expandedOverrides}
                   result={result}
-                  tabConfig={activeSectionConfig}
+                  tabConfigSection={activeSectionConfig}
                 />
               </Column>
             </Grid>
@@ -203,13 +182,14 @@ export function ZaaktypePage() {
               view={tabConfig.view}
               expandedOverrides={expandedOverrides}
               result={result}
-              tabConfig={tabConfig.sections[0]}
+              tabConfigSection={tabConfig.sections[0]}
             />
           )}
         </>
       ),
     }));
   }, [result, expandedOverrides, activeSectionIndex]);
+
   return (
     <CardBaseTemplate
       breadcrumbItems={breadcrumbItems}
@@ -264,129 +244,42 @@ export function ZaaktypePage() {
   );
 }
 
-function isAttributeGridSection(
+/**
+ * Returns whether view === "AttributeGrid", doubles as typeguard for `tabConfigSection`.
+ */
+const isAttributeGridSection = (
   view: string,
   // @ts-expect-error - TypeScript unhappy with unused, but necessary for type guard
-  tabConfig: AttributeGridSection<TargetType> | DataGridSection,
-): tabConfig is AttributeGridSection<TargetType> {
-  return view === "AttributeGrid";
-}
+  tabConfigSection: AttributeGridSection<TargetType> | DataGridSection,
+): tabConfigSection is AttributeGridSection<TargetType> =>
+  view === "AttributeGrid";
 
 type ZaaktypeTabProps = {
-  tabConfig: AttributeGridSection<TargetType> | DataGridSection;
+  tabConfigSection:
+    | AttributeGridSection<TargetType>
+    | DataGridSection<TargetType>;
   view: "AttributeGrid" | "DataGrid";
   result: TargetType;
   expandedOverrides: Partial<Record<keyof TargetType, ReactNode>>;
 };
-/** Renders a single tab */
+
+/**
+ * Renders a single tab
+ */
 const ZaaktypeTab = ({
-  tabConfig,
+  tabConfigSection,
   view,
   result,
   expandedOverrides,
 }: ZaaktypeTabProps) => {
-  if (isAttributeGridSection(view, tabConfig)) {
+  if (isAttributeGridSection(view, tabConfigSection)) {
     return (
       <AttributeGrid
         object={{ ...result, ...expandedOverrides } as TargetType}
-        fieldsets={tabConfig.fieldsets}
+        fieldsets={tabConfigSection.fieldsets}
       />
     );
   }
 
-  return expandedOverrides[tabConfig.key];
+  return expandedOverrides[tabConfigSection.key];
 };
-
-type RelatedObjectRendererProps = {
-  relatedObjects: Record<ExpandItemKeys, Primitive | object>[];
-  view: "AttributeGrid" | "DataGrid";
-  config: AttributeGridSection<TargetType> | DataGridSection;
-};
-
-/**
- * Renders either a DataGrid or a list of badges for a set of related objects,
- * depending on the tab configuration.
- *
- * @param relatedObjects - The array of objects to render
- * @param view - The view type, either "DataGrid" or "AttributeGrid"
- * @param config - Tab configuration indicating view type and allowed fields
- */
-function RelatedObjectRenderer({
-  relatedObjects,
-  view,
-  config,
-}: RelatedObjectRendererProps) {
-  if (!isAttributeGridSection(view, config)) {
-    return (
-      <DataGrid
-        objectList={relatedObjects}
-        fields={config.expandFields}
-        urlFields={[]}
-      />
-    );
-  }
-
-  return (
-    <>
-      {relatedObjects.map((relatedObject, index) => (
-        <RelatedObjectBadge
-          key={
-            typeof relatedObject.url === "string" ? relatedObject.url : index
-          }
-          relatedObject={relatedObject}
-          allowedFields={config.expandFields}
-        />
-      ))}
-    </>
-  );
-}
-
-type RelatedObjectBadgeProps = {
-  relatedObject: Record<ExpandItemKeys, Primitive | object>;
-  allowedFields: ExpandItemKeys[];
-};
-
-/**
- * Finds the first primitive field in `relatedObject` that is allowed,
- * then displays its value inside a Badge. Throws if no allowed key is found.
- *
- * @param relatedObject - Single related resource object
- * @param allowedFields - List of field names permitted for display
- * @returns A Badge containing the primitive value, or null for non-primitives
- * @throws InvalidRelatedObjectError When no allowed key exists
- */
-function RelatedObjectBadge({
-  relatedObject,
-  allowedFields,
-}: RelatedObjectBadgeProps) {
-  const objectKeys = Object.keys(
-    relatedObject,
-  ) as (keyof typeof relatedObject)[];
-
-  const key = objectKeys.find((k) => allowedFields.includes(k));
-  // Bail early, no renderable data.
-  if (!key) {
-    throw new InvalidRelatedObjectError({
-      object: relatedObject,
-      allowedFields,
-    });
-  }
-
-  // Extract value.
-  const value = relatedObject[key];
-  return isPrimitive(value) ? <Badge>{value}</Badge> : null;
-}
-
-export class InvalidRelatedObjectError extends Error {
-  constructor(data: unknown) {
-    const baseMessage =
-      "<RelatedObjectList /> received an invalid related object";
-    const detail =
-      data && typeof data === "object"
-        ? `: ${JSON.stringify(data, null, 2)}`
-        : "";
-
-    super(`${baseMessage}${detail}`);
-    this.name = "InvalidRelatedObjectError";
-  }
-}
