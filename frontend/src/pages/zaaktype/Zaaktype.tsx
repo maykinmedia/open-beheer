@@ -13,11 +13,12 @@ import {
   Toolbar,
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
+import { invariant } from "@maykin-ui/client-common/assert";
 import { ReactNode, useCallback, useMemo } from "react";
 import { useLoaderData, useParams } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
 import { RelatedObjectRenderer } from "~/components/related";
-import { useBreadcrumbItems } from "~/hooks";
+import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { useSubmitAction } from "~/hooks/useSubmitAction.ts";
 import { getZaaktypeUUID } from "~/lib";
@@ -54,25 +55,67 @@ export const TABS_CONFIG: TabConfig<TargetType>[] = [
  * Renders the detail view for a single zaaktype, with tabs for attributes and related data.
  */
 export function ZaaktypePage() {
-  const { fields, result, versions } = useLoaderData() as ZaaktypeLoaderData;
+  const { result, versions } = useLoaderData() as ZaaktypeLoaderData;
 
-  const { serviceSlug } = useParams();
   const breadcrumbItems = useBreadcrumbItems();
-  const [tabHash, setTabHash] = useHashParam("tab", "0");
-  const [sectionHash, setSectionHash] = useHashParam("section", "0");
   const submitAction = useSubmitAction<ZaaktypeAction>();
 
+  return (
+    <CardBaseTemplate
+      breadcrumbItems={breadcrumbItems}
+      cardProps={{
+        justify: "space-between",
+      }}
+    >
+      <Body fullHeight>
+        <H2>
+          {ucFirst(result.identificatie ?? "")}{" "}
+          {result.omschrijving ? `(${result.omschrijving})` : null}
+        </H2>
+
+        {versions && (
+          <VersionSelector
+            selectedVersionUUID={getZaaktypeUUID(result)}
+            versions={versions}
+            onVersionChange={({ uuid }) =>
+              submitAction({
+                type: "SELECT_VERSION",
+                payload: { uuid },
+              })
+            }
+          />
+        )}
+
+        <ZaaktypeTabs />
+      </Body>
+
+      <ZaaktypeToolbar />
+    </CardBaseTemplate>
+  );
+}
+
+/**
+ * Renders the tabs for a zaaktype
+ */
+function ZaaktypeTabs() {
+  const { fields, result } = useLoaderData() as ZaaktypeLoaderData;
+
+  // (Horizontal) tab data.
+  const [tabHash, setTabHash] = useHashParam("tab", "0");
   const activeTabIndex = parseInt(tabHash);
+
+  // (Vertical) section data.
+  const [sectionHash, setSectionHash] = useHashParam("section", "0");
   const activeSectionIndex = parseInt(sectionHash);
 
+  // The active (vertical) section.
   const activeSectionConfig = useMemo(() => {
     return TABS_CONFIG[activeTabIndex].sections[activeSectionIndex];
   }, [activeTabIndex, activeSectionIndex]);
 
-  const doesActiveTabHaveMultipleSubTabs = useMemo(() => {
-    return TABS_CONFIG[activeTabIndex].sections.length > 1;
-  }, [activeTabIndex]);
-
+  /**
+   * Gets called when the (horizontal) tab is changed.
+   */
   const handleTabChange = useCallback(
     (index: number) => {
       setTabHash(index.toString());
@@ -81,20 +124,13 @@ export function ZaaktypePage() {
     [setTabHash, setSectionHash],
   );
 
-  const handleSectionChange = useCallback(
-    (index: number) => {
-      setSectionHash(index.toString());
-    },
-    [setSectionHash],
-  );
-
   /**
    * Memoizes a version of the result object where expandable fields
    * are replaced by React nodes rendering related data.
    *
    * @returns A shallow copy of `result` with expanded fields replaced
    */
-  const expandedOverrides = useMemo(() => {
+  const serializedResult = useMemo(() => {
     if (!result || !result._expand) return {};
 
     const overrides: Partial<Record<keyof TargetType, ReactNode>> = {};
@@ -121,128 +157,114 @@ export function ZaaktypePage() {
     // TODO: Optimize this by inspecting if the field is part of the active tab.
   }, [fields, result, activeTabIndex]);
 
-  /**
-   * Memoizes the title.
-   */
-  const displayTitle = useMemo(() => {
-    const id = result.identificatie ?? "";
-    return ucFirst(id);
-  }, [result.identificatie]);
-
-  /**
-   * Memoizes the the rendered tabs.
-   */
-  const renderedTabs = useMemo(() => {
-    return TABS_CONFIG.map((tabConfig) => ({
-      label: tabConfig.label,
-      element: (
-        <>
-          {doesActiveTabHaveMultipleSubTabs ? (
-            <Grid>
-              <Column span={2}>
-                <Sidebar
-                  border={false}
-                  expandable={false}
-                  minWidth={false}
-                  sticky={false}
-                >
-                  <Toolbar
-                    align="start"
-                    direction="vertical"
-                    items={tabConfig.sections.map(
-                      (subTabConfig, index: number) => ({
-                        active: activeSectionIndex === index,
-                        children: (
-                          <>
-                            {subTabConfig.icon}
-                            {subTabConfig.label}
-                          </>
-                        ),
-                        key: slugify(subTabConfig.label),
-                        onClick: () => {
-                          handleSectionChange(index);
-                        },
-                      }),
-                    )}
-                    variant="transparent"
-                  />
-                </Sidebar>
-              </Column>
-              <Column span={10}>
-                <ZaaktypeTab
-                  view={tabConfig.view}
-                  expandedOverrides={expandedOverrides}
-                  result={result}
-                  tabConfigSection={activeSectionConfig}
-                />
-              </Column>
-            </Grid>
-          ) : (
-            <ZaaktypeTab
-              view={tabConfig.view}
-              expandedOverrides={expandedOverrides}
-              result={result}
-              tabConfigSection={tabConfig.sections[0]}
-            />
-          )}
-        </>
-      ),
-    }));
-  }, [result, expandedOverrides, activeSectionIndex]);
+  const tabs = useMemo(
+    () =>
+      TABS_CONFIG.map((tabConfig) => (
+        <Tab key={tabConfig.label} label={tabConfig.label}>
+          <ZaaktypeTab
+            view={tabConfig.view}
+            expandedOverrides={serializedResult}
+            tabConfig={tabConfig}
+            tabConfigSection={activeSectionConfig}
+          />
+        </Tab>
+      )),
+    [result, serializedResult, activeSectionIndex],
+  );
 
   return (
-    <CardBaseTemplate
-      breadcrumbItems={breadcrumbItems}
-      cardProps={{
-        justify: "space-between",
-      }}
-    >
-      <Body fullHeight>
-        <H2>
-          {displayTitle}{" "}
-          {result.omschrijving ? `(${result.omschrijving})` : null}
-        </H2>
-
-        {versions && (
-          <VersionSelector
-            selectedVersionUUID={getZaaktypeUUID(result)}
-            versions={versions}
-            onVersionChange={({ uuid }) =>
-              submitAction({
-                type: "SELECT_VERSION",
-                payload: { uuid },
-              })
-            }
-          />
-        )}
-        <Tabs activeTabIndex={activeTabIndex} onTabChange={handleTabChange}>
-          {renderedTabs.map(({ label, element }) => (
-            <Tab key={label} label={label}>
-              {element}
-            </Tab>
-          ))}
-        </Tabs>
-      </Body>
-
-      <Toolbar align="end" pad variant="alt" sticky={"bottom"}>
-        {serviceSlug && (
-          <Button
-            variant="primary"
-            onClick={() =>
-              submitAction({
-                type: "CREATE_VERSION",
-                payload: { serviceSlug: serviceSlug, zaaktype: result },
-              })
-            }
-          >
-            <Solid.PlusIcon />
-            Nieuwe versie
-          </Button>
-        )}
-      </Toolbar>
-    </CardBaseTemplate>
+    <Tabs activeTabIndex={activeTabIndex} onTabChange={handleTabChange}>
+      {tabs}
+    </Tabs>
   );
 }
+
+/**
+ * Renders a single tab, optionally containing different (vertical) section.
+ */
+const ZaaktypeTab = ({
+  tabConfig,
+  tabConfigSection,
+  view,
+  expandedOverrides,
+}: ZaaktypeTabProps) => {
+  const { result } = useLoaderData() as ZaaktypeLoaderData;
+
+  // (Horizontal) tab data.
+  const [tabHash] = useHashParam("tab", "0");
+  const activeTabIndex = parseInt(tabHash);
+
+  // (Vertical) section data.
+  const [sectionHash, setSectionHash] = useHashParam("section", "0");
+  const activeSectionIndex = parseInt(sectionHash);
+
+  // Whether (vertical) sections exist within the tab.
+  const doesActiveTabHaveMultipleSubTabs = useMemo(() => {
+    return TABS_CONFIG[activeTabIndex].sections.length > 1;
+  }, [activeTabIndex]);
+
+  /**
+   * Gets called when the (vertical) section is changed.
+   */
+  const handleSectionChange = useCallback(
+    (index: number) => {
+      setSectionHash(index.toString());
+    },
+    [setSectionHash],
+  );
+
+  /**
+   * The <AttributeGrid/> with the data for the current tab/section.
+   */
+  const contents = useMemo(() => {
+    if (isAttributeGridSection(view, tabConfigSection)) {
+      return (
+        <AttributeGrid
+          object={{ ...result, ...expandedOverrides } as TargetType}
+          fieldsets={tabConfigSection.fieldsets}
+        />
+      );
+    }
+
+    return expandedOverrides[tabConfigSection.key];
+  }, [view, tabConfigSection, result, expandedOverrides]);
+
+  return doesActiveTabHaveMultipleSubTabs ? (
+    <Grid>
+      <Column span={2}>
+        <Sidebar
+          border={false}
+          expandable={false}
+          minWidth={false}
+          sticky={false}
+        >
+          <Toolbar
+            align="start"
+            direction="vertical"
+            items={tabConfig.sections.map((subTabConfig, index: number) => ({
+              active: activeSectionIndex === index,
+              children: (
+                <>
+                  {subTabConfig.icon}
+                  {subTabConfig.label}
+                </>
+              ),
+              key: slugify(subTabConfig.label),
+              onClick: () => {
+                handleSectionChange(index);
+              },
+            }))}
+            variant="transparent"
+          />
+        </Sidebar>
+      </Column>
+
+      <Column span={10}>{contents}</Column>
+    </Grid>
+  ) : (
+    contents
+  );
+};
 
 /**
  * Returns whether view === "AttributeGrid", doubles as typeguard for `tabConfigSection`.
@@ -255,31 +277,31 @@ const isAttributeGridSection = (
   view === "AttributeGrid";
 
 type ZaaktypeTabProps = {
+  tabConfig: TabConfig<TargetType>;
   tabConfigSection:
     | AttributeGridSection<TargetType>
     | DataGridSection<TargetType>;
   view: "AttributeGrid" | "DataGrid";
-  result: TargetType;
   expandedOverrides: Partial<Record<keyof TargetType, ReactNode>>;
 };
 
 /**
- * Renders a single tab
+ * Renders the bottom toolbar containing (primary) actions.
  */
-const ZaaktypeTab = ({
-  tabConfigSection,
-  view,
-  result,
-  expandedOverrides,
-}: ZaaktypeTabProps) => {
-  if (isAttributeGridSection(view, tabConfigSection)) {
-    return (
-      <AttributeGrid
-        object={{ ...result, ...expandedOverrides } as TargetType}
-        fieldsets={tabConfigSection.fieldsets}
-      />
-    );
-  }
+function ZaaktypeToolbar() {
+  const [, setCombinedSearchParams] = useCombinedSearchParams();
+  const { serviceSlug } = useParams();
+  invariant(serviceSlug, "serviceSlug must be provided!");
 
-  return expandedOverrides[tabConfigSection.key];
-};
+  return (
+    <Toolbar align="end" pad variant="alt" sticky={"bottom"}>
+      <Button
+        variant="primary"
+        onClick={() => setCombinedSearchParams({ editing: "true" })}
+      >
+        <Solid.PencilSquareIcon />
+        Bewerken
+      </Button>
+    </Toolbar>
+  );
+}
