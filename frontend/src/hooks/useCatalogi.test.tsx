@@ -1,17 +1,20 @@
-// useCatalogi.test.tsx
 import { renderHook, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { vi } from "vitest";
 import { getCatalogiChoices } from "~/api/catalogi.ts";
 
 import { useCatalogi } from "./useCatalogi";
 
-// Mock API
 vi.mock("~/api/catalogi.ts", () => ({
   getCatalogiChoices: vi.fn(),
 }));
 
 describe("useCatalogi", () => {
   const mockService = { label: "Test Service", value: "test-service" };
+
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <MemoryRouter>{children}</MemoryRouter>
+  );
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -26,7 +29,7 @@ describe("useCatalogi", () => {
       mockCatalogi,
     );
 
-    const { result } = renderHook(() => useCatalogi(mockService));
+    const { result } = renderHook(() => useCatalogi(mockService), { wrapper });
 
     await waitFor(() => {
       expect(result.current.catalogiChoices.length).toBeGreaterThan(0);
@@ -37,7 +40,7 @@ describe("useCatalogi", () => {
   });
 
   it("does not fetch catalogi when service is null", async () => {
-    const { result } = renderHook(() => useCatalogi(null));
+    const { result } = renderHook(() => useCatalogi(null), { wrapper });
 
     await waitFor(() => {
       expect(result.current.catalogiChoices).toEqual([]);
@@ -49,7 +52,7 @@ describe("useCatalogi", () => {
   it("sets catalogiChoices to empty array if response is empty", async () => {
     (getCatalogiChoices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
 
-    const { result } = renderHook(() => useCatalogi(mockService));
+    const { result } = renderHook(() => useCatalogi(mockService), { wrapper });
 
     await waitFor(() => {
       expect(result.current.catalogiChoices).toEqual([]);

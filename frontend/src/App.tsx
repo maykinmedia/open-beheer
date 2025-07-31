@@ -54,10 +54,10 @@ function App() {
   const currentMatch = useCurrentMatch();
   const childRoutes = useChildRoutes(SIDEBAR_INDEX);
   const { service } = useService(user);
-  const { catalogiChoices } = useCatalogi(service);
+  const { catalogiChoices, handleCatalogusChange, selectedCatalogusId } =
+    useCatalogi(service);
 
   const serviceSlug = params[SERVICE_PARAM];
-  const catalogusId = params[CATALOGUS_PARAM];
 
   // Determine whether we should render the base UI.
   const currentMatchHandle = currentMatch.handle as
@@ -132,9 +132,9 @@ function App() {
           active: Boolean(id && matches.map((m) => m.id).includes(id)),
           align: "start",
           children: string2Title(path?.split("/").pop()?.trim() || ""),
-          disabled: !catalogusId,
+          disabled: !selectedCatalogusId,
           onClick: () => {
-            navigate(`${serviceSlug}/${catalogusId}/${path}`);
+            navigate(`${serviceSlug}/${selectedCatalogusId}/${path}`);
           },
         };
       });
@@ -146,17 +146,9 @@ function App() {
         disabled={catalogiChoices.length === 0}
         options={catalogiChoices}
         placeholder="Selecteer catalogus"
-        value={catalogusId}
+        value={selectedCatalogusId}
         variant="secondary"
-        onChange={({ target }) => {
-          const { value } = target;
-
-          if (!value) {
-            navigate("/");
-          }
-
-          navigate(serviceSlug + "/" + value);
-        }}
+        onChange={({ target }) => handleCatalogusChange(target.value)}
       />,
       ...items,
     ];
