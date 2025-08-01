@@ -67,7 +67,7 @@ _ENCODER = Encoder()
 
 # requests query param type
 type _RequestParamT = (
-    str | bytes | int | float | None | Iterable[str | bytes | int | float]
+        str | bytes | int | float | None | Iterable[str | bytes | int | float]
 )
 
 
@@ -139,7 +139,8 @@ def make_expandable[T: Type[Struct]](t: T, fields: Mapping[str, type]) -> T:
     """
     expansion = defstruct(
         name=f"{t.__name__}Expansion",
-        fields=[(f, t | UnsetType, UNSET) for f, t in fields.items()],  # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
+        fields=[(f, t | UnsetType, UNSET) for f, t in fields.items()],
+        # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
         # module="" should we pass in the caller module name?
         frozen=True,  # don't want to mutate the default value
         rename="camel",
@@ -161,10 +162,10 @@ def fetch_one[T](client: APIClient, path: str, result_type: type[T]) -> T | NoRe
 
 
 def fetch_response[T](
-    client: APIClient,
-    path: str,
-    params: Mapping,  # XXX: use ztc....Request objects here instead?
-    result_type: type[T],
+        client: APIClient,
+        path: str,
+        params: Mapping,  # XXX: use ztc....Request objects here instead?
+        result_type: type[T],
 ) -> ZGWResponse[T] | NoReturn:
     response = client.get(path, params=params)
     if response.status_code == 404:
@@ -174,13 +175,13 @@ def fetch_response[T](
 
 
 def fetch_all[T](
-    client: APIClient, path: str, params: Mapping, result_type: type[T]
+        client: APIClient, path: str, params: Mapping, result_type: type[T]
 ) -> list[T]:
     return list(iter_pages(client, fetch_response(client, path, params, result_type)))
 
 
 def make_expansion[T: Struct, R](
-    path: str, key: Callable[[T], dict], result_type: type[R]
+        path: str, key: Callable[[T], dict], result_type: type[R]
 ) -> Expansion[T, list[R]]:
     """
     :param path: path or full url that will get passed to APIClient
@@ -202,9 +203,9 @@ def make_expansion[T: Struct, R](
 
 
 def expand_many[T: Struct, R](
-    client: APIClient,
-    expansions: Mapping[str, Expansion[T, R]],  # {attribute_name: expansion}
-    objects: Iterable[T],
+        client: APIClient,
+        expansions: Mapping[str, Expansion[T, R]],  # {attribute_name: expansion}
+        objects: Iterable[T],
 ) -> list[T]:
     "Return new objects with all expansions applied to their ._expand"
     objects = list(objects)
@@ -225,9 +226,9 @@ def expand_many[T: Struct, R](
 
 
 def expand_one[T: Struct, R](
-    client: APIClient,
-    expansions: Mapping[str, Expansion[T, R]],
-    obj: T,
+        client: APIClient,
+        expansions: Mapping[str, Expansion[T, R]],
+        obj: T,
 ) -> T:
     "Return a new object T with all expansions applied to its ._expand"
     expanded = expand_many(client, expansions, [obj])
@@ -322,7 +323,7 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
         return Response(data, status.HTTP_201_CREATED)
 
     def parse_ob_fields(
-        self, params: P, option_overrides: Mapping[str, list[OBOption]] = {}
+            self, params: P, option_overrides: Mapping[str, list[OBOption]] = {}
     ) -> list[OBField]:
         """Create OBFields for the attributes on `self.data_type`
 
@@ -343,7 +344,7 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
 
             for filter_name in [name, f"{name}__in"]:
                 if (
-                    value := getattr(params, filter_name, not_applicable)
+                        value := getattr(params, filter_name, not_applicable)
                 ) is not not_applicable:
                     ob_field.filter_lookup = filter_name
                     ob_field.filter_value = value
@@ -370,12 +371,12 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
         return params
 
     def get_data(
-        self,
-        api_client: APIClient,
-        query_params: P,
-        base_params: Mapping[str, _RequestParamT] = {
-            "pageSize": 10,
-        },
+            self,
+            api_client: APIClient,
+            query_params: P,
+            base_params: Mapping[str, _RequestParamT] = {
+                "pageSize": 10,
+            },
     ) -> tuple[
         ZGWResponse[T] | ZGWError,
         int,
@@ -426,11 +427,11 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
 
     @staticmethod
     def paginate(
-        request: Request,
-        data: ZGWResponse[T],
-        page: int,
-        fields: Sequence[OBField] = [],
-        page_size: int = 10,
+            request: Request,
+            data: ZGWResponse[T],
+            page: int,
+            fields: Sequence[OBField] = [],
+            page_size: int = 10,
     ) -> OBList[T]:
         """Paginate ZGW response data.
 
@@ -463,7 +464,7 @@ class DetailWithVersions[T: Struct](Protocol):
     has_versions: bool = True
 
     def get_item_versions(
-        self, slug: str, data: T
+            self, slug: str, data: T
     ) -> tuple[list[T] | ZGWError, int]: ...
 
     def format_version(self, data: T) -> VersionSummary: ...
@@ -521,8 +522,6 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
         return expand_one(client, self.expansions, object)
 
     def get_fields(self) -> list[OBField]:
-        # merge annotations for all base classes too
-        attrs = reduce(or_, map(get_annotations, reversed(self.data_type.mro())))
         field_types = reduce(or_, map(get_type_hints, reversed(self.data_type.mro())))
         field_options = lambda field: options(field_types[field])
 
@@ -533,7 +532,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
                 options=field_options(field) or UNSET,
                 filter_lookup=UNSET,
             )
-            for field, annotation in attrs.items()
+            for field, annotation in field_types.items()
             if field != "_expand"
         ]
 
@@ -564,7 +563,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
         return Response(response_data)
 
     def update(
-        self, request: Request, slug: str, uuid: UUID, is_partial: bool = True
+            self, request: Request, slug: str, uuid: UUID, is_partial: bool = True
     ) -> Response:
         with ztc_client(slug) as client:
             handler = client.patch if is_partial else client.put
@@ -607,7 +606,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
     @handle_service_errors
     def patch(
-        self, request: Request, slug: str, uuid: UUID, *args, **kwargs
+            self, request: Request, slug: str, uuid: UUID, *args, **kwargs
     ) -> Response:
         return self.update(request, slug, uuid, is_partial=True)
 
@@ -617,7 +616,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
     @handle_service_errors
     def delete(
-        self, request: Request, slug: str, uuid: UUID, *args, **kwargs
+            self, request: Request, slug: str, uuid: UUID, *args, **kwargs
     ) -> Response:
         with ztc_client(slug) as client:
             response = client.delete(self.endpoint_path.format(uuid=uuid))
@@ -632,4 +631,5 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @abstractmethod
-    def get_fieldsets(self) -> FrontendFieldsets: ...
+    def get_fieldsets(self) -> FrontendFieldsets:
+        ...

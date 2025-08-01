@@ -1,10 +1,13 @@
 import { ActionFunctionArgs, redirect } from "react-router";
 import { request } from "~/api";
 import { TypedAction } from "~/hooks/useSubmitAction.ts";
+import { getZaaktypeUUID } from "~/lib";
+import { TargetType } from "~/pages";
 import { components } from "~/types";
 
 export type ZaaktypeAction =
   | TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>
+  | TypedAction<"UPDATE_VERSION", UpdateZaaktypeVersionPayload>
   | TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>;
 
 /**
@@ -22,6 +25,8 @@ export async function zaaktypeAction({
   switch (action.type) {
     case "CREATE_VERSION":
       return await createZaaktypeVersionAction({ request, params, context });
+    case "UPDATE_VERSION":
+      return await updateZaaktypeVersionAction({ request, params, context });
     case "SELECT_VERSION":
       return await selectZaaktypeVersionAction({ request, params, context });
     default:
@@ -34,7 +39,7 @@ export async function zaaktypeAction({
  */
 export type CreateZaaktypeVersionPayload = {
   serviceSlug: string;
-  zaaktype: components["schemas"]["ZaakType"];
+  zaaktype: TargetType;
 };
 
 /**
@@ -60,6 +65,42 @@ export async function createZaaktypeVersionAction(
   await request(
     "POST",
     `/service/${payload.serviceSlug}/zaaktypen/`,
+    {},
+    { ...zaaktype },
+  );
+}
+
+/**
+ * Payload for `updateZaaktypeVersionAction`
+ */
+export type UpdateZaaktypeVersionPayload = {
+  serviceSlug: string;
+  zaaktype: Partial<TargetType> & { url: string };
+};
+
+/**
+ * Updates a new zaaktype version.
+ */
+export async function updateZaaktypeVersionAction(
+  actionFunctionArgs: ActionFunctionArgs,
+) {
+  const data = await actionFunctionArgs.request.json();
+  const payload = data.payload as UpdateZaaktypeVersionPayload;
+
+  const invalidKeys: (keyof components["schemas"]["ExpandableZaakType"])[] = [
+    "_expand",
+  ];
+
+  const zaaktype = Object.fromEntries(
+    Object.entries(payload.zaaktype).filter(([k, v]) => {
+      // @ts-expect-error - checking wider type against subset.
+      return v !== null && !invalidKeys.includes(k);
+    }),
+  );
+
+  await request(
+    "PATCH",
+    `/service/${payload.serviceSlug}/zaaktypen/${getZaaktypeUUID(payload.zaaktype)}/`,
     {},
     { ...zaaktype },
   );
