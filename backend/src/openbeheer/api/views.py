@@ -521,8 +521,6 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
         return expand_one(client, self.expansions, object)
 
     def get_fields(self) -> list[OBField]:
-        # merge annotations for all base classes too
-        attrs = reduce(or_, map(get_annotations, reversed(self.data_type.mro())))
         field_types = reduce(or_, map(get_type_hints, reversed(self.data_type.mro())))
         field_options = lambda field: options(field_types[field])
 
@@ -533,7 +531,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
                 options=field_options(field) or UNSET,
                 filter_lookup=UNSET,
             )
-            for field, annotation in attrs.items()
+            for field, annotation in field_types.items()
             if field != "_expand"
         ]
 
