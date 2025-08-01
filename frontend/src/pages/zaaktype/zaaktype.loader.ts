@@ -17,6 +17,9 @@ export const zaaktypeLoader = loginRequired(
     const { params } = loaderFunctionArgs;
     return await request<
       components["schemas"]["DetailResponse_ExpandableZaakType_"]
-    >("GET", `/service/${params.serviceSlug}/zaaktypen/${params.zaaktypeUUID}`);
+    >(
+      "GET",
+      `/service/${params.serviceSlug}/zaaktypen/${params.zaaktypeUUID}/`,
+    );
   },
 );

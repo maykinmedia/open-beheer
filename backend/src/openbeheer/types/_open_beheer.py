@@ -7,7 +7,7 @@ import datetime
 import enum
 from functools import singledispatch
 from types import NoneType, UnionType
-from typing import Self, Sequence, Type
+from typing import Self, Sequence, Type, Annotated
 
 import msgspec
 from ape_pie import APIClient
@@ -77,7 +77,7 @@ class OBFieldType(enum.StrEnum):
 
     boolean = enum.auto()
     date = enum.auto()
-    # daterange = enum.auto()
+    daterange = enum.auto()
     # null = enum.auto()
     number = enum.auto()
     string = enum.auto()
@@ -99,6 +99,15 @@ def as_ob_fieldtype(t: type | UnionType) -> OBFieldType:
     if t is datetime.date:
         return OBFieldType.date
     return OBFieldType.string
+
+
+class MyStruct(Struct):
+    publish: Annotated[bool, msgspec.Meta(
+        description="Aanduiding of (het starten van) een ZAAK dit ZAAKTYPE gepubliceerd moet worden.")]
+
+
+thing = MyStruct(publish=True)
+as_ob_fieldtype(thing.publish)
 
 
 def options(t: type | UnionType) -> list[OBOption]:
@@ -210,8 +219,8 @@ class VersionedResourceSummary(Struct):
     def __post_init__(self):
         self.actief = (
             (
-                self.einde_geldigheid is None
-                or datetime.date.today() < self.einde_geldigheid
+                    self.einde_geldigheid is None
+                    or datetime.date.today() < self.einde_geldigheid
             )
             if not self.concept
             else False
@@ -223,12 +232,13 @@ def make_fields_optional(t: Type[Struct]) -> Type[Struct]:
     return msgspec.defstruct(
         f"Optional{t.__name__}",
         [
-            (field_info.name, field_info.type | UnsetType, UNSET)  # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
+            (field_info.name, field_info.type | UnsetType, UNSET)
+            # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
             for field_info in structs.fields(t)
             if (
                 field_info.default == structs.NODEFAULT
                 and field_info.default_factory == structs.NODEFAULT
-            )
+        )
         ],
         bases=(t,),
         rename="camel",
