@@ -1,4 +1,5 @@
 import { DataGrid } from "@maykin-ui/admin-ui";
+import { invariant } from "@maykin-ui/client-common/assert";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
 import { ExpandItemKeys, Expanded } from "~/types";
 
@@ -32,18 +33,15 @@ export function RelatedObjectRenderer<T extends object>({
    */
   const extractRelatedObjects = (
     object: Expanded<T>,
-    field: keyof ExpandItemKeys<T>,
+    field: ExpandItemKeys<T>,
   ) => {
     const expand = object._expand;
-    const value = expand?.[field as keyof typeof expand];
+    const value = expand?.[field];
 
-    if (!Array.isArray(value)) {
-      console.error(
-        `Expected an array for field "${field.toString()}" in _expand, but got:`,
-        value,
-      );
-      return [];
-    }
+    invariant(
+      Array.isArray(value),
+      `Expected an array for field "${field}" in _expand, but got: ${value}`,
+    );
     return value;
   };
 
@@ -59,18 +57,11 @@ export function RelatedObjectRenderer<T extends object>({
     );
   }
 
-  return (
-    <>
-      {relatedObjects.map((relatedObject, index) => (
-        <RelatedObjectBadge<T>
-          key={
-            // @ts-expect-error - `url``not typed.
-            typeof relatedObject.url === "string" ? relatedObject.url : index
-          }
-          relatedObject={relatedObject}
-          allowedFields={expandFields}
-        />
-      ))}
-    </>
-  );
+  return relatedObjects.map((relatedObject, index) => (
+    <RelatedObjectBadge<T>
+      key={typeof relatedObject.url === "string" ? relatedObject.url : index}
+      relatedObject={relatedObject}
+      allowedFields={expandFields}
+    />
+  ));
 }
