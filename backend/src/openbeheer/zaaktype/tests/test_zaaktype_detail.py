@@ -1,3 +1,5 @@
+from unittest import skip
+
 from django.test import tag
 
 from furl import furl
@@ -456,3 +458,55 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         for field in expected_required_fields:
             self.assertIn(field, invalid_params)
             self.assertEqual(invalid_params[field], "required")
+
+    @tag("gh-128")
+    @skip(
+        "Needs open zaak issue https://github.com/open-zaak/open-zaak/issues/2140 to be fixed."
+    )
+    def test_broncatalogus_fields(self):
+        catalog1 = self.helper.create_catalogus(overrides={"naam": "Catalog 1"})
+        catalog2 = self.helper.create_catalogus(overrides={"naam": "Catalog 2"})
+        zaaktype1 = self.helper.create_zaaktype()
+        zaaktype2 = self.helper.create_zaaktype(
+            overrides={
+                "catalogus": catalog2.url,
+                "broncatalogus": {
+                    "url": catalog1.url,
+                    "domein": catalog1.domein,
+                    "rsin": catalog1.rsin,
+                },
+                "bronzaaktype": {
+                    "url": zaaktype1.url,
+                    "identificatie": zaaktype1.identificatie,
+                    "omschrijving": zaaktype1.omschrijving,
+                },
+            }
+        )
+
+        assert zaaktype2.url
+
+        zaaktype2_uuid = furl(zaaktype2.url).path.segments[-1]
+        self.client.force_login(self.user)
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype2_uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        self.assertEqual(
+            data["result"]["broncatalogus"],
+            {"url": catalog1.url, "domein": catalog1.domein, "rsin": catalog1.rsin},
+        )
+        self.assertEqual(
+            data["result"]["bronzaaktype"],
+            {
+                "url": zaaktype1.url,
+                "identificatie": zaaktype1.identificatie,
+                "omschrijving": zaaktype1.omschrijving,
+            },
+        )
