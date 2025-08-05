@@ -261,6 +261,26 @@ class ZaakTypeListView(
         return params
 
 
+ExpandableZaakType = make_expandable(
+    ZaakType,
+    {
+        "besluittypen": list[BesluitType],
+        # Not invented here:
+        # "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+        # Posssibly Not invented here:
+        # "gerelateerde_zaaktypen": null,
+        # "bronzaaktype.url": null,
+        "statustypen": list[StatusType],
+        "resultaattypen": list[ResultaatType],
+        "eigenschappen": list[Eigenschap],
+        "informatieobjecttypen": list[InformatieObjectType],
+        "roltypen": list[RolType],
+        "deelzaaktypen": list[ZaakType],
+        "zaakobjecttypen": list[ZaakObjectType],
+    },
+)
+
+
 def expand_deelzaaktype(
     client: APIClient, zaaktypen: Iterable[ZaakType]
 ) -> list[list[ZaakType | None]]:
