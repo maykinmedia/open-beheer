@@ -1,3 +1,5 @@
+from unittest import skip
+
 from django.test import tag
 
 from furl import furl
@@ -44,6 +46,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
             }
         )
+        assert zaaktype.url
         self.helper.create_resultaattype(
             overrides={
                 "zaaktype": zaaktype.url,
@@ -67,8 +70,14 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "omschrijvingGeneriek": "behandelaar",
             }
         )
+        self.helper.create_statustype(zaaktype.url)
 
-        assert zaaktype.url
+        iot = self.helper.create_informatieobjecttype(
+            overrides={"catalogus": zaaktype.catalogus}
+        )
+        assert iot.url
+        self.helper.relate_zaaktype_informatieobjecttype(zaaktype.url, iot.url)
+
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
         self.client.force_login(self.user)
 
@@ -149,9 +158,36 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 {
                     "besluittypen": [],
                     "eigenschappen": [],
-                    "informatieobjecttypen": [],
+                    "informatieobjecttypen": [
+                        {
+                            "uuid": "d0942e98-b926-4d0d-be48-c6efcb5f99a1",
+                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/d0942e98-b926-4d0d-be48-c6efcb5f99a1",
+                            "omschrijving": "Omschrijving A",
+                            "vertrouwelijkheidaanduiding": "openbaar",
+                            "beginGeldigheid": "2025-07-01",
+                            "informatieobjectcategorie": "Blue",
+                            "url": "http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bac15594-3a44-4f3a-a093-3bbbe3685a8c",
+                            "eindeGeldigheid": None,
+                            "concept": True,
+                            "besluittypen": [],
+                            "trefwoord": [],
+                            "omschrijvingGeneriek": {
+                                "informatieobjecttypeOmschrijvingGeneriek": "",
+                                "definitieInformatieobjecttypeOmschrijvingGeneriek": "",
+                                "herkomstInformatieobjecttypeOmschrijvingGeneriek": "",
+                                "hierarchieInformatieobjecttypeOmschrijvingGeneriek": "",
+                                "opmerkingInformatieobjecttypeOmschrijvingGeneriek": "",
+                            },
+                            "zaaktypen": [
+                                "http://localhost:8003/catalogi/api/v1/zaaktypen/07ce63cb-d51b-410f-a673-31eba8a58d6b"
+                            ],
+                            "beginObject": "2025-07-01",
+                            "eindeObject": None,
+                        }
+                    ],
                     "resultaattypen": [
                         {
+                            "uuid": "93eae5ed-ed79-4cc9-ac3f-6cca22dee395",
                             "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/93eae5ed-ed79-4cc9-ac3f-6cca22dee395",
                             "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/df34e352-ecc7-46cd-a18c-7998fac92716",
                             "zaaktypeIdentificatie": "ZAAKTYPE-2025-0000000058",
@@ -184,6 +220,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                             "eindeObject": None,
                         },
                         {
+                            "uuid": "6052ca60-5062-4887-b0c1-a6c2b4fdec45",
                             "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/6052ca60-5062-4887-b0c1-a6c2b4fdec45",
                             "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/df34e352-ecc7-46cd-a18c-7998fac92716",
                             "zaaktypeIdentificatie": "ZAAKTYPE-2025-0000000058",
@@ -218,6 +255,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                     ],
                     "roltypen": [
                         {
+                            "uuid": "81f05a62-0a3e-410e-9cf4-84aef33e8e3e",
                             "url": "http://localhost:8003/catalogi/api/v1/roltypen/81f05a62-0a3e-410e-9cf4-84aef33e8e3e",
                             "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/df34e352-ecc7-46cd-a18c-7998fac92716",
                             "zaaktypeIdentificatie": "ZAAKTYPE-2025-0000000058",
@@ -230,7 +268,30 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                             "eindeObject": None,
                         }
                     ],
-                    "statustypen": [],
+                    "statustypen": [
+                        {
+                            "uuid": "07ce63cb-d51b-410f-a673-31eba8a58d6b",
+                            "omschrijving": "Omschrijving A",
+                            "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/07ce63cb-d51b-410f-a673-31eba8a58d6b",
+                            "volgnummer": 1,
+                            "url": "http://localhost:8003/catalogi/api/v1/statustypen/0bd6249c-9631-40df-8ba5-8c6a9804dc2a",
+                            "omschrijvingGeneriek": "",
+                            "statustekst": "",
+                            "zaaktypeIdentificatie": "ZAAKTYPE-2025-0000000076",
+                            "isEindstatus": True,
+                            "informeren": False,
+                            "doorlooptijd": None,
+                            "toelichting": None,
+                            "checklistitemStatustype": [],
+                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/d0942e98-b926-4d0d-be48-c6efcb5f99a1",
+                            "eigenschappen": [],
+                            "zaakobjecttypen": [],
+                            "beginGeldigheid": None,
+                            "eindeGeldigheid": None,
+                            "beginObject": None,
+                            "eindeObject": None,
+                        }
+                    ],
                     "deelzaaktypen": [],
                     "zaakobjecttypen": [],
                 },
@@ -461,3 +522,55 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         for field in expected_required_fields:
             self.assertIn(field, invalid_params)
             self.assertEqual(invalid_params[field], "required")
+
+    @tag("gh-128")
+    @skip(
+        "Needs open zaak issue https://github.com/open-zaak/open-zaak/issues/2140 to be fixed."
+    )
+    def test_broncatalogus_fields(self):
+        catalog1 = self.helper.create_catalogus(overrides={"naam": "Catalog 1"})
+        catalog2 = self.helper.create_catalogus(overrides={"naam": "Catalog 2"})
+        zaaktype1 = self.helper.create_zaaktype()
+        zaaktype2 = self.helper.create_zaaktype(
+            overrides={
+                "catalogus": catalog2.url,
+                "broncatalogus": {
+                    "url": catalog1.url,
+                    "domein": catalog1.domein,
+                    "rsin": catalog1.rsin,
+                },
+                "bronzaaktype": {
+                    "url": zaaktype1.url,
+                    "identificatie": zaaktype1.identificatie,
+                    "omschrijving": zaaktype1.omschrijving,
+                },
+            }
+        )
+
+        assert zaaktype2.url
+
+        zaaktype2_uuid = furl(zaaktype2.url).path.segments[-1]
+        self.client.force_login(self.user)
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype2_uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        self.assertEqual(
+            data["result"]["broncatalogus"],
+            {"url": catalog1.url, "domein": catalog1.domein, "rsin": catalog1.rsin},
+        )
+        self.assertEqual(
+            data["result"]["bronzaaktype"],
+            {
+                "url": zaaktype1.url,
+                "identificatie": zaaktype1.identificatie,
+                "omschrijving": zaaktype1.omschrijving,
+            },
+        )

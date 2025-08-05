@@ -147,7 +147,6 @@ ExpandableZaakType = make_expandable(
         # "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
         # Posssibly Not invented here:
         # "gerelateerde_zaaktypen": null,
-        # "broncatalogus.url": null,
         # "bronzaaktype.url": null,
         "statustypen": list[StatusType],
         "resultaattypen": list[ResultaatType],
