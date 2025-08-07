@@ -1,12 +1,13 @@
 import string
 from dataclasses import dataclass
 from random import choice
-from typing import Type
+from typing import Mapping, Sequence, Type
 
 from msgspec.json import decode
 
 from openbeheer.clients import ztc_client
 from openbeheer.types.ztc import (
+    BesluitType,
     Catalogus,
     InformatieObjectType,
     ResultaatType,
@@ -15,13 +16,26 @@ from openbeheer.types.ztc import (
     ZaakTypeInformatieObjectType,
 )
 
+type _JSONEncodable = (
+    None
+    | bool
+    | int
+    | float
+    | str
+    | Sequence[_JSONEncodable]
+    | Mapping[str, _JSONEncodable]
+)
+
 
 @dataclass
 class OpenZaakDataCreationHelper:
     service_identifier: str
 
     def _create_resource[T](
-        self, data: dict[str, str], resource_path: str, resource_type: Type[T]
+        self,
+        data: Mapping[str, _JSONEncodable],
+        resource_path: str,
+        resource_type: Type[T],
     ) -> T:
         with ztc_client("OZ") as client:
             response = client.post(resource_path, json=data)
@@ -34,8 +48,8 @@ class OpenZaakDataCreationHelper:
             strict=False,
         )
 
-    def _get_catalogus(self, data: dict | None = None) -> str:
-        catalogus_url = data and data.get("catalogus", "")
+    def _get_catalogus(self, data: Mapping[str, _JSONEncodable] = {}) -> str:
+        catalogus_url = data.get("catalogus", "")
         if not catalogus_url:
             catalogus = self.create_catalogus()
             catalogus_url = catalogus.url
@@ -44,7 +58,7 @@ class OpenZaakDataCreationHelper:
         assert isinstance(catalogus_url, str)
         return catalogus_url
 
-    def _get_zaaktype(self, data: dict | None = None) -> str:
+    def _get_zaaktype(self, data: Mapping[str, _JSONEncodable] = {}) -> str:
         zaaktype_url = data and data.get("zaaktype", "")
         if not zaaktype_url:
             zaaktype = self.create_zaaktype()
@@ -57,9 +71,9 @@ class OpenZaakDataCreationHelper:
     # Can't use the Patched requests for the type of the overrides, because the unset
     # values are filled with the default values  when converting to the dict type
     def create_informatieobjecttype(
-        self, overrides: dict | None = None
+        self, overrides: Mapping[str, _JSONEncodable] = {}
     ) -> InformatieObjectType:
-        data = {
+        data: dict[str, _JSONEncodable] = {
             "catalogus": self._get_catalogus(overrides),
             "omschrijving": "Omschrijving A",
             "vertrouwelijkheidaanduiding": "openbaar",
@@ -73,8 +87,10 @@ class OpenZaakDataCreationHelper:
             data, "informatieobjecttypen", InformatieObjectType
         )
 
-    def create_catalogus(self, overrides: dict | None = None) -> Catalogus:
-        data = {
+    def create_catalogus(
+        self, overrides: Mapping[str, _JSONEncodable] = {}
+    ) -> Catalogus:
+        data: dict[str, _JSONEncodable] = {
             "domein": "".join([choice(string.ascii_uppercase) for _ in range(5)]),
             "rsin": "123456782",
             "contactpersoonBeheerNaam": "Ubaldo",
@@ -89,23 +105,22 @@ class OpenZaakDataCreationHelper:
         self,
         zaaktype_url: str,
         informatieobjecttype_url: str,
-        overrides: dict | None = None,
+        overrides: Mapping[str, _JSONEncodable] = {},
     ) -> ZaakTypeInformatieObjectType:
-        data = {
+        data: dict[str, _JSONEncodable] = {
             "zaaktype": zaaktype_url,
             "informatieobjecttype": informatieobjecttype_url,
             "volgnummer": 1,
             "richting": "inkomend",
         }
-        if overrides:
-            data.update(overrides)
+        data.update(overrides)
 
         return self._create_resource(
             data, "zaaktype-informatieobjecttypen", ZaakTypeInformatieObjectType
         )
 
-    def create_zaaktype(self, overrides: dict | None = None) -> ZaakType:
-        data = {
+    def create_zaaktype(self, overrides: Mapping[str, _JSONEncodable] = {}) -> ZaakType:
+        data: dict[str, _JSONEncodable] = {
             "omschrijving": "Another test zaaktype",
             "vertrouwelijkheidaanduiding": "geheim",
             "doel": "New Zaaktype 001",
@@ -129,13 +144,14 @@ class OpenZaakDataCreationHelper:
             "gerelateerdeZaaktypen": [],
             "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
         }
-        if overrides:
-            data.update(overrides)
+        data.update(overrides)
 
         return self._create_resource(data, "zaaktypen", ZaakType)
 
-    def create_resultaattype(self, overrides: dict | None = None) -> ResultaatType:
-        data = {
+    def create_resultaattype(
+        self, overrides: Mapping[str, _JSONEncodable] = {}
+    ) -> ResultaatType:
+        data: dict[str, _JSONEncodable] = {
             "zaaktype": self._get_zaaktype(overrides),
             "omschrijving": "Gegrond",
             "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c",
@@ -155,14 +171,26 @@ class OpenZaakDataCreationHelper:
 
         return self._create_resource(data, "resultaattypen", ResultaatType)
 
-    def create_roltype(self, overrides: dict | None = None) -> RolType:
-        data = {
+    def create_roltype(self, overrides: Mapping[str, _JSONEncodable] = {}) -> RolType:
+        data: dict[str, _JSONEncodable] = {
             "zaaktype": self._get_zaaktype(overrides),
             "omschrijving": "Vastgesteld",
             "omschrijvingGeneriek": "Beleidsplan met externe werking",
+            **overrides,
         }
-
-        if overrides:
-            data.update(overrides)
-
         return self._create_resource(data, "roltypen", RolType)
+
+    def create_besluittype(
+        self, overrides: Mapping[str, _JSONEncodable] = {}
+    ) -> BesluitType:
+        return self._create_resource(
+            {
+                # "zaaktypen": [],
+                "publicatieIndicatie": False,
+                "informatieobjecttypen": [],
+                "beginGeldigheid": "2025-06-19",
+                **overrides,
+            },
+            "besluittypen",
+            BesluitType,
+        )
