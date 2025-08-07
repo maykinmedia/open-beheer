@@ -779,8 +779,6 @@ class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
             {et["url"] for et in created_zaaktype["_expand"]["zaakobjecttypen"]},
         )
 
-    vcr_enabled = False
-
     def test_missing_data(self):
         self.client.force_login(self.user)
 
