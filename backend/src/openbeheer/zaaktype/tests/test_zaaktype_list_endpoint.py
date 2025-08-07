@@ -1,4 +1,8 @@
+from django.test import tag
+
 from maykin_common.vcr import VCRMixin
+from msgspec.json import decode, encode
+from requests import get
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -7,8 +11,12 @@ from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.types.ztc import Status
+from openbeheer.utils.open_zaak_helper.data_creation import (
+    OpenZaakDataCreationHelper,
+)
 
 
+@tag("vcr")
 class ZaakTypeListViewTest(VCRMixin, APITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
@@ -150,6 +158,7 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
+@tag("vcr")
 class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
@@ -161,40 +170,616 @@ class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
             secret="test-vcr",
             slug="OZ",
         )
+        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
         cls.user = UserFactory.create()
         cls.url = reverse("api:zaaktypen:zaaktype-list", kwargs={"slug": "OZ"})
 
     def test_create_zaaktype(self):
         self.client.force_login(self.user)
-        response = self.client.post(
-            self.url,
-            data={
-                "omschrijving": "New Zaaktype 001",
-                "vertrouwelijkheidaanduiding": "geheim",
-                "doel": "New Zaaktype 001",
-                "aanleiding": "New Zaaktype 001",
-                "indicatieInternOfExtern": "intern",
-                "handelingInitiator": "aanvragen",
-                "onderwerp": "New Zaaktype 001",
-                "handelingBehandelaar": "handelin",
-                "doorlooptijd": "P40D",
-                "opschortingEnAanhoudingMogelijk": False,
-                "verlengingMogelijk": True,
-                "verlengingstermijn": "P40D",
-                "publicatieIndicatie": False,
-                "productenOfDiensten": ["https://example.com/product/321"],
-                "referentieproces": {"naam": "ReferentieProces 1"},
-                "verantwoordelijke": "200000000",
-                "beginGeldigheid": "2025-06-19",
-                "versiedatum": "2025-06-19",
-                "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-                "besluittypen": [],
-                "gerelateerdeZaaktypen": [],
-            },
-            format="json",
-        )
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+        }
+        response = self.client.post(self.url, data=data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_zaaktype_with_related_resultaattype(self):
+        self.client.force_login(self.user)
+
+        template_resultaattype = self.helper.create_resultaattype()
+        selectielijstklasse = get(template_resultaattype.selectielijstklasse).json()
+        resultaattype = decode(encode(template_resultaattype))  # recursive asdict
+        del resultaattype["zaaktype"]
+        resultaattype["catalogus"] = (
+            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77"
+        )
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            # needs to be the same as resultaattype
+            "selectielijstProcestype": selectielijstklasse["procesType"],
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {"resultaattypen": [resultaattype]},
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["resultaattypen"]), 1)
+
+        created_resultaattype_url = created_zaaktype["resultaattypen"][0]
+        self.assertNotEqual(created_resultaattype_url, resultaattype["url"])
+
+        assert created_zaaktype["_expand"]["resultaattypen"] == [
+            resultaattype
+            | {
+                "zaaktype": created_zaaktype["url"],
+                "zaaktypeIdentificatie": created_zaaktype["identificatie"],
+                "url": created_resultaattype_url,
+            }
+        ]
+
+    def test_create_zaaktype_with_multiple_related_besluitttype(self):
+        self.client.force_login(self.user)
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "besluittypen": [
+                    {
+                        "publicatieIndicatie": False,
+                        "informatieobjecttypen": [],
+                        "beginGeldigheid": "2025-06-19",
+                        "catalogus": (
+                            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77"
+                        ),
+                    },
+                    {
+                        "publicatieIndicatie": True,
+                        "informatieobjecttypen": [],
+                        "beginGeldigheid": "2025-06-19",
+                        "catalogus": (
+                            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77"
+                        ),
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["besluittypen"]), 2)
+
+        self.assertSetEqual(
+            set(created_zaaktype["besluittypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["besluittypen"]},
+        )
+
+    def test_create_zaaktype_with_new_and_existing_besluitttypen(self):
+        self.client.force_login(self.user)
+
+        existing = self.helper.create_besluittype(
+            overrides={
+                "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            }
+        )
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [existing.url],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "besluittypen": [
+                    {
+                        "publicatieIndicatie": False,
+                        "informatieobjecttypen": [],
+                        "beginGeldigheid": "2025-06-19",
+                        "catalogus": (
+                            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77"
+                        ),
+                    },
+                    {
+                        "publicatieIndicatie": True,
+                        "informatieobjecttypen": [],
+                        "beginGeldigheid": "2025-06-19",
+                        "catalogus": (
+                            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77"
+                        ),
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["besluittypen"]), 3)
+
+        self.assertSetEqual(
+            set(created_zaaktype["besluittypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["besluittypen"]}
+            | {existing.url},
+        )
+
+    def test_create_zaaktype_with_related_statustype(self):
+        self.client.force_login(self.user)
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "statustypen": [
+                    {
+                        "omschrijving": "Status",
+                        "volgnummer": 1,
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["statustypen"]), 1)
+        self.assertSetEqual(
+            set(created_zaaktype["statustypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["statustypen"]},
+        )
+
+    def test_create_zaaktype_with_related_eigenschappen(self):
+        self.client.force_login(self.user)
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "eigenschappen": [
+                    {
+                        "naam": "Eigenschap",
+                        "definitie": "zelfst.naamw. (v.) iets wat karakteristiek is voor iemand of iets",
+                        "specificatie": {
+                            "formaat": "tekst",
+                            "lengte": "255",
+                            "kardinaliteit": "N",
+                        },
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["eigenschappen"]), 1)
+        self.assertSetEqual(
+            set(created_zaaktype["eigenschappen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["eigenschappen"]},
+        )
+
+    def test_create_zaaktype_with_related_informatieobjecttypen(self):
+        self.client.force_login(self.user)
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "informatieobjecttypen": [
+                    {
+                        "omschrijving": "Gewoon een bestand",
+                        "vertrouwelijkheidaanduiding": "geheim",
+                        "informatieobjectcategorie": "Aard- en nagelvast",
+                        "beginGeldigheid": "2025-07-30",
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["informatieobjecttypen"]), 1)
+        self.assertSetEqual(
+            set(created_zaaktype["informatieobjecttypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["informatieobjecttypen"]},
+        )
+
+    def test_create_zaaktype_with_related_roltypen(self):
+        self.client.force_login(self.user)
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "roltypen": [
+                    {
+                        "omschrijving": "Fruitella",
+                        "omschrijvingGeneriek": "behandelaar",
+                        "beginGeldigheid": "2025-07-30",
+                    },
+                    {
+                        "omschrijving": "Droptella",
+                        "omschrijvingGeneriek": "beslisser",
+                        "beginGeldigheid": "2025-07-30",
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["roltypen"]), 2)
+        self.assertSetEqual(
+            set(created_zaaktype["roltypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["roltypen"]},
+        )
+
+    def test_create_zaaktype_with_related_deelzaaktypen(self):
+        self.client.force_login(self.user)
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "deelzaaktypen": [
+                    {
+                        "omschrijving": "Sub Zaaktype 001",
+                        "vertrouwelijkheidaanduiding": "geheim",
+                        "doel": "Sub Zaaktype 001",
+                        "aanleiding": "Sub Zaaktype 001",
+                        "indicatieInternOfExtern": "intern",
+                        "handelingInitiator": "aanvragen",
+                        "onderwerp": "Sub Zaaktype 001",
+                        "handelingBehandelaar": "handelin",
+                        "doorlooptijd": "P40D",
+                        "opschortingEnAanhoudingMogelijk": False,
+                        "verlengingMogelijk": True,
+                        "verlengingstermijn": "P40D",
+                        "publicatieIndicatie": False,
+                        "productenOfDiensten": ["https://example.com/product/321"],
+                        "referentieproces": {"naam": "ReferentieProces 1"},
+                        "verantwoordelijke": "200000000",
+                        "beginGeldigheid": "2025-06-19",
+                        "versiedatum": "2025-06-19",
+                        "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                        "besluittypen": [],
+                        "gerelateerdeZaaktypen": [],
+                        "resultaattypen": [],
+                    }
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["deelzaaktypen"]), 1)
+        self.assertSetEqual(
+            set(created_zaaktype["deelzaaktypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["deelzaaktypen"]},
+        )
+
+    def test_create_zaaktype_with_new_and_existing_deelzaaktypen(self):
+        self.client.force_login(self.user)
+
+        existing = self.helper.create_zaaktype(
+            overrides={
+                "omschrijving": "Sub Zaaktype 000",
+                "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            }
+        )
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "deelzaaktypen": [existing.url],
+            "_expand": {
+                "deelzaaktypen": [
+                    {
+                        "omschrijving": "Sub Zaaktype 001",
+                        "vertrouwelijkheidaanduiding": "geheim",
+                        "doel": "Sub Zaaktype 001",
+                        "aanleiding": "Sub Zaaktype 001",
+                        "indicatieInternOfExtern": "intern",
+                        "handelingInitiator": "aanvragen",
+                        "onderwerp": "Sub Zaaktype 001",
+                        "handelingBehandelaar": "handelin",
+                        "doorlooptijd": "P40D",
+                        "opschortingEnAanhoudingMogelijk": False,
+                        "verlengingMogelijk": True,
+                        "verlengingstermijn": "P40D",
+                        "publicatieIndicatie": False,
+                        "productenOfDiensten": ["https://example.com/product/321"],
+                        "referentieproces": {"naam": "ReferentieProces 1"},
+                        "verantwoordelijke": "200000000",
+                        "beginGeldigheid": "2025-06-19",
+                        "versiedatum": "2025-06-19",
+                        "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+                        "besluittypen": [],
+                        "gerelateerdeZaaktypen": [],
+                        "resultaattypen": [],
+                    }
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["deelzaaktypen"]), 2)
+        self.assertSetEqual(
+            set(created_zaaktype["deelzaaktypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["deelzaaktypen"]}
+            | {existing.url},
+        )
+
+    def test_create_zaaktype_with_zaakobjecttypen(self):
+        self.client.force_login(self.user)
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "zaakobjecttypen": [
+                    {
+                        "anderObjecttype": False,
+                        "objecttype": "https://www.gemeentelijkgegevensmodel.nl/latest/definities/definitie_Model%20Kern%20RSGB",
+                        "relatieOmschrijving": "puzzle",
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_zaaktype = response.json()
+
+        self.assertEqual(len(created_zaaktype["zaakobjecttypen"]), 1)
+        self.assertSetEqual(
+            set(created_zaaktype["zaakobjecttypen"]),
+            {et["url"] for et in created_zaaktype["_expand"]["zaakobjecttypen"]},
+        )
+
+    vcr_enabled = False
 
     def test_missing_data(self):
         self.client.force_login(self.user)

@@ -17,6 +17,8 @@ from typing import (
     runtime_checkable,
 )
 
+from django.utils.translation import gettext as _
+
 import structlog
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema
@@ -239,6 +241,56 @@ def expand_one[T: Struct, R](
     return result
 
 
+def create_one[T](
+    client: APIClient, path: str, result_type: type[T], data: Mapping
+) -> T | ZGWError:
+    response = client.post(path, json=data)
+    if response.ok:
+        try:
+            return decode(response.content, type=result_type)
+        except ValidationError as e:
+            logger.info(
+                "failed POST response decode",
+                error=e,
+                expected_type=result_type,
+                path=path,
+                post_data=data,
+            )
+            return ZGWError(
+                title=_("Invalid OpenZaak response"),
+                detail=str(e),
+                code="validation_error",
+                instance="",
+                status=response.status_code,
+            )
+    else:
+        error = decode(response.content, type=ZGWError)
+        logger.info(
+            "failed POST",
+            error=error,
+            expected_type=result_type,
+            path=path,
+            post_data=data,
+        )
+        return error
+
+
+def create_many[T](
+    client: APIClient, path: str, result_type: type[T], data: Iterable[Mapping]
+) -> tuple[list[T], list[ZGWError]]:
+    results: list[T] = []
+    errors: list[ZGWError] = []
+
+    for item in data:
+        match result := create_one(client, path, result_type=result_type, data=item):
+            case ZGWError():
+                errors.append(result)
+            case _:
+                results.append(result)
+
+    return results, errors
+
+
 class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
     return_data_type: type[T]
     """The datatype that the endpoints return
@@ -306,20 +358,33 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
         with ztc_client(slug) as client:
             response = client.post(self.endpoint_path, json=request.data)
 
-        if not response.ok:
-            error = decode(response.content, type=ZGWError)
-            return Response(
-                error,
-                status=response.status_code,
-            )
+            if not response.ok:
+                error = decode(response.content, type=ZGWError)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
 
-        data = decode(
-            response.content,
-            type=self.data_type,
-            strict=False,
-        )
+            data = decode(
+                response.content,
+                type=self.data_type,
+                strict=False,
+            )
+            data, errors = self.create_related(client, data, request.data)
+            if errors:
+                return Response(
+                    errors,
+                    status.HTTP_400_BAD_REQUEST
+                    if all(400 <= e.status < 500 for e in errors)
+                    else status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
 
         return Response(data, status.HTTP_201_CREATED)
+
+    def create_related(
+        self, api_client: APIClient, obj: S, request_data: Mapping
+    ) -> tuple[S, list[ZGWError]]:
+        return obj, []
 
     def parse_ob_fields(
         self, params: P, option_overrides: Mapping[str, list[OBOption]] = {}

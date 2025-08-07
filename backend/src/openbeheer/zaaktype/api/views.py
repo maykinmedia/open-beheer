@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 import datetime  # noqa: TC003
-from typing import TYPE_CHECKING, Annotated, Iterable, Mapping
+from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
 from django.utils.translation import gettext as _
 
+import structlog
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
-from msgspec import UNSET, Meta, UnsetType
+from msgspec import UNSET, Meta, Struct, UnsetType
 from msgspec.json import decode
+from msgspec.structs import asdict, replace
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -18,8 +20,8 @@ from openbeheer.api.views import (
     DetailWithVersions,
     ListView,
     MsgspecAPIView,
+    create_many,
     fetch_one,
-    make_expandable,
     make_expansion,
 )
 from openbeheer.clients import iter_pages, ztc_client
@@ -65,6 +67,9 @@ if TYPE_CHECKING:
     from rest_framework.request import Request
 
 
+logger = structlog.get_logger(__name__)
+
+
 class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="camel"):
     catalogus: Annotated[
         str | UnsetType, Meta(description="UUID part of the catalogus URL")
@@ -91,6 +96,31 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
     concept: bool | UnsetType = UNSET
 
 
+class ZaakTypeExtension(Struct, frozen=True):
+    besluittypen: UnsetType | list[BesluitType] = UNSET
+    # Not invented here:
+    # "selectielijst_procestype: UnsetType | "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
+    # Posssibly Not invented here:
+    # "gerelateerde_zaaktypen: UnsetType | null
+    # "broncatalogus.url: UnsetType | null
+    # "bronzaaktype.url: UnsetType | null
+    statustypen: UnsetType | list[StatusType] = UNSET
+    resultaattypen: UnsetType | list[ResultaatType] = UNSET
+    eigenschappen: UnsetType | list[Eigenschap] = UNSET
+    informatieobjecttypen: UnsetType | list[InformatieObjectType] = UNSET
+    roltypen: UnsetType | list[RolType] = UNSET
+    deelzaaktypen: UnsetType | list[ZaakType] = UNSET
+    zaakobjecttypen: UnsetType | list[ZaakObjectType] = UNSET
+
+
+class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
+    _expand: ZaakTypeExtension = ZaakTypeExtension()
+
+
+class ExpandableZaakType(ZaakType, Struct):
+    _expand: ZaakTypeExtension = ZaakTypeExtension()
+
+
 @extend_schema_view(
     get=extend_schema(
         tags=["Zaaktypen"],
@@ -103,10 +133,11 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
         tags=["Zaaktypen"],
         summary="Create a zaaktype",
         description="Create a zaaktype.",
-        request=ZaakTypeRequest,
+        request=ExpandableZaakTypeRequest,
         responses={
-            "201": ZaakType,
-            "400": ZGWError,
+            "201": ExpandableZaakType,
+            "400": list[ZGWError],
+            "500": list[ZGWError],
         },
     ),
 )
@@ -132,32 +163,102 @@ class ZaakTypeListView(
             },
         )
 
+    @override
+    def create_related(self, api_client, obj, request_data):
+        zaaktype = ExpandableZaakType(**asdict(obj))
+
+        posted_expansions = request_data.get("_expand", {})
+
+        all_errors = []
+
+        def inject_foreignkeys(key) -> Iterable[Mapping]:
+            # add missing foreign keys
+            # defaults | posted | overrides
+            return (
+                {"catalogus": obj.catalogus} | data | {"zaaktype": obj.url}
+                for data in posted_expansions.get(key, [])
+            )
+
+        besluittypen, errors = create_many(
+            api_client, "besluittypen", BesluitType, inject_foreignkeys("besluittypen")
+        )
+        all_errors.extend(errors)
+        statustypen, errors = create_many(
+            api_client, "statustypen", StatusType, inject_foreignkeys("statustypen")
+        )
+        all_errors.extend(errors)
+        resultaattypen, errors = create_many(
+            api_client,
+            "resultaattypen",
+            ResultaatType,
+            inject_foreignkeys("resultaattypen"),
+        )
+        all_errors.extend(errors)
+        eigenschappen, errors = create_many(
+            api_client, "eigenschappen", Eigenschap, inject_foreignkeys("eigenschappen")
+        )
+        all_errors.extend(errors)
+        informatieobjecttypen, errors = create_many(
+            api_client,
+            "informatieobjecttypen",
+            InformatieObjectType,
+            inject_foreignkeys("informatieobjecttypen"),
+        )
+        all_errors.extend(errors)
+        roltypen, errors = create_many(
+            api_client, "roltypen", RolType, inject_foreignkeys("roltypen")
+        )
+        all_errors.extend(errors)
+        deelzaaktypen, errors = create_many(
+            api_client,
+            "zaaktypen",
+            ZaakType,
+            posted_expansions.get("deelzaaktypen", []),
+        )
+        all_errors.extend(errors)
+        zaakobjecttypen, errors = create_many(
+            api_client,
+            "zaakobjecttypen",
+            ZaakObjectType,
+            inject_foreignkeys("zaakobjecttypen"),
+        )
+        all_errors.extend(errors)
+
+        # M2M
+        zaaktype.besluittypen = [t.url for t in besluittypen if t.url] + (
+            zaaktype.besluittypen or []
+        )
+        zaaktype.statustypen = [t.url for t in statustypen if t.url]
+        zaaktype.resultaattypen = [t.url for t in resultaattypen if t.url]
+        zaaktype.eigenschappen = [t.url for t in eigenschappen if t.url]
+        zaaktype.informatieobjecttypen = [t.url for t in informatieobjecttypen if t.url]
+        zaaktype.roltypen = [t.url for t in roltypen if t.url]
+        # accepts existing
+        zaaktype.deelzaaktypen = [t.url for t in deelzaaktypen if t.url] + (
+            zaaktype.deelzaaktypen or []
+        )
+        zaaktype.zaakobjecttypen = [t.url for t in zaakobjecttypen if t.url]
+
+        # existing besluittypen and deelzaaktypen are not expanded (yet?)
+        zaaktype._expand = replace(
+            zaaktype._expand,
+            besluittypen=besluittypen,
+            statustypen=statustypen,
+            resultaattypen=resultaattypen,
+            eigenschappen=eigenschappen,
+            informatieobjecttypen=informatieobjecttypen,
+            roltypen=roltypen,
+            deelzaaktypen=deelzaaktypen,
+            zaakobjecttypen=zaakobjecttypen,
+        )
+
+        return zaaktype, all_errors
+
     def parse_query_params(self, request: Request, api_client: APIClient):
         params = super().parse_query_params(request, api_client)
         if params.catalogus:
             params.catalogus = f"{api_client.base_url}catalogussen/{params.catalogus}"
         return params
-
-
-ExpandableZaakType = make_expandable(
-    ZaakType,
-    {
-        "besluittypen": list[BesluitType],
-        # Not invented here:
-        # "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
-        # Posssibly Not invented here:
-        # "gerelateerde_zaaktypen": null,
-        # "broncatalogus.url": null,
-        # "bronzaaktype.url": null,
-        "statustypen": list[StatusType],
-        "resultaattypen": list[ResultaatType],
-        "eigenschappen": list[Eigenschap],
-        "informatieobjecttypen": list[InformatieObjectType],
-        "roltypen": list[RolType],
-        "deelzaaktypen": list[ZaakType],
-        "zaakobjecttypen": list[ZaakObjectType],
-    },
-)
 
 
 def expand_deelzaaktype(
