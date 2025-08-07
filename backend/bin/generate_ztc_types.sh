@@ -58,6 +58,7 @@ datamodel-codegen \
     --formatters ruff-check ruff-format \
     --target-python-version 3.12 \
     --openapi-scopes schemas paths parameters \
+    --output-datetime-class datetime \
     --output-model-type msgspec.Struct \
     --snake-case-field \
     --use-union-operator \

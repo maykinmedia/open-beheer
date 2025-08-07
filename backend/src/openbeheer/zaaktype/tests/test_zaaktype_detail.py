@@ -87,7 +87,8 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         self.assertIn("fieldsets", data)
         self.assertIn("fields", data)
 
-        fields = {f["name"] for f in data["fields"]}
+        fields_by_name = {f["name"]: f for f in data["fields"]}
+        fields = set(fields_by_name)
         # misspelled too, to catch camelize bugs
         expand = {"_expand", "Expand"}
         # fields are still undefined for expansion
@@ -239,6 +240,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         with self.subTest("fields"):
             self.assertEqual(data["fields"][1]["name"], "vertrouwelijkheidaanduiding")
             self.assertEqual(len(data["fields"][1]["options"]), 8)
+            self.assertEqual(fields_by_name["beginGeldigheid"]["type"], "date")
 
     def test_patch_zaaktype(self):
         zaaktype = self.helper.create_zaaktype()

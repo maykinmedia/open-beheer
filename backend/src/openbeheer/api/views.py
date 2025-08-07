@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial, reduce
-from inspect import get_annotations
 from operator import or_
 from typing import (
     TYPE_CHECKING,
@@ -415,7 +414,7 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
 
             return ob_field
 
-        attrs = get_annotations(self.return_data_type)
+        attrs = get_type_hints(self.return_data_type)
         return [to_ob_field(field, annotation) for field, annotation in attrs.items()]
 
     def parse_query_params(self, request: Request, api_client: APIClient) -> P:
