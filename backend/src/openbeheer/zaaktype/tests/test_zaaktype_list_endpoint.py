@@ -66,6 +66,9 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
             keys_in_fields = set(row.keys()) & field_names
             self.assertSetEqual(keys_in_fields, field_names)
 
+        versiedatum = next(f for f in data["fields"] if f["name"] == "versiedatum")
+        self.assertEqual(versiedatum["type"], "date")
+
     def test_catalog_filter(self):
         self.client.force_authenticate(self.user)
 
