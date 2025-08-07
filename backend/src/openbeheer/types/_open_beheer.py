@@ -157,8 +157,8 @@ class VersionSummary(Struct, rename="camel"):
     """
 
     uuid: str
-    begin_geldigheid: str
-    einde_geldigheid: str | None
+    begin_geldigheid: datetime.date
+    einde_geldigheid: datetime.date | None
     concept: bool | None
 
 

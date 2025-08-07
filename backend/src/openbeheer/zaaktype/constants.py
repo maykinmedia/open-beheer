@@ -4,6 +4,7 @@
 # from __future__ import annotations
 
 
+from datetime import date
 from typing import Annotated, Mapping
 from uuid import UUID, uuid4, uuid5
 
@@ -153,8 +154,8 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                 producten_of_diensten=[],
                 referentieproces=ReferentieProces(naam="De Vries"),
                 verantwoordelijke="",
-                begin_geldigheid="",
-                versiedatum="",
+                begin_geldigheid=date.today(),
+                versiedatum=date.today(),
                 catalogus="",
                 besluittypen=[],
                 gerelateerde_zaaktypen=[],
@@ -187,8 +188,6 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                     link="https://cwilibrary.on.worldcat.org/oclc/24718516",
                 ),
                 verantwoordelijke="",
-                begin_geldigheid="",
-                versiedatum="",
                 catalogus="",
                 besluittypen=[],
                 gerelateerde_zaaktypen=[],
@@ -221,8 +220,6 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                     link="https://www.gemmaonline.nl/wiki/Procesarchitectuur_Besturing_en_procesverbetering#De_PDCA-cyclus",
                 ),
                 verantwoordelijke="",
-                begin_geldigheid="",
-                versiedatum="",
                 catalogus="",
                 besluittypen=[],
                 gerelateerde_zaaktypen=[],
@@ -261,8 +258,8 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                 ],
                 referentieproces=ReferentieProces(naam="ReferentieProces 999", link=""),
                 verantwoordelijke="100000999",
-                begin_geldigheid="2018-01-01",
-                versiedatum="2018-01-01",
+                begin_geldigheid=date(2018, 1, 1),
+                versiedatum=date(2018, 1, 1),
                 catalogus=(
                     "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/"
                     "catalogussen/85028f4f-3d70-4ce9-8dbe-16a6b8613a54"
@@ -301,7 +298,7 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                     ),
                 },
                 einde_geldigheid=None,
-                begin_object="2018-01-01",
+                begin_object=date(2018, 1, 1),
                 einde_object=None,
                 statustypen=[],
                 resultaattypen=[],
