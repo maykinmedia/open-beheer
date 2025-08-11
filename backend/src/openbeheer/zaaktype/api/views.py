@@ -12,7 +12,7 @@ from furl import furl
 from msgspec import UNSET, Meta, Struct, UnsetType
 from msgspec.json import decode
 from msgspec.structs import asdict, replace
-from rest_framework.request import Request
+from rest_framework import status
 from rest_framework.response import Response
 
 from openbeheer.api.views import (
@@ -387,6 +387,32 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
+
+
+class ZaakTypePublishView(MsgspecAPIView):
+    data_type = ExpandableZaakType
+    endpoint_path = "zaaktypen/{uuid}/publish"
+
+    def post(self, request: Request, slug: str = "", uuid: str = "") -> Response:
+        with ztc_client(slug) as client:
+            response = client.post(
+                self.endpoint_path.format(uuid=uuid),
+            )
+
+            if not response.ok:
+                error = decode(response.content)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
+
+            data = decode(
+                response.content,
+                type=self.data_type,
+                strict=False,
+            )
+
+            return Response(data, status.HTTP_200_OK)
 
 
 @extend_schema_view(
