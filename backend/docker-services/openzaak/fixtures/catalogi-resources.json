@@ -336,6 +336,7 @@
     "pk": 1,
     "fields": {
       "uuid": "5d39b8ac-437a-475c-9a76-0f6ae1540d0e",
+      "brondatum_archiefprocedure_afleidingswijze": "afgehandeld",
       "omschrijving": "Afgehandeld",
       "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
       "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/1bb001e9-5eab-4f10-8940-8781e11f180f",
@@ -347,6 +348,7 @@
     "pk": 2,
     "fields": {
       "uuid": "12903100-b7a0-4441-9645-eda7df2ad106",
+      "brondatum_archiefprocedure_afleidingswijze": "afgehandeld",
       "omschrijving": "Verwerkt",
       "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/f33dbd16-68ae-4820-acb5-5f437bca5edb",
       "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/cc5ae4e3-a9e6-4386-bcee-46be4986a829",

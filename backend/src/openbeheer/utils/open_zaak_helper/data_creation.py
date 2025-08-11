@@ -12,6 +12,7 @@ from openbeheer.types.ztc import (
     InformatieObjectType,
     ResultaatType,
     RolType,
+    StatusType,
     ZaakType,
     ZaakTypeInformatieObjectType,
 )
@@ -100,6 +101,24 @@ class OpenZaakDataCreationHelper:
             data.update(overrides)
 
         return self._create_resource(data, "catalogussen", Catalogus)
+
+    def create_statustype(
+        self, overrides: Mapping[str, _JSONEncodable] = {}
+    ) -> StatusType:
+        assert "zaaktype" in overrides
+        data: dict[str, _JSONEncodable] = {
+            "omschrijving": "Ontvangen",
+            "zaaktype": str(overrides["zaaktype"]),
+            "volgnummer": 1,
+            "omschrijving_generiek": "",
+            "statustekst": "",
+            "informeren": False,
+            "checklistitem_statustype": [],
+        }
+        if overrides:
+            data.update(overrides)
+
+        return self._create_resource(data, "statustypen", StatusType)
 
     def relate_zaaktype_informatieobjecttype(
         self,
