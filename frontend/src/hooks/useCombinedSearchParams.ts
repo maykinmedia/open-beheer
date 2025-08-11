@@ -21,7 +21,12 @@ export function useCombinedSearchParams(
    * @param params - Query params to add.
    */
   function handle(params: URLSearchParamsInit) {
+    // FIXME: For some reason params (in our case status) seem not te be picked by
+    // useSearchParams, bug/by design?
+    const windowLocationParams = new URLSearchParams(window?.location.search);
+
     const combinedParams = {
+      ...Object.fromEntries(windowLocationParams),
       ...Object.fromEntries(searchParams),
       ...(params as Record<string, string>),
     };
