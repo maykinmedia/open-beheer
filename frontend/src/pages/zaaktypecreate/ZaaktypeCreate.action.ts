@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, redirect } from "react-router";
 import { request } from "~/api";
-import { TypedAction } from "~/hooks/useSubmitAction.ts";
+import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { PartialDeep, getZaaktypeUUID } from "~/lib";
 import { ZaaktypeCreateLoaderData } from "~/pages";
 import { components } from "~/types";

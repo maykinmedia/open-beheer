@@ -1,4 +1,4 @@
-import { useAlert } from "@maykin-ui/admin-ui";
+import { Errors, useAlert } from "@maykin-ui/admin-ui";
 import { useEffect } from "react";
 import { SubmitOptions, useActionData, useSubmit } from "react-router";
 import { collectErrors } from "~/lib";
@@ -68,8 +68,22 @@ export function useSubmitAction<T extends TypedAction = TypedAction>(
   // Show error(s) if present.
   useEffect(() => {
     if (catchErrors && actionData) {
-      const errors = collectErrors(actionData, true);
-      alert("Foutmelding", errors, "Ok");
+      let messages;
+      if (
+        "invalidParams" in actionData &&
+        Array.isArray(actionData.invalidParams)
+      ) {
+        messages = actionData.invalidParams.map(({ name, reason }) =>
+          [name, reason].join(": "),
+        );
+      } else {
+        messages = collectErrors(actionData);
+      }
+      alert(
+        "Foutmelding",
+        (<Errors errors={messages} />) as unknown as string, // TODO: Fix in admin-ui
+        "Ok",
+      );
     }
   }, [actionData, catchErrors]);
 

@@ -45,12 +45,9 @@ export function ListView<T extends object>({
    * Gets called when the page number changes.
    * @param page - The new page number.
    */
-  const handlePageChange = useCallback(
-    (page: number) => {
-      setCombinedSearchParams({ page: page.toString() });
-    },
-    [urlSearchParams],
-  );
+  const handlePageChange = (page: number) => {
+    setCombinedSearchParams({ page: page.toString() });
+  };
 
   /**
    * Gets called when a row's identifier is clicked.
