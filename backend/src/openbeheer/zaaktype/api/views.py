@@ -390,10 +390,19 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
 
 
 class ZaakTypePublishView(MsgspecAPIView):
-    data_type = ExpandableZaakType
     endpoint_path = "zaaktypen/{uuid}/publish"
 
+    @extend_schema(
+        operation_id="service_zaaktypen_publish",
+        summary="Publish a zaaktype",
+        tags=["Zaaktypen"],
+        responses={
+            204: None,
+            400: ZGWError,
+        },
+    )
     def post(self, request: Request, slug: str = "", uuid: str = "") -> Response:
+        "Publish a zaaktype"
         with ztc_client(slug) as client:
             response = client.post(
                 self.endpoint_path.format(uuid=uuid),
@@ -406,13 +415,7 @@ class ZaakTypePublishView(MsgspecAPIView):
                     status=response.status_code,
                 )
 
-            data = decode(
-                response.content,
-                type=self.data_type,
-                strict=False,
-            )
-
-            return Response(data, status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema_view(

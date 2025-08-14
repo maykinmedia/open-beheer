@@ -88,9 +88,9 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
 
         assert zaaktype.url
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
-        self.client.force_login(self.user)
+        assert zaaktype.concept is True
 
-        self.assertTrue(zaaktype.concept)
+        self.client.force_login(self.user)
 
         endpoint = reverse(
             "api:zaaktypen:zaaktype-publish",
@@ -98,8 +98,36 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
         )
         response = self.client.post(endpoint)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(
+            response.status_code, status.HTTP_204_NO_CONTENT, response.content
+        )
 
-        data = response.json()
+        detail_endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
+        )
 
-        self.assertFalse(data["concept"])
+        detail = self.client.get(detail_endpoint).json()["result"]
+
+        self.assertFalse(detail["concept"])
+
+        # :thisisfine:
+        # deletion_attempt = self.client.delete(detail_endpoint)
+        # self.assertEqual(
+        #     deletion_attempt.status_code,
+        #     status.HTTP_405_METHOD_NOT_ALLOWED,
+        # )
+
+    def test_publish_zaaktype_404(self):
+        self.client.force_login(self.user)
+        zaaktype_uuid = "542983d2-78fd-11f0-a844-c3f05b711b08"
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-publish",
+            kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
+        )
+        response = self.client.post(endpoint)
+
+        self.assertEqual(
+            response.status_code, status.HTTP_404_NOT_FOUND, response.content
+        )
