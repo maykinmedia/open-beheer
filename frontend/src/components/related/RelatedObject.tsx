@@ -1,13 +1,29 @@
-import { DataGrid } from "@maykin-ui/admin-ui";
+import {
+  Button,
+  DataGrid,
+  Form,
+  FormControlProps,
+  Outline,
+  Primitive,
+} from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
+import { ChangeEvent, JSX, useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { SERVICE_PARAM } from "~/App.tsx";
+import { getRelatedObjectTemplateChoices } from "~/api/template.ts";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
-import { ExpandItemKeys, Expanded } from "~/types";
+import { useCombinedSearchParams } from "~/hooks";
+import { useSubmitAction } from "~/hooks/useSubmitAction.ts";
+import { getObjectUUID } from "~/lib";
+import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
+import { Expand, ExpandItemKeys, Expanded, RelatedObject } from "~/types";
 
 type RelatedObjectRendererProps<T extends object> = {
   object: Expanded<T>;
   view: "AttributeGrid" | "DataGrid";
   expandFields: ExpandItemKeys<T>[];
   field: ExpandItemKeys<T>;
+  zaaktypeUuid: string;
 };
 
 /**
@@ -16,14 +32,45 @@ type RelatedObjectRendererProps<T extends object> = {
  *
  * @param relatedObjects - The array of objects to render
  * @param view - The view type, either "DataGrid" or "AttributeGrid"
- * @param config - Tab configuration indicating view type and allowed fields
  */
 export function RelatedObjectRenderer<T extends object>({
   object,
   view,
   expandFields,
   field,
+  zaaktypeUuid,
 }: RelatedObjectRendererProps<T>) {
+  const [combinedSearchParams] = useCombinedSearchParams();
+  const [addNewValueState, setAddNewValueState] = useState<string | null>(null);
+  // TODO: Editable on `url` needs to be false
+  const params = useParams();
+  const serviceSlug = params[SERVICE_PARAM];
+  const submitAction = useSubmitAction<ZaaktypeAction>();
+  const [relatedObjectChoices, setRelatedObjectChoices] = useState<
+    RelatedObject<T>[]
+  >([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchCatalogiChoices = async () => {
+      try {
+        const choices = await getRelatedObjectTemplateChoices(field);
+        if (choices) {
+          setRelatedObjectChoices(choices);
+        }
+      } catch (error) {
+        console.error("Failed to fetch catalogi choices:", error);
+      }
+    };
+
+    void fetchCatalogiChoices();
+
+    return () => {
+      controller.abort();
+    };
+  }, [field]);
+
   /**
    * Extracts an array of related objects from the expansion map.
    *
@@ -34,34 +81,145 @@ export function RelatedObjectRenderer<T extends object>({
   const extractRelatedObjects = (
     object: Expanded<T>,
     field: ExpandItemKeys<T>,
-  ) => {
-    const expand = object._expand;
-    const value = expand?.[field];
+  ): RelatedObject<T>[] => {
+    const expand = object._expand as Expand<T>;
+    const value = expand[field];
 
     invariant(
       Array.isArray(value),
-      `Expected an array for field "${field}" in _expand, but got: ${value}`,
+      `Expected an array for field "${String(field)}" in _expand, but got: ${value}`,
     );
+
     return value;
   };
 
+  const onAdd = (url: string) => {
+    const foundRelatedObject = relatedObjectChoices.find(
+      (choice: { url?: string }) => choice.url === url,
+    );
+    if (!foundRelatedObject) {
+      console.warn(`No choice found for value: ${url}`);
+      return;
+    }
+    if (!serviceSlug) {
+      console.warn("Service slug is not defined.");
+      return;
+    }
+    submitAction({
+      type: "ADD_RELATED_OBJECT",
+      payload: {
+        serviceSlug: serviceSlug,
+        zaaktypeUuid: zaaktypeUuid,
+        relatedObjectKey: field,
+        relatedObject: foundRelatedObject,
+      },
+    });
+  };
+
+  const onEdit = (relatedObject: RelatedObject<T>) => {
+    if (!serviceSlug) {
+      console.warn("Service slug is not defined.");
+      return;
+    }
+    submitAction({
+      type: "EDIT_RELATED_OBJECT",
+      payload: {
+        serviceSlug: serviceSlug,
+        zaaktypeUuid: zaaktypeUuid,
+        relatedObjectKey: field,
+        relatedObject: relatedObject,
+      },
+    });
+  };
+
+  const onDelete = (relatedObject: RelatedObject<T>) => {
+    if (!serviceSlug) {
+      console.warn("Service slug is not defined.");
+      return;
+    }
+    submitAction({
+      type: "DELETE_RELATED_OBJECT",
+      payload: {
+        serviceSlug: serviceSlug,
+        zaaktypeUuid: zaaktypeUuid,
+        relatedObjectKey: field,
+        relatedObjectUuid: getObjectUUID(relatedObject),
+      },
+    });
+  };
+
   const relatedObjects = extractRelatedObjects(object, field);
-  if (!relatedObjects.length) return null;
+  if (!relatedObjects?.length) return null;
+
+  const fields: FormControlProps[] = [
+    {
+      name: `${field}-toevoegen`,
+      label: `Voeg ${field} toe`,
+      type: "text",
+      placeholder: "Selecteer...",
+      value: addNewValueState,
+      options: relatedObjectChoices.map(
+        (choice: { url?: string; omschrijving?: string }) => ({
+          label: choice.omschrijving || choice.url || "Onbekend",
+          value: choice.url || "",
+        }),
+      ),
+      onChange: (e: ChangeEvent<HTMLSelectElement>) =>
+        setAddNewValueState(e.target.value),
+    },
+  ];
 
   if (view !== "AttributeGrid") {
     return (
-      <DataGrid<(typeof relatedObjects)[number]> // FIXME
-        objectList={relatedObjects}
-        urlFields={[]}
-      />
+      <>
+        <DataGrid<RelatedObject<T>>
+          objectList={
+            relatedObjects.map((relatedObject) => ({
+              ...(relatedObject as object),
+              "delete-related-object": (
+                <Button
+                  variant="danger"
+                  onClick={() => onDelete?.(relatedObject as RelatedObject<T>)}
+                  pad="h"
+                >
+                  <Outline.TrashIcon />
+                </Button>
+              ),
+            })) as (RelatedObject<T> & {
+              "delete-related-object": JSX.Element;
+            })[]
+          }
+          editable={Boolean(combinedSearchParams.get("editing"))}
+          fields={[...expandFields, "delete-related-object"]}
+          onEdit={(data) => {
+            const _data = data as RelatedObject<T>;
+            onEdit(_data);
+          }}
+          urlFields={[]}
+        />
+        <Form // TODO: New select/combobox according to design is necessary.
+          buttonProps={{ pad: "h" }}
+          fields={fields}
+          showRequiredExplanation={false}
+          labelSubmit="Toevoegen"
+          onSubmit={() => onAdd?.(addNewValueState || "")}
+        />
+      </>
     );
   }
 
-  return relatedObjects.map((relatedObject, index) => (
-    <RelatedObjectBadge<T>
-      key={typeof relatedObject.url === "string" ? relatedObject.url : index}
-      relatedObject={relatedObject}
-      allowedFields={expandFields}
-    />
-  ));
+  return relatedObjects.map((relatedObject, index) => {
+    const maybeUrl = (relatedObject as Record<string, unknown>)?.url as
+      | string
+      | undefined;
+    return (
+      <RelatedObjectBadge<RelatedObject<T>>
+        key={maybeUrl || index}
+        relatedObject={
+          relatedObject as Record<ExpandItemKeys<T>, object | Primitive>
+        }
+        allowedFields={expandFields}
+      />
+    );
+  });
 }
