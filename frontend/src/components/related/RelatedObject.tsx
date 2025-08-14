@@ -1,11 +1,28 @@
-import { DataGrid } from "@maykin-ui/admin-ui";
+import {
+  Button,
+  DataGrid,
+  Form,
+  FormControlProps,
+  Outline,
+} from "@maykin-ui/admin-ui";
+import { ChangeEvent, JSX, useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { SERVICE_PARAM } from "~/App.tsx";
+import { getRelatedObjectTemplateChoices } from "~/api/template.ts";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
+import { useCombinedSearchParams } from "~/hooks";
+import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
+import { getZaaktypeUUID } from "~/lib";
 import { BaseTabSection, TabConfig } from "~/pages";
+import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
+import { Expand, ExpandItemKeys, Expanded, RelatedObject } from "~/types";
 
 type RelatedObjectRendererProps<T extends object> = {
   relatedObject: object | object[]; // TODO: Can improve typing
   view: TabConfig<T>["view"];
   expandFields: BaseTabSection<T>["expandFields"];
+  field: ExpandItemKeys<T>;
+  zaaktypeUuid: string;
 };
 
 /**
@@ -19,7 +36,117 @@ export function RelatedObjectRenderer<T extends object>({
   relatedObject,
   view,
   expandFields,
+  field,
+  zaaktypeUuid,
 }: RelatedObjectRendererProps<T>) {
+  const [combinedSearchParams] = useCombinedSearchParams();
+  const [addNewValueState, setAddNewValueState] = useState<string | null>(null);
+  // TODO: Editable on `url` needs to be false
+  const params = useParams();
+  const serviceSlug = params[SERVICE_PARAM];
+  const submitAction = useSubmitAction<ZaaktypeAction>();
+  const [relatedObjectChoices, setRelatedObjectChoices] = useState<
+    RelatedObject<T>[]
+  >([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchCatalogiChoices = async () => {
+      try {
+        const choices = await getRelatedObjectTemplateChoices(field);
+        if (choices) {
+          setRelatedObjectChoices(choices);
+        }
+      } catch (error) {
+        console.error("Failed to fetch catalogi choices:", error);
+      }
+    };
+
+    void fetchCatalogiChoices();
+
+    return () => {
+      controller.abort();
+    };
+  }, [field]);
+
+  const onAdd = (url: string) => {
+    const foundRelatedObject = relatedObjectChoices.find(
+      (choice: { url?: string }) => choice.url === url,
+    );
+    if (!foundRelatedObject) {
+      console.warn(`No choice found for value: ${url}`);
+      return;
+    }
+    if (!serviceSlug) {
+      console.warn("Service slug is not defined.");
+      return;
+    }
+    submitAction({
+      type: "ADD_RELATED_OBJECT",
+      payload: {
+        serviceSlug: serviceSlug,
+        zaaktypeUuid: zaaktypeUuid,
+        relatedObjectKey: field,
+        relatedObject: foundRelatedObject,
+      },
+    });
+  };
+
+  const onEdit = (relatedObject: RelatedObject<T>) => {
+    if (!serviceSlug) {
+      console.warn("Service slug is not defined.");
+      return;
+    }
+    submitAction({
+      type: "EDIT_RELATED_OBJECT",
+      payload: {
+        serviceSlug: serviceSlug,
+        zaaktypeUuid: zaaktypeUuid,
+        relatedObjectKey: field,
+        relatedObject: relatedObject,
+      },
+    });
+  };
+
+  const onDelete = (relatedObject: RelatedObject<T>) => {
+    if (!serviceSlug) {
+      console.warn("Service slug is not defined.");
+      return;
+    }
+    const zaaktypeUuid = getZaaktypeUUID(relatedObject);
+    if (!zaaktypeUuid) {
+      throw new Error("Related object does not have a UUID.");
+    }
+    submitAction({
+      type: "DELETE_RELATED_OBJECT",
+      payload: {
+        serviceSlug: serviceSlug,
+        zaaktypeUuid: zaaktypeUuid,
+        relatedObjectKey: field,
+        relatedObjectUuid: getZaaktypeUUID(relatedObject) ?? "",
+      },
+    });
+  };
+
+  const fields: FormControlProps[] = [
+    {
+      name: `${field}-toevoegen`,
+      label: `Voeg ${field} toe`,
+      type: "text",
+      placeholder: "Selecteer...",
+      value: addNewValueState,
+      options: relatedObjectChoices.map(
+        (choice: { url?: string; omschrijving?: string }) => ({
+          label: choice.omschrijving || choice.url || "Onbekend",
+          value: choice.url || "",
+        }),
+      ),
+      onChange: (e: ChangeEvent<HTMLSelectElement>) =>
+        setAddNewValueState(e.target.value),
+    },
+  ];
+
   if (!Array.isArray(relatedObject)) {
     if (!relatedObject) return null;
 
@@ -33,10 +160,40 @@ export function RelatedObjectRenderer<T extends object>({
 
   if (view === "DataGrid") {
     return (
-      <DataGrid<(typeof relatedObject)[number]>
-        objectList={relatedObject}
-        urlFields={[]}
-      />
+      <>
+        <DataGrid<(typeof relatedObject)[number]>
+          objectList={
+            relatedObject.map((relatedObject) => ({
+              ...(relatedObject as object),
+              "delete-related-object": (
+                <Button
+                  variant="danger"
+                  onClick={() => onDelete?.(relatedObject as RelatedObject<T>)}
+                  pad="h"
+                >
+                  <Outline.TrashIcon />
+                </Button>
+              ),
+            })) as (RelatedObject<T> & {
+              "delete-related-object": JSX.Element;
+            })[]
+          }
+          editable={Boolean(combinedSearchParams.get("editing"))}
+          fields={[...expandFields, "delete-related-object"]}
+          onEdit={(data) => {
+            const _data = data as RelatedObject<T>;
+            onEdit(_data);
+          }}
+          urlFields={[]}
+        />
+        <Form // TODO: New select/combobox according to design is necessary.
+          buttonProps={{ pad: "h" }}
+          fields={fields}
+          showRequiredExplanation={false}
+          labelSubmit="Toevoegen"
+          onSubmit={() => onAdd?.(addNewValueState || "")}
+        />
+      </>
     );
   }
 
@@ -48,4 +205,57 @@ export function RelatedObjectRenderer<T extends object>({
       allowedFields={expandFields}
     />
   ));
+  // if (view !== "AttributeGrid") {
+  //   return (
+  //     <>
+  //       <DataGrid<RelatedObject<T>>
+  //         objectList={
+  //           relatedObject.map((relatedObject) => ({
+  //             ...(relatedObject as object),
+  //             "delete-related-object": (
+  //               <Button
+  //                 variant="danger"
+  //                 onClick={() => onDelete?.(relatedObject as RelatedObject<T>)}
+  //                 pad="h"
+  //               >
+  //                 <Outline.TrashIcon />
+  //               </Button>
+  //             ),
+  //           })) as (RelatedObject<T> & {
+  //             "delete-related-object": JSX.Element;
+  //           })[]
+  //         }
+  //         editable={Boolean(combinedSearchParams.get("editing"))}
+  //         fields={[...expandFields, "delete-related-object"]}
+  //         onEdit={(data) => {
+  //           const _data = data as RelatedObject<T>;
+  //           onEdit(_data);
+  //         }}
+  //         urlFields={[]}
+  //       />
+  //       <Form // TODO: New select/combobox according to design is necessary.
+  //         buttonProps={{ pad: "h" }}
+  //         fields={fields}
+  //         showRequiredExplanation={false}
+  //         labelSubmit="Toevoegen"
+  //         onSubmit={() => onAdd?.(addNewValueState || "")}
+  //       />
+  //     </>
+  //   );
+  // }
+  //
+  // return relatedObject.map((relatedObject, index) => {
+  //   const maybeUrl = (relatedObject as Record<string, unknown>)?.url as
+  //     | string
+  //     | undefined;
+  //   return (
+  //     <RelatedObjectBadge<RelatedObject<T>>
+  //       key={maybeUrl || index}
+  //       relatedObject={
+  //         relatedObject as Record<ExpandItemKeys<T>, object | Primitive>
+  //       }
+  //       allowedFields={expandFields}
+  //     />
+  //   );
+  // });
 }

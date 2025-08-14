@@ -2,8 +2,8 @@ import { ActionFunctionArgs, redirect } from "react-router";
 import { request } from "~/api";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
-import { TargetType } from "~/pages";
-import { components } from "~/types";
+import { TargetType, ZaaktypeLoaderData } from "~/pages";
+import { RelatedObject, components } from "~/types";
 
 export type ZaaktypeAction =
   | TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>
@@ -11,7 +11,10 @@ export type ZaaktypeAction =
   | TypedAction<"PUBLISH_VERSION", UpdateZaaktypeVersionPayload>
   | TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>
   | TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>
-  | TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>;
+  | TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>
+  | TypedAction<"EDIT_RELATED_OBJECT", EditRelatedObjectPayload>
+  | TypedAction<"ADD_RELATED_OBJECT", AddRelatedObjectPayload>
+  | TypedAction<"DELETE_RELATED_OBJECT", DeleteRelatedObjectPayload>;
 
 /**
  * Zaaktype action.
@@ -42,6 +45,12 @@ export async function zaaktypeAction({
       });
     case "SELECT_VERSION":
       return await selectZaaktypeVersionAction({ request, params, context });
+    case "EDIT_RELATED_OBJECT":
+      return await editRelatedObjectAction({ request, params, context });
+    case "ADD_RELATED_OBJECT":
+      return await addRelatedObjectAction({ request, params, context });
+    case "DELETE_RELATED_OBJECT":
+      return await deleteRelatedObjectAction({ request, params, context });
     default:
       throw new Error("INVALID ACTION TYPE SPECIFIED!");
   }
@@ -183,6 +192,96 @@ export async function editZaaktypeVersionAction(
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as EditZaaktypeVersionPayload;
   return redirect(`../${payload.uuid}?editing=true`);
+}
+
+export type AddRelatedObjectPayload = {
+  serviceSlug: string;
+  zaaktypeUuid: string;
+
+  relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
+  relatedObject: RelatedObject<ZaaktypeLoaderData["result"]>;
+};
+
+/**
+ * Action to add a related object.
+ */
+export async function addRelatedObjectAction(
+  actionFunctionArgs: ActionFunctionArgs,
+) {
+  const data = await actionFunctionArgs.request.json();
+  const payload = data.payload as AddRelatedObjectPayload;
+
+  console.log(`Adding related object: ${payload.relatedObjectKey}`);
+  try {
+    return await request(
+      "POST",
+      `/service/${payload.serviceSlug}/zaaktype/${payload.zaaktypeUuid}/${payload.relatedObjectKey}`,
+      {},
+      payload.relatedObject,
+    );
+  } catch (e: unknown) {
+    return await (e as Response).json();
+  }
+}
+
+export type EditRelatedObjectPayload = {
+  serviceSlug: string;
+  zaaktypeUuid: string;
+
+  relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
+  relatedObject: Partial<RelatedObject<ZaaktypeLoaderData["result"]>>;
+};
+
+/**
+ * Action to edit a related object.
+ */
+export async function editRelatedObjectAction(
+  actionFunctionArgs: ActionFunctionArgs,
+) {
+  const data = await actionFunctionArgs.request.json();
+  const payload = data.payload as EditRelatedObjectPayload;
+  console.log("Editing related object:", payload.relatedObject);
+
+  const relatedObjectUuid = getZaaktypeUUID(payload.relatedObject);
+
+  try {
+    return await request(
+      "PATCH",
+      `/service/${payload.serviceSlug}/zaaktype/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${relatedObjectUuid}`,
+      {},
+      payload.relatedObject,
+    );
+  } catch (e: unknown) {
+    return await (e as Response).json();
+  }
+}
+
+export type DeleteRelatedObjectPayload = {
+  serviceSlug: string;
+  zaaktypeUuid: string;
+
+  relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
+  relatedObjectUuid: string;
+};
+/**
+ * Action to delete a related object.
+ */
+export async function deleteRelatedObjectAction(
+  actionFunctionArgs: ActionFunctionArgs,
+) {
+  const data = await actionFunctionArgs.request.json();
+  const payload = data.payload as DeleteRelatedObjectPayload;
+
+  console.log("Deleting related object:", payload.relatedObjectKey);
+
+  try {
+    return await request(
+      "DELETE",
+      `/service/${payload.serviceSlug}/zaaktype/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${payload.relatedObjectUuid}`,
+    );
+  } catch (e: unknown) {
+    return await (e as Response).json();
+  }
 }
 
 /**
