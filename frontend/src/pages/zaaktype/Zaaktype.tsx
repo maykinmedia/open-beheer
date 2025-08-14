@@ -142,13 +142,13 @@ function ZaaktypeTabs() {
 
       // Skip if the field is not expandable or has no value.
       if (!(fieldName in expand) || originalValue === null) continue;
-
       overrides[fieldName] = (
         <RelatedObjectRenderer
           expandFields={activeSectionConfig.expandFields}
           field={fieldName as keyof Expand<typeof result>}
           object={result}
           view={TABS_CONFIG[activeTabIndex].view}
+          zaaktypeUuid={getZaaktypeUUID(result)}
         />
       );
     }
