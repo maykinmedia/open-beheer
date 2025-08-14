@@ -14,8 +14,6 @@ from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreation
 
 @tag("vcr")
 class ZaakTypePublishViewTest(VCRMixin, APITestCase):
-    vcr_enabled = False
-
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
