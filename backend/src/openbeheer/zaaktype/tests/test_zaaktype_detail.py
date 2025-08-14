@@ -103,6 +103,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         zaaktype = data["result"]
 
         with self.subTest("result"):
+            self.assertIn("uuid", zaaktype)
             self.assertIn("omschrijving", zaaktype)
             self.assertIn("vertrouwelijkheidaanduiding", zaaktype)
             self.assertIn("doel", zaaktype)
