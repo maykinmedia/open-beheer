@@ -116,6 +116,8 @@ def _add_mixin(render_class: type[BaseRenderer]) -> type[BaseRenderer]:
 
 
 class MsgspecAPIView(_APIView):
+    serializer_class = None
+
     def get_renderers(self) -> list[BaseRenderer]:
         render_classes = (_add_mixin(_class) for _class in self.renderer_classes)
         return [MsgspecJSONRenderer()] + [r() for r in render_classes]
