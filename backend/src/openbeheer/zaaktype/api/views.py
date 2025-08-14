@@ -311,6 +311,19 @@ def expand_deelzaaktype(
             "400": ZGWError,
         },
     ),
+    delete=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Delete a zaaktype",
+        description=(
+            "Delete a zaaktype from Open Zaak. According to OZ specs, this should only work with"
+            " draft zaaktypen. In practice, it deletes also the published zaaktypen."
+        ),
+        request=None,
+        responses={
+            "204": None,
+            "400": ZGWError,
+        },
+    ),
 )
 class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     data_type = ExpandableZaakType
