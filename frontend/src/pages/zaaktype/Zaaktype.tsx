@@ -11,7 +11,7 @@ import {
   Solid,
   Tab,
   Tabs,
-  Toolbar,
+  Toolbar
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
@@ -30,6 +30,7 @@ import { getZaaktypeUUID } from "~/lib";
 import {
   AttributeGridSection,
   DataGridSection,
+  TabConfig,
   TABS_CONFIG_ALGEMEEN,
   TABS_CONFIG_DOCUMENTTYPEN,
   TABS_CONFIG_EIGENSCHAPPEN,
@@ -37,9 +38,8 @@ import {
   TABS_CONFIG_RELATIES,
   TABS_CONFIG_ROLTYPEN,
   TABS_CONFIG_STATUSTYPEN,
-  TabConfig,
   TargetType,
-  ZaaktypeLoaderData,
+  ZaaktypeLoaderData
 } from "~/pages";
 import { TABS_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.tsx";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
@@ -340,6 +340,7 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
           expandFields={activeSectionConfig.expandFields}
           relatedObject={relatedObject}
           view={tabConfig.view}
+          zaaktypeUuid={getZaaktypeUUID(object)}
         />
       );
     }
