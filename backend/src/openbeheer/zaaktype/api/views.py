@@ -23,6 +23,7 @@ from openbeheer.api.views import (
     create_many,
     fetch_one,
     make_expansion,
+    make_with_uuid,
 )
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import (
@@ -118,7 +119,12 @@ class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
 
 
 class ExpandableZaakType(ZaakType, Struct):
+    uuid: str | UnsetType = UNSET
     _expand: ZaakTypeExtension = ZaakTypeExtension()
+
+    def __post_init__(self):
+        if hasattr(self, "url") and self.url:
+            self.uuid = furl(self.url).path.segments[-1]
 
 
 @extend_schema_view(
@@ -261,32 +267,12 @@ class ZaakTypeListView(
         return params
 
 
-ExpandableZaakType = make_expandable(
-    ZaakType,
-    {
-        "besluittypen": list[BesluitType],
-        # Not invented here:
-        # "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
-        # Posssibly Not invented here:
-        # "gerelateerde_zaaktypen": null,
-        # "bronzaaktype.url": null,
-        "statustypen": list[StatusType],
-        "resultaattypen": list[ResultaatType],
-        "eigenschappen": list[Eigenschap],
-        "informatieobjecttypen": list[InformatieObjectType],
-        "roltypen": list[RolType],
-        "deelzaaktypen": list[ZaakType],
-        "zaakobjecttypen": list[ZaakObjectType],
-    },
-)
-
-
 def expand_deelzaaktype(
     client: APIClient, zaaktypen: Iterable[ZaakType]
 ) -> list[list[ZaakType | None]]:
     return [
         [
-            fetch_one(client, dz_url, ZaakType) if dz_url else None
+            fetch_one(client, dz_url, make_with_uuid(ZaakType)) if dz_url else None
             for dz_url in (zt.deelzaaktypen or [])
         ]
         for zt in zaaktypen
@@ -364,24 +350,30 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
             lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
-            BesluitType,
+            make_with_uuid(BesluitType),
         ),
         "statustypen": make_expansion(
-            "statustypen", _get_params_with_status, StatusType
+            "statustypen", _get_params_with_status, make_with_uuid(StatusType)
         ),
         # TODO investigate bad OZ response
         "resultaattypen": make_expansion(
             "resultaattypen", _get_params_with_status, dict
         ),
         "eigenschappen": make_expansion(
-            "eigenschappen", _get_params_with_status, Eigenschap
+            "eigenschappen", _get_params_with_status, make_with_uuid(Eigenschap)
         ),
         "informatieobjecttypen": make_expansion(
-            "informatieobjecttypen", _get_params_with_status, InformatieObjectType
+            "informatieobjecttypen",
+            _get_params_with_status,
+            make_with_uuid(InformatieObjectType),
         ),
-        "roltypen": make_expansion("roltypen", _get_params_with_status, RolType),
+        "roltypen": make_expansion(
+            "roltypen", _get_params_with_status, make_with_uuid(RolType)
+        ),
         "deelzaaktypen": expand_deelzaaktype,
-        "zaakobjecttypen": make_expansion("zaakobjecttypen", _key, ZaakObjectType),
+        "zaakobjecttypen": make_expansion(
+            "zaakobjecttypen", _key, make_with_uuid(ZaakObjectType)
+        ),
     }
 
     def get_item_versions(
