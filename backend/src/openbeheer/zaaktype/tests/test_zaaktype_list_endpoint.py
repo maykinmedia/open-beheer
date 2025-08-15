@@ -329,9 +329,7 @@ class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
         self.client.force_login(self.user)
 
         existing = self.helper.create_besluittype(
-            overrides={
-                "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-            }
+            catalogus="http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
         )
 
         data = {
@@ -664,10 +662,8 @@ class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
         self.client.force_login(self.user)
 
         existing = self.helper.create_zaaktype(
-            overrides={
-                "omschrijving": "Sub Zaaktype 000",
-                "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-            }
+            omschrijving="Sub Zaaktype 000",
+            catalogus="http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
         )
         data = {
             "omschrijving": "New Zaaktype 001",
