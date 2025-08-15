@@ -121,7 +121,7 @@ class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
     roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
     deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
     zaakobjecttypen: UnsetType | list[ZaakObjectTypeWithUUID] = UNSET
-    selectielijst_procestype: UnsetType | list[ProcesType] = UNSET
+    selectielijst_procestype: UnsetType | ProcesType = UNSET
 
 
 class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
@@ -277,7 +277,7 @@ def expand_deelzaaktype(
 ) -> list[list[ZaakType | None]]:
     return [
         [
-            fetch_one(client, dz_url, ZaakTypeWithUUID) if dz_url else None
+            fetch_one(client, dz_url, ZaakType) if dz_url else None
             for dz_url in (zt.deelzaaktypen or [])
         ]
         for zt in zaaktypen
