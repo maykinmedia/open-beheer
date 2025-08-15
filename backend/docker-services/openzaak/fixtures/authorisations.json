@@ -14,7 +14,33 @@
             "uuid": "72320633-898b-419c-be94-ce8e7800b021",
             "client_ids": "[\"test-vcr\"]",
             "label": "VCR test",
-            "heeft_alle_autorisaties": true
+            "heeft_alle_autorisaties": false
+        }
+    },
+    {
+        "model": "authorizations.autorisatie",
+        "pk": 2,
+        "fields": {
+            "applicatie": 1,
+            "component": "ztc",
+            "scopes": "[\"catalogi.lezen\", \"catalogi.schrijven\", \"notificaties.consumeren\", \"notificaties.publiceren\"]",
+            "zaaktype": "",
+            "informatieobjecttype": "",
+            "besluittype": "",
+            "max_vertrouwelijkheidaanduiding": ""
+        }
+    },
+    {
+        "model": "authorizations.autorisatie",
+        "pk": 3,
+        "fields": {
+            "applicatie": 1,
+            "component": "ac",
+            "scopes": "[\"autorisaties.lezen\"]",
+            "zaaktype": "",
+            "informatieobjecttype": "",
+            "besluittype": "",
+            "max_vertrouwelijkheidaanduiding": ""
         }
     }
 ]

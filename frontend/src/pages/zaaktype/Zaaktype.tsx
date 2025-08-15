@@ -7,6 +7,7 @@ import {
   FieldSet,
   Grid,
   H2,
+  Outline,
   Sidebar,
   Solid,
   Tab,
@@ -21,7 +22,7 @@ import { VersionSelector } from "~/components/VersionSelector";
 import { RelatedObjectRenderer } from "~/components/related";
 import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
-import { useSubmitAction } from "~/hooks/useSubmitAction.ts";
+import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
 import {
   AttributeGridSection,
@@ -94,7 +95,6 @@ export function ZaaktypePage() {
    * Gets called when the edit button is clicked.
    */
   const handleEdit = useCallback<React.MouseEventHandler>(() => {
-    console.log({ versions, conceptVersion });
     submitAction({
       type: "EDIT_VERSION",
       payload: {
@@ -140,6 +140,19 @@ export function ZaaktypePage() {
     });
   }, [serviceSlug, pendingUpdatesState]);
 
+  /**
+   * Gets called when the edit button is clicked.
+   */
+  const handlePublish = useCallback<React.MouseEventHandler>(() => {
+    submitAction({
+      type: "PUBLISH_VERSION",
+      payload: {
+        serviceSlug: serviceSlug as string,
+        zaaktype: pendingUpdatesState,
+      },
+    });
+  }, [serviceSlug, pendingUpdatesState]);
+
   return (
     <CardBaseTemplate
       breadcrumbItems={breadcrumbItems}
@@ -172,6 +185,7 @@ export function ZaaktypePage() {
 
       <ZaaktypeToolbar
         onEdit={handleEdit}
+        onPublish={handlePublish}
         onSave={handleSave}
         onVersionCreate={handleVersionCreate}
       />
@@ -377,6 +391,7 @@ const isAttributeGridSection = (
 
 type ZaaktypeToolbarProps = {
   onEdit: React.MouseEventHandler;
+  onPublish: React.MouseEventHandler;
   onSave: React.MouseEventHandler;
   onVersionCreate: React.MouseEventHandler;
 };
@@ -386,6 +401,7 @@ type ZaaktypeToolbarProps = {
  */
 function ZaaktypeToolbar({
   onEdit,
+  onPublish,
   onSave,
   onVersionCreate,
 }: ZaaktypeToolbarProps) {
@@ -403,16 +419,22 @@ function ZaaktypeToolbar({
         );
       } else {
         return (
-          <Button onClick={onSave} variant="primary">
-            <Solid.CheckIcon />
-            Opslaan
-          </Button>
+          <>
+            <Button onClick={onSave} variant="transparent">
+              <Outline.ArrowDownTrayIcon />
+              Opslaan en afsluiten
+            </Button>
+            <Button onClick={onPublish} variant="primary">
+              <Outline.CloudArrowUpIcon />
+              Publiceren
+            </Button>
+          </>
         );
       }
     } else {
       return (
         <Button onClick={onVersionCreate} variant="primary">
-          <Solid.PlusIcon />
+          <Outline.PlusIcon />
           Nieuwe Versie
         </Button>
       );
@@ -420,7 +442,7 @@ function ZaaktypeToolbar({
   }, [result, combinedSearchParams, onEdit, onSave, onVersionCreate]);
 
   return (
-    <Toolbar align="end" pad variant="alt" sticky={"bottom"}>
+    <Toolbar align="end" pad variant="transparent" sticky={"bottom"}>
       {button}
     </Toolbar>
   );

@@ -12,7 +12,7 @@ from furl import furl
 from msgspec import UNSET, Meta, Struct, UnsetType
 from msgspec.json import decode
 from msgspec.structs import asdict, replace
-from rest_framework.request import Request
+from rest_framework import status
 from rest_framework.response import Response
 
 from openbeheer.api.views import (
@@ -311,6 +311,19 @@ def expand_deelzaaktype(
             "400": ZGWError,
         },
     ),
+    delete=extend_schema(
+        tags=["Zaaktypen"],
+        summary="Delete a zaaktype",
+        description=(
+            "Delete a zaaktype from Open Zaak. According to OZ specs, this should only work with"
+            " draft zaaktypen. In practice, it deletes also the published zaaktypen."
+        ),
+        request=None,
+        responses={
+            "204": None,
+            "400": ZGWError,
+        },
+    ),
 )
 class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     data_type = ExpandableZaakType
@@ -387,6 +400,35 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
+
+
+class ZaakTypePublishView(MsgspecAPIView):
+    endpoint_path = "zaaktypen/{uuid}/publish"
+
+    @extend_schema(
+        operation_id="service_zaaktypen_publish",
+        summary="Publish a zaaktype",
+        tags=["Zaaktypen"],
+        responses={
+            204: None,
+            400: ZGWError,
+        },
+    )
+    def post(self, request: Request, slug: str = "", uuid: str = "") -> Response:
+        "Publish a zaaktype"
+        with ztc_client(slug) as client:
+            response = client.post(
+                self.endpoint_path.format(uuid=uuid),
+            )
+
+            if not response.ok:
+                error = decode(response.content)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema_view(

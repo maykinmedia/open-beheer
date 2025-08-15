@@ -21,7 +21,7 @@ import React, { FormEvent, useCallback, useEffect } from "react";
 import { useActionData, useLoaderData, useParams } from "react-router";
 import { CATALOGUS_PARAM, SERVICE_PARAM } from "~/App.tsx";
 import { useBreadcrumbItems } from "~/hooks";
-import { useSubmitAction } from "~/hooks/useSubmitAction.ts";
+import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import {
   ZaakTypeCreateAction,
   ZaaktypeCreateActionPayload,

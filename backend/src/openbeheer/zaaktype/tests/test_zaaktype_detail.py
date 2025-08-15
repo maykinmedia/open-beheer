@@ -40,32 +40,25 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
     def test_retrieve_zaaktype(self):
         zaaktype = self.helper.create_zaaktype(
-            overrides={
-                "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
-            }
+            selectielijstProcestype="https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
+        )
+        assert zaaktype.url
+        self.helper.create_resultaattype(
+            zaaktype=zaaktype.url,
+            omschrijving="Toegekend",
+            resultaattypeomschrijving="https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/fb65d251-1518-4185-865f-b8bdcfad07b1",
+            selectielijstklasse="https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
         )
         self.helper.create_resultaattype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Toegekend",
-                "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/fb65d251-1518-4185-865f-b8bdcfad07b1",
-                "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
-            }
-        )
-        self.helper.create_resultaattype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Afgehandeld",
-                "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
-                "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
-            }
+            zaaktype=zaaktype.url,
+            omschrijving="Afgehandeld",
+            resultaattypeomschrijving="https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
+            selectielijstklasse="https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
         )
         self.helper.create_roltype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Behandelend afdeling",
-                "omschrijvingGeneriek": "behandelaar",
-            }
+            zaaktype=zaaktype.url,
+            omschrijving="Behandelend afdeling",
+            omschrijvingGeneriek="behandelaar",
         )
 
         assert zaaktype.url

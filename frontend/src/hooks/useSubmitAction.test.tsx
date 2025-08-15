@@ -1,15 +1,19 @@
-import { useAlert } from "@maykin-ui/admin-ui";
+import { Errors, useAlert } from "@maykin-ui/admin-ui";
 import { act, renderHook } from "@testing-library/react";
 import { useActionData, useSubmit } from "react-router";
 import { Mock, beforeEach, describe, expect, it, vi } from "vitest";
 import * as lib from "~/lib";
 
-import { useSubmitAction } from "./useSubmitAction";
+import { useSubmitAction } from "./useSubmitAction.tsx";
 
 // Mocks
-vi.mock("@maykin-ui/admin-ui", () => ({
-  useAlert: vi.fn(),
-}));
+vi.mock("@maykin-ui/admin-ui", async (importOriginal) => {
+  const actual = (await importOriginal()) as object;
+  return {
+    ...actual,
+    useAlert: vi.fn(),
+  };
+});
 
 vi.mock("react-router", async () => {
   const actual =
@@ -81,7 +85,11 @@ describe("useSubmitAction", () => {
 
     renderHook(() => useSubmitAction());
 
-    expect(mockAlert).toHaveBeenCalledWith("Foutmelding", errors, "Ok");
+    expect(mockAlert).toHaveBeenCalledWith(
+      "Foutmelding",
+      <Errors errors={errors} />,
+      "Ok",
+    );
   });
 
   it("should not show alert if catchErrors is false", () => {

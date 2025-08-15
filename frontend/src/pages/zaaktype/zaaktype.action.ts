@@ -1,13 +1,14 @@
 import { ActionFunctionArgs, redirect } from "react-router";
 import { request } from "~/api";
-import { TypedAction } from "~/hooks/useSubmitAction.ts";
+import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
 import { TargetType } from "~/pages";
 import { components } from "~/types";
 
 export type ZaaktypeAction =
   | TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>
-  | TypedAction<"UPDATE_VERSION", UpdateZaaktypeVersionPayload>
+  | TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>
+  | TypedAction<"PUBLISH_VERSION", UpdateZaaktypeVersionPayload>
   | TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>
   | TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>;
 
@@ -28,6 +29,8 @@ export async function zaaktypeAction({
       return await createZaaktypeVersionAction({ request, params, context });
     case "UPDATE_VERSION":
       return await updateZaaktypeVersionAction({ request, params, context });
+    case "PUBLISH_VERSION":
+      return await publishZaaktypeVersionAction({ request, params, context });
     case "EDIT_VERSION":
       return await editZaaktypeVersionAction({ request, params, context });
     case "SELECT_VERSION":
@@ -65,14 +68,17 @@ export async function createZaaktypeVersionAction(
     }),
   );
 
-  const result = await request<components["schemas"]["ZaakType"]>(
-    "POST",
-    `/service/${payload.serviceSlug}/zaaktypen/`,
-    {},
-    { ...zaaktype },
-  );
-
-  return redirect(`../${getZaaktypeUUID(result)}?editing=true`);
+  try {
+    const result = await request<components["schemas"]["ZaakType"]>(
+      "POST",
+      `/service/${payload.serviceSlug}/zaaktypen/`,
+      {},
+      { ...zaaktype },
+    );
+    return redirect(`../${getZaaktypeUUID(result)}?editing=true`);
+  } catch (e) {
+    return await (e as Response).json();
+  }
 }
 
 /**
@@ -90,15 +96,60 @@ export async function updateZaaktypeVersionAction(
   actionFunctionArgs: ActionFunctionArgs,
 ) {
   const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as UpdateZaaktypeVersionPayload;
+  const payload = data.payload as PublishZaaktypeVersionPayload;
   const uuid = getZaaktypeUUID(payload.zaaktype);
+
+  try {
+    await _saveZaaktypeVersion(payload.zaaktype, payload.serviceSlug);
+    return redirect(`../${uuid}`);
+  } catch (e) {
+    return await (e as Response).json();
+  }
+}
+
+/**
+ * Payload for `publishZaaktypeVersionAction`
+ */
+export type PublishZaaktypeVersionPayload = {
+  serviceSlug: string;
+  zaaktype: Partial<TargetType> & { url: string };
+};
+
+/**
+ * Saves and publishes a zaaktype version.
+ */
+export async function publishZaaktypeVersionAction(
+  actionFunctionArgs: ActionFunctionArgs,
+) {
+  const data = await actionFunctionArgs.request.json();
+  const payload = data.payload as PublishZaaktypeVersionPayload;
+  const uuid = getZaaktypeUUID(payload.zaaktype);
+
+  await _saveZaaktypeVersion(payload.zaaktype, payload.serviceSlug);
+
+  try {
+    await request(
+      "POST",
+      `/service/${payload.serviceSlug}/zaaktypen/${uuid}/publish`,
+    );
+    return redirect(`../${uuid}`);
+  } catch (e) {
+    return await (e as Response).json();
+  }
+}
+
+async function _saveZaaktypeVersion(
+  zaaktype: Partial<TargetType> & { url: string },
+  serviceSlug: string,
+) {
+  const uuid = getZaaktypeUUID(zaaktype);
 
   const invalidKeys: (keyof components["schemas"]["ExpandableZaakType"])[] = [
     "_expand",
   ];
 
-  const zaaktype = Object.fromEntries(
-    Object.entries(payload.zaaktype).filter(([k, v]) => {
+  const _zaaktype = Object.fromEntries(
+    Object.entries(zaaktype).filter(([k, v]) => {
       // @ts-expect-error - checking wider type against subset.
       return v !== null && !invalidKeys.includes(k);
     }),
@@ -106,12 +157,10 @@ export async function updateZaaktypeVersionAction(
 
   await request(
     "PATCH",
-    `/service/${payload.serviceSlug}/zaaktypen/${uuid}/`,
+    `/service/${serviceSlug}/zaaktypen/${uuid}/`,
     {},
-    { ...zaaktype },
+    { ..._zaaktype },
   );
-
-  return redirect(`../${uuid}`);
 }
 
 /**
@@ -122,7 +171,7 @@ export type SelectZaaktypeVersionPayload = {
 };
 
 /**
- * Creates a new zaaktype version.
+ * Navigates to a zaaktype version.
  */
 export async function selectZaaktypeVersionAction(
   actionFunctionArgs: ActionFunctionArgs,
@@ -140,7 +189,7 @@ export type EditZaaktypeVersionPayload = {
 };
 
 /**
- * Creates a new zaaktype version.
+ * Allow the user to edit a zaaktype version.
  */
 export async function editZaaktypeVersionAction(
   actionFunctionArgs: ActionFunctionArgs,

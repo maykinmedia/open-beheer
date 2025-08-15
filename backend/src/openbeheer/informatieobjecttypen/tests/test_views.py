@@ -51,15 +51,11 @@ class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
         catalogus = self.helper.create_catalogus()
         assert catalogus.url
         self.helper.create_informatieobjecttype(
-            overrides={
-                "catalogus": catalogus.url,
-                "omschrijving": "test_retrieve_with_filter_catalogus 1",
-            }
+            catalogus=catalogus.url,
+            omschrijving="test_retrieve_with_filter_catalogus 1",
         )
         self.helper.create_informatieobjecttype(
-            overrides={
-                "omschrijving": "test_retrieve_with_filter_catalogus 2",
-            }
+            omschrijving="test_retrieve_with_filter_catalogus 2",
         )
 
         self.client.force_login(self.user)
@@ -94,19 +90,17 @@ class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
         zaaktype = self.helper.create_zaaktype()
 
         iot1 = self.helper.create_informatieobjecttype(
-            overrides={
-                "omschrijving": "test_retrieve_with_filter_zaaktype 1",
-                "catalogus": zaaktype.catalogus,
-            }
+            omschrijving="test_retrieve_with_filter_zaaktype 1",
+            catalogus=zaaktype.catalogus,
         )
         iot2 = self.helper.create_informatieobjecttype(
-            overrides={"omschrijving": "test_retrieve_with_filter_zaaktype 2"}
+            omschrijving="test_retrieve_with_filter_zaaktype 2"
         )
 
         assert zaaktype.url and iot1.url and iot2.url
 
         self.helper.relate_zaaktype_informatieobjecttype(
-            zaaktype.url, iot1.url, overrides={"volgnummer": 1}
+            zaaktype.url, iot1.url, volgnummer=1
         )
 
         # Without Filtering
