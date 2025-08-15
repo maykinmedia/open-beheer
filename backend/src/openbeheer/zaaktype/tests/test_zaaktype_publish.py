@@ -9,6 +9,7 @@ from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.clients import ztc_client
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
 
 
@@ -36,52 +37,40 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
         response = self.client.get(endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        # self.assertEqual(self.cassette.play_count, 0)
 
     def test_publish_zaaktype(self):
         zaaktype = self.helper.create_zaaktype(
-            overrides={
-                "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
-            }
+            selectielijstProcestype="https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
+        )
+        assert zaaktype.url
+        self.helper.create_resultaattype(
+            zaaktype=zaaktype.url,
+            omschrijving="Toegekend",
+            resultaattypeomschrijving="https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/fb65d251-1518-4185-865f-b8bdcfad07b1",
+            selectielijstklasse="https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
         )
         self.helper.create_resultaattype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Toegekend",
-                "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/fb65d251-1518-4185-865f-b8bdcfad07b1",
-                "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
-            }
-        )
-        self.helper.create_resultaattype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Afgehandeld",
-                "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
-                "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
-            }
+            zaaktype=zaaktype.url,
+            omschrijving="Afgehandeld",
+            resultaattypeomschrijving="https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
+            selectielijstklasse="https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
         )
         self.helper.create_roltype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Behandelend afdeling",
-                "omschrijvingGeneriek": "behandelaar",
-            }
+            zaaktype=zaaktype.url,
+            omschrijving="Behandelend afdeling",
+            omschrijvingGeneriek="behandelaar",
         )
 
         self.helper.create_statustype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Begin",
-                "volgnummer": 1,
-            }
+            zaaktype=zaaktype.url,
+            omschrijving="begin",
+            volgnummer=1,
         )
 
         self.helper.create_statustype(
-            overrides={
-                "zaaktype": zaaktype.url,
-                "omschrijving": "Eind",
-                "volgnummer": 2,
-            }
+            zaaktype=zaaktype.url,
+            omschrijving="eind",
+            volgnummer=2,
         )
 
         assert zaaktype.url
@@ -109,12 +98,11 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
 
         self.assertFalse(detail["concept"])
 
-        # :thisisfine:
-        # deletion_attempt = self.client.delete(detail_endpoint)
-        # self.assertEqual(
-        #     deletion_attempt.status_code,
-        #     status.HTTP_405_METHOD_NOT_ALLOWED,
-        # )
+        deletion_attempt = self.client.delete(detail_endpoint)
+        self.assertEqual(
+            deletion_attempt.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
 
     def test_publish_zaaktype_404(self):
         self.client.force_login(self.user)
@@ -129,3 +117,39 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
         self.assertEqual(
             response.status_code, status.HTTP_404_NOT_FOUND, response.content
         )
+
+    def test_publish_zaaktype_with_unpublished_iot(self):
+        self.client.force_login(self.user)
+        zaaktype = self.helper.create_zaaktype()
+        assert zaaktype.url
+        self.helper.create_statustype(
+            zaaktype=zaaktype.url,
+            omschrijving="begin",
+            volgnummer=1,
+        )
+        self.helper.create_statustype(
+            zaaktype=zaaktype.url,
+            omschrijving="eind",
+            volgnummer=2,
+        )
+        self.helper.create_roltype(zaaktype=zaaktype.url)
+        self.helper.create_resultaattype(zaaktype=zaaktype.url)
+
+        iot = self.helper.create_informatieobjecttype(catalogus=zaaktype.catalogus)
+        assert iot.url and iot.concept
+        self.helper.relate_zaaktype_informatieobjecttype(zaaktype.url, iot.url)
+
+        zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-publish",
+            kwargs={"slug": "OZ", "uuid": zaaktype_uuid},
+        )
+
+        response = self.client.post(endpoint)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        with ztc_client() as client:
+            client.post(f"{iot.url}/publish")
+
+        response = self.client.post(endpoint)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
