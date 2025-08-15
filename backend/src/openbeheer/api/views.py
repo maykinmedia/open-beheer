@@ -154,33 +154,6 @@ def make_expandable[T: Type[Struct]](t: T, fields: Mapping[str, type]) -> T:
     )
 
 
-def post_init_with_uuid(obj: Struct) -> Struct:
-    if hasattr(obj, "url") and obj.url:
-        obj.uuid = furl(obj.url).path.segments[-1]
-    return obj
-
-
-def make_with_uuid[T: Type[Struct]](t: T) -> T:
-    old_post_init = getattr(t, "__post_init__", None)
-
-    # Changing the __post_init__ on the new_struct_class doesn't seem to work.
-    # Maybe because of cached access?
-    # https://github.com/jcrist/msgspec/blob/bc60e96772c5e8a3babff967d86a9e7dfcdbfb1b/msgspec/_core.c#L6356
-    t.__post_init__ = post_init_with_uuid
-
-    new_struct_class = defstruct(  # pyright: ignore[reportReturnType]  # t is in bases!
-        name=f"{t.__name__}WithUUID",
-        fields=[("uuid", type[str | UnsetType], UNSET)],
-        bases=(t,),
-    )
-
-    # Restoring post_init on base class
-    if old_post_init:
-        t.__post_init__ = old_post_init
-
-    return new_struct_class  # pyright: ignore[reportReturnType]
-
-
 type Expansion[T: Struct, R] = Callable[[APIClient, Iterable[T]], Iterable[R]]
 
 
