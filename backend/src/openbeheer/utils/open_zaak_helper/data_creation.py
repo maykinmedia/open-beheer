@@ -1,7 +1,7 @@
 import string
 from dataclasses import dataclass
 from random import choice
-from typing import Mapping, Sequence, Type
+from typing import Literal, Mapping, Sequence, Type
 
 from msgspec.json import decode
 
@@ -41,6 +41,9 @@ class OpenZaakDataCreationHelper:
         with ztc_client("OZ") as client:
             response = client.post(resource_path, json=data)
 
+            if response.status_code == 400:
+                raise Exception(decode(response.content))
+
             response.raise_for_status()
 
         return decode(
@@ -49,74 +52,53 @@ class OpenZaakDataCreationHelper:
             strict=False,
         )
 
-    def _get_catalogus(self, data: Mapping[str, _JSONEncodable] = {}) -> str:
-        catalogus_url = data.get("catalogus", "")
-        if not catalogus_url:
-            catalogus = self.create_catalogus()
-            catalogus_url = catalogus.url
-            assert catalogus_url
+    def _get_catalogus(self, catalogus="", **_) -> str:
+        assert (url := catalogus or self.create_catalogus().url)
+        return url
 
-        assert isinstance(catalogus_url, str)
-        return catalogus_url
-
-    def _get_zaaktype(self, data: Mapping[str, _JSONEncodable] = {}) -> str:
-        zaaktype_url = data and data.get("zaaktype", "")
-        if not zaaktype_url:
-            zaaktype = self.create_zaaktype()
-            zaaktype_url = zaaktype.url
-            assert zaaktype_url
-
-        assert isinstance(zaaktype_url, str)
-        return zaaktype_url
+    def _get_zaaktype(self, zaaktype="", **_) -> str:
+        assert (url := zaaktype or self.create_zaaktype().url)
+        return url
 
     # Can't use the Patched requests for the type of the overrides, because the unset
     # values are filled with the default values  when converting to the dict type
     def create_informatieobjecttype(
-        self, overrides: Mapping[str, _JSONEncodable] = {}
+        self, catalogus: str = "", **overrides: _JSONEncodable
     ) -> InformatieObjectType:
         data: dict[str, _JSONEncodable] = {
-            "catalogus": self._get_catalogus(overrides),
+            "catalogus": self._get_catalogus(catalogus),
             "omschrijving": "Omschrijving A",
             "vertrouwelijkheidaanduiding": "openbaar",
             "beginGeldigheid": "2025-07-01",
             "informatieobjectcategorie": "Blue",
-        }
-        if overrides:
-            data.update(overrides)
+        } | overrides
 
         return self._create_resource(
             data, "informatieobjecttypen", InformatieObjectType
         )
 
-    def create_catalogus(
-        self, overrides: Mapping[str, _JSONEncodable] = {}
-    ) -> Catalogus:
+    def create_catalogus(self, **overrides: _JSONEncodable) -> Catalogus:
         data: dict[str, _JSONEncodable] = {
             "domein": "".join([choice(string.ascii_uppercase) for _ in range(5)]),
             "rsin": "123456782",
             "contactpersoonBeheerNaam": "Ubaldo",
             "naam": "Test catalogus",
-        }
-        if overrides:
-            data.update(overrides)
+        } | overrides
 
         return self._create_resource(data, "catalogussen", Catalogus)
 
     def create_statustype(
-        self, overrides: Mapping[str, _JSONEncodable] = {}
+        self, zaaktype: str = "", **overrides: _JSONEncodable
     ) -> StatusType:
-        assert "zaaktype" in overrides
         data: dict[str, _JSONEncodable] = {
             "omschrijving": "Ontvangen",
-            "zaaktype": str(overrides["zaaktype"]),
+            "zaaktype": zaaktype,
             "volgnummer": 1,
             "omschrijving_generiek": "",
             "statustekst": "",
             "informeren": False,
             "checklistitem_statustype": [],
-        }
-        if overrides:
-            data.update(overrides)
+        } | overrides
 
         return self._create_resource(data, "statustypen", StatusType)
 
@@ -124,21 +106,22 @@ class OpenZaakDataCreationHelper:
         self,
         zaaktype_url: str,
         informatieobjecttype_url: str,
-        overrides: Mapping[str, _JSONEncodable] = {},
+        **overrides: _JSONEncodable,
     ) -> ZaakTypeInformatieObjectType:
         data: dict[str, _JSONEncodable] = {
             "zaaktype": zaaktype_url,
             "informatieobjecttype": informatieobjecttype_url,
             "volgnummer": 1,
             "richting": "inkomend",
-        }
-        data.update(overrides)
+        } | overrides
 
         return self._create_resource(
             data, "zaaktype-informatieobjecttypen", ZaakTypeInformatieObjectType
         )
 
-    def create_zaaktype(self, overrides: Mapping[str, _JSONEncodable] = {}) -> ZaakType:
+    def create_zaaktype(
+        self, catalogus: str = "", **overrides: _JSONEncodable
+    ) -> ZaakType:
         data: dict[str, _JSONEncodable] = {
             "omschrijving": "Another test zaaktype",
             "vertrouwelijkheidaanduiding": "geheim",
@@ -158,20 +141,21 @@ class OpenZaakDataCreationHelper:
             "verantwoordelijke": "200000000",
             "beginGeldigheid": "2025-06-19",
             "versiedatum": "2025-06-19",
-            "catalogus": self._get_catalogus(overrides),
+            "catalogus": self._get_catalogus(catalogus),
             "besluittypen": [],
             "gerelateerdeZaaktypen": [],
             "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
-        }
-        data.update(overrides)
+        } | overrides
 
         return self._create_resource(data, "zaaktypen", ZaakType)
 
     def create_resultaattype(
-        self, overrides: Mapping[str, _JSONEncodable] = {}
+        self,
+        zaaktype: str = "",
+        **overrides: _JSONEncodable,
     ) -> ResultaatType:
         data: dict[str, _JSONEncodable] = {
-            "zaaktype": self._get_zaaktype(overrides),
+            "zaaktype": self._get_zaaktype(zaaktype),
             "omschrijving": "Gegrond",
             "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c",
             "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
@@ -184,24 +168,34 @@ class OpenZaakDataCreationHelper:
                 "objecttype": "",
                 "registratie": "",
             },
-        }
-        if overrides:
-            data.update(overrides)
+        } | overrides
 
         return self._create_resource(data, "resultaattypen", ResultaatType)
 
-    def create_roltype(self, overrides: Mapping[str, _JSONEncodable] = {}) -> RolType:
+    def create_roltype(
+        self,
+        zaaktype: str = "",
+        omschrijvingGeneriek: Literal[  # noqa: N803
+            "adviseur",
+            "behandelaar",
+            "belanghebbende",
+            "beslisser",
+            "initiator",
+            "klantcontacter",
+            "mede_initiator",
+            "zaakcoordinator",
+        ] = "initiator",
+        **overrides: _JSONEncodable,
+    ) -> RolType:
         data: dict[str, _JSONEncodable] = {
-            "zaaktype": self._get_zaaktype(overrides),
+            "zaaktype": self._get_zaaktype(zaaktype),
             "omschrijving": "Vastgesteld",
-            "omschrijvingGeneriek": "Beleidsplan met externe werking",
+            "omschrijvingGeneriek": omschrijvingGeneriek,
             **overrides,
         }
         return self._create_resource(data, "roltypen", RolType)
 
-    def create_besluittype(
-        self, overrides: Mapping[str, _JSONEncodable] = {}
-    ) -> BesluitType:
+    def create_besluittype(self, **overrides: _JSONEncodable) -> BesluitType:
         return self._create_resource(
             {
                 # "zaaktypen": [],
