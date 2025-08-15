@@ -3,7 +3,8 @@ from __future__ import annotations
 import datetime  # noqa: TC003
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
-from django.utils.translation import gettext as _
+from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import gettext as _, gettext_lazy as __
 
 import structlog
 from ape_pie import APIClient
@@ -14,6 +15,8 @@ from msgspec.json import decode
 from msgspec.structs import asdict, replace
 from rest_framework.request import Request
 from rest_framework.response import Response
+from zgw_consumers.client import build_client
+from zgw_consumers.models import Service
 
 from openbeheer.api.views import (
     DetailView,
@@ -26,18 +29,27 @@ from openbeheer.api.views import (
 )
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import (
+    BesluitTypeWithUUID,
     DetailResponse,
+    EigenschapWithUUID,
     FrontendFieldsets,
+    InformatieObjectTypeWithUUID,
     OBField,
     OBOption,
     OBPagedQueryParams,
+    ResultaatTypeWithUUID,
+    RolTypeWithUUID,
+    StatusTypeWithUUID,
     VersionSummary,
+    ZaakObjectTypeWithUUID,
+    ZaakTypeWithUUID,
     ZGWError,
     ZGWResponse,
 )
 from openbeheer.types._open_beheer import (
     VersionedResourceSummary,
 )
+from openbeheer.types.selectielijst import ProcesType
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -96,28 +108,27 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
     concept: bool | UnsetType = UNSET
 
 
-class ZaakTypeExtension(Struct, frozen=True):
-    besluittypen: UnsetType | list[BesluitType] = UNSET
-    # Not invented here:
-    # "selectielijst_procestype: UnsetType | "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
+class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
+    besluittypen: UnsetType | list[BesluitTypeWithUUID] = UNSET
     # Posssibly Not invented here:
     # "gerelateerde_zaaktypen: UnsetType | null
     # "broncatalogus.url: UnsetType | null
     # "bronzaaktype.url: UnsetType | null
-    statustypen: UnsetType | list[StatusType] = UNSET
-    resultaattypen: UnsetType | list[ResultaatType] = UNSET
-    eigenschappen: UnsetType | list[Eigenschap] = UNSET
-    informatieobjecttypen: UnsetType | list[InformatieObjectType] = UNSET
-    roltypen: UnsetType | list[RolType] = UNSET
-    deelzaaktypen: UnsetType | list[ZaakType] = UNSET
-    zaakobjecttypen: UnsetType | list[ZaakObjectType] = UNSET
+    statustypen: UnsetType | list[StatusTypeWithUUID] = UNSET
+    resultaattypen: UnsetType | list[ResultaatTypeWithUUID] = UNSET
+    eigenschappen: UnsetType | list[EigenschapWithUUID] = UNSET
+    informatieobjecttypen: UnsetType | list[InformatieObjectTypeWithUUID] = UNSET
+    roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
+    deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
+    zaakobjecttypen: UnsetType | list[ZaakObjectTypeWithUUID] = UNSET
+    selectielijst_procestype: UnsetType | ProcesType = UNSET
 
 
 class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
     _expand: ZaakTypeExtension = ZaakTypeExtension()
 
 
-class ExpandableZaakType(ZaakType, Struct):
+class ExpandableZaakType(ZaakTypeWithUUID, Struct):
     _expand: ZaakTypeExtension = ZaakTypeExtension()
 
 
@@ -273,6 +284,34 @@ def expand_deelzaaktype(
     ]
 
 
+# TODO: If we are going to expand the selectielijst fields of the expanded resources,
+# we will need to revisit this because we shouldn't construct the client everytime.
+def expand_selectielijstprocestype(
+    client: APIClient, zaaktypen: Iterable[ZaakType]
+) -> Iterable[ProcesType | None]:
+    # There is only one zaaktype, since we are expanding
+    # the retrieve endpoint.
+    zaaktype = list(zaaktypen)[0]
+    if not zaaktype.selectielijst_procestype:
+        return [None]
+
+    selectielijst_service = Service.get_service(zaaktype.selectielijst_procestype)
+    if not (selectielijst_service):
+        raise ImproperlyConfigured(__("No Selectielijst service configured"))
+
+    selectielijst_client = build_client(selectielijst_service)
+
+    with selectielijst_client:
+        return [
+            fetch_one(
+                selectielijst_client, zaaktype.selectielijst_procestype, ProcesType
+            )
+            if zaaktype.selectielijst_procestype
+            else None
+            for zaaktype in zaaktypen
+        ]
+
+
 @extend_schema_view(
     get=extend_schema(
         operation_id="service_zaaktype_retrieve_one",
@@ -331,30 +370,35 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
             lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
-            BesluitType,
+            BesluitTypeWithUUID,
         ),
         "statustypen": make_expansion(
-            "statustypen", _get_params_with_status, StatusType
+            "statustypen", _get_params_with_status, StatusTypeWithUUID
         ),
-        # TODO investigate bad OZ response
         "resultaattypen": make_expansion(
-            "resultaattypen", _get_params_with_status, dict
+            "resultaattypen", _get_params_with_status, ResultaatTypeWithUUID
         ),
         "eigenschappen": make_expansion(
-            "eigenschappen", _get_params_with_status, Eigenschap
+            "eigenschappen", _get_params_with_status, EigenschapWithUUID
         ),
         "informatieobjecttypen": make_expansion(
-            "informatieobjecttypen", _get_params_with_status, InformatieObjectType
+            "informatieobjecttypen",
+            _get_params_with_status,
+            InformatieObjectTypeWithUUID,
         ),
-        "roltypen": make_expansion("roltypen", _get_params_with_status, RolType),
+        "roltypen": make_expansion(
+            "roltypen", _get_params_with_status, RolTypeWithUUID
+        ),
         "deelzaaktypen": expand_deelzaaktype,
-        "zaakobjecttypen": make_expansion("zaakobjecttypen", _key, ZaakObjectType),
+        "zaakobjecttypen": make_expansion(
+            "zaakobjecttypen", _key, ZaakObjectTypeWithUUID
+        ),
+        "selectielijst_procestype": expand_selectielijstprocestype,
     }
 
     def get_item_versions(
         self, slug: str, data: ZaakType
     ) -> tuple[list[ZaakType] | ZGWError, int]:
-        # TODO: Question: should we keep the versions "paginated"? (I don't think so)
         with ztc_client() as client:
             response = client.get(
                 "zaaktypen",

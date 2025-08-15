@@ -1,3 +1,5 @@
+from unittest import skip
+
 from django.test import tag
 
 from furl import furl
@@ -5,11 +7,13 @@ from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from zgw_consumers.constants import APITypes
+from zgw_consumers.constants import APITypes, AuthTypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
-from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
+from openbeheer.utils.open_zaak_helper.data_creation import (
+    OpenZaakDataCreationHelper,
+)
 
 
 @tag("vcr")
@@ -23,6 +27,12 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             client_id="test-vcr",
             secret="test-vcr",
             slug="OZ",
+        )
+        cls.selectielijst_service = ServiceFactory.create(
+            api_type=APITypes.orc,
+            api_root="https://selectielijst.openzaak.nl/api/v1/",
+            auth_type=AuthTypes.no_auth,
+            slug="selectielijst",
         )
         cls.user = UserFactory.create()
 
@@ -44,7 +54,8 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
             }
         )
-        self.helper.create_resultaattype(
+        assert zaaktype.url
+        resultaattype1 = self.helper.create_resultaattype(
             overrides={
                 "zaaktype": zaaktype.url,
                 "omschrijving": "Toegekend",
@@ -52,7 +63,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
             }
         )
-        self.helper.create_resultaattype(
+        resultaattype2 = self.helper.create_resultaattype(
             overrides={
                 "zaaktype": zaaktype.url,
                 "omschrijving": "Afgehandeld",
@@ -60,15 +71,27 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
             }
         )
-        self.helper.create_roltype(
+        roltype = self.helper.create_roltype(
             overrides={
                 "zaaktype": zaaktype.url,
                 "omschrijving": "Behandelend afdeling",
                 "omschrijvingGeneriek": "behandelaar",
             }
         )
+        statustype = self.helper.create_statustype(zaaktype.url)
 
-        assert zaaktype.url
+        iot = self.helper.create_informatieobjecttype(
+            overrides={"catalogus": zaaktype.catalogus}
+        )
+        assert (
+            iot.url
+            and resultaattype1.url
+            and resultaattype2.url
+            and roltype.url
+            and statustype.url
+        )
+        self.helper.relate_zaaktype_informatieobjecttype(zaaktype.url, iot.url)
+
         zaaktype_uuid = furl(zaaktype.url).path.segments[-1]
         self.client.force_login(self.user)
 
@@ -98,148 +121,234 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
 
         self.assertEqual(len(data["versions"]), 1)
 
-        zaaktype = data["result"]
+        zaaktype_data = data["result"]
 
         with self.subTest("result"):
-            self.assertIn("omschrijving", zaaktype)
-            self.assertIn("vertrouwelijkheidaanduiding", zaaktype)
-            self.assertIn("doel", zaaktype)
-            self.assertIn("aanleiding", zaaktype)
-            self.assertIn("indicatieInternOfExtern", zaaktype)
-            self.assertIn("handelingInitiator", zaaktype)
-            self.assertIn("onderwerp", zaaktype)
-            self.assertIn("handelingBehandelaar", zaaktype)
-            self.assertIn("doorlooptijd", zaaktype)
-            self.assertIn("opschortingEnAanhoudingMogelijk", zaaktype)
-            self.assertIn("verlengingMogelijk", zaaktype)
-            self.assertIn("publicatieIndicatie", zaaktype)
-            self.assertIn("productenOfDiensten", zaaktype)
-            self.assertIn("referentieproces", zaaktype)
-            self.assertIn("verantwoordelijke", zaaktype)
-            self.assertIn("beginGeldigheid", zaaktype)
-            self.assertIn("versiedatum", zaaktype)
-            self.assertIn("catalogus", zaaktype)
-            self.assertIn("besluittypen", zaaktype)
-            self.assertIn("gerelateerdeZaaktypen", zaaktype)
-            self.assertIn("url", zaaktype)
-            self.assertIn("identificatie", zaaktype)
-            self.assertIn("omschrijvingGeneriek", zaaktype)
-            self.assertIn("toelichting", zaaktype)
-            self.assertIn("servicenorm", zaaktype)
-            self.assertIn("verlengingstermijn", zaaktype)
-            self.assertIn("trefwoorden", zaaktype)
-            self.assertIn("publicatietekst", zaaktype)
-            self.assertIn("verantwoordingsrelatie", zaaktype)
-            self.assertIn("selectielijstProcestype", zaaktype)
-            self.assertIn("concept", zaaktype)
-            self.assertIn("broncatalogus", zaaktype)
-            self.assertIn("bronzaaktype", zaaktype)
-            self.assertIn("eindeGeldigheid", zaaktype)
-            self.assertIn("beginObject", zaaktype)
-            self.assertIn("eindeObject", zaaktype)
-            self.assertIn("statustypen", zaaktype)
-            self.assertIn("resultaattypen", zaaktype)
-            self.assertIn("eigenschappen", zaaktype)
-            self.assertIn("informatieobjecttypen", zaaktype)
-            self.assertIn("roltypen", zaaktype)
-            self.assertIn("deelzaaktypen", zaaktype)
-            self.assertIn("zaakobjecttypen", zaaktype)
+            self.assertIn("uuid", zaaktype_data)
+            self.assertIn("omschrijving", zaaktype_data)
+            self.assertIn("vertrouwelijkheidaanduiding", zaaktype_data)
+            self.assertIn("doel", zaaktype_data)
+            self.assertIn("aanleiding", zaaktype_data)
+            self.assertIn("indicatieInternOfExtern", zaaktype_data)
+            self.assertIn("handelingInitiator", zaaktype_data)
+            self.assertIn("onderwerp", zaaktype_data)
+            self.assertIn("handelingBehandelaar", zaaktype_data)
+            self.assertIn("doorlooptijd", zaaktype_data)
+            self.assertIn("opschortingEnAanhoudingMogelijk", zaaktype_data)
+            self.assertIn("verlengingMogelijk", zaaktype_data)
+            self.assertIn("publicatieIndicatie", zaaktype_data)
+            self.assertIn("productenOfDiensten", zaaktype_data)
+            self.assertIn("referentieproces", zaaktype_data)
+            self.assertIn("verantwoordelijke", zaaktype_data)
+            self.assertIn("beginGeldigheid", zaaktype_data)
+            self.assertIn("versiedatum", zaaktype_data)
+            self.assertIn("catalogus", zaaktype_data)
+            self.assertIn("besluittypen", zaaktype_data)
+            self.assertIn("gerelateerdeZaaktypen", zaaktype_data)
+            self.assertIn("url", zaaktype_data)
+            self.assertIn("identificatie", zaaktype_data)
+            self.assertIn("omschrijvingGeneriek", zaaktype_data)
+            self.assertIn("toelichting", zaaktype_data)
+            self.assertIn("servicenorm", zaaktype_data)
+            self.assertIn("verlengingstermijn", zaaktype_data)
+            self.assertIn("trefwoorden", zaaktype_data)
+            self.assertIn("publicatietekst", zaaktype_data)
+            self.assertIn("verantwoordingsrelatie", zaaktype_data)
+            self.assertIn("selectielijstProcestype", zaaktype_data)
+            self.assertIn("concept", zaaktype_data)
+            self.assertIn("broncatalogus", zaaktype_data)
+            self.assertIn("bronzaaktype", zaaktype_data)
+            self.assertIn("eindeGeldigheid", zaaktype_data)
+            self.assertIn("beginObject", zaaktype_data)
+            self.assertIn("eindeObject", zaaktype_data)
+            self.assertIn("statustypen", zaaktype_data)
+            self.assertIn("resultaattypen", zaaktype_data)
+            self.assertIn("eigenschappen", zaaktype_data)
+            self.assertIn("informatieobjecttypen", zaaktype_data)
+            self.assertIn("roltypen", zaaktype_data)
+            self.assertIn("deelzaaktypen", zaaktype_data)
+            self.assertIn("zaakobjecttypen", zaaktype_data)
 
+            self.assertEqual(zaaktype_data["_expand"]["besluittypen"], [])
+            self.assertEqual(zaaktype_data["_expand"]["eigenschappen"], [])
             self.assertEqual(
-                zaaktype["_expand"],
+                zaaktype_data["_expand"]["informatieobjecttypen"],
+                [
+                    {
+                        "uuid": furl(iot.url).path.segments[-1],
+                        "catalogus": zaaktype.catalogus,
+                        "omschrijving": "Omschrijving A",
+                        "vertrouwelijkheidaanduiding": "openbaar",
+                        "beginGeldigheid": "2025-07-01",
+                        "informatieobjectcategorie": "Blue",
+                        "url": iot.url,
+                        "eindeGeldigheid": None,
+                        "concept": True,
+                        "besluittypen": [],
+                        "trefwoord": [],
+                        "omschrijvingGeneriek": {
+                            "informatieobjecttypeOmschrijvingGeneriek": "",
+                            "definitieInformatieobjecttypeOmschrijvingGeneriek": "",
+                            "herkomstInformatieobjecttypeOmschrijvingGeneriek": "",
+                            "hierarchieInformatieobjecttypeOmschrijvingGeneriek": "",
+                            "opmerkingInformatieobjecttypeOmschrijvingGeneriek": "",
+                        },
+                        "zaaktypen": [zaaktype.url],
+                        "beginObject": "2025-07-01",
+                        "eindeObject": None,
+                    }
+                ],
+            )
+
+            expected_resultaattypen = [
                 {
+                    "uuid": furl(resultaattype1.url).path.segments[-1],
+                    "url": resultaattype1.url,
+                    "zaaktype": zaaktype.url,
+                    "zaaktypeIdentificatie": zaaktype.identificatie,
+                    "omschrijving": resultaattype1.omschrijving,
+                    "resultaattypeomschrijving": resultaattype1.resultaattypeomschrijving,
+                    "omschrijvingGeneriek": resultaattype1.omschrijving_generiek,
+                    "selectielijstklasse": resultaattype1.selectielijstklasse,
+                    "toelichting": "",
+                    "archiefnominatie": "vernietigen",
+                    "archiefactietermijn": "P10Y",
+                    "brondatumArchiefprocedure": {
+                        "afleidingswijze": "afgehandeld",
+                        "datumkenmerk": "",
+                        "einddatumBekend": False,
+                        "objecttype": "",
+                        "registratie": "",
+                        "procestermijn": None,
+                    },
+                    "procesobjectaard": "",
+                    "indicatieSpecifiek": None,
+                    "procestermijn": None,
+                    "catalogus": zaaktype.catalogus,
                     "besluittypen": [],
-                    "eigenschappen": [],
+                    "besluittypeOmschrijving": [],
                     "informatieobjecttypen": [],
-                    "resultaattypen": [
-                        {
-                            "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/93eae5ed-ed79-4cc9-ac3f-6cca22dee395",
-                            "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/df34e352-ecc7-46cd-a18c-7998fac92716",
-                            "zaaktypeIdentificatie": "ZAAKTYPE-2025-0000000058",
-                            "omschrijving": "Afgehandeld",
-                            "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/7cb315fb-4f7b-4a43-aca1-e4522e4c73b3",
-                            "omschrijvingGeneriek": "Afgehandeld",
-                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
-                            "toelichting": "",
-                            "archiefnominatie": "vernietigen",
-                            "archiefactietermijn": None,
-                            "brondatumArchiefprocedure": {
-                                "afleidingswijze": "afgehandeld",
-                                "datumkenmerk": "",
-                                "einddatumBekend": False,
-                                "objecttype": "",
-                                "registratie": "",
-                                "procestermijn": None,
-                            },
-                            "procesobjectaard": "",
-                            "indicatieSpecifiek": None,
-                            "procestermijn": None,
-                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/d001f879-496e-4844-8a64-fcdd0eab6b23",
-                            "besluittypen": [],
-                            "besluittypeOmschrijving": [],
-                            "informatieobjecttypen": [],
-                            "informatieobjecttypeOmschrijving": [],
-                            "beginGeldigheid": None,
-                            "eindeGeldigheid": None,
-                            "beginObject": None,
-                            "eindeObject": None,
-                        },
-                        {
-                            "url": "http://localhost:8003/catalogi/api/v1/resultaattypen/6052ca60-5062-4887-b0c1-a6c2b4fdec45",
-                            "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/df34e352-ecc7-46cd-a18c-7998fac92716",
-                            "zaaktypeIdentificatie": "ZAAKTYPE-2025-0000000058",
-                            "omschrijving": "Toegekend",
-                            "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/fb65d251-1518-4185-865f-b8bdcfad07b1",
-                            "omschrijvingGeneriek": "Toegekend",
-                            "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/afa30940-855b-4a7e-aa21-9e15a8078814",
-                            "toelichting": "",
-                            "archiefnominatie": "vernietigen",
-                            "archiefactietermijn": "P10Y",
-                            "brondatumArchiefprocedure": {
-                                "afleidingswijze": "afgehandeld",
-                                "datumkenmerk": "",
-                                "einddatumBekend": False,
-                                "objecttype": "",
-                                "registratie": "",
-                                "procestermijn": None,
-                            },
-                            "procesobjectaard": "",
-                            "indicatieSpecifiek": None,
-                            "procestermijn": None,
-                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/d001f879-496e-4844-8a64-fcdd0eab6b23",
-                            "besluittypen": [],
-                            "besluittypeOmschrijving": [],
-                            "informatieobjecttypen": [],
-                            "informatieobjecttypeOmschrijving": [],
-                            "beginGeldigheid": None,
-                            "eindeGeldigheid": None,
-                            "beginObject": None,
-                            "eindeObject": None,
-                        },
-                    ],
-                    "roltypen": [
-                        {
-                            "url": "http://localhost:8003/catalogi/api/v1/roltypen/81f05a62-0a3e-410e-9cf4-84aef33e8e3e",
-                            "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/df34e352-ecc7-46cd-a18c-7998fac92716",
-                            "zaaktypeIdentificatie": "ZAAKTYPE-2025-0000000058",
-                            "omschrijving": "Behandelend afdeling",
-                            "omschrijvingGeneriek": "behandelaar",
-                            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/d001f879-496e-4844-8a64-fcdd0eab6b23",
-                            "beginGeldigheid": None,
-                            "eindeGeldigheid": None,
-                            "beginObject": None,
-                            "eindeObject": None,
-                        }
-                    ],
-                    "statustypen": [],
-                    "deelzaaktypen": [],
-                    "zaakobjecttypen": [],
+                    "informatieobjecttypeOmschrijving": [],
+                    "beginGeldigheid": None,
+                    "eindeGeldigheid": None,
+                    "beginObject": None,
+                    "eindeObject": None,
+                },
+                {
+                    "uuid": furl(resultaattype2.url).path.segments[-1],
+                    "url": resultaattype2.url,
+                    "zaaktype": zaaktype.url,
+                    "zaaktypeIdentificatie": zaaktype.identificatie,
+                    "omschrijving": resultaattype2.omschrijving,
+                    "resultaattypeomschrijving": resultaattype2.resultaattypeomschrijving,
+                    "omschrijvingGeneriek": resultaattype2.omschrijving_generiek,
+                    "selectielijstklasse": resultaattype2.selectielijstklasse,
+                    "toelichting": "",
+                    "archiefnominatie": "vernietigen",
+                    "archiefactietermijn": None,
+                    "brondatumArchiefprocedure": {
+                        "afleidingswijze": "afgehandeld",
+                        "datumkenmerk": "",
+                        "einddatumBekend": False,
+                        "objecttype": "",
+                        "registratie": "",
+                        "procestermijn": None,
+                    },
+                    "procesobjectaard": "",
+                    "indicatieSpecifiek": None,
+                    "procestermijn": None,
+                    "catalogus": zaaktype.catalogus,
+                    "besluittypen": [],
+                    "besluittypeOmschrijving": [],
+                    "informatieobjecttypen": [],
+                    "informatieobjecttypeOmschrijving": [],
+                    "beginGeldigheid": None,
+                    "eindeGeldigheid": None,
+                    "beginObject": None,
+                    "eindeObject": None,
+                },
+            ]
+            self.assertEqual(
+                sorted(
+                    zaaktype_data["_expand"]["resultaattypen"],
+                    key=lambda item: item["uuid"],
+                ),
+                sorted(
+                    expected_resultaattypen,
+                    key=lambda item: item["uuid"],
+                ),
+            )
+            self.assertEqual(
+                zaaktype_data["_expand"]["roltypen"],
+                [
+                    {
+                        "uuid": furl(roltype.url).path.segments[-1],
+                        "url": roltype.url,
+                        "zaaktype": zaaktype.url,
+                        "zaaktypeIdentificatie": zaaktype.identificatie,
+                        "omschrijving": "Behandelend afdeling",
+                        "omschrijvingGeneriek": "behandelaar",
+                        "catalogus": zaaktype.catalogus,
+                        "beginGeldigheid": None,
+                        "eindeGeldigheid": None,
+                        "beginObject": None,
+                        "eindeObject": None,
+                    }
+                ],
+            )
+            self.assertEqual(
+                zaaktype_data["_expand"]["statustypen"],
+                [
+                    {
+                        "uuid": furl(statustype.url).path.segments[-1],
+                        "omschrijving": "Omschrijving A",
+                        "zaaktype": zaaktype.url,
+                        "volgnummer": 1,
+                        "url": statustype.url,
+                        "omschrijvingGeneriek": "",
+                        "statustekst": "",
+                        "zaaktypeIdentificatie": zaaktype.identificatie,
+                        "isEindstatus": True,
+                        "informeren": False,
+                        "doorlooptijd": None,
+                        "toelichting": None,
+                        "checklistitemStatustype": [],
+                        "catalogus": zaaktype.catalogus,
+                        "eigenschappen": [],
+                        "zaakobjecttypen": [],
+                        "beginGeldigheid": None,
+                        "eindeGeldigheid": None,
+                        "beginObject": None,
+                        "eindeObject": None,
+                    }
+                ],
+            )
+            self.assertEqual(zaaktype_data["_expand"]["deelzaaktypen"], [])
+            self.assertEqual(zaaktype_data["_expand"]["zaakobjecttypen"], [])
+            self.assertEqual(
+                zaaktype_data["_expand"]["selectielijstProcestype"],
+                {
+                    "url": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+                    "nummer": 1,
+                    "jaar": 2020,
+                    "naam": "Instellen en inrichten organisatie",
+                    "omschrijving": "Instellen en inrichten organisatie",
+                    "toelichting": "Dit procestype betreft het instellen van een nieuw organisatieonderdeel of een nieuwe orgaan waar het orgaan in deelneemt. Dit procestype betreft eveneens het inrichten van het eigen orgaan. Dit kan kleinschalig plaatsvinden bijvoorbeeld het wijzigen van de uitvoering van een wettelijke taak of grootschalig wanneer er een organisatiewijziging wordt doorgevoerd.",
+                    "procesobject": "De vastgestelde organisatie inrichting",
                 },
             )
 
+        vertrouwelijkheidaanduiding_field = next(
+            (
+                field
+                for field in data["fields"]
+                if field["name"] == "vertrouwelijkheidaanduiding"
+            ),
+            None,
+        )
+        assert vertrouwelijkheidaanduiding_field
         with self.subTest("fields"):
-            self.assertEqual(data["fields"][1]["name"], "vertrouwelijkheidaanduiding")
-            self.assertEqual(len(data["fields"][1]["options"]), 8)
+            self.assertEqual(len(vertrouwelijkheidaanduiding_field["options"]), 8)
             self.assertEqual(fields_by_name["beginGeldigheid"]["type"], "date")
 
     def test_patch_zaaktype(self):
@@ -463,3 +572,55 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         for field in expected_required_fields:
             self.assertIn(field, invalid_params)
             self.assertEqual(invalid_params[field], "required")
+
+    @tag("gh-128")
+    @skip(
+        "Needs open zaak issue https://github.com/open-zaak/open-zaak/issues/2140 to be fixed."
+    )
+    def test_broncatalogus_fields(self):
+        catalog1 = self.helper.create_catalogus(overrides={"naam": "Catalog 1"})
+        catalog2 = self.helper.create_catalogus(overrides={"naam": "Catalog 2"})
+        zaaktype1 = self.helper.create_zaaktype()
+        zaaktype2 = self.helper.create_zaaktype(
+            overrides={
+                "catalogus": catalog2.url,
+                "broncatalogus": {
+                    "url": catalog1.url,
+                    "domein": catalog1.domein,
+                    "rsin": catalog1.rsin,
+                },
+                "bronzaaktype": {
+                    "url": zaaktype1.url,
+                    "identificatie": zaaktype1.identificatie,
+                    "omschrijving": zaaktype1.omschrijving,
+                },
+            }
+        )
+
+        assert zaaktype2.url
+
+        zaaktype2_uuid = furl(zaaktype2.url).path.segments[-1]
+        self.client.force_login(self.user)
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype2_uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        self.assertEqual(
+            data["result"]["broncatalogus"],
+            {"url": catalog1.url, "domein": catalog1.domein, "rsin": catalog1.rsin},
+        )
+        self.assertEqual(
+            data["result"]["bronzaaktype"],
+            {
+                "url": zaaktype1.url,
+                "identificatie": zaaktype1.identificatie,
+                "omschrijving": zaaktype1.omschrijving,
+            },
+        )
