@@ -23,16 +23,23 @@ from openbeheer.api.views import (
     create_many,
     fetch_one,
     make_expansion,
-    make_with_uuid,
 )
 from openbeheer.clients import iter_pages, ztc_client
 from openbeheer.types import (
+    BesluitTypeWithUUID,
     DetailResponse,
+    EigenschapWithUUID,
     FrontendFieldsets,
+    InformatieObjectTypeWithUUID,
     OBField,
     OBOption,
     OBPagedQueryParams,
+    ResultaatTypeWithUUID,
+    RolTypeWithUUID,
+    StatusTypeWithUUID,
     VersionSummary,
+    ZaakObjectTypeWithUUID,
+    ZaakTypeWithUUID,
     ZGWError,
     ZGWResponse,
 )
@@ -98,33 +105,28 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
 
 
 class ZaakTypeExtension(Struct, frozen=True):
-    besluittypen: UnsetType | list[BesluitType] = UNSET
+    besluittypen: UnsetType | list[BesluitTypeWithUUID] = UNSET
     # Not invented here:
     # "selectielijst_procestype: UnsetType | "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
     # Posssibly Not invented here:
     # "gerelateerde_zaaktypen: UnsetType | null
     # "broncatalogus.url: UnsetType | null
     # "bronzaaktype.url: UnsetType | null
-    statustypen: UnsetType | list[StatusType] = UNSET
-    resultaattypen: UnsetType | list[ResultaatType] = UNSET
-    eigenschappen: UnsetType | list[Eigenschap] = UNSET
-    informatieobjecttypen: UnsetType | list[InformatieObjectType] = UNSET
-    roltypen: UnsetType | list[RolType] = UNSET
-    deelzaaktypen: UnsetType | list[ZaakType] = UNSET
-    zaakobjecttypen: UnsetType | list[ZaakObjectType] = UNSET
+    statustypen: UnsetType | list[StatusTypeWithUUID] = UNSET
+    resultaattypen: UnsetType | list[ResultaatTypeWithUUID] = UNSET
+    eigenschappen: UnsetType | list[EigenschapWithUUID] = UNSET
+    informatieobjecttypen: UnsetType | list[InformatieObjectTypeWithUUID] = UNSET
+    roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
+    deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
+    zaakobjecttypen: UnsetType | list[ZaakObjectTypeWithUUID] = UNSET
 
 
 class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
     _expand: ZaakTypeExtension = ZaakTypeExtension()
 
 
-class ExpandableZaakType(ZaakType, Struct):
-    uuid: str | UnsetType = UNSET
+class ExpandableZaakType(ZaakTypeWithUUID, Struct):
     _expand: ZaakTypeExtension = ZaakTypeExtension()
-
-    def __post_init__(self):
-        if hasattr(self, "url") and self.url:
-            self.uuid = furl(self.url).path.segments[-1]
 
 
 @extend_schema_view(
@@ -272,7 +274,7 @@ def expand_deelzaaktype(
 ) -> list[list[ZaakType | None]]:
     return [
         [
-            fetch_one(client, dz_url, make_with_uuid(ZaakType)) if dz_url else None
+            fetch_one(client, dz_url, ZaakTypeWithUUID) if dz_url else None
             for dz_url in (zt.deelzaaktypen or [])
         ]
         for zt in zaaktypen
@@ -350,29 +352,29 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
             lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
-            make_with_uuid(BesluitType),
+            BesluitTypeWithUUID,
         ),
         "statustypen": make_expansion(
-            "statustypen", _get_params_with_status, make_with_uuid(StatusType)
+            "statustypen", _get_params_with_status, StatusTypeWithUUID
         ),
         # TODO investigate bad OZ response
         "resultaattypen": make_expansion(
-            "resultaattypen", _get_params_with_status, dict
+            "resultaattypen", _get_params_with_status, ResultaatTypeWithUUID
         ),
         "eigenschappen": make_expansion(
-            "eigenschappen", _get_params_with_status, make_with_uuid(Eigenschap)
+            "eigenschappen", _get_params_with_status, EigenschapWithUUID
         ),
         "informatieobjecttypen": make_expansion(
             "informatieobjecttypen",
             _get_params_with_status,
-            make_with_uuid(InformatieObjectType),
+            InformatieObjectTypeWithUUID,
         ),
         "roltypen": make_expansion(
-            "roltypen", _get_params_with_status, make_with_uuid(RolType)
+            "roltypen", _get_params_with_status, RolTypeWithUUID
         ),
         "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": make_expansion(
-            "zaakobjecttypen", _key, make_with_uuid(ZaakObjectType)
+            "zaakobjecttypen", _key, ZaakObjectTypeWithUUID
         ),
     }
 

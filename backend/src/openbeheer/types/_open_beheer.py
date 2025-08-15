@@ -11,7 +11,19 @@ from typing import Self, Sequence, Type
 
 import msgspec
 from ape_pie import APIClient
+from furl import furl
 from msgspec import UNSET, Struct, UnsetType, structs
+
+from .ztc import (
+    BesluitType,
+    Eigenschap,
+    InformatieObjectType,
+    ResultaatType,
+    RolType,
+    StatusType,
+    ZaakObjectType,
+    ZaakType,
+)
 
 
 class OBPagedQueryParams(Struct):
@@ -233,3 +245,66 @@ def make_fields_optional(t: Type[Struct]) -> Type[Struct]:
         bases=(t,),
         rename="camel",
     )
+
+
+class ResourceWithUUID:
+    """
+    Add a ``__post_init__`` method to set the value of the UUID from the URL.
+
+    Coundn't use the construction:
+
+    .. code:: python
+
+       class ResourceWithUUID(Struct):
+           uuid: str | UnsetType = UNSET
+
+           def __post_init__(self):
+               if hasattr(self, "url") and self.url:
+                   self.uuid = furl(self.url).path.segments[-1]
+               return self
+
+       class BesluitTypeWithUUID(ResourceWithUUID, BesluitType):
+           pass
+
+    As this gives the error: ``TypeError: multiple bases have instance lay-out conflict``.
+    """
+
+    url: str | None
+    uuid: str | UnsetType = UNSET
+
+    def __post_init__(self):
+        if hasattr(self, "url") and self.url:
+            self.uuid = furl(self.url).path.segments[-1]
+        return Self
+
+
+class BesluitTypeWithUUID(BesluitType, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
+
+
+class StatusTypeWithUUID(StatusType, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
+
+
+class ResultaatTypeWithUUID(ResultaatType, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
+
+
+class EigenschapWithUUID(Eigenschap, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
+
+
+class InformatieObjectTypeWithUUID(InformatieObjectType, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
+
+
+class RolTypeWithUUID(RolType, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
+
+
+class ZaakTypeWithUUID(ZaakType, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
+
+
+class ZaakObjectTypeWithUUID(ZaakObjectType, ResourceWithUUID, Struct):
+    uuid: str | UnsetType = UNSET
