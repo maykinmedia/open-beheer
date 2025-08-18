@@ -230,3 +230,20 @@ jobs:
 
       - name: Push the Docker image (production)
         run: docker push ${{ needs.docker_build.outputs.image_name }}
+
+  dockerhub_description:
+    needs: docker_push
+
+    name: Update dockerhub description
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' # Exclude PRs
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+          repository: maykinmedia/open-beheer
+          readme-filepath: ${{ github.workspace }}/README.md
