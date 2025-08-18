@@ -39,6 +39,8 @@ backend/log/*.log*
 backend/log/nginx/*.log*
 .env
 
+frontend/.env
+
 # Static files
 backend/src/openbeheer/templates/index.html
 backend/src/openbeheer/static/assets
