@@ -247,7 +247,7 @@ def make_fields_optional(t: Type[Struct]) -> Type[Struct]:
     )
 
 
-class ResourceWithUUID:
+class UUIDMixin:
     """
     Add a ``__post_init__`` method to set the value of the UUID from the URL.
 
@@ -278,33 +278,33 @@ class ResourceWithUUID:
         return Self
 
 
-class BesluitTypeWithUUID(BesluitType, ResourceWithUUID, Struct):
+class BesluitTypeWithUUID(UUIDMixin, BesluitType):
     uuid: str | UnsetType = UNSET
 
 
-class StatusTypeWithUUID(StatusType, ResourceWithUUID, Struct):
+class StatusTypeWithUUID(UUIDMixin, StatusType):
     uuid: str | UnsetType = UNSET
 
 
-class ResultaatTypeWithUUID(ResultaatType, ResourceWithUUID, Struct):
+class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
     uuid: str | UnsetType = UNSET
 
 
-class EigenschapWithUUID(Eigenschap, ResourceWithUUID, Struct):
+class EigenschapWithUUID(UUIDMixin, Eigenschap):
     uuid: str | UnsetType = UNSET
 
 
-class InformatieObjectTypeWithUUID(InformatieObjectType, ResourceWithUUID, Struct):
+class InformatieObjectTypeWithUUID(UUIDMixin, InformatieObjectType):
     uuid: str | UnsetType = UNSET
 
 
-class RolTypeWithUUID(RolType, ResourceWithUUID, Struct):
+class RolTypeWithUUID(UUIDMixin, RolType):
     uuid: str | UnsetType = UNSET
 
 
-class ZaakTypeWithUUID(ZaakType, ResourceWithUUID, Struct):
+class ZaakTypeWithUUID(UUIDMixin, ZaakType):
     uuid: str | UnsetType = UNSET
 
 
-class ZaakObjectTypeWithUUID(ZaakObjectType, ResourceWithUUID, Struct):
+class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: str | UnsetType = UNSET
