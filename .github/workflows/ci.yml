@@ -217,7 +217,7 @@ jobs:
       - name: Download built image
         uses: actions/download-artifact@v4
         with:
-          name: docker-image
+          name: ${{ needs.docker_build.outputs.artifact_name }}
 
       - name: Load image
         run: |
@@ -229,4 +229,4 @@ jobs:
           --password-stdin
 
       - name: Push the Docker image (production)
-        run: docker push ${{ needs.docker_build.outputs.image_tag }}
+        run: docker push ${{ needs.docker_build.outputs.image_name }}
