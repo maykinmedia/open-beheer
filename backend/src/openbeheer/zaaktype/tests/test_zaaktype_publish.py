@@ -5,7 +5,7 @@ from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from zgw_consumers.constants import APITypes
+from zgw_consumers.constants import APITypes, AuthTypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
@@ -24,6 +24,12 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
             client_id="test-vcr",
             secret="test-vcr",
             slug="OZ",
+        )
+        cls.selectielijst_service = ServiceFactory.create(
+            api_type=APITypes.orc,
+            api_root="https://selectielijst.openzaak.nl/api/v1/",
+            auth_type=AuthTypes.no_auth,
+            slug="selectielijst",
         )
         cls.user = UserFactory.create()
 
