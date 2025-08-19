@@ -263,6 +263,7 @@ export type DeleteRelatedObjectPayload = {
   relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
   relatedObjectUuid: string;
 };
+
 /**
  * Action to delete a related object.
  */
