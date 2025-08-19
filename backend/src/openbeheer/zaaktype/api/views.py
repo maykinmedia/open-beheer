@@ -162,18 +162,32 @@ class ZaakTypeListView(
     query_type = ZaaktypenGetParametersQuery
     endpoint_path = "zaaktypen"
 
+    @override
     def parse_ob_fields(
         self,
         params: ZaaktypenGetParametersQuery,
         option_overrides: Mapping[str, list[OBOption]] = {},
+        **_,
     ) -> list[OBField]:
+        order = [
+            "url",
+            "identificatie",
+            "omschrijving",
+            "vertrouwelijkheidaanduiding",
+            "versiedatum",
+            "actief",
+            "eindeGeldigheid",
+            "concept",
+        ]
         return super().parse_ob_fields(
             params,
-            {
+            dict(option_overrides)
+            | {
                 "vertrouwelijkheidaanduiding": OBOption.from_enum(
                     VertrouwelijkheidaanduidingEnum
                 )
             },
+            sort_key=lambda f: order.index(f.name),
         )
 
     @override

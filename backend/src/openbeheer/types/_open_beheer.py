@@ -124,7 +124,7 @@ def options(t: type | UnionType) -> list[OBOption]:
             return []
 
 
-class OBField[T](Struct, rename="camel"):
+class OBField[T](Struct, rename="camel", omit_defaults=True):
     """Used by frontend to draw list views"""
 
     name: str
@@ -135,11 +135,11 @@ class OBField[T](Struct, rename="camel"):
     filter_value: T | UnsetType = msgspec.UNSET
     'The currently "selected" value'
 
-    filter_lookup: str | UnsetType = ""
+    filter_lookup: str | UnsetType = msgspec.UNSET
     """The "lookup" (query parameter) to use for this field while filtering (e.g.
     "omschrijving__icontains")."""
 
-    options: list[OBOption] | UnsetType = []
+    options: list[OBOption] | UnsetType = msgspec.UNSET
     "fields that are not query parameter MAY need options too"
 
     def __post_init__(self):
