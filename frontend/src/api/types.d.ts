@@ -5,3 +5,8 @@ export type ListResponse<T extends object = object> = {
   pagination: PaginatorProps;
   results: T[];
 };
+
+export type OidcInfoType = {
+  enabled: boolean;
+  loginUrl?: string;
+};

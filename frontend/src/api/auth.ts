@@ -2,6 +2,8 @@ import { cacheDelete, cacheMemo } from "@maykin-ui/client-common";
 import { request } from "~/api/request.ts";
 import { components } from "~/types";
 
+import { OidcInfoType } from "./types";
+
 /**
  * API call for login.
  * @param username - username of the user
@@ -56,4 +58,11 @@ export async function logout(signal?: AbortSignal) {
     undefined,
     signal,
   );
+}
+
+/**
+ * API call to get info about OIDC.
+ */
+export async function getOIDCInfo() {
+  return request<OidcInfoType>("GET", "/oidc-info/");
 }
