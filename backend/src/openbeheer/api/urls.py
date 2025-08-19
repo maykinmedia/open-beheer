@@ -7,6 +7,7 @@ from drf_spectacular.views import (
 )
 
 from openbeheer.accounts.api.views import WhoAmIView
+from openbeheer.config.api.views import OIDCInfoView
 from openbeheer.health_checks.api.views import HealthChecksView
 from openbeheer.zaaktype.api.views import (
     ZaakTypeTemplateListView,
@@ -76,6 +77,7 @@ urlpatterns = [
                 path(
                     "health-checks/", HealthChecksView.as_view(), name="health-checks"
                 ),
+                path("oidc-info", OIDCInfoView.as_view(), name="oidc-info"),
             ]
         ),
     ),
