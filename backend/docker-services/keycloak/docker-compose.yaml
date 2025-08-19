@@ -6,29 +6,12 @@
 # your Helm charts from). Note that various environment variables are UNSAFE and merely
 # specified so that you can get up and running with the least amount of friction.
 services:
-  keycloak-db:
-    image: postgres:14
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
-    networks:
-      - keycloak-dev
-
   keycloak.local:
-    depends_on:
-      - keycloak-db
     command: start-dev --import-realm
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://keycloak-db/keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak
-      KC_HOSTNAME: localhost
-    image: quay.io/keycloak/keycloak:25.0.6
+    image: quay.io/keycloak/keycloak:26.3.2
     ports:
       - "28080:8080"
     restart: unless-stopped
