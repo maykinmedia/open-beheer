@@ -13,7 +13,7 @@ import { SERVICE_PARAM } from "~/App.tsx";
 import { getRelatedObjectTemplateChoices } from "~/api/template.ts";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
 import { useCombinedSearchParams } from "~/hooks";
-import { useSubmitAction } from "~/hooks/useSubmitAction.ts";
+import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getObjectUUID } from "~/lib";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { Expand, ExpandItemKeys, Expanded, RelatedObject } from "~/types";

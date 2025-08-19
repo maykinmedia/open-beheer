@@ -5,10 +5,6 @@ import { getObjectUUID, getZaaktypeUUID } from "~/lib";
 import { TargetType, ZaaktypeLoaderData } from "~/pages";
 import { RelatedObject, components } from "~/types";
 
-
-
-
-
 export type ZaaktypeAction =
   | TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>
   | TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>
@@ -285,6 +281,7 @@ export type DeleteRelatedObjectPayload = {
   relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
   relatedObjectUuid: string;
 };
+
 /**
  * Action to delete a related object.
  */
