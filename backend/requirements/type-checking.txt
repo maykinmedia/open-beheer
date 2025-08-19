@@ -140,7 +140,6 @@ django-simple-certmanager==2.4.1
 django-solo==2.4.0
     # via
     #   -r requirements/base.txt
-    #   mozilla-django-oidc-db
     #   zgw-consumers
 django-structlog==9.1.1
     # via -r requirements/base.txt
@@ -219,7 +218,7 @@ mozilla-django-oidc==4.0.1
     # via
     #   -r requirements/base.txt
     #   mozilla-django-oidc-db
-mozilla-django-oidc-db==0.22.0
+mozilla-django-oidc-db==0.25.0
     # via -r requirements/base.txt
 msgspec==0.19.0
     # via -r requirements/base.txt
