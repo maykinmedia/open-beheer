@@ -62,6 +62,10 @@ if TYPE_CHECKING:
 
     from rest_framework.request import Request
 
+    # poor man's Comprarable
+    # don't want to import SupportsRichComparison from pyright's private _typeshed
+    type Comparable = int | str
+
 logger = structlog.stdlib.get_logger(__name__)
 
 _ENCODER = Encoder()
@@ -388,7 +392,11 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
         return obj, []
 
     def parse_ob_fields(
-        self, params: P, option_overrides: Mapping[str, list[OBOption]] = {}
+        self,
+        params: P,
+        option_overrides: Mapping[str, list[OBOption]] = {},
+        *,
+        sort_key: Callable[[OBField], Comparable] = lambda f: f.name,
     ) -> list[OBField]:
         """Create OBFields for the attributes on `self.data_type`
 
@@ -413,11 +421,16 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
                 ) is not not_applicable:
                     ob_field.filter_lookup = filter_name
                     ob_field.filter_value = value
+                else:
+                    ob_field.options = UNSET
 
             return ob_field
 
         attrs = get_type_hints(self.return_data_type)
-        return [to_ob_field(field, annotation) for field, annotation in attrs.items()]
+        return sorted(
+            (to_ob_field(field, annotation) for field, annotation in attrs.items()),
+            key=sort_key,
+        )
 
     def parse_query_params(self, request: Request, api_client: APIClient) -> P:
         "Parse incoming query parameters into a value of `self.query_type`"

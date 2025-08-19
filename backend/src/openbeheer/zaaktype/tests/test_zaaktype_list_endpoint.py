@@ -44,27 +44,33 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
 
         self.assertGreater(data["pagination"]["count"], 0)
 
-        field_names = {f["name"] for f in data["fields"]}
+        field_names = [f["name"] for f in data["fields"]]
 
-        # has specced fields
-        self.assertSetEqual(
+        # has specced fields in correct order
+        self.assertListEqual(
             field_names,
-            {
+            [
                 "url",
-                "omschrijving",
                 "identificatie",
-                "eindeGeldigheid",
-                "versiedatum",
+                "omschrijving",
                 "vertrouwelijkheidaanduiding",
+                "versiedatum",
                 "actief",
+                "eindeGeldigheid",
                 "concept",
-            },
+            ],
         )
 
         # all rows have at least all fields
         for row in data["results"]:
-            keys_in_fields = set(row.keys()) & field_names
-            self.assertSetEqual(keys_in_fields, field_names)
+            keys_in_fields = set(row.keys()) & set(field_names)
+            self.assertSetEqual(keys_in_fields, set(field_names))
+
+        identificatie = data["fields"][1]
+        assert identificatie["name"] == "identificatie"
+        # options should be undefined if there are no options
+        # [] renders to an empty select
+        self.assertNotIn("options", identificatie.keys())
 
         versiedatum = next(f for f in data["fields"] if f["name"] == "versiedatum")
         self.assertEqual(versiedatum["type"], "date")

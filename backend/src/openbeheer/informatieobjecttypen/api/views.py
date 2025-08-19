@@ -63,6 +63,7 @@ class InformatieObjectTypeListView(
         self,
         params: InformatieObjectTypenGetParametersQuery,
         option_overrides: Mapping[str, list[OBOption]] = {},
+        **_,
     ) -> list[OBField]:
         return super().parse_ob_fields(
             params,
