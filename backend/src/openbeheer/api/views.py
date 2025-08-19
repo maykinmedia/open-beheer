@@ -276,16 +276,24 @@ def create_one[T](
         return error
 
 
+def noop(error: ZGWError, index: int) -> ZGWError:
+    return error
+
+
 def create_many[T](
-    client: APIClient, path: str, result_type: type[T], data: Iterable[Mapping]
+    client: APIClient,
+    path: str,
+    result_type: type[T],
+    data: Iterable[Mapping],
+    error_transform: Callable[[ZGWError, int], ZGWError] = noop,
 ) -> tuple[list[T], list[ZGWError]]:
     results: list[T] = []
     errors: list[ZGWError] = []
 
-    for item in data:
+    for index, item in enumerate(data):
         match result := create_one(client, path, result_type=result_type, data=item):
             case ZGWError():
-                errors.append(result)
+                errors.append(error_transform(result, index))
             case _:
                 results.append(result)
 
