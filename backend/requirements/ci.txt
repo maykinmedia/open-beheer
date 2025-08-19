@@ -214,7 +214,6 @@ django-solo==2.4.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
-    #   mozilla-django-oidc-db
     #   zgw-consumers
 django-structlog==9.1.1
     # via
@@ -360,7 +359,7 @@ mozilla-django-oidc==4.0.1
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   mozilla-django-oidc-db
-mozilla-django-oidc-db==0.22.0
+mozilla-django-oidc-db==0.25.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
