@@ -812,3 +812,56 @@ class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json()["invalidParams"][0]["name"], "omschrijving")
         self.assertEqual(response.json()["invalidParams"][0]["code"], "required")
+
+    def test_create_zaaktype_with_related_resource_with_incomplete_data(self):
+        self.client.force_login(self.user)
+        catalogus = self.helper.create_catalogus()
+
+        data = {
+            "omschrijving": "New Zaaktype 001",
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": catalogus.url,
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "resultaattypen": [],
+            "_expand": {
+                "roltypen": [
+                    {
+                        # "omschrijving": "Fruitella", # Missing!
+                        "omschrijvingGeneriek": "behandelaar",
+                        "beginGeldigheid": "2025-07-30",
+                    },
+                    {
+                        "omschrijving": "Droptella",
+                        "omschrijvingGeneriek": "beslisser",
+                        "beginGeldigheid": "2025-07-30",
+                    },
+                ]
+            },
+        }
+        response = self.client.post(self.url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.json()
+
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(
+            errors[0]["invalidParams"][0]["name"], "roltypen.0.omschrijving"
+        )
