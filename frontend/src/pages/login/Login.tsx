@@ -1,12 +1,24 @@
 import { LoginTemplate, forceArray } from "@maykin-ui/admin-ui";
-import { useActionData, useSubmit } from "react-router";
+import { useActionData, useLoaderData, useSubmit } from "react-router";
 
 type LoginFormType = { username: string; password: string };
+
+/*
+ * Add the redirect URL to the callback URL
+ */
+const makeRedirectUrl = (oidcLoginUrl: string) => {
+  const currentUrl = new URL(window.location.href);
+  const redirectUrl = new URL("/", currentUrl);
+  const loginUrl = new URL(oidcLoginUrl);
+  loginUrl.searchParams.set("next", redirectUrl.href);
+  return loginUrl.href;
+};
 
 /**
  * Login page
  */
 export function LoginPage() {
+  const { oidcInfo } = useLoaderData();
   const actionData = useActionData() || {};
   const submit = useSubmit();
 
@@ -45,6 +57,10 @@ export function LoginPage() {
         fields,
         onSubmit: (_, data) => submit(data, { method: "POST" }),
       }}
+      labelOidcLogin="Organisatie login"
+      urlOidcLogin={
+        oidcInfo.enabled ? makeRedirectUrl(oidcInfo.loginUrl) : undefined
+      }
     />
   );
 }
