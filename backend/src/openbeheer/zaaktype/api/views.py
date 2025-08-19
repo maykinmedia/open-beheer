@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime  # noqa: TC003
+from functools import partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
 from django.core.exceptions import ImproperlyConfigured
@@ -71,6 +72,7 @@ from openbeheer.zaaktype.constants import (
     OptionalZaakType,
     Sjabloon,
 )
+from openbeheer.zaaktype.utils import format_related_resource_error
 
 if TYPE_CHECKING:
     from uuid import UUID
@@ -191,11 +193,19 @@ class ZaakTypeListView(
             )
 
         besluittypen, errors = create_many(
-            api_client, "besluittypen", BesluitType, inject_foreignkeys("besluittypen")
+            api_client,
+            "besluittypen",
+            BesluitType,
+            inject_foreignkeys("besluittypen"),
+            partial(format_related_resource_error, "besluittypen"),
         )
         all_errors.extend(errors)
         statustypen, errors = create_many(
-            api_client, "statustypen", StatusType, inject_foreignkeys("statustypen")
+            api_client,
+            "statustypen",
+            StatusType,
+            inject_foreignkeys("statustypen"),
+            partial(format_related_resource_error, "statustypen"),
         )
         all_errors.extend(errors)
         resultaattypen, errors = create_many(
@@ -203,10 +213,15 @@ class ZaakTypeListView(
             "resultaattypen",
             ResultaatType,
             inject_foreignkeys("resultaattypen"),
+            partial(format_related_resource_error, "resultaattypen"),
         )
         all_errors.extend(errors)
         eigenschappen, errors = create_many(
-            api_client, "eigenschappen", Eigenschap, inject_foreignkeys("eigenschappen")
+            api_client,
+            "eigenschappen",
+            Eigenschap,
+            inject_foreignkeys("eigenschappen"),
+            partial(format_related_resource_error, "eigenschappen"),
         )
         all_errors.extend(errors)
         informatieobjecttypen, errors = create_many(
@@ -214,10 +229,15 @@ class ZaakTypeListView(
             "informatieobjecttypen",
             InformatieObjectType,
             inject_foreignkeys("informatieobjecttypen"),
+            partial(format_related_resource_error, "informatieobjecttypen"),
         )
         all_errors.extend(errors)
         roltypen, errors = create_many(
-            api_client, "roltypen", RolType, inject_foreignkeys("roltypen")
+            api_client,
+            "roltypen",
+            RolType,
+            inject_foreignkeys("roltypen"),
+            partial(format_related_resource_error, "roltypen"),
         )
         all_errors.extend(errors)
         deelzaaktypen, errors = create_many(
@@ -225,6 +245,7 @@ class ZaakTypeListView(
             "zaaktypen",
             ZaakType,
             posted_expansions.get("deelzaaktypen", []),
+            partial(format_related_resource_error, "deelzaaktypen"),
         )
         all_errors.extend(errors)
         zaakobjecttypen, errors = create_many(
@@ -232,6 +253,7 @@ class ZaakTypeListView(
             "zaakobjecttypen",
             ZaakObjectType,
             inject_foreignkeys("zaakobjecttypen"),
+            partial(format_related_resource_error, "zaakobjecttypen"),
         )
         all_errors.extend(errors)
 
