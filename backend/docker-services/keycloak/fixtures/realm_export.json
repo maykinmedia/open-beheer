@@ -772,7 +772,7 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:8000/oidc/callback/"
+        "http://localhost:8000/auth/oidc/callback/"
       ],
       "webOrigins": [
         "http://localhost:8000"
