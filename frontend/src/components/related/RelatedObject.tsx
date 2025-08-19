@@ -15,7 +15,7 @@ import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
 import { BaseTabSection, TabConfig } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
-import { Expand, ExpandItemKeys, Expanded, RelatedObject } from "~/types";
+import { ExpandItemKeys, RelatedObject } from "~/types";
 
 type RelatedObjectRendererProps<T extends object> = {
   relatedObject: object | object[]; // TODO: Can improve typing
@@ -113,10 +113,6 @@ export function RelatedObjectRenderer<T extends object>({
     if (!serviceSlug) {
       console.warn("Service slug is not defined.");
       return;
-    }
-    const zaaktypeUuid = getZaaktypeUUID(relatedObject);
-    if (!zaaktypeUuid) {
-      throw new Error("Related object does not have a UUID.");
     }
     submitAction({
       type: "DELETE_RELATED_OBJECT",
