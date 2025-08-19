@@ -11,7 +11,7 @@ urlpatterns = [
         name="informatieobjecttypen-list",
     ),
     path(
-        "/<uuid:uuid>",
+        "<uuid:uuid>",
         InformatieObjectTypeDetailView.as_view(),
         name="informatieobjecttypen-detail",
     ),
