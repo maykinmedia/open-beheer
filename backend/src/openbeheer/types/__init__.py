@@ -1,5 +1,6 @@
 """Data Transfer Object types for both ZGW APIs facing side, and our frontend."""
 
+from ._oidc import OIDCInfo
 from ._open_beheer import (
     BesluitTypeWithUUID,
     DetailResponse,
@@ -55,4 +56,5 @@ __all__ = [
     "RolTypeWithUUID",
     "ZaakTypeWithUUID",
     "ZaakObjectTypeWithUUID",
+    "OIDCInfo",
 ]
