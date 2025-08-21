@@ -7,6 +7,7 @@ import {
   Column,
   Form,
   FormField,
+  FormValidator,
   Grid,
   H1,
   H2,
@@ -96,9 +97,9 @@ export function ZaaktypeCreatePage() {
     [results],
   );
 
-  const handleValidate = useCallback(
-    (values: SerializedFormData, fields: FormField[]) => {
-      const errors = validateForm(values, fields);
+  const handleValidate = useCallback<FormValidator>(
+    (values: object, fields: FormField[], validators) => {
+      const errors = validateForm(values, fields, validators);
       const isValid = Object.keys(errors).length === 0;
       setIsValidState(isValid);
       return errors;
