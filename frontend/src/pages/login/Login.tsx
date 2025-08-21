@@ -1,4 +1,5 @@
-import { LoginTemplate, forceArray } from "@maykin-ui/admin-ui";
+import { LoginTemplate } from "@maykin-ui/admin-ui";
+import { forceArray } from "@maykin-ui/client-common";
 import { useActionData, useSubmit } from "react-router";
 
 type LoginFormType = { username: string; password: string };
