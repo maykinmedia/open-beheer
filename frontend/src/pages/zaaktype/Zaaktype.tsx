@@ -293,6 +293,7 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
           field={fieldName as keyof Expand<typeof object>}
           object={object}
           view={tabConfig.view}
+          zaaktypeUuid={getZaaktypeUUID(object)}
         />
       );
     }

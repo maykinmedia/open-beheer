@@ -41,3 +41,16 @@ export type ExpandItemKeys<T extends Expanded> = NonNullable<
       : never;
   }[keyof Expand<T>]
 >;
+
+/**
+ * Extracts the item type for a specific field in the `_expand` map.
+ *
+ * Example:
+ * RelatedObject<MyObject> = StatusType
+ */
+export type RelatedObject<T extends object> =
+  NonNullable<Expand<T>[keyof Expand<T>]> extends (infer U)[]
+    ? U extends object
+      ? U
+      : never
+    : never;
