@@ -17,6 +17,7 @@ PLAYWRIGHT_BROWSER = config("PLAYWRIGHT_BROWSER", default="chromium")
 PLAYWRIGHT_HEADLESS = config("PLAYWRIGHT_HEADLESS", default=True)
 PLAYWRIGHT_TRACE_PATH = config("PLAYWRIGHT_TRACE_PATH", default="playwright-trace.zip")
 PLAYWRIGHT_SAVE_TRACE = config("PLAYWRIGHT_SAVE_TRACE", default=True)
+E2E_TESTS = config("E2E_TESTS", default=True)
 
 from .base import *  # noqa isort:skip
 
