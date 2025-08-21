@@ -5,13 +5,13 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
-from django.views.generic.base import TemplateView
 
 from maykin_2fa import monkeypatch_admin
 from maykin_2fa.urls import urlpatterns, webauthn_urlpatterns
 from mozilla_django_oidc_db.views import AdminLoginFailure
 
 from openbeheer.accounts.views.password_reset import PasswordResetView
+from openbeheer.utils.views import RootView
 
 # Configure admin
 
@@ -57,7 +57,7 @@ urlpatterns = [
     ),
     path("api/", include("openbeheer.api.urls", namespace="api")),
     # Simply show the master template.
-    path("", TemplateView.as_view(template_name="master.html"), name="root"),
+    path("", RootView.as_view(), name="root"),
 ]
 
 # NOTE: The staticfiles_urlpatterns also discovers static files (ie. no need to run collectstatic). Both the static
