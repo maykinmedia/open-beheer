@@ -1,34 +1,145 @@
 import { FieldSet, TypedField } from "@maykin-ui/admin-ui";
 import { components } from "~/types";
 
-export const FIXTURE_ZAAKTYPE: components["schemas"]["ZaakType"] = {
-  omschrijving: "engage best-of-breed synergies",
+export const FIXTURE_ZAAKTYPE: components["schemas"]["ExpandableZaakType"] = {
+  uuid: "be210495-20b6-48ff-8d3d-3e44f74c43a4",
+  _expand: {
+    besluittypen: [],
+    statustypen: [
+      {
+        uuid: "9438e56a-5d78-4dc8-9d9a-2404781f818d",
+        omschrijving: "Statustype Completed",
+        zaaktype:
+          "http://localhost:8003/catalogi/api/v1/zaaktypen/be210495-20b6-48ff-8d3d-3e44f74c43a4",
+        volgnummer: 1,
+        url: "http://localhost:8003/catalogi/api/v1/statustypen/9438e56a-5d78-4dc8-9d9a-2404781f818d",
+        omschrijvingGeneriek: "",
+        statustekst: "",
+        zaaktypeIdentificatie: "ZAAKTYPE-2018-0000000001",
+        isEindstatus: true,
+        informeren: false,
+        doorlooptijd: null,
+        toelichting: null,
+        checklistitemStatustype: [],
+        catalogus:
+          "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+        eigenschappen: [],
+        zaakobjecttypen: [],
+        beginGeldigheid: null,
+        eindeGeldigheid: null,
+        beginObject: null,
+        eindeObject: null,
+      },
+    ],
+    resultaattypen: [
+      {
+        uuid: "12903100-b7a0-4441-9645-eda7df2ad106",
+        zaaktype:
+          "http://localhost:8003/catalogi/api/v1/zaaktypen/be210495-20b6-48ff-8d3d-3e44f74c43a4",
+        omschrijving: "Verwerkt",
+        resultaattypeomschrijving:
+          "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/f33dbd16-68ae-4820-acb5-5f437bca5edb",
+        selectielijstklasse:
+          "https://selectielijst.openzaak.nl/api/v1/resultaten/cc5ae4e3-a9e6-4386-bcee-46be4986a829",
+        url: "http://localhost:8003/catalogi/api/v1/resultaattypen/12903100-b7a0-4441-9645-eda7df2ad106",
+        zaaktypeIdentificatie: "ZAAKTYPE-2018-0000000001",
+        omschrijvingGeneriek: "",
+        toelichting: "",
+        archiefnominatie: "",
+        archiefactietermijn: null,
+        brondatumArchiefprocedure: {
+          afleidingswijze: "afgehandeld",
+          datumkenmerk: "",
+          einddatumBekend: false,
+          objecttype: "",
+          registratie: "",
+          procestermijn: null,
+        },
+        procesobjectaard: "",
+        indicatieSpecifiek: null,
+        procestermijn: null,
+        catalogus:
+          "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+        besluittypen: [],
+        besluittypeOmschrijving: [],
+        informatieobjecttypen: [],
+        informatieobjecttypeOmschrijving: [],
+        beginGeldigheid: null,
+        eindeGeldigheid: null,
+        beginObject: null,
+        eindeObject: null,
+      },
+    ],
+    eigenschappen: [],
+    informatieobjecttypen: [
+      {
+        uuid: "a8089bdf-72d3-414f-a9cd-953cfa602b6c",
+        catalogus:
+          "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
+        omschrijving: "Informatie object type 0",
+        vertrouwelijkheidaanduiding: "openbaar",
+        beginGeldigheid: "2018-01-01",
+        informatieobjectcategorie: "stock",
+        url: "http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a8089bdf-72d3-414f-a9cd-953cfa602b6c",
+        eindeGeldigheid: null,
+        concept: false,
+        besluittypen: [],
+        trefwoord: [],
+        omschrijvingGeneriek: {
+          informatieobjecttypeOmschrijvingGeneriek: "bill",
+          definitieInformatieobjecttypeOmschrijvingGeneriek:
+            "Bank sound west control fly Mrs. West their some pressure. Many often various guess first move visit group.",
+          herkomstInformatieobjecttypeOmschrijvingGeneriek: "ZSWuoDPOIaWF",
+          hierarchieInformatieobjecttypeOmschrijvingGeneriek: "until",
+          opmerkingInformatieobjecttypeOmschrijvingGeneriek: "",
+        },
+        zaaktypen: [
+          "http://localhost:8003/catalogi/api/v1/zaaktypen/be210495-20b6-48ff-8d3d-3e44f74c43a4",
+        ],
+        beginObject: "2018-01-01",
+        eindeObject: null,
+      },
+    ],
+    roltypen: [],
+    deelzaaktypen: [],
+    zaakobjecttypen: [],
+    selectielijstProcestype: {
+      nummer: 1,
+      jaar: 2020,
+      naam: "Instellen en inrichten organisatie",
+      omschrijving: "Instellen en inrichten organisatie",
+      toelichting:
+        "Dit procestype betreft het instellen van een nieuw organisatieonderdeel of een nieuwe orgaan waar het orgaan in deelneemt. Dit procestype betreft eveneens het inrichten van het eigen orgaan. Dit kan kleinschalig plaatsvinden bijvoorbeeld het wijzigen van de uitvoering van een wettelijke taak of grootschalig wanneer er een organisatiewijziging wordt doorgevoerd.",
+      procesobject: "De vastgestelde organisatie inrichting",
+      url: "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+    },
+  },
+  omschrijving: "brand world-class initiatives",
   vertrouwelijkheidaanduiding: "openbaar",
-  doel: "Table hope production think fast here law soon. Energy our admit month either check very. Investment nothing property social rich low role number.",
-  aanleiding:
-    "Instead imagine federal cause wall sometimes. Game modern control bit shake. Can red full decade finish final rest.",
+  doel: "Trouble red compare produce animal. Everything today Democrat student enter. By probably adult.",
+  aanleiding: "Couple toward trip old nice memory system instead.",
   indicatieInternOfExtern: "extern",
-  handelingInitiator: "melden",
-  onderwerp: "Klacht",
-  handelingBehandelaar: "onderhouden",
+  handelingInitiator: "indienen",
+  onderwerp: "Evenementvergunning",
+  handelingBehandelaar: "uitvoeren",
   doorlooptijd: "P30D",
-  opschortingEnAanhoudingMogelijk: false,
+  opschortingEnAanhoudingMogelijk: true,
   verlengingMogelijk: false,
   publicatieIndicatie: true,
   productenOfDiensten: ["https://example.com/product/123"],
   referentieproces: {
-    naam: "ReferentieProces 999",
+    naam: "ReferentieProces 0",
     link: "",
   },
-  verantwoordelijke: "100000999",
+  verantwoordelijke: "100000000",
   beginGeldigheid: "2018-01-01",
   versiedatum: "2018-01-01",
   catalogus:
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/catalogussen/85028f4f-3d70-4ce9-8dbe-16a6b8613a54",
+    "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
   besluittypen: [],
   gerelateerdeZaaktypen: [],
-  url: "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/zaaktypen/004164e7-75ba-4d3c-b5ea-ec36593ab694",
-  identificatie: "Zaaktype-999",
+  url: "http://localhost:8003/catalogi/api/v1/zaaktypen/be210495-20b6-48ff-8d3d-3e44f74c43a4",
+  identificatie: "ZAAKTYPE-2018-0000000001",
   omschrijvingGeneriek: "",
   toelichting: "",
   servicenorm: null,
@@ -45,29 +156,22 @@ export const FIXTURE_ZAAKTYPE: components["schemas"]["ZaakType"] = {
   beginObject: "2018-01-01",
   eindeObject: null,
   statustypen: [
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/statustypen/a318ed24-80ad-4da0-b95f-69913aef994f",
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/statustypen/56df165f-c657-44b1-a498-ea440e749b05",
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/statustypen/03003779-800e-4951-844d-7478691cfd13",
+    "http://localhost:8003/catalogi/api/v1/statustypen/9438e56a-5d78-4dc8-9d9a-2404781f818d",
   ],
   resultaattypen: [
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/resultaattypen/1ac42262-dbb8-49bd-a059-3e54752bdb74",
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/resultaattypen/4d453f16-04e7-4832-9e90-e59fda7e198d",
+    "http://localhost:8003/catalogi/api/v1/resultaattypen/12903100-b7a0-4441-9645-eda7df2ad106",
   ],
-  eigenschappen: [
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/eigenschappen/8c5681f5-0c8b-44d5-a489-a0bad28ecf0c",
-  ],
+  eigenschappen: [],
   informatieobjecttypen: [
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/informatieobjecttypen/09428c24-12e5-4c3a-a75c-e9e0d448a93b",
+    "http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a8089bdf-72d3-414f-a9cd-953cfa602b6c",
   ],
-  roltypen: [
-    "https://openzaak.test.maykin.opengem.nl/catalogi/api/v1/roltypen/10f1a5d8-d239-4e4f-8c9c-03c5d1e02027",
-  ],
+  roltypen: [],
   deelzaaktypen: [],
   zaakobjecttypen: [],
 };
 
 export const FIXTURE_ZAAKTYPE_FIELDS: TypedField<
-  components["schemas"]["ZaakType"]
+  components["schemas"]["ExpandableZaakType"]
 >[] = [
   {
     name: "omschrijving",
@@ -288,7 +392,7 @@ export const FIXTURE_ZAAKTYPE_FIELDS: TypedField<
 ];
 
 export const FIXTURE_ZAAKTYPE_FIELDSETS: FieldSet<
-  components["schemas"]["ZaakType"]
+  components["schemas"]["ExpandableZaakType"]
 >[] = [
   [
     "Overview",

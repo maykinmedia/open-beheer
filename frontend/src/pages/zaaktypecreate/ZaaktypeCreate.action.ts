@@ -49,7 +49,7 @@ async function createZaaktypeAction(
       `/service/${payload.serviceSlug}/zaaktypen/`,
       {},
       { ...payload.zaaktype },
-    )) as components["schemas"]["ZaakType"];
+    )) as components["schemas"]["ExpandableZaakType"];
     const uuid = getZaaktypeUUID({ url: data.url });
     const nextPath = `/${payload.serviceSlug}/${payload.catalogusSlug}/zaaktypen/${uuid}`;
     return redirect(nextPath);
