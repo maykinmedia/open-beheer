@@ -1,7 +1,6 @@
 import {
   AttributeGrid,
   Body,
-  Button,
   CardBaseTemplate,
   Column,
   FieldSet,
@@ -69,17 +68,37 @@ export function ZaaktypePage() {
   const { serviceSlug } = useParams();
   invariant(serviceSlug, "serviceSlug must be provided!");
 
+  // Versions sorted by date.
+  const sortedVersions = useMemo(
+    () =>
+      [...(versions || [])].sort(
+        (a, b) =>
+          new Date(a.beginGeldigheid).getTime() -
+          new Date(b.beginGeldigheid).getTime(),
+      ),
+    [versions],
+  );
+
   // The (last) concept version, we assume there should be max 1.
   const conceptVersion = useMemo(() => {
-    const sortedVersions = [...(versions || [])].sort(
-      (a, b) =>
-        new Date(a.beginGeldigheid).getTime() -
-        new Date(b.beginGeldigheid).getTime(),
-    );
-
     const concepts = sortedVersions.filter((v) => v.concept);
     return concepts[0];
-  }, [versions]);
+  }, [sortedVersions]);
+
+  // The current active (but not necessarily selected) versions
+  const today = new Date();
+  const currentVersion = useMemo(
+    () =>
+      sortedVersions.find((v) => {
+        const beginDate = new Date(v.beginGeldigheid);
+        const endDate = v.eindeGeldigheid ? new Date(v.eindeGeldigheid) : null;
+
+        return (
+          !v.concept && beginDate <= today && (!endDate || endDate > today)
+        );
+      }),
+    [sortedVersions],
+  );
 
   /**
    * Gets called when the edit button is clicked.
@@ -101,7 +120,19 @@ export function ZaaktypePage() {
         uuid: conceptVersion.uuid,
       },
     });
-  }, []);
+  }, [conceptVersion.uuid]);
+
+  /**
+   * Gets called when the cancel button is clicked.
+   */
+  const handleCancel = useCallback<React.MouseEventHandler>(() => {
+    submitAction({
+      type: "EDIT_CANCEL",
+      payload: {
+        uuid: currentVersion?.uuid || conceptVersion.uuid,
+      },
+    });
+  }, [currentVersion?.uuid, conceptVersion.uuid]);
 
   /**
    * Gets called when the object is changed.
@@ -184,6 +215,7 @@ export function ZaaktypePage() {
       </Body>
 
       <ZaaktypeToolbar
+        onCancel={handleCancel}
         onEdit={handleEdit}
         onPublish={handlePublish}
         onSave={handleSave}
@@ -253,6 +285,7 @@ type ZaaktypeTabProps = {
 const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
   const { fields } = useLoaderData() as ZaaktypeLoaderData;
   const [combinedSearchParams] = useCombinedSearchParams();
+  const isEditing = Boolean(combinedSearchParams.get("editing"));
 
   // (Vertical) section data.
   const [sectionHash, setSectionHash] = useHashParam("section", "0");
@@ -326,7 +359,8 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
       return (
         <AttributeGrid
           object={{ ...object, ...expandedOverrides } as TargetType}
-          editable={Boolean(combinedSearchParams.get("editing"))}
+          editable={isEditing}
+          editing={isEditing}
           fieldsets={fieldsets}
           onChange={onChange}
         />
@@ -390,6 +424,7 @@ const isAttributeGridSection = (
   view === "AttributeGrid";
 
 type ZaaktypeToolbarProps = {
+  onCancel: React.MouseEventHandler;
   onEdit: React.MouseEventHandler;
   onPublish: React.MouseEventHandler;
   onSave: React.MouseEventHandler;
@@ -400,6 +435,7 @@ type ZaaktypeToolbarProps = {
  * Renders the bottom toolbar containing (primary) actions.
  */
 function ZaaktypeToolbar({
+  onCancel,
   onEdit,
   onPublish,
   onSave,
@@ -411,39 +447,76 @@ function ZaaktypeToolbar({
   const button = useMemo(() => {
     if (versions?.some((v) => v.concept)) {
       if (!combinedSearchParams.get("editing")) {
-        return (
-          <Button onClick={onEdit} variant="primary">
-            <Solid.PencilSquareIcon />
-            Bewerken
-          </Button>
-        );
+        return [
+          {
+            children: (
+              <>
+                <Solid.PencilSquareIcon />
+                Bewerken
+              </>
+            ),
+            variant: "primary",
+            onClick: onEdit,
+          },
+        ];
       } else {
-        return (
-          <>
-            <Button onClick={onSave} variant="transparent">
-              <Outline.ArrowDownTrayIcon />
-              Opslaan en afsluiten
-            </Button>
-            <Button onClick={onPublish} variant="primary">
-              <Outline.CloudArrowUpIcon />
-              Publiceren
-            </Button>
-          </>
-        );
+        return [
+          {
+            children: (
+              <>
+                <Outline.NoSymbolIcon />
+                Annuleren
+              </>
+            ),
+            variant: "transparent",
+            onClick: onCancel,
+          },
+          "spacer",
+          {
+            children: (
+              <>
+                <Outline.ArrowDownTrayIcon />
+                Opslaan en afsluiten
+              </>
+            ),
+            variant: "transparent",
+            onClick: onSave,
+          },
+          {
+            children: (
+              <>
+                <Outline.CloudArrowUpIcon />
+                Publiceren
+              </>
+            ),
+            variant: "primary",
+            onClick: onPublish,
+          },
+        ];
       }
     } else {
-      return (
-        <Button onClick={onVersionCreate} variant="primary">
-          <Outline.PlusIcon />
-          Nieuwe Versie
-        </Button>
-      );
+      return [
+        {
+          children: (
+            <>
+              <Outline.PlusIcon />
+              Nieuwe Versie
+            </>
+          ),
+          variant: "primary",
+          onClick: onVersionCreate,
+        },
+      ];
     }
   }, [result, combinedSearchParams, onEdit, onSave, onVersionCreate]);
 
   return (
-    <Toolbar align="end" pad variant="transparent" sticky={"bottom"}>
-      {button}
-    </Toolbar>
+    <Toolbar
+      align="end"
+      pad
+      variant="transparent"
+      sticky={"bottom"}
+      items={button}
+    ></Toolbar>
   );
 }
