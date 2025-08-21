@@ -321,7 +321,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                     "url": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
                     "nummer": 1,
                     "jaar": 2020,
-                    "naam": "Instellen en inrichten organisatie",
+                    "naam": "Instellen en inrichten organisatie - 2020",
                     "omschrijving": "Instellen en inrichten organisatie",
                     "toelichting": "Dit procestype betreft het instellen van een nieuw organisatieonderdeel of een nieuwe orgaan waar het orgaan in deelneemt. Dit procestype betreft eveneens het inrichten van het eigen orgaan. Dit kan kleinschalig plaatsvinden bijvoorbeeld het wijzigen van de uitvoering van een wettelijke taak of grootschalig wanneer er een organisatiewijziging wordt doorgevoerd.",
                     "procesobject": "De vastgestelde organisatie inrichting",
