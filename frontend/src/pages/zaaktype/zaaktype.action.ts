@@ -69,7 +69,7 @@ export async function createZaaktypeVersionAction(
   );
 
   try {
-    const result = await request<components["schemas"]["ZaakType"]>(
+    const result = await request<components["schemas"]["ExpandableZaakType"]>(
       "POST",
       `/service/${payload.serviceSlug}/zaaktypen/`,
       {},

@@ -5,7 +5,7 @@ import { loginRequired } from "~/loaders/loginRequired.loader.ts";
 import { components } from "~/types";
 
 export type ZaaktypenLoaderData = ListResponse<
-  components["schemas"]["ZaakType"]
+  components["schemas"]["ZaakTypeSummary"]
 >;
 
 /**
@@ -29,7 +29,7 @@ export const zaaktypenLoader = loginRequired(
 
     const searchParams = new URL(loaderFunctionArgs.request.url).searchParams;
     const response = await request<
-      ListResponse<components["schemas"]["ZaakType"]>
+      ListResponse<components["schemas"]["ZaakTypeSummary"]>
     >("GET", `/service/${params.serviceSlug}/zaaktypen/`, {
       catalogus: params.catalogusId,
       ...Object.fromEntries(searchParams),
