@@ -12,6 +12,7 @@ requests-mock  # required by zgw_consumers.test.factories
 tblib
 maykin-common[vcr]
 hypothesis
+pytest-playwright
 
 # For documentation
 pytest

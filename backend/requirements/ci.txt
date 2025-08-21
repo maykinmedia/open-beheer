@@ -297,6 +297,8 @@ glom==24.11.0
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   mozilla-django-oidc-db
+greenlet==3.2.4
+    # via playwright
 hypothesis==6.138.13
     # via
     #   -r requirements/test-tools.in
@@ -394,6 +396,8 @@ pillow==11.1.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
+playwright==1.55.0
+    # via pytest-playwright
 pluggy==1.5.0
     # via pytest
 polib==1.2.0
@@ -436,6 +440,8 @@ pydantic-settings==2.9.1
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django-setup-configuration
+pyee==13.0.0
+    # via playwright
 pygments==2.19.1
     # via sphinx
 pyjwt==2.10.1
@@ -459,6 +465,13 @@ pypng==0.20220715.0
 pyquery==2.0.1
     # via -r requirements/test-tools.in
 pytest==8.3.5
+    # via
+    #   -r requirements/test-tools.in
+    #   pytest-base-url
+    #   pytest-playwright
+pytest-base-url==2.1.0
+    # via pytest-playwright
+pytest-playwright==0.7.1
     # via -r requirements/test-tools.in
 python-dateutil==2.9.0.post0
     # via
@@ -484,6 +497,8 @@ python-ipware==3.0.0
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django-ipware
+python-slugify==8.0.4
+    # via pytest-playwright
 pyyaml==6.0.2
     # via
     #   -c requirements/base.txt
@@ -521,6 +536,7 @@ requests==2.32.4
     #   djangorestframework-stubs
     #   maykin-common
     #   mozilla-django-oidc
+    #   pytest-base-url
     #   requests-mock
     #   sphinx
     #   zgw-consumers
@@ -603,6 +619,8 @@ structlog==25.4.0
     #   django-structlog
 tblib==3.1.0
     # via -r requirements/test-tools.in
+text-unidecode==1.3
+    # via python-slugify
 types-pyyaml==6.0.12.20250516
     # via
     #   -r requirements/type-checking.txt
@@ -625,6 +643,7 @@ typing-extensions==4.14.0
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
+    #   pyee
     #   pyopenssl
     #   qrcode
     #   referencing
