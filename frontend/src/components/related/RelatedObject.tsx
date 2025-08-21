@@ -1,5 +1,4 @@
 import { DataGrid } from "@maykin-ui/admin-ui";
-import { invariant } from "@maykin-ui/client-common/assert";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
 import { ExpandItemKeys, Expanded } from "~/types";
 
@@ -24,39 +23,28 @@ export function RelatedObjectRenderer<T extends object>({
   expandFields,
   field,
 }: RelatedObjectRendererProps<T>) {
-  /**
-   * Extracts an array of related objects from the expansion map.
-   *
-   * @param object - The object
-   * @param field - The name of the field to extract from `expand`
-   * @returns An array of related objects, or empty if none
-   */
-  const extractRelatedObjects = (
-    object: Expanded<T>,
-    field: ExpandItemKeys<T>,
-  ) => {
-    const expand = object._expand;
-    const value = expand?.[field];
+  const relatedObjects = object._expand?.[field];
 
-    invariant(
-      Array.isArray(value),
-      `Expected an array for field "${field}" in _expand, but got: ${value}`,
-    );
-    return value;
-  };
-
-  const relatedObjects = extractRelatedObjects(object, field);
-  if (!relatedObjects.length) return null;
-
-  if (view !== "AttributeGrid") {
+  if (!Array.isArray(relatedObjects)) {
+    if (!relatedObjects) return null;
     return (
-      <DataGrid<(typeof relatedObjects)[number]> // FIXME
+      <RelatedObjectBadge
+        relatedObject={relatedObjects}
+        allowedFields={expandFields}
+      />
+    );
+  }
+
+  if (view === "DataGrid") {
+    return (
+      <DataGrid<(typeof relatedObjects)[number]>
         objectList={relatedObjects}
         urlFields={[]}
       />
     );
   }
 
+  // Assume for attribute grid.
   return relatedObjects.map((relatedObject, index) => (
     <RelatedObjectBadge<T>
       key={typeof relatedObject.url === "string" ? relatedObject.url : index}

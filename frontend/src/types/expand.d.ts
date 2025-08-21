@@ -3,7 +3,7 @@
  * A value with an _expand field.
  */
 export type Expanded<T extends object> = T extends {
-  _expand: object | object[];
+  _expand: Record<string, object | object[]>;
 }
   ? T
   : never;
