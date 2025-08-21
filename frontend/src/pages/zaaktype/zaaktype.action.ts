@@ -10,6 +10,7 @@ export type ZaaktypeAction =
   | TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>
   | TypedAction<"PUBLISH_VERSION", UpdateZaaktypeVersionPayload>
   | TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>
+  | TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>
   | TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>;
 
 /**
@@ -33,6 +34,12 @@ export async function zaaktypeAction({
       return await publishZaaktypeVersionAction({ request, params, context });
     case "EDIT_VERSION":
       return await editZaaktypeVersionAction({ request, params, context });
+    case "EDIT_CANCEL":
+      return await editCancelZaaktypeVersionAction({
+        request,
+        params,
+        context,
+      });
     case "SELECT_VERSION":
       return await selectZaaktypeVersionAction({ request, params, context });
     default:
@@ -197,4 +204,22 @@ export async function editZaaktypeVersionAction(
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as EditZaaktypeVersionPayload;
   return redirect(`../${payload.uuid}?editing=true`);
+}
+
+/**
+ * Payload for `editCancelZaaktypeVersionAction`
+ */
+export type EditCancelZaaktypeVersionPayload = {
+  uuid: string;
+};
+
+/**
+ * Allow the user to cancel editting a zaaktype version.
+ */
+export async function editCancelZaaktypeVersionAction(
+  actionFunctionArgs: ActionFunctionArgs,
+) {
+  const data = await actionFunctionArgs.request.json();
+  const payload = data.payload as EditZaaktypeVersionPayload;
+  return redirect(`../${payload.uuid}`);
 }
