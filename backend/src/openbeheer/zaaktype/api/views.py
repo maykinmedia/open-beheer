@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import datetime  # noqa: TC003
 from functools import partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
@@ -346,10 +347,8 @@ def expand_selectielijstprocestype(
             return proc
 
         new_naam = f"{proc.naam} - {jaar}"
-        try:
-            setattr(proc, "naam", new_naam)
-        except Exception:
-            pass
+        with contextlib.suppress(AttributeError, TypeError):
+            proc.naam = new_naam
         return proc
 
     with selectielijst_client:
