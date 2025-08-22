@@ -617,6 +617,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
                 type=as_ob_fieldtype(annotation),
                 options=field_options(field) or UNSET,
                 filter_lookup=UNSET,
+                editable=field not in self.expansions,
             )
             for field, annotation in field_types.items()
             if field != "_expand"
