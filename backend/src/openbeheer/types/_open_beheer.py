@@ -142,6 +142,9 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
     options: list[OBOption] | UnsetType = msgspec.UNSET
     "fields that are not query parameter MAY need options too"
 
+    editable: bool | UnsetType = msgspec.UNSET
+    "fields may be included/excluded from editing"
+
     def __post_init__(self):
         # camelize value of name
         self.name = "".join(

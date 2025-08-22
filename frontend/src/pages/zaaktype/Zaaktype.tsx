@@ -359,7 +359,7 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
       return (
         <AttributeGrid
           object={{ ...object, ...expandedOverrides } as TargetType}
-          editable={isEditing}
+          editable={isEditing ? undefined : false} // When in edit mode, allow fields to defined editable state, prevent editing otherwise.
           editing={isEditing}
           fieldsets={fieldsets}
           onChange={onChange}
