@@ -1,5 +1,4 @@
 import {
-  A,
   Body,
   Button,
   Card,
@@ -12,7 +11,6 @@ import {
   H1,
   H2,
   Modal,
-  Outline,
   P,
   SerializedFormData,
   Ul,
@@ -212,9 +210,6 @@ export function ZaaktypeCreatePage() {
             >
               Gebruik dit sjabloon
             </Button>
-            <P>
-              Of kopieer een <A href="/zaaktypen">bestaand zaaktype</A>
-            </P>
           </Column>
         </Grid>
       </Body>
@@ -258,11 +253,6 @@ export const ZaaktypeCreateCard: React.FC<ZaaktypeCreateCardProps> = ({
             ))}
           </Ul>
         )}
-        <div className="zaaktypecreate__link">
-          <A href={``}>
-            <Outline.EyeIcon /> Bekijk voorbeeld
-          </A>
-        </div>
       </Body>
     </Card>
   );
