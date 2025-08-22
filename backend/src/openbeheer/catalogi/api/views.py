@@ -31,10 +31,7 @@ def _as_option(catalogue: Catalogus, client) -> OBOption[str]:
     # In practice, it is always present.
     url = catalogue.url
     assert url
-    path = f"{client.base_url}catalogussen/"
-    uuid = url.removeprefix(path)
-    assert uuid
-    return OBOption(label=label, value=uuid)
+    return OBOption(label=label, value=url)
 
 
 @extend_schema_view(
