@@ -143,17 +143,23 @@ export function ZaaktypeCreatePage() {
   return (
     <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
       <Modal
-        size="s"
+        size="m"
+        title={`Sjabloon ${valuesState.naam}`}
         open={isFillingForm}
         onClose={() => setIsFillingForm(false)}
       >
         <Body fullHeight>
-          <H2>Er zijn nog enkele velden nodig</H2>
+          <P>
+            Je staat op het punt een nieuw zaaktype te starten. Geef een
+            identificatie en omschrijving op. Deze twee gegevens vormen de basis
+            van je nieuwe zaaktype.
+          </P>
           <Form
             key={`zaaktypecreate-form-${valuesState.uuid || ""}`}
             aria-label="Zaaktype aanmaken"
             nonFieldErrors={nonFieldErrors}
             fields={fields}
+            justify="stretch"
             validateOnChange
             showActions={true}
             validate={handleValidate}
