@@ -201,7 +201,7 @@ export function ZaaktypePage() {
 
         {versions && (
           <VersionSelector
-            selectedVersionUUID={getZaaktypeUUID(result)}
+            selectedVersionUUID={getZaaktypeUUID(result)!}
             versions={versions}
             onVersionChange={({ uuid }) =>
               submitAction({

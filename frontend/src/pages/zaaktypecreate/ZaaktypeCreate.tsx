@@ -18,11 +18,13 @@ import {
   Ul,
   validateForm,
 } from "@maykin-ui/admin-ui";
-import React, { FormEvent, useCallback, useEffect } from "react";
+import { invariant } from "@maykin-ui/client-common/assert";
+import React, { FormEvent, useCallback, useContext, useEffect } from "react";
 import { useActionData, useLoaderData, useParams } from "react-router";
-import { CATALOGUS_PARAM, SERVICE_PARAM } from "~/App.tsx";
+import { CATALOGUS_PARAM, OBContext, SERVICE_PARAM } from "~/App.tsx";
 import { useBreadcrumbItems } from "~/hooks";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
+import { getUUIDFromString } from "~/lib/format/string.ts";
 import {
   ZaakTypeCreateAction,
   ZaaktypeCreateActionPayload,
@@ -33,12 +35,18 @@ import { components } from "~/types";
 import "./zaaktypeCreate.styles.css";
 
 export function ZaaktypeCreatePage() {
+  const obContext = useContext(OBContext);
   const { results } = useLoaderData<ZaaktypeCreateLoaderData>();
+
   const breadcrumbItems = useBreadcrumbItems();
   const submitAction = useSubmitAction<ZaakTypeCreateAction>(false);
   const params = useParams();
   const serviceSlug = params[SERVICE_PARAM];
-  const catalogusSlug = params[CATALOGUS_PARAM];
+  const catalogusUUID = params[CATALOGUS_PARAM];
+  const catalogusURL = obContext.catalogiChoices.find(
+    (c) => getUUIDFromString(c.value) === catalogusUUID,
+  )?.value;
+
   const actionData = useActionData() as components["schemas"]["ZGWError"];
 
   const [isFillingForm, setIsFillingForm] = React.useState(false);
@@ -109,7 +117,7 @@ export function ZaaktypeCreatePage() {
 
   const handleSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>, data: SerializedFormData) => {
-      if (!isValidState || !serviceSlug || !catalogusSlug) {
+      if (!isValidState || !serviceSlug || !catalogusUUID) {
         console.warn(
           "Form is not valid or serviceSlug/catalogusSlug is missing.",
           {
@@ -123,13 +131,15 @@ export function ZaaktypeCreatePage() {
         event.preventDefault();
         return;
       }
+
+      invariant(catalogusURL, "Unable to determine catalogus url!");
       const finalPayload: ZaaktypeCreateActionPayload = {
         zaaktype: {
           ...valuesState.waarden,
           ...data,
         },
         serviceSlug: serviceSlug,
-        catalogusSlug: catalogusSlug,
+        catalogus: catalogusURL,
       };
 
       await submitAction({

@@ -2,6 +2,7 @@ import { cacheGet, cacheSet } from "@maykin-ui/client-common";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { getCatalogiChoices } from "~/api/catalogi.ts";
+import { getUUIDFromString } from "~/lib/format/string.ts";
 import { components } from "~/types";
 
 /**
@@ -22,7 +23,7 @@ export function useCatalogi(
   const handleCatalogusChange = (newCatalogusId: string) => {
     if (newCatalogusId) {
       void cacheSet(cacheKey, newCatalogusId);
-      navigate(`/${service?.value}/${newCatalogusId}`);
+      navigate(`/${service?.value}/${getUUIDFromString(newCatalogusId)}`);
     } else {
       navigate(`/${service?.value}`);
     }

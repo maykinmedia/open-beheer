@@ -12,7 +12,7 @@ import {
 // @ts-expect-error - no ts modules
 import "@maykin-ui/admin-ui/style";
 import { string2Title } from "@maykin-ui/client-common";
-import { useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import {
   Outlet,
   RouteObject,
@@ -29,6 +29,7 @@ import {
   useCurrentMatch,
   useService,
 } from "~/hooks";
+import { getUUIDFromString } from "~/lib/format/string.ts";
 import { components } from "~/types";
 
 import "./main.css";
@@ -41,6 +42,14 @@ export const SERVICE_PARAM = "serviceSlug";
 
 /** Parameter name for the catalogus id in the URL. */
 export const CATALOGUS_PARAM = "catalogusId";
+
+type OBContext = {
+  catalogiChoices: components["schemas"]["list_OBOption_str_"];
+};
+
+export const OBContext = createContext<OBContext>({
+  catalogiChoices: [],
+});
 
 /**
  * This component serves as the entry point for the React app and renders the main UI structure.
@@ -144,7 +153,10 @@ function App() {
       <Select
         key="catalogi-select"
         disabled={catalogiChoices.length === 0}
-        options={catalogiChoices}
+        options={catalogiChoices.map((c) => ({
+          label: c.label,
+          value: getUUIDFromString(c.value) || "",
+        }))}
         placeholder="Selecteer catalogus"
         value={selectedCatalogusId}
         variant="secondary"
@@ -164,7 +176,9 @@ function App() {
         <ConfigContext.Provider
           value={{ templatesContentOnly: true, templatesGrid: false }}
         >
-          <Outlet />
+          <OBContext.Provider value={{ catalogiChoices }}>
+            <Outlet />
+          </OBContext.Provider>
         </ConfigContext.Provider>
       </ModalService>
     </BaseTemplate>

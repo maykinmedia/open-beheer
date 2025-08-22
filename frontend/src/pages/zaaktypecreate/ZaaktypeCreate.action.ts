@@ -2,6 +2,7 @@ import { ActionFunctionArgs, redirect } from "react-router";
 import { request } from "~/api";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { PartialDeep, getZaaktypeUUID } from "~/lib";
+import { getUUIDFromString } from "~/lib/format/string.ts";
 import { ZaaktypeCreateLoaderData } from "~/pages";
 import { components } from "~/types";
 
@@ -12,7 +13,7 @@ export type ZaakTypeCreateAction = TypedAction<
 export type ZaaktypeCreateActionPayload = {
   zaaktype: PartialDeep<ZaaktypeCreateLoaderData["results"][0]>;
   serviceSlug: string;
-  catalogusSlug: string;
+  catalogus: string;
 };
 
 /**
@@ -48,10 +49,10 @@ async function createZaaktypeAction(
       "POST",
       `/service/${payload.serviceSlug}/zaaktypen/`,
       {},
-      { ...payload.zaaktype },
+      { ...payload.zaaktype, catalogus: payload.catalogus },
     )) as components["schemas"]["ExpandableZaakType"];
     const uuid = getZaaktypeUUID({ url: data.url });
-    const nextPath = `/${payload.serviceSlug}/${payload.catalogusSlug}/zaaktypen/${uuid}`;
+    const nextPath = `/${payload.serviceSlug}/${getUUIDFromString(payload.catalogus)}/zaaktypen/${uuid}`;
     return redirect(nextPath);
   } catch (e: unknown) {
     if (e instanceof Response) {
