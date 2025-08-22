@@ -12,10 +12,11 @@ from msgspec import Meta, Struct, field
 
 from openbeheer.types import FrontendFieldSet, FrontendFieldsets, make_fields_optional
 from openbeheer.types.ztc import (
+    Catalogus,
     IndicatieInternOfExternEnum,
     ReferentieProces,
     VertrouwelijkheidaanduidingEnum,
-    ZaakType, Catalogus,
+    ZaakType,
 )
 
 ZAAKTYPE_FIELDS = {
@@ -131,8 +132,11 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
         Sjabloon(
             naam="Basis",
             omschrijving="Start hier een nieuwe zaak met de juiste structuur en vooraf ingevulde velden.",
-            voorbeelden=["Zelf opbouwen", "Volledig zelf te configureren",
-                         "Vertrouwelijkheidaanduiding: openbaar"],
+            voorbeelden=[
+                "Zelf opbouwen",
+                "Volledig zelf te configureren",
+                "Vertrouwelijkheidaanduiding: openbaar",
+            ],
             waarden=OptionalZaakType(
                 omschrijving="De Zaaktype-omschrijving",
                 vertrouwelijkheidaanduiding=VertrouwelijkheidaanduidingEnum.openbaar,
@@ -158,16 +162,19 @@ TEMPLATES: Mapping[UUID, Sjabloon] = {
                 verantwoordingsrelatie=[],
                 selectielijst_procestype="",
                 verantwoordelijke="De verantwoordelijke (soort) organisatie.",
-                broncatalogus=make_fields_optional(Catalogus)(url="", domein="", rsin=""),
-                bronzaaktype=OptionalZaakType(url="", identificatie="", omschrijving=""),
+                broncatalogus=make_fields_optional(Catalogus)(
+                    url="", domein="", rsin=""
+                ),
+                bronzaaktype=OptionalZaakType(
+                    url="", identificatie="", omschrijving=""
+                ),
                 begin_geldigheid=date.today(),
                 versiedatum=date.today(),
                 catalogus="",
                 besluittypen=[],
                 deelzaaktypen=[],
                 gerelateerde_zaaktypen=[],
-            )
-
+            ),
         ),
     ]
     if template.uuid
