@@ -63,24 +63,14 @@ export async function createZaaktypeVersionAction(
 ) {
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as CreateZaaktypeVersionPayload;
-
-  const invalidKeys: (keyof components["schemas"]["ExpandableZaakType"])[] = [
-    "_expand",
-  ];
-
-  const zaaktype = Object.fromEntries(
-    Object.entries(payload.zaaktype).filter(([k, v]) => {
-      // @ts-expect-error - checking wider type against subset.
-      return v !== null && !invalidKeys.includes(k);
-    }),
-  );
+  const zaaktype = payload.zaaktype;
 
   try {
     const result = await request<components["schemas"]["ExpandableZaakType"]>(
       "POST",
       `/service/${payload.serviceSlug}/zaaktypen/`,
       {},
-      { ...zaaktype },
+      zaaktype,
     );
     return redirect(`../${getZaaktypeUUID(result)}?editing=true`);
   } catch (e) {
@@ -151,22 +141,11 @@ async function _saveZaaktypeVersion(
 ) {
   const uuid = getZaaktypeUUID(zaaktype);
 
-  const invalidKeys: (keyof components["schemas"]["ExpandableZaakType"])[] = [
-    "_expand",
-  ];
-
-  const _zaaktype = Object.fromEntries(
-    Object.entries(zaaktype).filter(([k, v]) => {
-      // @ts-expect-error - checking wider type against subset.
-      return v !== null && !invalidKeys.includes(k);
-    }),
-  );
-
   await request(
     "PATCH",
     `/service/${serviceSlug}/zaaktypen/${uuid}/`,
     {},
-    { ..._zaaktype },
+    { zaaktype },
   );
 }
 
