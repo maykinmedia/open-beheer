@@ -145,7 +145,7 @@ async function _saveZaaktypeVersion(
     "PATCH",
     `/service/${serviceSlug}/zaaktypen/${uuid}/`,
     {},
-    { zaaktype },
+    zaaktype,
   );
 }
 
