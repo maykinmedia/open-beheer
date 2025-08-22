@@ -120,7 +120,7 @@ export function ZaaktypePage() {
         uuid: conceptVersion.uuid,
       },
     });
-  }, [conceptVersion.uuid]);
+  }, [conceptVersion?.uuid]);
 
   /**
    * Gets called when the cancel button is clicked.
@@ -132,7 +132,7 @@ export function ZaaktypePage() {
         uuid: currentVersion?.uuid || conceptVersion.uuid,
       },
     });
-  }, [currentVersion?.uuid, conceptVersion.uuid]);
+  }, [currentVersion?.uuid, conceptVersion?.uuid]);
 
   /**
    * Gets called when the object is changed.
