@@ -175,7 +175,7 @@
       "versiedatum": "2018-01-01",
       "verantwoordelijke": "100000000",
       "producten_of_diensten": "[\"https://example.com/product/123\"]",
-      "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+      "selectielijst_procestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/e1b73b12-b2f6-4c4e-8929-94f84dd2a57d",
       "selectielijst_procestype_jaar": 2020,
       "referentieproces_naam": "ReferentieProces 0",
       "referentieproces_link": "",
