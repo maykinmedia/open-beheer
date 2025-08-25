@@ -19,7 +19,11 @@ import React, { ReactNode, useCallback, useMemo, useState } from "react";
 import { useLoaderData, useParams } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
 import { RelatedObjectRenderer } from "~/components/related";
-import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
+import {
+  useBreadcrumbItems,
+  useCombinedSearchParams,
+  useErrors,
+} from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
@@ -63,7 +67,7 @@ export function ZaaktypePage() {
   const possiblyUpdatedResult = { ...result, ...pendingUpdatesState };
 
   const breadcrumbItems = useBreadcrumbItems();
-  const submitAction = useSubmitAction<ZaaktypeAction>();
+  const submitAction = useSubmitAction<ZaaktypeAction>(false);
 
   const { serviceSlug } = useParams();
   invariant(serviceSlug, "serviceSlug must be provided!");
@@ -286,6 +290,7 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
   const { fields } = useLoaderData() as ZaaktypeLoaderData;
   const [combinedSearchParams] = useCombinedSearchParams();
   const isEditing = Boolean(combinedSearchParams.get("editing"));
+  const errors = useErrors();
 
   // (Vertical) section data.
   const [sectionHash, setSectionHash] = useHashParam("section", "0");
@@ -321,6 +326,7 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
       if (!(fieldName in expand) || originalValue === null) continue;
 
       overrides[fieldName] = (
+        // TODO: Handle errors for related objects.
         <RelatedObjectRenderer
           expandFields={activeSectionConfig.expandFields}
           field={fieldName as keyof Expand<typeof object>}
@@ -361,6 +367,7 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
           object={{ ...object, ...expandedOverrides } as TargetType}
           editable={isEditing ? undefined : false} // When in edit mode, allow fields to defined editable state, prevent editing otherwise.
           editing={isEditing}
+          errors={errors}
           fieldsets={fieldsets}
           onChange={onChange}
         />

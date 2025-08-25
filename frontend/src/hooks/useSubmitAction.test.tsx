@@ -26,7 +26,7 @@ vi.mock("react-router", async () => {
 });
 
 vi.mock("~/lib", () => ({
-  collectErrors: vi.fn(),
+  collectErrorMessages: vi.fn(),
 }));
 
 describe("useSubmitAction", () => {
@@ -41,7 +41,7 @@ describe("useSubmitAction", () => {
     (useAlert as unknown as Mock).mockReturnValue(mockAlert);
 
     (useActionData as unknown as Mock).mockReturnValue(undefined);
-    (lib.collectErrors as Mock).mockReturnValue([]);
+    (lib.collectErrorMessages as Mock).mockReturnValue([]);
   });
 
   it("should call submit with correct action and default options", () => {
@@ -81,7 +81,7 @@ describe("useSubmitAction", () => {
     (useActionData as unknown as Mock).mockReturnValue({
       field: ["Some error"],
     });
-    (lib.collectErrors as Mock).mockReturnValue(errors);
+    (lib.collectErrorMessages as Mock).mockReturnValue(errors);
 
     renderHook(() => useSubmitAction());
 
@@ -94,7 +94,7 @@ describe("useSubmitAction", () => {
 
   it("should not show alert if catchErrors is false", () => {
     (useActionData as unknown as Mock).mockReturnValue({ error: "fail" });
-    (lib.collectErrors as Mock).mockReturnValue("fail");
+    (lib.collectErrorMessages as Mock).mockReturnValue("fail");
 
     renderHook(() => useSubmitAction(false));
 
