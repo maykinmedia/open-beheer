@@ -1,22 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { collectErrors } from "~/lib";
+import { collectErrorMessages } from "~/lib";
 
 describe("collectErrors", () => {
   it("should return array when join is undefined", () => {
     const error = "Something went wrong";
-    const result = collectErrors(error);
+    const result = collectErrorMessages(error);
     expect(result).toEqual(["Something went wrong"]);
   });
 
   it("should return array when join is false", () => {
     const error = "Something went wrong";
-    const result = collectErrors(error, false);
+    const result = collectErrorMessages(error, false);
     expect(result).toEqual(["Something went wrong"]);
   });
 
   it("should return string when join is true", () => {
     const error = ["Something went wrong", "Whoops"];
-    const result = collectErrors(error, true);
+    const result = collectErrorMessages(error, true);
     expect(result).toEqual("Something went wrong\nWhoops");
   });
 
@@ -28,7 +28,7 @@ describe("collectErrors", () => {
         error: "This field is required",
       },
     };
-    const result = collectErrors(error);
+    const result = collectErrorMessages(error);
     expect(result).toEqual([
       "Unable to log in with provided credentials.",
       "This field is required",
@@ -42,7 +42,7 @@ describe("collectErrors", () => {
       code: "bar",
       username: ["This field is required"],
     };
-    const result = collectErrors(error);
+    const result = collectErrorMessages(error);
     expect(result).toEqual(["This field is required"]);
   });
 });

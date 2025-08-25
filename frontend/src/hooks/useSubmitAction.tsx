@@ -1,7 +1,7 @@
 import { Errors, useAlert } from "@maykin-ui/admin-ui";
 import { useEffect } from "react";
 import { SubmitOptions, useActionData, useSubmit } from "react-router";
-import { collectErrors } from "~/lib";
+import { collectErrorMessages } from "~/lib";
 
 // From React Router
 export type JsonObject = {
@@ -77,7 +77,7 @@ export function useSubmitAction<T extends TypedAction = TypedAction>(
           [name, reason].join(": "),
         );
       } else {
-        messages = collectErrors(actionData);
+        messages = collectErrorMessages(actionData);
       }
       alert(
         "Foutmelding",
