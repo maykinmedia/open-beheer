@@ -19,9 +19,6 @@ if TYPE_CHECKING:
     from rest_framework.request import Request
 
 
-# Shouldn't this have an inverse? Currently there is no way to go from
-# the option.value back to the correct Catalogus; you'll always need the
-# (option, client) pair.
 @as_ob_option.register
 def _as_option(catalogue: Catalogus, client) -> OBOption[str]:
     label = (
