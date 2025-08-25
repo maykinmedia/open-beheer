@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import datetime  # noqa: TC003
 from functools import partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
@@ -332,19 +333,37 @@ def expand_selectielijstprocestype(
         return [None]
 
     selectielijst_service = Service.get_service(zaaktype.selectielijst_procestype)
-    if not (selectielijst_service):
+    if not selectielijst_service:
         raise ImproperlyConfigured(__("No Selectielijst service configured"))
 
     selectielijst_client = build_client(selectielijst_service)
 
+    def _attach_year(proc, jaar=None):
+        if not proc:
+            return proc
+
+        jaar = jaar or getattr(proc, "jaar", None)
+        if not jaar:
+            return proc
+
+        new_naam = f"{proc.naam} - {jaar}"
+        with contextlib.suppress(AttributeError, TypeError):
+            proc.naam = new_naam
+        return proc
+
     with selectielijst_client:
         return [
-            fetch_one(
-                selectielijst_client, zaaktype.selectielijst_procestype, ProcesType
+            _attach_year(
+                (
+                    fetch_one(
+                        selectielijst_client, z.selectielijst_procestype, ProcesType
+                    )
+                    if z.selectielijst_procestype
+                    else None
+                ),
+                getattr(z, "jaar", None),
             )
-            if zaaktype.selectielijst_procestype
-            else None
-            for zaaktype in zaaktypen
+            for z in zaaktypen
         ]
 
 
