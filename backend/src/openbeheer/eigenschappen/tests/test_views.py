@@ -1,0 +1,206 @@
+from django.test import tag
+
+from maykin_common.vcr import VCRMixin
+from msgspec import to_builtins
+from rest_framework import status
+from rest_framework.reverse import reverse
+from rest_framework.test import APITestCase
+from zgw_consumers.constants import APITypes
+from zgw_consumers.test.factories import ServiceFactory
+
+from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
+from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
+
+
+@tag("vcr")
+class EigenschappenListViewTests(VCRMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls) -> None:
+        super().setUpTestData()
+        cls.service = ServiceFactory.create(
+            api_type=APITypes.ztc,
+            api_root="http://localhost:8003/catalogi/api/v1",
+            client_id="test-vcr",
+            secret="test-vcr",
+            slug="OZ",
+        )
+        cls.user = UserFactory.create()
+        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+
+    def setUp(self):
+        super().setUp()
+        # create a fresh zaaktype and set its eigenschappen endpoint
+        self.zaaktype = self.helper.create_zaaktype(
+            vertrouwelijkheidaanduiding=VertrouwelijkheidaanduidingEnum.openbaar.value,
+        )
+        self.endpoint = reverse(
+            "api:eigenschappen:eigenschappen-list",
+            kwargs={
+                "slug": "OZ",
+                "zaaktype": self.zaaktype.uuid,
+            },
+        )
+
+    def test_not_authenticated(self):
+        response = self.client.get(self.endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_retrieve_eigenschappen(self):
+        # Frontend uses _expand instead, but this works too
+
+        assert self.zaaktype.url
+        eigenschap = self.helper.create_eigenschap(zaaktype=self.zaaktype.url)
+
+        self.client.force_login(self.user)
+        response = self.client.get(self.endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        self.assertEqual(data["pagination"]["count"], 1)
+        created = to_builtins(eigenschap)
+        self.assertEqual(data["results"][0], created)
+
+    def test_create(self):
+        "Create a new eigenschappen for a zaaktype"
+        self.client.force_login(self.user)
+        response = self.client.post(
+            self.endpoint,
+            data={
+                "naam": "Piet",
+                "definitie": "Ook niet de broer van Henk de Vries",
+                "specificatie": {
+                    "formaat": "getal",
+                    "lengte": "64",
+                    "kardinaliteit": "N",
+                    "groep": "",
+                    "waardenverzameling": [],
+                },
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+
+
+@tag("vcr")
+class EigenschappenDetailViewTest(VCRMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls) -> None:
+        super().setUpTestData()
+        cls.service = ServiceFactory.create(
+            api_type=APITypes.ztc,
+            api_root="http://localhost:8003/catalogi/api/v1",
+            client_id="test-vcr",
+            secret="test-vcr",
+            slug="OZ",
+        )
+        cls.user = UserFactory.create()
+
+        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+
+    def setUp(self):
+        super().setUp()
+        # create a fresh eigenschappen and set its endpoint
+        self.zaaktype = self.helper.create_zaaktype(
+            vertrouwelijkheidaanduiding=VertrouwelijkheidaanduidingEnum.openbaar.value,
+        )
+        assert self.zaaktype.url
+        self.eigenschappen = self.helper.create_eigenschap(zaaktype=self.zaaktype.url)
+
+        self.endpoint = reverse(
+            "api:eigenschappen:eigenschappen-detail",
+            kwargs={
+                "slug": "OZ",
+                "zaaktype": self.zaaktype.uuid,
+                "uuid": self.eigenschappen.uuid,
+            },
+        )
+
+    def test_not_authenticated(self):
+        response = self.client.get(self.endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_retrieve_eigenschappen(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        result_keys = set(data.keys())
+        assert result_keys == {
+            "beginGeldigheid",
+            "beginObject",
+            "catalogus",
+            "definitie",
+            "eindeGeldigheid",
+            "eindeObject",
+            "naam",
+            "specificatie",
+            "statustype",
+            "toelichting",
+            "url",
+            "zaaktype",
+            "zaaktypeIdentificatie",
+        }
+
+    def test_patch_eigenschappen(self):
+        self.client.force_login(self.user)
+
+        changes = {"naam": "MODIFIED by patch"}
+
+        response = self.client.patch(self.endpoint, data=changes)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+
+        data = response.json()
+
+        expected = to_builtins(self.eigenschappen) | changes
+
+        del expected["uuid"]
+
+        self.assertEqual(data, expected)
+
+    def test_put_eigenschappen(self):
+        self.client.force_login(self.user)
+
+        response = self.client.put(
+            self.endpoint,
+            data={
+                "zaaktype": self.zaaktype.url,
+                "naam": "PUTjeschepper",
+                "definitie": "Ook niet de broer van Henk de Vries",
+                "specificatie": {
+                    "formaat": "getal",
+                    "lengte": "64",
+                    "kardinaliteit": "1",
+                    "groep": "",
+                    "waardenverzameling": [],
+                },
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+
+        data = response.json()
+
+        self.assertEqual(data["zaaktype"], self.zaaktype.url)
+        self.assertEqual(data["naam"], "PUTjeschepper")
+
+    def test_delete_eigenschappen(self):
+        self.client.force_login(self.user)
+
+        response = self.client.delete(self.endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = self.client.get(self.endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

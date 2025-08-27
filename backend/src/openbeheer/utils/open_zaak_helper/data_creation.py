@@ -3,14 +3,18 @@ from dataclasses import dataclass
 from random import choice
 from typing import Literal, Mapping, Sequence, Type
 
+from msgspec import to_builtins
 from msgspec.json import decode
 
 from openbeheer.clients import ztc_client
 from openbeheer.types import ResultaatTypeWithUUID
-from openbeheer.types._open_beheer import ZaakTypeWithUUID
+from openbeheer.types._open_beheer import EigenschapWithUUID, ZaakTypeWithUUID
 from openbeheer.types.ztc import (
     BesluitType,
     Catalogus,
+    EigenschapSpecificatie,
+    EigenschapSpecificatieRequest,
+    FormaatEnum,
     InformatieObjectType,
     RolType,
     StatusType,
@@ -206,4 +210,25 @@ class OpenZaakDataCreationHelper:
             },
             "besluittypen",
             BesluitType,
+        )
+
+    def create_eigenschap(self, **overrides: _JSONEncodable) -> EigenschapWithUUID:
+        return self._create_resource(
+            {
+                # "zaaktypen": [],
+                "naam": "Henk de Vries",
+                "definitie": "Niet de broer van Henk de Vries",
+                "specificatie": to_builtins(
+                    EigenschapSpecificatieRequest(
+                        formaat=FormaatEnum.tekst,
+                        lengte="1",
+                        kardinaliteit="1",
+                        groep="de De Vriesjes",  # required???
+                        waardenverzameling=[],  # required???
+                    )
+                ),
+                **overrides,
+            },
+            "eigenschappen",
+            EigenschapWithUUID,
         )
