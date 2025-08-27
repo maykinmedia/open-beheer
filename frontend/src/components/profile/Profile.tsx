@@ -46,7 +46,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               <Grid gutter={false}>
                 <Column span={12}>
                   <P bold>
-                    {user?.firstName} {user?.lastName}
+                    {user?.first_name} {user?.last_name}
                   </P>
                 </Column>
                 <Column span={12}>
