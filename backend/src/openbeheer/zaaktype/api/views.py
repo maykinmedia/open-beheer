@@ -402,6 +402,7 @@ def expand_selectielijstprocestype(
 )
 class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     data_type = ExpandableZaakType
+    return_data_type = DetailResponse[ExpandableZaakType]
     endpoint_path = "zaaktypen/{uuid}"
     serializer_class = None
 

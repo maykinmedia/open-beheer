@@ -138,6 +138,7 @@ class InformatieObjectTypeDetailView(
     DetailViewWithoutVersions, DetailView[InformatieObjectType]
 ):
     data_type = InformatieObjectType
+    return_data_type = DetailResponseWithoutVersions[InformatieObjectType]
     endpoint_path = "informatieobjecttypen/{uuid}"
 
     # TODO: not sure if we should expand the zaaktypen, since the IOT will be
