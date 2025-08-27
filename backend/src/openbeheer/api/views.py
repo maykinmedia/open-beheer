@@ -12,9 +12,11 @@ from typing import (
     Protocol,
     Sequence,
     Type,
+    get_origin,
     get_type_hints,
     runtime_checkable,
 )
+from uuid import UUID
 
 from django.utils.translation import gettext as _
 
@@ -55,11 +57,10 @@ from openbeheer.types import (
     as_ob_fieldtype,
     options,
 )
+from openbeheer.types._open_beheer import DetailResponseWithoutVersions
 from openbeheer.utils.decorators import handle_service_errors
 
 if TYPE_CHECKING:
-    from uuid import UUID
-
     from rest_framework.request import Request
 
     # poor man's Comprarable
@@ -164,7 +165,17 @@ type Expansion[T: Struct, R] = Callable[[APIClient, Iterable[T]], Iterable[R]]
 def fetch_one[T](client: APIClient, path: str, result_type: type[T]) -> T | NoReturn:
     response = client.get(path)
     response.raise_for_status()
-    return decode(response.content, type=result_type)
+    try:
+        return decode(response.content, type=result_type)
+    except ValidationError:
+        logger.info(
+            "failed GET response decode",
+            expected_type=result_type,
+            content=response.content,
+            service=client.base_url,
+            path=path,
+        )
+        raise
 
 
 def fetch_response[T](
@@ -177,7 +188,18 @@ def fetch_response[T](
     if response.status_code == 404:
         return ZGWResponse(count=1, results=[], next=None, previous=None)
     response.raise_for_status()
-    return decode(response.content, type=ZGWResponse[result_type])
+    try:
+        return decode(response.content, type=ZGWResponse[result_type])
+    except ValidationError:
+        logger.info(
+            "failed GET response decode",
+            expected_type=ZGWResponse[result_type],
+            content=response.content,
+            service=client.base_url,
+            path=path,
+            params=params,
+        )
+        raise
 
 
 def fetch_all[T](
@@ -304,9 +326,29 @@ def create_many[T](
     return results, errors
 
 
+def reverse(service_slug: str):
+    "Return a UUID -> url reverse function for the ZTC service"
+    base_url = ztc_client(service_slug).base_url
+
+    def _as_url(path_param: str, uuid: UUID | object) -> str | None:
+        """Reverse a UUID path_param back to a url
+
+        eg. <uuid:zaaktype>
+        """
+        match path_param, uuid:
+            case "eigenschap", UUID():
+                return f"{base_url}{path_param}pen/{uuid}"
+            case "catalogus", UUID():
+                return f"{base_url}{path_param}sen/{uuid}"
+            case _, UUID():
+                return f"{base_url}{path_param}n/{uuid}"
+
+    return _as_url
+
+
 class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
     return_data_type: type[T]
-    """The datatype that the endpoints return
+    """The datatype that the endpoints returns
 
     This is where you can "whitelist/expose" fields.
     Fields not on the `return_data_type` will be ignored from respones from the Service
@@ -348,9 +390,16 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
         )(self.get)
 
     @handle_service_errors
-    def get(self, request: Request, slug: str = "") -> Response:
+    def get(self, request: Request, slug: str = "", **path_params) -> Response:
+        as_url = reverse(slug)
         client = ztc_client(slug=slug)
         params = self.parse_query_params(request, client)
+
+        # insert our path_params that map to ZGW API query_params
+        for param, value in path_params.items():
+            if hasattr(params, param) and (url := as_url(param, value)):
+                setattr(params, param, url)
+
         data, status_code = self.get_data(client, params)
         match data:
             case ZGWError():
@@ -367,9 +416,15 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
                 )
 
     @handle_service_errors
-    def post(self, request: Request, slug: str = "") -> Response:
+    def post(self, request: Request, slug: str = "", **path_params) -> Response:
+        as_url = reverse(slug)
         with ztc_client(slug) as client:
-            response = client.post(self.endpoint_path, json=request.data)
+            data = request.data | {
+                param: url
+                for param, value in path_params.items()
+                if (url := as_url(param, value))
+            }
+            response = client.post(self.endpoint_path, json=data)
 
             if not response.ok:
                 error = decode(response.content, type=ZGWError)
@@ -502,6 +557,7 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
 
                 return data, response.status_code
             except ValidationError as e:
+                logger.debug("invalid service response", validation_error=e)
                 return ZGWError(
                     code="Bad response",
                     title="Server returned out of spec response",
@@ -563,6 +619,11 @@ class DetailViewWithoutVersions(Protocol):
 
 class DetailView[T: Struct](MsgspecAPIView, ABC):
     data_type: type[T]
+    return_data_type: (
+        type[T] | type[DetailResponse[T]] | type[DetailResponseWithoutVersions[T]]
+    )
+    """The datatype that the endpoints returns"""
+
     has_versions: bool
     endpoint_path: str
     expansions: Mapping[str, Expansion[T, object]] = {}
@@ -627,7 +688,9 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         data, status_code = self.get_item_data(slug, uuid)
 
-        if isinstance(data, ZGWError):
+        if isinstance(
+            data, (ZGWError, get_origin(self.return_data_type) or self.return_data_type)
+        ):
             return Response(data, status=status_code)
 
         versions = []
@@ -672,6 +735,11 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
                 ),
             )
 
+        if isinstance(
+            data, (ZGWError, get_origin(self.return_data_type) or self.return_data_type)
+        ):
+            return Response(data, status=response.status_code)
+
         versions = []
         if self.has_versions:
             assert isinstance(self, DetailWithVersions)
@@ -693,12 +761,30 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
     @handle_service_errors
     def patch(
-        self, request: Request, slug: str, uuid: UUID, *args, **kwargs
+        self, request: Request, slug: str, uuid: UUID, *args, **path_params
     ) -> Response:
+        as_url = reverse(slug)
+        request.data.update(
+            {
+                param: url
+                for param, v in path_params.items()
+                if (url := as_url(param, v))
+            }
+        )
         return self.update(request, slug, uuid, is_partial=True)
 
     @handle_service_errors
-    def put(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
+    def put(
+        self, request: Request, slug: str, uuid: UUID, *args, **path_params
+    ) -> Response:
+        as_url = reverse(slug)
+        request.data.update(
+            {
+                param: url
+                for param, v in path_params.items()
+                if (url := as_url(param, v))
+            }
+        )
         return self.update(request, slug, uuid, is_partial=False)
 
     @handle_service_errors
@@ -717,5 +803,5 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @abstractmethod
-    def get_fieldsets(self) -> FrontendFieldsets: ...
+    def get_fieldsets(self) -> FrontendFieldsets:
+        return []
