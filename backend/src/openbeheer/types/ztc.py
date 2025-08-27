@@ -2698,7 +2698,7 @@ class PatchedResultaatTypeRequest(Struct, kw_only=True):
     ) = None
     archiefnominatie: (
         Annotated[
-            ArchiefnominatieEnum | BlankEnum,
+            ArchiefnominatieEnum,  # | BlankEnum,
             Meta(
                 description="Aanduiding die aangeeft of ZAAKen met een resultaat van dit RESULTAATTYPE blijvend moeten worden bewaard of (op termijn) moeten worden vernietigd. Indien niet expliciet opgegeven wordt dit gevuld vanuit de selectielijst.\n\nUitleg bij mogelijke waarden:\n\n* `blijvend_bewaren` - Het zaakdossier moet bewaard blijven en op de Archiefactiedatum overgedragen worden naar een archiefbewaarplaats.\n* `vernietigen` - Het zaakdossier moet op of na de Archiefactiedatum vernietigd worden."
             ),
