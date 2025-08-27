@@ -29,7 +29,15 @@ export type BaseTabSection<T extends object> = {
   expandFields: ExpandItemKeys<T>[];
   icon?: ReactNode;
   label: string;
+  valueTransform?: Partial<{
+    [K in keyof Expand<T>]: (
+      record: NonNullable<Expand<T>[K]>,
+    ) => WithTransform<NonNullable<Expand<T>[K]>>;
+  }>;
 };
+type WithTransform<T> = T extends (infer U)[]
+  ? (U & { transform: ReactNode })[] // array of objects, each has transform
+  : T & { transform: ReactNode }; // single object, add transform
 
 export type AttributeGridSection<T extends object> = BaseTabSection<T> & {
   fieldsets: FieldSet<Expanded<T>>[];

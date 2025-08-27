@@ -948,6 +948,7 @@ export interface components {
             filterValue?: unknown;
             filterLookup?: string;
             options?: components["schemas"]["OBOption"][];
+            editable?: boolean;
         };
         /**
          * OBFieldType
@@ -1472,9 +1473,9 @@ export interface components {
              */
             username: string;
             /** Voornaam */
-            firstName?: string;
+            first_name?: string;
             /** Achternaam */
-            lastName?: string;
+            last_name?: string;
             /**
              * E-mailadres
              * Format: email
@@ -1485,7 +1486,7 @@ export interface components {
          * VersionSummary
          * @description Summary of the different version of a ZTC resource.
          *
-         *         # TODO: what do we need to show per version?
+         *     # TODO: what do we need to show per version?
          */
         VersionSummary: {
             uuid: string;

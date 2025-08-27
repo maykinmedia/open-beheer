@@ -44,6 +44,14 @@ export const TABS_CONFIG_OVERVIEW: TabConfig<TargetType> = {
       expandFields: ["naam", "omschrijving"],
       label: "Overzicht",
       fieldsets: FIELDSETS_OVERVIEW,
+      valueTransform: {
+        selectielijstProcestype: (record) => {
+          return {
+            ...record,
+            transform: `${record.naam} - ${record.jaar}`,
+          };
+        },
+      },
     },
   ],
 };

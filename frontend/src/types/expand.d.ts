@@ -41,3 +41,5 @@ export type ExpandItemKeys<T extends Expanded> = NonNullable<
       : never;
   }[keyof Expand<T>]
 >;
+
+export type RelatedObject<T extends object> = Expand<T>[keyof Expand<T>];
