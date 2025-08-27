@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from collections.abc import Callable
 from functools import partial, reduce
 from operator import or_
@@ -57,11 +57,12 @@ from openbeheer.types import (
     as_ob_fieldtype,
     options,
 )
-from openbeheer.types._open_beheer import DetailResponseWithoutVersions
 from openbeheer.utils.decorators import handle_service_errors
 
 if TYPE_CHECKING:
     from rest_framework.request import Request
+
+    from openbeheer.types._open_beheer import DetailResponseWithoutVersions
 
     # poor man's Comprarable
     # don't want to import SupportsRichComparison from pyright's private _typeshed
