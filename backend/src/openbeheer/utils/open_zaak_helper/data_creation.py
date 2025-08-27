@@ -6,14 +6,14 @@ from typing import Literal, Mapping, Sequence, Type
 from msgspec.json import decode
 
 from openbeheer.clients import ztc_client
+from openbeheer.types import ResultaatTypeWithUUID
+from openbeheer.types._open_beheer import ZaakTypeWithUUID
 from openbeheer.types.ztc import (
     BesluitType,
     Catalogus,
     InformatieObjectType,
-    ResultaatType,
     RolType,
     StatusType,
-    ZaakType,
     ZaakTypeInformatieObjectType,
 )
 
@@ -121,7 +121,7 @@ class OpenZaakDataCreationHelper:
 
     def create_zaaktype(
         self, catalogus: str = "", **overrides: _JSONEncodable
-    ) -> ZaakType:
+    ) -> ZaakTypeWithUUID:
         data: dict[str, _JSONEncodable] = {
             "omschrijving": "Another test zaaktype",
             "vertrouwelijkheidaanduiding": "geheim",
@@ -147,13 +147,13 @@ class OpenZaakDataCreationHelper:
             "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
         } | overrides
 
-        return self._create_resource(data, "zaaktypen", ZaakType)
+        return self._create_resource(data, "zaaktypen", ZaakTypeWithUUID)
 
     def create_resultaattype(
         self,
         zaaktype: str = "",
         **overrides: _JSONEncodable,
-    ) -> ResultaatType:
+    ) -> ResultaatTypeWithUUID:
         data: dict[str, _JSONEncodable] = {
             "zaaktype": self._get_zaaktype(zaaktype),
             "omschrijving": "Gegrond",
@@ -170,7 +170,7 @@ class OpenZaakDataCreationHelper:
             },
         } | overrides
 
-        return self._create_resource(data, "resultaattypen", ResultaatType)
+        return self._create_resource(data, "resultaattypen", ResultaatTypeWithUUID)
 
     def create_roltype(
         self,

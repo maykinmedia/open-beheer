@@ -1,7 +1,7 @@
 from django.test import tag
 
 from maykin_common.vcr import VCRMixin
-from msgspec.json import decode, encode
+from msgspec import to_builtins
 from requests import get
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -218,8 +218,9 @@ class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
 
         template_resultaattype = self.helper.create_resultaattype()
         selectielijstklasse = get(template_resultaattype.selectielijstklasse).json()
-        resultaattype = decode(encode(template_resultaattype))  # recursive asdict
+        resultaattype = to_builtins(template_resultaattype)
         del resultaattype["zaaktype"]
+        del resultaattype["uuid"]
         resultaattype["catalogus"] = (
             "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77"
         )

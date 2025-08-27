@@ -55,7 +55,39 @@ urlpatterns = [
     path("v1/service/", include("openbeheer.services.urls", namespace="services")),
     path(
         "v1/service/<slug:slug>/zaaktypen/",
-        include("openbeheer.zaaktype.urls", namespace="zaaktypen"),
+        include(
+            [
+                path("", include("openbeheer.zaaktype.urls", namespace="zaaktypen")),
+                path(
+                    "<uuid:zaaktype>/",
+                    include(
+                        [
+                            path(
+                                "besluittypen/",
+                                include(
+                                    "openbeheer.besluittypen.urls",
+                                    namespace="besluittypen",
+                                ),
+                            ),
+                            path(
+                                "eigenschappen/",
+                                include(
+                                    "openbeheer.eigenschappen.urls",
+                                    namespace="eigenschappen",
+                                ),
+                            ),
+                            path(
+                                "resultaattypen/",
+                                include(
+                                    "openbeheer.resultaattypen.urls",
+                                    namespace="resultaattypen",
+                                ),
+                            ),
+                        ]
+                    ),
+                ),
+            ]
+        ),
     ),
     path(
         "v1/service/<slug:slug>/informatieobjecttypen/",
