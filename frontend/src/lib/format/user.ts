@@ -7,12 +7,12 @@ export function formatUser(
   let displayName = "";
   if (!user) return displayName;
 
-  if (!user.firstName && !user.lastName) return user.username;
+  if (!user.first_name && !user.last_name) return user.username;
 
-  if (user.firstName)
-    displayName = displayName.concat(user.firstName.trim(), " ");
-  if (user.lastName)
-    displayName = displayName.concat(user.lastName.trim(), " ");
+  if (user.first_name)
+    displayName = displayName.concat(user.first_name.trim(), " ");
+  if (user.last_name)
+    displayName = displayName.concat(user.last_name.trim(), " ");
   if (showUsername)
     displayName = displayName.concat(`(${user.username.trim()})`);
 
