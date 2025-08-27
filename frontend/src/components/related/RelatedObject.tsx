@@ -1,12 +1,11 @@
 import { DataGrid } from "@maykin-ui/admin-ui";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
-import { ExpandItemKeys, Expanded } from "~/types";
+import { ExpandItemKeys } from "~/types";
 
 type RelatedObjectRendererProps<T extends object> = {
-  object: Expanded<T>;
+  relatedObject: object | object[]; // TODO: Can improve typing
   view: "AttributeGrid" | "DataGrid";
   expandFields: ExpandItemKeys<T>[];
-  field: ExpandItemKeys<T>;
 };
 
 /**
@@ -15,41 +14,39 @@ type RelatedObjectRendererProps<T extends object> = {
  *
  * @param relatedObjects - The array of objects to render
  * @param view - The view type, either "DataGrid" or "AttributeGrid"
- * @param config - Tab configuration indicating view type and allowed fields
  */
 export function RelatedObjectRenderer<T extends object>({
-  object,
+  relatedObject,
   view,
   expandFields,
-  field,
 }: RelatedObjectRendererProps<T>) {
-  const relatedObjects = object._expand?.[field];
+  const _expandFields = ["transform", ...expandFields];
+  if (!Array.isArray(relatedObject)) {
+    if (!relatedObject) return null;
 
-  if (!Array.isArray(relatedObjects)) {
-    if (!relatedObjects) return null;
     return (
       <RelatedObjectBadge
-        relatedObject={relatedObjects}
-        allowedFields={expandFields}
+        relatedObject={relatedObject}
+        allowedFields={_expandFields}
       />
     );
   }
 
   if (view === "DataGrid") {
     return (
-      <DataGrid<(typeof relatedObjects)[number]>
-        objectList={relatedObjects}
+      <DataGrid<(typeof relatedObject)[number]>
+        objectList={relatedObject}
         urlFields={[]}
       />
     );
   }
 
   // Assume for attribute grid.
-  return relatedObjects.map((relatedObject, index) => (
-    <RelatedObjectBadge<T>
+  return relatedObject.map((relatedObject, index) => (
+    <RelatedObjectBadge
       key={typeof relatedObject.url === "string" ? relatedObject.url : index}
       relatedObject={relatedObject}
-      allowedFields={expandFields}
+      allowedFields={_expandFields}
     />
   ));
 }

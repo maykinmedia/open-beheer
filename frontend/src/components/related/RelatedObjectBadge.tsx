@@ -11,7 +11,7 @@ type RelatedObjectBadgeProps<T extends object> = {
  * Finds the first primitive field in `relatedObject` that is allowed,
  * then displays its value inside a Badge. Throws if no allowed key is found.
  *
- * @param relatedObject - Single related resource object
+ * @param relatedObject - Single related resource relatedObject
  * @param allowedFields - List of field names permitted for display
  * @returns A Badge containing the primitive value, or null for non-primitives
  * @throws InvalidRelatedObjectError When no allowed key exists
@@ -20,12 +20,7 @@ export function RelatedObjectBadge<T extends object>({
   relatedObject,
   allowedFields,
 }: RelatedObjectBadgeProps<T>) {
-  const objectKeys = Object.keys(
-    relatedObject,
-  ) as (keyof typeof relatedObject)[];
-
-  const key = objectKeys.find((k) => allowedFields.includes(k));
-  // Bail early, no renderable data.
+  const key = allowedFields.find((k) => Object.keys(relatedObject).includes(k));
   if (!key) {
     throw new InvalidRelatedObjectError({
       object: relatedObject,
@@ -41,7 +36,7 @@ export function RelatedObjectBadge<T extends object>({
 export class InvalidRelatedObjectError extends Error {
   constructor(data: unknown) {
     const baseMessage =
-      "<RelatedObjectList /> received an invalid related object";
+      "<RelatedObjectList /> received an invalid relatedObject";
     const detail =
       data && typeof data === "object"
         ? `: ${JSON.stringify(data, null, 2)}`

@@ -135,7 +135,7 @@ export function ZaaktypePage() {
   }, [currentVersion?.uuid, conceptVersion?.uuid]);
 
   /**
-   * Gets called when the object is changed.
+   * Gets called when the relatedObject is changed.
    */
   const handleChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -302,7 +302,7 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
   }, [tabConfig]);
 
   /**
-   * Memoizes a version of the result object where expandable fields
+   * Memoizes a version of the result relatedObject where expandable fields
    * are replaced by React nodes rendering related data.
    *
    * @returns A shallow copy of `result` with expanded fields replaced
@@ -319,12 +319,19 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
 
       // Skip if the field is not expandable or has no value.
       if (!(fieldName in expand) || originalValue === null) continue;
+      const expandKey = fieldName as keyof Expand<TargetType>;
+      const expandValue = expand[expandKey]!;
+
+      const transform = activeSectionConfig?.valueTransform;
+      const transformFn = transform?.[expandKey];
+      const relatedObject = transformFn
+        ? transformFn(expandValue as never) // TODO: Fix pls
+        : expandValue;
 
       overrides[fieldName] = (
         <RelatedObjectRenderer
           expandFields={activeSectionConfig.expandFields}
-          field={fieldName as keyof Expand<typeof object>}
-          object={object}
+          relatedObject={relatedObject}
           view={tabConfig.view}
         />
       );
