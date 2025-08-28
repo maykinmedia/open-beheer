@@ -89,7 +89,7 @@ class SchemaEndpointTests(APITestCase):
             query_type = TestQueryParam
 
             @extend_schema(filters=True)
-            def get(self, request, slug: str = "") -> Response:
+            def get(self, request, slug: str = "", **other_path_params) -> Response:
                 return Response()
 
         schema = _get_drf_spectacular_schema(DummyView.as_view())
@@ -125,7 +125,7 @@ class SchemaEndpointTests(APITestCase):
             query_type = TestQueryParam
 
             @extend_schema(filters=True)
-            def get(self, request, slug: str = "") -> Response:
+            def get(self, request, slug: str = "", **other_path_params) -> Response:
                 return Response()
 
         schema = _get_drf_spectacular_schema(DummyView.as_view())
