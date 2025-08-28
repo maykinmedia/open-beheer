@@ -1,11 +1,11 @@
 import { DataGrid } from "@maykin-ui/admin-ui";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
-import { ExpandItemKeys } from "~/types";
+import { BaseTabSection, TabConfig } from "~/pages";
 
 type RelatedObjectRendererProps<T extends object> = {
   relatedObject: object | object[]; // TODO: Can improve typing
-  view: "AttributeGrid" | "DataGrid";
-  expandFields: ExpandItemKeys<T>[];
+  view: TabConfig<T>["view"];
+  expandFields: BaseTabSection<T>["expandFields"];
 };
 
 /**
@@ -20,14 +20,13 @@ export function RelatedObjectRenderer<T extends object>({
   view,
   expandFields,
 }: RelatedObjectRendererProps<T>) {
-  const _expandFields = ["transform", ...expandFields];
   if (!Array.isArray(relatedObject)) {
     if (!relatedObject) return null;
 
     return (
       <RelatedObjectBadge
         relatedObject={relatedObject}
-        allowedFields={_expandFields}
+        allowedFields={expandFields}
       />
     );
   }
@@ -46,7 +45,7 @@ export function RelatedObjectRenderer<T extends object>({
     <RelatedObjectBadge
       key={typeof relatedObject.url === "string" ? relatedObject.url : index}
       relatedObject={relatedObject}
-      allowedFields={_expandFields}
+      allowedFields={expandFields}
     />
   ));
 }
