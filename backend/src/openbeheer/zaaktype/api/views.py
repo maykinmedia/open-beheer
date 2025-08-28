@@ -11,7 +11,7 @@ import structlog
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
-from msgspec import UNSET, Meta, Struct, UnsetType
+from msgspec import UNSET, Meta, UnsetType
 from msgspec.json import decode
 from msgspec.structs import asdict, replace
 from rest_framework import status
@@ -43,11 +43,12 @@ from openbeheer.types import (
     StatusTypeWithUUID,
     VersionSummary,
     ZaakObjectTypeWithUUID,
-    ZaakTypeWithUUID,
     ZGWError,
     ZGWResponse,
 )
 from openbeheer.types._open_beheer import (
+    ExpandableZaakType,
+    ExpandableZaakTypeRequest,
     VersionedResourceSummary,
 )
 from openbeheer.types.selectielijst import ProcesType
@@ -67,7 +68,7 @@ from openbeheer.types.ztc import (
     ZaakTypeRequest,
 )
 from openbeheer.zaaktype.constants import (
-    TEMPLATES,
+    TEMPLATE_MAPPING,
     ZAAKTYPE_FIELDSETS,
     OptionalZaakType,
     Sjabloon,
@@ -108,30 +109,6 @@ class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
     actief: bool | UnsetType = UNSET
     einde_geldigheid: datetime.date | None = None
     concept: bool | UnsetType = UNSET
-
-
-class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
-    besluittypen: UnsetType | list[BesluitTypeWithUUID] = UNSET
-    # Posssibly Not invented here:
-    # "gerelateerde_zaaktypen: UnsetType | null
-    # "broncatalogus.url: UnsetType | null
-    # "bronzaaktype.url: UnsetType | null
-    statustypen: UnsetType | list[StatusTypeWithUUID] = UNSET
-    resultaattypen: UnsetType | list[ResultaatTypeWithUUID] = UNSET
-    eigenschappen: UnsetType | list[EigenschapWithUUID] = UNSET
-    informatieobjecttypen: UnsetType | list[InformatieObjectTypeWithUUID] = UNSET
-    roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
-    deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
-    zaakobjecttypen: UnsetType | list[ZaakObjectTypeWithUUID] = UNSET
-    selectielijst_procestype: UnsetType | ProcesType = UNSET
-
-
-class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
-    _expand: ZaakTypeExtension = ZaakTypeExtension()
-
-
-class ExpandableZaakType(ZaakTypeWithUUID, Struct):
-    _expand: ZaakTypeExtension = ZaakTypeExtension()
 
 
 @extend_schema_view(
@@ -522,7 +499,7 @@ class ZaakTypePublishView(MsgspecAPIView):
 )
 class ZaakTypeTemplateListView(MsgspecAPIView):
     def get(self, request: Request) -> Response:
-        results = list(TEMPLATES.values())
+        results = list(TEMPLATE_MAPPING.values())
         return Response(
             data=ZGWResponse(
                 count=len(results),
@@ -543,7 +520,7 @@ class ZaakTypeTemplateListView(MsgspecAPIView):
 class ZaakTypeTemplateView(MsgspecAPIView):
     def get(self, request: Request, uuid: UUID) -> Response:
         try:
-            return Response(data=TEMPLATES[uuid])
+            return Response(data=TEMPLATE_MAPPING[uuid])
         except KeyError:
             return Response(
                 data=ZGWError(
