@@ -330,7 +330,8 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
       const transform = activeSectionConfig?.valueTransform;
       const transformFn = transform?.[expandKey];
       const relatedObject = transformFn
-        ? transformFn(expandValue as never) // TODO: Fix pls
+        ? // @ts-expect-error - TS can't infer expandValue correctly here.
+          transformFn(expandValue)
         : expandValue;
 
       overrides[fieldName] = (
