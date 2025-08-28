@@ -32,9 +32,7 @@ export type BaseTabSection<T extends object> = {
   icon?: ReactNode;
   label: string;
   valueTransform?: Partial<{
-    [K in keyof Expand<T>]: (
-      record: NonNullable<Expand<T>[K]>,
-    ) => NonNullable<Expand<T>[K]>;
+    [K in keyof Expand<T>]: (value: Expand<T>[K]) => Record<string, unknown>;
   }>;
 };
 export type AttributeGridSection<T extends object> = BaseTabSection<T> & {

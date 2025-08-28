@@ -48,7 +48,7 @@ export const TABS_CONFIG_OVERVIEW: TabConfig<TargetType> = {
         selectielijstProcestype: (record) => {
           return {
             ...record,
-            procestype: `${record.naam} - ${record.jaar}`,
+            procestype: `${record?.naam} - ${record?.jaar}`,
           };
         },
       },
