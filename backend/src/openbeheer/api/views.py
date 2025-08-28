@@ -11,7 +11,6 @@ from typing import (
     NoReturn,
     Protocol,
     Sequence,
-    Type,
     get_origin,
     get_type_hints,
     runtime_checkable,
@@ -27,10 +26,8 @@ from furl import furl
 from msgspec import (
     UNSET,
     Struct,
-    UnsetType,
     ValidationError,
     convert,
-    defstruct,
     structs,
     to_builtins,
 )
@@ -127,37 +124,6 @@ class MsgspecAPIView(_APIView):
     def get_renderers(self) -> list[BaseRenderer]:
         render_classes = (_add_mixin(_class) for _class in self.renderer_classes)
         return [MsgspecJSONRenderer()] + [r() for r in render_classes]
-
-
-def make_expandable[T: Type[Struct]](t: T, fields: Mapping[str, type]) -> T:
-    """
-    Return a version of t that has an .expand attribute with the specified `fields`.
-
-    :param t: The *class* you want to make expandable
-    :param fields: Map of attribute name -> attribute type
-
-    ``mk_expandable(Foo, {"bar": bool})`` returns a
-
-        class ExpandableFoo(Foo):
-            _expand: FooExpansion = FooExpansion()
-
-    where:
-
-        class FooExpansion(Struct):
-            bar: bool | UnsetType = UNSET
-    """
-    expansion = defstruct(
-        name=f"{t.__name__}Expansion",
-        fields=[(f, t | UnsetType, UNSET) for f, t in fields.items()],  # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
-        # module="" should we pass in the caller module name?
-        frozen=True,  # don't want to mutate the default value
-        rename="camel",
-    )
-    return defstruct(  # pyright: ignore[reportReturnType]  # t is in bases!
-        name=f"Expandable{t.__name__}",
-        fields=[("_expand", expansion, expansion())],
-        bases=(t,),
-    )
 
 
 type Expansion[T: Struct, R] = Callable[[APIClient, Iterable[T]], Iterable[R]]
