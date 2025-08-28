@@ -12,6 +12,7 @@ from openbeheer.types import (
     EigenschapWithUUID,
     ResultaatTypeWithUUID,
     RolTypeWithUUID,
+    StatusTypeWithUUID,
     ZaakTypeWithUUID,
 )
 from openbeheer.types.ztc import (
@@ -19,7 +20,6 @@ from openbeheer.types.ztc import (
     EigenschapSpecificatieRequest,
     FormaatEnum,
     InformatieObjectType,
-    StatusType,
     ZaakTypeInformatieObjectType,
 )
 
@@ -95,7 +95,7 @@ class OpenZaakDataCreationHelper:
 
     def create_statustype(
         self, zaaktype: str = "", **overrides: _JSONEncodable
-    ) -> StatusType:
+    ) -> StatusTypeWithUUID:
         data: dict[str, _JSONEncodable] = {
             "omschrijving": "Ontvangen",
             "zaaktype": zaaktype,
@@ -106,7 +106,7 @@ class OpenZaakDataCreationHelper:
             "checklistitem_statustype": [],
         } | overrides
 
-        return self._create_resource(data, "statustypen", StatusType)
+        return self._create_resource(data, "statustypen", StatusTypeWithUUID)
 
     def relate_zaaktype_informatieobjecttype(
         self,
