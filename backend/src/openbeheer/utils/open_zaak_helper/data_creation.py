@@ -7,12 +7,15 @@ from msgspec import to_builtins
 from msgspec.json import decode
 
 from openbeheer.clients import ztc_client
-from openbeheer.types import ResultaatTypeWithUUID
-from openbeheer.types._open_beheer import EigenschapWithUUID, ZaakTypeWithUUID
+from openbeheer.types import (
+    BesluitTypeWithUUID,
+    EigenschapWithUUID,
+    ResultaatTypeWithUUID,
+    ZaakTypeWithUUID,
+)
 from openbeheer.types.ztc import (
     BesluitType,
     Catalogus,
-    EigenschapSpecificatie,
     EigenschapSpecificatieRequest,
     FormaatEnum,
     InformatieObjectType,
@@ -199,23 +202,24 @@ class OpenZaakDataCreationHelper:
         }
         return self._create_resource(data, "roltypen", RolType)
 
-    def create_besluittype(self, **overrides: _JSONEncodable) -> BesluitType:
+    def create_besluittype(self, **overrides: _JSONEncodable) -> BesluitTypeWithUUID:
         return self._create_resource(
             {
-                # "zaaktypen": [],
                 "publicatieIndicatie": False,
                 "informatieobjecttypen": [],
                 "beginGeldigheid": "2025-06-19",
                 **overrides,
             },
             "besluittypen",
-            BesluitType,
+            BesluitTypeWithUUID,
         )
 
-    def create_eigenschap(self, **overrides: _JSONEncodable) -> EigenschapWithUUID:
+    def create_eigenschap(
+        self, zaaktype: str = "", **overrides: _JSONEncodable
+    ) -> EigenschapWithUUID:
         return self._create_resource(
             {
-                # "zaaktypen": [],
+                "zaaktype": self._get_zaaktype(zaaktype),
                 "naam": "Henk de Vries",
                 "definitie": "Niet de broer van Henk de Vries",
                 "specificatie": to_builtins(
