@@ -93,21 +93,39 @@ class OBFieldType(enum.StrEnum):
     # null = enum.auto()
     number = enum.auto()
     string = enum.auto()
+    text = enum.auto()
     # jsx = enum.auto()
 
 
-def as_ob_fieldtype(t: type | UnionType) -> OBFieldType:
+def as_ob_fieldtype(t: type | UnionType, meta: msgspec.Meta | None) -> OBFieldType:
     "Return the `OBFieldType` for some annotation `t`"
     if isinstance(t, UnionType):
         return as_ob_fieldtype(
-            next(ut for ut in t.__args__ if ut not in (NoneType, UnsetType))
+            next(ut for ut in t.__args__ if ut not in (NoneType, UnsetType)), meta
         )
     if t is bool:
         return OBFieldType.boolean
     if t in (int, float):
         return OBFieldType.number
     if t is str:
-        return OBFieldType.string
+        # We return either "string" (input) or text" for the field type based on the
+        # "max_length" meta attribute.
+        #
+        # Fields don't have this property set all the time, and it's absence can
+        # possibly indicate no limit. Therefore, the default should be "text"
+        # (textarea).
+        #
+        # Only for fields with a smaller "max_length" set we will use "string" (input).
+        try:
+            if meta and isinstance(meta.max_length, int) and meta.max_length <= 50:
+                # Small fields should get an input
+                return OBFieldType.string
+        except (AttributeError, TypeError):
+            pass
+
+        # Large fields should get a textarea
+        return OBFieldType.text
+
     if t is datetime.date:
         return OBFieldType.date
     return OBFieldType.string

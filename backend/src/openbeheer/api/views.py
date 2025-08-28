@@ -11,6 +11,7 @@ from typing import (
     NoReturn,
     Protocol,
     Sequence,
+    get_args,
     get_origin,
     get_type_hints,
     runtime_checkable,
@@ -25,6 +26,7 @@ from drf_spectacular.utils import extend_schema
 from furl import furl
 from msgspec import (
     UNSET,
+    Meta,
     Struct,
     ValidationError,
     convert,
@@ -439,9 +441,12 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
         def to_ob_field(name: str, annotation: type) -> OBField:
             # closure over option_overrides
             not_applicable = object()
+            args: tuple[type, Meta] = get_args(annotation)
+            t, meta = args if args else (annotation, None)
+
             ob_field = OBField(
                 name=name,
-                type=as_ob_fieldtype(annotation),
+                type=as_ob_fieldtype(t, meta),
                 options=option_overrides.get(name, options(annotation)),
             )
 
@@ -456,7 +461,7 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
 
             return ob_field
 
-        attrs = get_type_hints(self.return_data_type)
+        attrs = get_type_hints(self.return_data_type, include_extras=True)
         return sorted(
             (to_ob_field(field, annotation) for field, annotation in attrs.items()),
             key=sort_key,
@@ -636,20 +641,32 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
         return expand_one(client, self.expansions, object)
 
     def get_fields(self) -> list[OBField]:
-        field_types = reduce(or_, map(get_type_hints, reversed(self.data_type.mro())))
-        field_options = lambda field: options(field_types[field])
+        field_types = reduce(
+            or_,
+            (
+                get_type_hints(obj, include_extras=True)
+                for obj in reversed(self.data_type.mro())
+            ),
+        )
 
-        return [
-            OBField(
-                name=field,
-                type=as_ob_fieldtype(annotation),
-                options=field_options(field) or UNSET,
-                filter_lookup=UNSET,
-                editable=field not in self.expansions,
+        fields = []
+        for field, annotation in field_types.items():
+            if field == "_expand":
+                continue
+
+            args: tuple[type, Meta] = get_args(annotation)
+            t, meta = args if args else (annotation, None)
+
+            fields.append(
+                OBField(
+                    name=field,
+                    type=as_ob_fieldtype(t, meta),
+                    options=options(t) or UNSET,
+                    filter_lookup=UNSET,
+                    editable=field not in self.expansions,
+                )
             )
-            for field, annotation in field_types.items()
-            if field != "_expand"
-        ]
+        return fields
 
     @handle_service_errors
     def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
