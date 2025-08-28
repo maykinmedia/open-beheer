@@ -15,11 +15,13 @@ from openbeheer.types import (
     StatusTypeWithUUID,
     ZaakTypeWithUUID,
 )
+from openbeheer.types._open_beheer import ZaakObjectTypeWithUUID
 from openbeheer.types.ztc import (
     Catalogus,
     EigenschapSpecificatieRequest,
     FormaatEnum,
     InformatieObjectType,
+    ZaakObjectTypeRequest,
     ZaakTypeInformatieObjectType,
 )
 
@@ -234,4 +236,22 @@ class OpenZaakDataCreationHelper:
             },
             "eigenschappen",
             EigenschapWithUUID,
+        )
+
+    def create_zaakobjecttype(
+        self, zaaktype: str = "", **overrides: _JSONEncodable
+    ) -> ZaakObjectTypeWithUUID:
+        defaults: dict = to_builtins(
+            ZaakObjectTypeRequest(
+                ander_objecttype=True,
+                objecttype="http://example.com",
+                relatie_omschrijving="Open",
+                zaaktype=self._get_zaaktype(zaaktype),
+                # statustype: str | None = None,
+                # begin_geldigheid: date | None = None,
+                # einde_geldigheid: date | None = None
+            )
+        )
+        return self._create_resource(
+            defaults | overrides, "zaakobjecttypen", ZaakObjectTypeWithUUID
         )
