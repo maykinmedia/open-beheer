@@ -15,9 +15,11 @@ from openbeheer.types.ztc import (
     Catalogus,
     IndicatieInternOfExternEnum,
     ReferentieProces,
+    StatusType,
     VertrouwelijkheidaanduidingEnum,
     ZaakType,
 )
+from openbeheer.zaaktype.api.views import ExpandableZaakTypeRequest
 
 ZAAKTYPE_FIELDS = {
     field: getattr(ZaakType, field).__name__ for field in ZaakType.__struct_fields__
@@ -123,59 +125,103 @@ class Sjabloon[T](Struct):
         self.uuid = uuid5(zaaktype_namespace, self.naam)
 
 
-OptionalZaakType = make_fields_optional(ZaakType)
+OptionalZaakType = make_fields_optional(ExpandableZaakTypeRequest)
+
+waarden_dict = {
+    "omschrijving": "De Zaaktype-omschrijving",
+    "vertrouwelijkheidaanduiding": VertrouwelijkheidaanduidingEnum.openbaar,
+    "doel": "Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.",
+    "aanleiding": "Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE.",
+    "toelichting": "Een eventuele toelichting op dit zaaktype",
+    "indicatie_intern_of_extern": IndicatieInternOfExternEnum.extern,
+    "handeling_initiator": "Initiëren",
+    "onderwerp": "Het onderwerp van ZAAKen van dit ZAAKTYPE.",
+    "handeling_behandelaar": "Behandelen",
+    "doorlooptijd": "P6W",
+    "opschorting_en_aanhouding_mogelijk": True,
+    "verlenging_mogelijk": True,
+    "verlengingstermijn": "P2W",
+    "trefwoorden": ["Zaaktype", "Basis"],
+    "publicatie_indicatie": True,
+    "publicatietekst": "De generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.",
+    "producten_of_diensten": [],
+    "referentieproces": make_fields_optional(ReferentieProces)(
+        naam="De naam van het Referentieproces.",
+        link="",
+    ),
+    "verantwoordingsrelatie": [],
+    "selectielijst_procestype": "",
+    "verantwoordelijke": "De verantwoordelijke (soort) organisatie.",
+    "broncatalogus": make_fields_optional(Catalogus)(url="", domein="", rsin=""),
+    "bronzaaktype": OptionalZaakType(identificatie="", omschrijving=""),
+    "begin_geldigheid": date.today(),
+    "versiedatum": date.today(),
+    "catalogus": "",
+    "besluittypen": [],
+    "deelzaaktypen": [],
+    "gerelateerde_zaaktypen": [],
+}
+
+TEMPLATE_BASE: Sjabloon = Sjabloon(
+    naam="Basis",
+    omschrijving="Start hier een nieuwe zaak met de juiste structuur en vooraf ingevulde velden.",
+    voorbeelden=[
+        "Zelf opbouwen",
+        "Volledig zelf te configureren",
+        "Vertrouwelijkheidaanduiding: openbaar",
+    ],
+    waarden=OptionalZaakType(**waarden_dict),
+)
+
+TEMPLATE_STATUSES = Sjabloon(
+    naam="Met statustypen",
+    omschrijving="Met statustypen.",
+    voorbeelden=[
+        "Ingediend",
+        "In behandeling",
+        "Afgerond",
+    ],
+    waarden=OptionalZaakType(
+        **{
+            **waarden_dict,
+            "_expand": {
+                "statustypen": [
+                    StatusType(
+                        volgnummer=1,
+                        omschrijving="Ingediend",
+                        omschrijving_generiek="Ingediend",
+                        statustekst="Ingediend",
+                        informeren=False,
+                        checklistitem_statustype=[],
+                        zaaktype="",
+                    ),
+                    StatusType(
+                        volgnummer=2,
+                        omschrijving="In behandeling",
+                        omschrijving_generiek="In behandeling",
+                        statustekst="In behandeling",
+                        informeren=False,
+                        checklistitem_statustype=[],
+                        zaaktype="",
+                    ),
+                    StatusType(
+                        volgnummer=3,
+                        omschrijving="Afgehandeld",
+                        omschrijving_generiek="Afgehandeld",
+                        statustekst="Afgehandeld",
+                        informeren=False,
+                        checklistitem_statustype=[],
+                        zaaktype="",
+                    ),
+                ],
+            },
+        }
+    ),
+)
+
+TEMPLATES: list[Sjabloon] = [TEMPLATE_BASE, TEMPLATE_STATUSES]
 
 # Sjabloon[OptionalZaakType] is not allowed as an annotation OptionalZaakType is a value not a type
-TEMPLATES: Mapping[UUID, Sjabloon] = {
-    template.uuid: template
-    for template in [
-        Sjabloon(
-            naam="Basis",
-            omschrijving="Start hier een nieuwe zaak met de juiste structuur en vooraf ingevulde velden.",
-            voorbeelden=[
-                "Zelf opbouwen",
-                "Volledig zelf te configureren",
-                "Vertrouwelijkheidaanduiding: openbaar",
-            ],
-            waarden=OptionalZaakType(
-                omschrijving="De Zaaktype-omschrijving",
-                vertrouwelijkheidaanduiding=VertrouwelijkheidaanduidingEnum.openbaar,
-                doel="Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.",
-                aanleiding="Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE.",
-                toelichting="Een eventuele toelichting op dit zaaktype",
-                indicatie_intern_of_extern=IndicatieInternOfExternEnum.extern,
-                handeling_initiator="Initiëren",
-                onderwerp="Het onderwerp van ZAAKen van dit ZAAKTYPE.",
-                handeling_behandelaar="Behandelen",
-                doorlooptijd="P6W",
-                opschorting_en_aanhouding_mogelijk=True,
-                verlenging_mogelijk=True,
-                verlengingstermijn="P2W",
-                trefwoorden=["Zaaktype", "Basis"],
-                publicatie_indicatie=True,
-                publicatietekst="De generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.",
-                producten_of_diensten=[],
-                referentieproces=make_fields_optional(ReferentieProces)(
-                    naam="De naam van het Referentieproces.",
-                    link="",
-                ),
-                verantwoordingsrelatie=[],
-                selectielijst_procestype="",
-                verantwoordelijke="De verantwoordelijke (soort) organisatie.",
-                broncatalogus=make_fields_optional(Catalogus)(
-                    url="", domein="", rsin=""
-                ),
-                bronzaaktype=OptionalZaakType(
-                    url="", identificatie="", omschrijving=""
-                ),
-                begin_geldigheid=date.today(),
-                versiedatum=date.today(),
-                catalogus="",
-                besluittypen=[],
-                deelzaaktypen=[],
-                gerelateerde_zaaktypen=[],
-            ),
-        ),
-    ]
-    if template.uuid
+TEMPLATE_MAPPING: Mapping[UUID, Sjabloon] = {
+    template.uuid: template for template in TEMPLATES if template.uuid
 }

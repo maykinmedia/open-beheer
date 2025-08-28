@@ -24,6 +24,7 @@ from ape_pie import APIClient
 from furl import furl
 from msgspec import UNSET, Meta, Struct, UnsetType, structs
 
+from .selectielijst import ProcesType
 from .ztc import (
     BesluitType,
     Eigenschap,
@@ -33,6 +34,7 @@ from .ztc import (
     StatusType,
     ZaakObjectType,
     ZaakType,
+    ZaakTypeRequest,
 )
 
 
@@ -290,7 +292,8 @@ def make_fields_optional(t: Type[Struct]) -> Type[Struct]:
     return msgspec.defstruct(
         f"Optional{t.__name__}",
         [
-            (field_info.name, field_info.type | UnsetType, UNSET)  # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
+            (field_info.name, field_info.type | UnsetType, UNSET)
+            # pyright: ignore[reportArgumentType] UnionType t | UnsetType seems to work
             for field_info in structs.fields(t)
             if (
                 field_info.default == structs.NODEFAULT
@@ -363,6 +366,30 @@ class ZaakTypeWithUUID(UUIDMixin, ZaakType):
 
 class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: str | UnsetType = UNSET
+
+
+class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
+    besluittypen: UnsetType | list[BesluitTypeWithUUID] = UNSET
+    # Posssibly Not invented here:
+    # "gerelateerde_zaaktypen: UnsetType | null
+    # "broncatalogus.url: UnsetType | null
+    # "bronzaaktype.url: UnsetType | null
+    statustypen: UnsetType | list[StatusTypeWithUUID] = UNSET
+    resultaattypen: UnsetType | list[ResultaatTypeWithUUID] = UNSET
+    eigenschappen: UnsetType | list[EigenschapWithUUID] = UNSET
+    informatieobjecttypen: UnsetType | list[InformatieObjectTypeWithUUID] = UNSET
+    roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
+    deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
+    zaakobjecttypen: UnsetType | list[ZaakObjectTypeWithUUID] = UNSET
+    selectielijst_procestype: UnsetType | ProcesType = UNSET
+
+
+class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
+    _expand: ZaakTypeExtension = ZaakTypeExtension()
+
+
+class ExpandableZaakType(ZaakTypeWithUUID, Struct):
+    _expand: ZaakTypeExtension = ZaakTypeExtension()
 
 
 def _camelize(s: str) -> str:
