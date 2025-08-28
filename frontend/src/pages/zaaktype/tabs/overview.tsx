@@ -41,14 +41,14 @@ export const TABS_CONFIG_OVERVIEW: TabConfig<TargetType> = {
   view: "AttributeGrid",
   sections: [
     {
-      expandFields: ["naam", "omschrijving"],
+      expandFields: ["procestype", "naam", "omschrijving"],
       label: "Overzicht",
       fieldsets: FIELDSETS_OVERVIEW,
       valueTransform: {
         selectielijstProcestype: (record) => {
           return {
             ...record,
-            transform: `${record.naam} - ${record.jaar}`,
+            procestype: `${record.naam} - ${record.jaar}`,
           };
         },
       },
