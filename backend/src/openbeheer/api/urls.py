@@ -83,6 +83,13 @@ urlpatterns = [
                                     namespace="resultaattypen",
                                 ),
                             ),
+                            path(
+                                "roltypen/",
+                                include(
+                                    "openbeheer.roltypen.urls",
+                                    namespace="roltypen",
+                                ),
+                            ),
                         ]
                     ),
                 ),

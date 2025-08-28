@@ -11,15 +11,14 @@ from openbeheer.types import (
     BesluitTypeWithUUID,
     EigenschapWithUUID,
     ResultaatTypeWithUUID,
+    RolTypeWithUUID,
     ZaakTypeWithUUID,
 )
 from openbeheer.types.ztc import (
-    BesluitType,
     Catalogus,
     EigenschapSpecificatieRequest,
     FormaatEnum,
     InformatieObjectType,
-    RolType,
     StatusType,
     ZaakTypeInformatieObjectType,
 )
@@ -193,14 +192,14 @@ class OpenZaakDataCreationHelper:
             "zaakcoordinator",
         ] = "initiator",
         **overrides: _JSONEncodable,
-    ) -> RolType:
+    ) -> RolTypeWithUUID:
         data: dict[str, _JSONEncodable] = {
             "zaaktype": self._get_zaaktype(zaaktype),
             "omschrijving": "Vastgesteld",
             "omschrijvingGeneriek": omschrijvingGeneriek,
             **overrides,
         }
-        return self._create_resource(data, "roltypen", RolType)
+        return self._create_resource(data, "roltypen", RolTypeWithUUID)
 
     def create_besluittype(self, **overrides: _JSONEncodable) -> BesluitTypeWithUUID:
         return self._create_resource(
