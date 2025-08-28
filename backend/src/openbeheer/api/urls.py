@@ -90,6 +90,13 @@ urlpatterns = [
                                     namespace="roltypen",
                                 ),
                             ),
+                            path(
+                                "statustypen/",
+                                include(
+                                    "openbeheer.statustypen.urls",
+                                    namespace="statustypen",
+                                ),
+                            ),
                         ]
                     ),
                 ),
