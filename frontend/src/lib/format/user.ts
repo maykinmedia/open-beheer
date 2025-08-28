@@ -7,12 +7,22 @@ export function formatUser(
   let displayName = "";
   if (!user) return displayName;
 
-  if (!user.first_name && !user.last_name) return user.username;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  if (!user.firstName && !user.lastName) return user.username;
 
-  if (user.first_name)
-    displayName = displayName.concat(user.first_name.trim(), " ");
-  if (user.last_name)
-    displayName = displayName.concat(user.last_name.trim(), " ");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  if (user.firstName)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    displayName = displayName.concat(user.firstName.trim(), " ");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  if (user.lastName)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    displayName = displayName.concat(user.lastName.trim(), " ");
   if (showUsername)
     displayName = displayName.concat(`(${user.username.trim()})`);
 
