@@ -334,13 +334,22 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
           transformFn(expandValue)
         : expandValue;
 
+      const zaaktypeUuid = getZaaktypeUUID(object);
+      if (!zaaktypeUuid) {
+        console.warn(
+          "Zaaktype UUID is undefined, cannot render related object.",
+        );
+        continue;
+      }
+
       overrides[fieldName] = (
         // TODO: Handle errors for related objects.
         <RelatedObjectRenderer
           expandFields={activeSectionConfig.expandFields}
           relatedObject={relatedObject}
           view={tabConfig.view}
-          zaaktypeUuid={getZaaktypeUUID(object)}
+          field={fieldName}
+          zaaktypeUuid={zaaktypeUuid}
         />
       );
     }
