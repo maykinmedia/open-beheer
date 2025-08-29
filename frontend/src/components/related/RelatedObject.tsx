@@ -5,10 +5,9 @@ import {
   FormControlProps,
   Outline,
 } from "@maykin-ui/admin-ui";
-import { ChangeEvent, JSX, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { SERVICE_PARAM } from "~/App.tsx";
-import { getRelatedObjectTemplateChoices } from "~/api/template.ts";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
 import { useCombinedSearchParams } from "~/hooks";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
@@ -52,18 +51,18 @@ export function RelatedObjectRenderer<T extends object>({
   useEffect(() => {
     const controller = new AbortController();
 
-    const fetchCatalogiChoices = async () => {
+    const fetchChoices = async () => {
       try {
-        const choices = await getRelatedObjectTemplateChoices(field);
-        if (choices) {
-          setRelatedObjectChoices(choices);
-        }
+        // const choices = await getRelatedObjectTemplateChoices(field);
+        // if (choices) {
+        //   setRelatedObjectChoices(choices);
+        // }
       } catch (error) {
-        console.error("Failed to fetch catalogi choices:", error);
+        console.error("Failed to fetch choices:", error);
       }
     };
 
-    void fetchCatalogiChoices();
+    void fetchChoices();
 
     return () => {
       controller.abort();
@@ -143,6 +142,25 @@ export function RelatedObjectRenderer<T extends object>({
     },
   ];
 
+  const augmentedObjectList = useMemo(
+    () =>
+      Array.isArray(relatedObject)
+        ? relatedObject.map((row) => ({
+            ...row,
+            action: (
+              <Button
+                variant="danger"
+                size="xs"
+                onClick={() => onDelete(row as RelatedObject<T>)}
+              >
+                <Outline.TrashIcon />
+              </Button>
+            ),
+          }))
+        : [],
+    [relatedObject],
+  );
+
   if (!Array.isArray(relatedObject)) {
     if (!relatedObject) return null;
 
@@ -158,24 +176,9 @@ export function RelatedObjectRenderer<T extends object>({
     return (
       <>
         <DataGrid<(typeof relatedObject)[number]>
-          objectList={
-            relatedObject.map((relatedObject) => ({
-              ...(relatedObject as object),
-              "delete-related-object": (
-                <Button
-                  variant="danger"
-                  onClick={() => onDelete?.(relatedObject as RelatedObject<T>)}
-                  pad="h"
-                >
-                  <Outline.TrashIcon />
-                </Button>
-              ),
-            })) as (RelatedObject<T> & {
-              "delete-related-object": JSX.Element;
-            })[]
-          }
+          objectList={augmentedObjectList}
           editable={Boolean(combinedSearchParams.get("editing"))}
-          fields={[...expandFields, "delete-related-object"]}
+          fields={[...expandFields, "action"]}
           onEdit={(data) => {
             const _data = data as RelatedObject<T>;
             onEdit(_data);
@@ -201,57 +204,4 @@ export function RelatedObjectRenderer<T extends object>({
       allowedFields={expandFields}
     />
   ));
-  // if (view !== "AttributeGrid") {
-  //   return (
-  //     <>
-  //       <DataGrid<RelatedObject<T>>
-  //         objectList={
-  //           relatedObject.map((relatedObject) => ({
-  //             ...(relatedObject as object),
-  //             "delete-related-object": (
-  //               <Button
-  //                 variant="danger"
-  //                 onClick={() => onDelete?.(relatedObject as RelatedObject<T>)}
-  //                 pad="h"
-  //               >
-  //                 <Outline.TrashIcon />
-  //               </Button>
-  //             ),
-  //           })) as (RelatedObject<T> & {
-  //             "delete-related-object": JSX.Element;
-  //           })[]
-  //         }
-  //         editable={Boolean(combinedSearchParams.get("editing"))}
-  //         fields={[...expandFields, "delete-related-object"]}
-  //         onEdit={(data) => {
-  //           const _data = data as RelatedObject<T>;
-  //           onEdit(_data);
-  //         }}
-  //         urlFields={[]}
-  //       />
-  //       <Form // TODO: New select/combobox according to design is necessary.
-  //         buttonProps={{ pad: "h" }}
-  //         fields={fields}
-  //         showRequiredExplanation={false}
-  //         labelSubmit="Toevoegen"
-  //         onSubmit={() => onAdd?.(addNewValueState || "")}
-  //       />
-  //     </>
-  //   );
-  // }
-  //
-  // return relatedObject.map((relatedObject, index) => {
-  //   const maybeUrl = (relatedObject as Record<string, unknown>)?.url as
-  //     | string
-  //     | undefined;
-  //   return (
-  //     <RelatedObjectBadge<RelatedObject<T>>
-  //       key={maybeUrl || index}
-  //       relatedObject={
-  //         relatedObject as Record<ExpandItemKeys<T>, object | Primitive>
-  //       }
-  //       allowedFields={expandFields}
-  //     />
-  //   );
-  // });
 }

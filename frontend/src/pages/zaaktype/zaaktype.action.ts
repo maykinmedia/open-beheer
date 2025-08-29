@@ -215,7 +215,7 @@ export async function addRelatedObjectAction(
   try {
     return await request(
       "POST",
-      `/service/${payload.serviceSlug}/zaaktype/${payload.zaaktypeUuid}/${payload.relatedObjectKey}`,
+      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}`,
       {},
       payload.relatedObject,
     );
@@ -240,14 +240,13 @@ export async function editRelatedObjectAction(
 ) {
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as EditRelatedObjectPayload;
-  console.log("Editing related object:", payload.relatedObject);
 
   const relatedObjectUuid = getZaaktypeUUID(payload.relatedObject);
 
   try {
-    return await request(
-      "PATCH",
-      `/service/${payload.serviceSlug}/zaaktype/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${relatedObjectUuid}`,
+    await request(
+      "PUT",
+      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${relatedObjectUuid}`,
       {},
       payload.relatedObject,
     );
@@ -278,7 +277,7 @@ export async function deleteRelatedObjectAction(
   try {
     return await request(
       "DELETE",
-      `/service/${payload.serviceSlug}/zaaktype/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${payload.relatedObjectUuid}`,
+      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${payload.relatedObjectUuid}`,
     );
   } catch (e: unknown) {
     return await (e as Response).json();
