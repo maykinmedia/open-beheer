@@ -35,6 +35,7 @@ import {
   TABS_CONFIG_EIGENSCHAPPEN,
   TABS_CONFIG_OVERVIEW,
   TABS_CONFIG_RELATIES,
+  TABS_CONFIG_RESULTAATTYPEN,
   TABS_CONFIG_ROLTYPEN,
   TABS_CONFIG_STATUSTYPEN,
   TabConfig,
@@ -43,7 +44,7 @@ import {
 } from "~/pages";
 import { TABS_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.tsx";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
-import { Expand } from "~/types";
+import { Expand, ExpandItemKeys, RelatedObject } from "~/types";
 
 export const TABS_CONFIG: TabConfig<TargetType>[] = [
   TABS_CONFIG_OVERVIEW,
@@ -52,6 +53,7 @@ export const TABS_CONFIG: TabConfig<TargetType>[] = [
   TABS_CONFIG_OBJECTTYPEN,
   TABS_CONFIG_DOCUMENTTYPEN,
   TABS_CONFIG_ROLTYPEN,
+  TABS_CONFIG_RESULTAATTYPEN,
   TABS_CONFIG_EIGENSCHAPPEN,
   TABS_CONFIG_RELATIES,
 ];
@@ -346,9 +348,9 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
         // TODO: Handle errors for related objects.
         <RelatedObjectRenderer
           expandFields={activeSectionConfig.expandFields}
-          relatedObject={relatedObject}
+          relatedObject={relatedObject as RelatedObject<TargetType>}
           view={tabConfig.view}
-          field={fieldName}
+          field={fieldName as ExpandItemKeys<TargetType>}
           zaaktypeUuid={zaaktypeUuid}
         />
       );

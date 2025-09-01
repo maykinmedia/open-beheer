@@ -1,9 +1,9 @@
-import { Badge, Primitive } from "@maykin-ui/admin-ui";
+import { Badge } from "@maykin-ui/admin-ui";
 import { isPrimitive } from "~/lib";
-import { ExpandItemKeys } from "~/types";
+import { ExpandItemKeys, RelatedObject } from "~/types";
 
 type RelatedObjectBadgeProps<T extends object> = {
-  relatedObject: Record<ExpandItemKeys<T>, Primitive | object>;
+  relatedObject: RelatedObject<T>;
   allowedFields: ExpandItemKeys<T>[];
 };
 
