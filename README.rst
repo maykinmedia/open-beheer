@@ -12,6 +12,10 @@ Easily create and publish smart forms (`Nederlandse versie`_)
 
 Developed by `Maykin B.V.`_, originally commissioned by `Gemeente Rotterdam`_.
 
+.. note::
+
+   ⚠️ **Project status:** This project is under active development.
+   Some functionality is still in progress and subject to change.
 
 Introduction
 ===========

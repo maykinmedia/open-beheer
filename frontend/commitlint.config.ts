@@ -63,7 +63,7 @@ const config = {
         // Message did not match format.
         return [
           false,
-          "Commit message format invalid: \n\nFormat: <gitmoji>[ [ticket]] <type>[([optional scope])]: <description>.\nExample: :sparkles: [#1] feat: implement new feature",
+          "Commit message format invalid: \n\nFormat: <gitmoji>[ <ticket>] <type>[(<scope>)]: <description>.\nExample: :sparkles: [#1] feat: implement new feature",
         ];
       },
     ],

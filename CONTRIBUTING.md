@@ -47,9 +47,15 @@ On your local machine, create a new branch, and name it like:
 Once you have made changes or additions to the code, you can commit them (try to keep the commit
 message descriptive but short). If an issue already exists in the list of existing [issues][issues]
 for the changes you made, be sure to format your commit message like
-`:gitmoji: Fixes #<issue_id> -- description of changes made`, where `<issue_id>` corresponds to the
-number of the issue on GitHub. To demonstrate that the changes implement the new feature/fix the
-issue, make sure to also add tests to the existing Django testsuite.
+`<gitmoji>[ <ticket>] <type>[(<scope>)]: <description>`, where:
+
+ - `<gitmoji>` [gitmoji](https://gitmoji.dev) describing the nature of the change. 
+ - `<ticket>` (optional for small changes) corresponds to the number of the issue on GitHub. 
+ - `<type>` The type of change, must be in the type list of the [Angular commit message guildelines](https://github.com/angular/angular/blob/main/contributing-docs/commit-message-guidelines.md#type).
+ - `<scope>` (optional) corresponds to the number of the issue on GitHub.
+ - `<description>` description of the change.
+To demonstrate that the changes implement the new feature/fix the issue, make sure to
+also add tests to the existing Django testsuite.
 
 #### Refactoring
 
