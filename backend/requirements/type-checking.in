@@ -2,4 +2,5 @@
 
 django-stubs
 djangorestframework-stubs
+hypothesis
 maykin-common[vcr]

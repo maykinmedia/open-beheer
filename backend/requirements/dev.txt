@@ -42,6 +42,7 @@ attrs==25.3.0
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
     #   glom
+    #   hypothesis
     #   jsonschema
     #   referencing
 babel==2.17.0
@@ -374,6 +375,11 @@ httpx==0.28.1
     #   -r requirements/dev.in
     #   bump-my-version
     #   datamodel-code-generator
+hypothesis==6.138.13
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   -r requirements/type-checking.txt
 idna==3.10
     # via
     #   -c requirements/ci.txt
@@ -716,6 +722,12 @@ snowballstemmer==2.2.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   sphinx
+sortedcontainers==2.4.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   -r requirements/type-checking.txt
+    #   hypothesis
 soupsieve==2.6
     # via
     #   -c requirements/ci.txt

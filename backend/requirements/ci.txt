@@ -34,6 +34,7 @@ attrs==25.3.0
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   glom
+    #   hypothesis
     #   jsonschema
     #   referencing
 babel==2.17.0
@@ -297,6 +298,10 @@ glom==24.11.0
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   mozilla-django-oidc-db
+hypothesis==6.138.13
+    # via
+    #   -r requirements/test-tools.in
+    #   -r requirements/type-checking.txt
 idna==3.10
     # via
     #   -c requirements/base.txt
@@ -558,6 +563,10 @@ six==1.17.0
     #   python-dateutil
 snowballstemmer==2.2.0
     # via sphinx
+sortedcontainers==2.4.0
+    # via
+    #   -r requirements/type-checking.txt
+    #   hypothesis
 soupsieve==2.6
     # via beautifulsoup4
 sphinx==8.2.3

@@ -8,9 +8,10 @@ django-webtest
 factory-boy
 freezegun
 pyquery  # integrates with webtest
-requests-mock
+requests-mock  # required by zgw_consumers.test.factories
 tblib
 maykin-common[vcr]
+hypothesis
 
 # For documentation
 pytest
