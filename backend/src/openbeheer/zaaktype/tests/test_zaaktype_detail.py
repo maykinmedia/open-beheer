@@ -341,6 +341,9 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             self.assertEqual(len(vertrouwelijkheidaanduiding_field["options"]), 8)
             self.assertEqual(fields_by_name["beginGeldigheid"]["type"], "date")
 
+            # has some editable fields
+            assert any(f.get("editable") for f in fields_by_name.values())
+
     def test_patch_zaaktype(self):
         zaaktype = self.helper.create_zaaktype()
 

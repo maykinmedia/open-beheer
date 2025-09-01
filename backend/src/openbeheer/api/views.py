@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Callable
-from functools import partial, reduce
-from operator import or_
+from functools import partial
 from typing import (
     TYPE_CHECKING,
     Iterable,
@@ -11,9 +10,7 @@ from typing import (
     NoReturn,
     Protocol,
     Sequence,
-    get_args,
     get_origin,
-    get_type_hints,
     runtime_checkable,
 )
 from uuid import UUID
@@ -26,7 +23,6 @@ from drf_spectacular.utils import extend_schema
 from furl import furl
 from msgspec import (
     UNSET,
-    Meta,
     Struct,
     ValidationError,
     convert,
@@ -53,9 +49,8 @@ from openbeheer.types import (
     VersionSummary,
     ZGWError,
     ZGWResponse,
-    as_ob_fieldtype,
-    options,
 )
+from openbeheer.types._open_beheer import ob_fields_of_type
 from openbeheer.utils.decorators import handle_service_errors
 
 if TYPE_CHECKING:
@@ -437,33 +432,8 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
                             Options are inferred from the type annotation of
                             `self.data_type`, but that may be set more general.
         """
-
-        def to_ob_field(name: str, annotation: type) -> OBField:
-            # closure over option_overrides
-            not_applicable = object()
-            args: tuple[type, Meta] = get_args(annotation)
-            t, meta = args if args else (annotation, None)
-
-            ob_field = OBField(
-                name=name,
-                type=as_ob_fieldtype(t, meta),
-                options=option_overrides.get(name, options(annotation)),
-            )
-
-            for filter_name in [name, f"{name}__in"]:
-                if (
-                    value := getattr(params, filter_name, not_applicable)
-                ) is not not_applicable:
-                    ob_field.filter_lookup = filter_name
-                    ob_field.filter_value = value
-                else:
-                    ob_field.options = UNSET
-
-            return ob_field
-
-        attrs = get_type_hints(self.return_data_type, include_extras=True)
         return sorted(
-            (to_ob_field(field, annotation) for field, annotation in attrs.items()),
+            ob_fields_of_type(self.return_data_type, params, option_overrides),
             key=sort_key,
         )
 
@@ -641,32 +611,13 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
         return expand_one(client, self.expansions, object)
 
     def get_fields(self) -> list[OBField]:
-        field_types = reduce(
-            or_,
-            (
-                get_type_hints(obj, include_extras=True)
-                for obj in reversed(self.data_type.mro())
-            ),
-        )
+        ob_fields = ob_fields_of_type(self.data_type)
 
-        fields = []
-        for field, annotation in field_types.items():
-            if field == "_expand":
-                continue
+        def adapt[F: OBField](field: F) -> F:
+            field.editable = field.name not in self.expansions
+            return field
 
-            args: tuple[type, Meta] = get_args(annotation)
-            t, meta = args if args else (annotation, None)
-
-            fields.append(
-                OBField(
-                    name=field,
-                    type=as_ob_fieldtype(t, meta),
-                    options=options(t) or UNSET,
-                    filter_lookup=UNSET,
-                    editable=field not in self.expansions,
-                )
-            )
-        return fields
+        return [adapt(f) for f in ob_fields if f.name != "Expand"]
 
     @handle_service_errors
     def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:

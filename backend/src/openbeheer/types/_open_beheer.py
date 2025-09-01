@@ -6,13 +6,23 @@
 import datetime
 import enum
 from functools import singledispatch
+from itertools import starmap
 from types import NoneType, UnionType
-from typing import Self, Sequence, Type
+from typing import (
+    Annotated,
+    Iterable,
+    Mapping,
+    Self,
+    Sequence,
+    Type,
+    get_args,
+    get_type_hints,
+)
 
 import msgspec
 from ape_pie import APIClient
 from furl import furl
-from msgspec import UNSET, Struct, UnsetType, structs
+from msgspec import UNSET, Meta, Struct, UnsetType, structs
 
 from .ztc import (
     BesluitType,
@@ -97,47 +107,44 @@ class OBFieldType(enum.StrEnum):
     # jsx = enum.auto()
 
 
-def as_ob_fieldtype(t: type | UnionType, meta: msgspec.Meta | None) -> OBFieldType:
+def as_ob_fieldtype(
+    t: type | UnionType | Annotated, meta: Meta | None = None
+) -> OBFieldType:
     "Return the `OBFieldType` for some annotation `t`"
-    if isinstance(t, UnionType):
-        return as_ob_fieldtype(
-            next(ut for ut in t.__args__ if ut not in (NoneType, UnsetType)), meta
-        )
-    if t is bool:
-        return OBFieldType.boolean
-    if t in (int, float):
-        return OBFieldType.number
-    if t is str:
-        # We return either "string" (input) or text" for the field type based on the
-        # "max_length" meta attribute.
-        #
-        # Fields don't have this property set all the time, and it's absence can
-        # possibly indicate no limit. Therefore, the default should be "text"
-        # (textarea).
-        #
-        # Only for fields with a smaller "max_length" set we will use "string" (input).
-        try:
-            if meta and isinstance(meta.max_length, int) and meta.max_length <= 50:
-                # Small fields should get an input
-                return OBFieldType.string
-        except (AttributeError, TypeError):
-            pass
 
-        # Large fields should get a textarea
-        return OBFieldType.text
+    args = get_args(t)
+    meta = meta or next((arg for arg in args if isinstance(arg, Meta)), None)
 
-    if t is datetime.date:
-        return OBFieldType.date
-    return OBFieldType.string
+    match (t, meta):
+        case type(), _ if t is bool:
+            return OBFieldType.boolean
+        case type(), _ if t in (int, float):
+            return OBFieldType.number
+        case _, Meta(max_length=int(n)) if str in args and n <= 50:
+            # small strings get an input widget
+            return OBFieldType.string
+        case type(), _ if t is str:
+            # large ones a textarea
+            return OBFieldType.text
+        case type(), _ if t is datetime.date:
+            return OBFieldType.date
+        case _ if args:
+            # unpack Unions, Annotated etc.
+            return as_ob_fieldtype(
+                next(ut for ut in args if ut not in (NoneType, UnsetType)), meta
+            )
+        case _:
+            # fallback to input widget
+            return OBFieldType.string
 
 
-def options(t: type | UnionType) -> list[OBOption]:
+def options(t: type | UnionType | Annotated) -> list[OBOption]:
     "Find an enum in the type and turn it into options."
     match t:
         case enum.EnumType():
             return OBOption.from_enum(t)
-        case UnionType():
-            return [option for ut in t.__args__ for option in options(ut)]
+        case _ if get_args(t):
+            return sum(map(options, get_args(t)), [])
         case _:
             return []
 
@@ -165,9 +172,36 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
 
     def __post_init__(self):
         # camelize value of name
-        self.name = "".join(
-            part.title() if n else part for n, part in enumerate(self.name.split("_"))
+        self.name = _camelize(self.name)
+
+
+def ob_fields_of_type(
+    data_type: type,
+    query_params: OBPagedQueryParams | None = None,
+    option_overrides: Mapping[str, list[OBOption]] = {},
+) -> Iterable[OBField]:
+    def to_ob_field(name: str, annotation: type) -> OBField:
+        # closure over option_overrides
+        not_applicable = object()
+
+        ob_field = OBField(
+            name=name,
+            type=as_ob_fieldtype(annotation),
+            options=option_overrides.get(name, options(annotation)) or UNSET,
         )
+
+        if query_params:
+            for filter_name in [name, f"{name}__in"]:
+                if (
+                    value := getattr(query_params, filter_name, not_applicable)
+                ) is not not_applicable:
+                    ob_field.filter_lookup = filter_name
+                    ob_field.filter_value = value
+
+        return ob_field
+
+    attrs = get_type_hints(data_type, include_extras=True)
+    return starmap(to_ob_field, attrs.items())
 
 
 class OBList[T](Struct):
@@ -329,3 +363,7 @@ class ZaakTypeWithUUID(UUIDMixin, ZaakType):
 
 class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: str | UnsetType = UNSET
+
+
+def _camelize(s: str) -> str:
+    return "".join(part.title() if n else part for n, part in enumerate(s.split("_")))
