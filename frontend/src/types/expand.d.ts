@@ -48,11 +48,8 @@ export type ExpandItemKeys<T extends Expanded> = NonNullable<
  * Example:
  * RelatedObject<MyObject> = StatusType
  */
-export type RelatedObject<T extends object> =
-  NonNullable<Expand<T>[keyof Expand<T>]> extends (infer U)[]
-    ? U extends object
-      ? U
-      : never
-    : never;
-
-// export type RelatedObject<T extends object> = Expand<T>[keyof Expand<T>];
+export type RelatedObject<T extends object> = {
+  [K in ExpandItemKeys<T>]?: Expand<T>[K] extends Array
+    ? Expand<T>[K][number]
+    : Expand<T>[K];
+};

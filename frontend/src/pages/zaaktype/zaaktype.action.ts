@@ -199,7 +199,7 @@ export type AddRelatedObjectPayload = {
   zaaktypeUuid: string;
 
   relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
-  relatedObject: RelatedObject<ZaaktypeLoaderData["result"]>;
+  relatedObject: RelatedObject<TargetType>;
 };
 
 /**
@@ -211,11 +211,10 @@ export async function addRelatedObjectAction(
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as AddRelatedObjectPayload;
 
-  console.log(`Adding related object: ${payload.relatedObjectKey}`);
   try {
-    return await request(
+    await request(
       "POST",
-      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}`,
+      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/`,
       {},
       payload.relatedObject,
     );
@@ -229,7 +228,7 @@ export type EditRelatedObjectPayload = {
   zaaktypeUuid: string;
 
   relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
-  relatedObject: Partial<RelatedObject<ZaaktypeLoaderData["result"]>>;
+  relatedObject: RelatedObject<TargetType>;
 };
 
 /**
@@ -240,7 +239,6 @@ export async function editRelatedObjectAction(
 ) {
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as EditRelatedObjectPayload;
-
   const relatedObjectUuid = getZaaktypeUUID(payload.relatedObject);
 
   try {
@@ -271,8 +269,6 @@ export async function deleteRelatedObjectAction(
 ) {
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as DeleteRelatedObjectPayload;
-
-  console.log("Deleting related object:", payload.relatedObjectKey);
 
   try {
     return await request(
