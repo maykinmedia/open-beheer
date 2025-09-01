@@ -13,6 +13,11 @@ interface. (`English version`_)
 
 Ontwikkeld door `Maykin B.V.`_, oorspronkelijk in opdracht van `Gemeente Rotterdam`_.
 
+.. note::
+
+   ⚠️ **Projectstatus:** Dit project is in actieve ontwikkeling.
+   Bepaalde functionaliteiten zijn nog in aanbouw en kunnen wijzigen.
+
 
 Introductie
 ===========
