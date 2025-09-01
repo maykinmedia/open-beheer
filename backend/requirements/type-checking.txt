@@ -22,6 +22,7 @@ attrs==25.3.0
     # via
     #   -r requirements/base.txt
     #   glom
+    #   hypothesis
     #   jsonschema
     #   referencing
 boltons==25.0.0
@@ -185,6 +186,8 @@ glom==24.11.0
     # via
     #   -r requirements/base.txt
     #   mozilla-django-oidc-db
+hypothesis==6.138.13
+    # via -r requirements/type-checking.in
 idna==3.10
     # via
     #   -r requirements/base.txt
@@ -332,6 +335,8 @@ six==1.17.0
     #   furl
     #   orderedmultidict
     #   python-dateutil
+sortedcontainers==2.4.0
+    # via hypothesis
 sqlparse==0.5.3
     # via
     #   -r requirements/base.txt
