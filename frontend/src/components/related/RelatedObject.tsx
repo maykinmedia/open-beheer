@@ -184,7 +184,7 @@ export function RelatedObjectRenderer<T extends object>({
       Array.isArray(relatedObject)
         ? relatedObject.map((row) => ({
             ...row,
-            action: (
+            "": (
               <Button
                 disabled={isLoading}
                 size="xs"
@@ -218,7 +218,7 @@ export function RelatedObjectRenderer<T extends object>({
           objectList={augmentedObjectList}
           fields={[
             ...expandFields,
-            { name: "action", type: "jsx", editable: false },
+            { name: "", type: "jsx", editable: false, sortable: false },
           ]}
           boolProps={{ explicit: true }}
           decorate
@@ -226,9 +226,8 @@ export function RelatedObjectRenderer<T extends object>({
           editing={isEditing}
           sort="volgnummer"
           onEdit={(data) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { action, ..._data } = data;
-            handleEdit(_data as RelatedObject<T>);
+            delete data[""]; // Action column.
+            handleEdit(data as RelatedObject<T>);
           }}
           urlFields={[]}
         />
