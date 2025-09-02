@@ -246,4 +246,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
           repository: maykinmedia/open-beheer
-          readme-filepath: ${{ github.workspace }}/README.md
+          readme-filepath: ${{ github.workspace }}/README.rst
