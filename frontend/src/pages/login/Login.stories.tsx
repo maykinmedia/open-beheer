@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, within } from "@storybook/test";
 import { DefaultBodyType, HttpResponse, PathParams, http } from "msw";
 import {
   reactRouterParameters,
   withRouter,
 } from "storybook-addon-remix-react-router";
-import { API_BASE_URL } from "~/api";
+import { API_BASE_URL, OidcInfoType } from "~/api";
 import { FIXTURE_USER } from "~/fixtures";
 import { routes } from "~/routes.tsx";
 import { User } from "~/types";
@@ -28,6 +29,10 @@ export const LoginPage: Story = {
           `${API_BASE_URL}/whoami/`,
           () => HttpResponse.json(FIXTURE_USER),
         ),
+        http.get<PathParams, DefaultBodyType, OidcInfoType>(
+          `${API_BASE_URL}/oidc-info/`,
+          () => HttpResponse.json({ enabled: false }),
+        ),
       ],
     },
     reactRouter: reactRouterParameters({
@@ -36,5 +41,42 @@ export const LoginPage: Story = {
       },
       routing: routes[0],
     }),
+  },
+};
+
+export const LoginPageWithOIDC: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get<PathParams, DefaultBodyType, User>(
+          `${API_BASE_URL}/whoami/`,
+          () => HttpResponse.json(FIXTURE_USER),
+        ),
+        http.get<PathParams, DefaultBodyType, OidcInfoType>(
+          `${API_BASE_URL}/oidc-info/`,
+          () =>
+            HttpResponse.json({
+              enabled: true,
+              loginUrl: "http://backend.nl/oidc/authenticate",
+            }),
+        ),
+      ],
+    },
+    reactRouter: reactRouterParameters({
+      location: {
+        path: "/login",
+      },
+      routing: routes[0],
+    }),
+  },
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
+    const oidcButton: HTMLBaseElement = await canvas.findByRole("link", {
+      name: "Organisatie login",
+    });
+    const redirectUrl = new URL(oidcButton.href);
+    const nextUrl = redirectUrl.searchParams.get("next");
+    expect(nextUrl).not.toBeNull();
+    expect(new URL(nextUrl as string).pathname).toEqual("/");
   },
 };

@@ -327,9 +327,15 @@ AUTHENTICATION_BACKENDS = [
 SESSION_COOKIE_NAME = "openbeheer_sessionid"
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
-# OIDC settings
+
+#
+# Django OIDC
+#
 OIDC_AUTHENTICATE_CLASS = "mozilla_django_oidc_db.views.OIDCAuthenticationRequestView"
 OIDC_CALLBACK_CLASS = "mozilla_django_oidc_db.views.OIDCCallbackView"
+OIDC_REDIRECT_ALLOWED_HOSTS = config(
+    "OIDC_REDIRECT_ALLOWED_HOSTS", default="", split=True
+)
 
 LOGIN_URL = reverse_lazy("admin:login")
 LOGIN_REDIRECT_URL = reverse_lazy("admin:index")

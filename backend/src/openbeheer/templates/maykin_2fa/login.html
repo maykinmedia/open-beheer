@@ -1,5 +1,5 @@
 {% extends "maykin_2fa/login.html" %}
-{% load solo_tags i18n %}
+{% load mozilla_django_oidc_db i18n %}
 
 
 {% block footer %}
@@ -8,8 +8,8 @@
 
 
 {% block extra_login_options %}
-    {% get_solo 'mozilla_django_oidc_db.OpenIDConnectConfig' as oidc_config %}
-    {% if oidc_config.enabled %}
+    {% get_oidc_admin_client as admin_oidc_client %}
+    {% if admin_oidc_client.enabled %}
         <div class="admin-login-divider"><span>{% trans 'or' %}</span></div>
         <div class="admin-login-option admin-login-option--oidc">
             <a href="{% url 'oidc_authentication_init' %}">
