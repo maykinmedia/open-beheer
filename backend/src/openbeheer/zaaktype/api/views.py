@@ -4,6 +4,8 @@ import datetime  # noqa: TC003
 from functools import partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
+from django.conf import settings
+from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext as _, gettext_lazy as __
 
@@ -49,9 +51,10 @@ from openbeheer.types import (
 from openbeheer.types._open_beheer import (
     ExpandableZaakType,
     ExpandableZaakTypeRequest,
+    LAXProcesType,
     VersionedResourceSummary,
+    as_ob_option,
 )
-from openbeheer.types.selectielijst import ProcesType
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -80,7 +83,6 @@ if TYPE_CHECKING:
 
     from ape_pie import APIClient
     from rest_framework.request import Request
-
 
 logger = structlog.get_logger(__name__)
 
@@ -297,34 +299,6 @@ def expand_deelzaaktype(
     ]
 
 
-# TODO: If we are going to expand the selectielijst fields of the expanded resources,
-# we will need to revisit this because we shouldn't construct the client everytime.
-def expand_selectielijstprocestype(
-    client: APIClient, zaaktypen: Iterable[ZaakType]
-) -> Iterable[ProcesType | None]:
-    # There is only one zaaktype, since we are expanding
-    # the retrieve endpoint.
-    zaaktype = list(zaaktypen)[0]
-    if not zaaktype.selectielijst_procestype:
-        return [None]
-
-    selectielijst_service = Service.get_service(zaaktype.selectielijst_procestype)
-    if not (selectielijst_service):
-        raise ImproperlyConfigured(__("No Selectielijst service configured"))
-
-    selectielijst_client = build_client(selectielijst_service)
-
-    with selectielijst_client:
-        return [
-            fetch_one(
-                selectielijst_client, zaaktype.selectielijst_procestype, ProcesType
-            )
-            if zaaktype.selectielijst_procestype
-            else None
-            for zaaktype in zaaktypen
-        ]
-
-
 @extend_schema_view(
     get=extend_schema(
         operation_id="service_zaaktype_retrieve_one",
@@ -382,6 +356,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     return_data_type = DetailResponse[ExpandableZaakType]
     endpoint_path = "zaaktypen/{uuid}"
     serializer_class = None
+    selectielijst_client: APIClient | None = None
 
     @staticmethod
     def _get_params_with_status(zaaktype: ZaakType):
@@ -391,37 +366,100 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     def _key(zaaktype: ZaakType):
         return {"zaaktype": zaaktype.url}
 
-    expansions = {
-        "besluittypen": make_expansion(
-            "besluittypen",
-            # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
-            # it actually accepts multiple so we can't use a __in
-            lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
-            BesluitTypeWithUUID,
-        ),
-        "statustypen": make_expansion(
-            "statustypen", _get_params_with_status, StatusTypeWithUUID
-        ),
-        "resultaattypen": make_expansion(
-            "resultaattypen", _get_params_with_status, ResultaatTypeWithUUID
-        ),
-        "eigenschappen": make_expansion(
-            "eigenschappen", _get_params_with_status, EigenschapWithUUID
-        ),
-        "informatieobjecttypen": make_expansion(
-            "informatieobjecttypen",
-            _get_params_with_status,
-            InformatieObjectTypeWithUUID,
-        ),
-        "roltypen": make_expansion(
-            "roltypen", _get_params_with_status, RolTypeWithUUID
-        ),
-        "deelzaaktypen": expand_deelzaaktype,
-        "zaakobjecttypen": make_expansion(
-            "zaakobjecttypen", _key, ZaakObjectTypeWithUUID
-        ),
-        "selectielijst_procestype": expand_selectielijstprocestype,
-    }
+    @property
+    def expansions(self):  # type: ignore[override]
+        return {
+            "besluittypen": make_expansion(
+                "besluittypen",
+                # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
+                # it actually accepts multiple so we can't use a __in
+                lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
+                BesluitTypeWithUUID,
+            ),
+            "statustypen": make_expansion(
+                "statustypen", self._get_params_with_status, StatusTypeWithUUID
+            ),
+            "resultaattypen": make_expansion(
+                "resultaattypen", self._get_params_with_status, ResultaatTypeWithUUID
+            ),
+            "eigenschappen": make_expansion(
+                "eigenschappen", self._get_params_with_status, EigenschapWithUUID
+            ),
+            "informatieobjecttypen": make_expansion(
+                "informatieobjecttypen",
+                self._get_params_with_status,
+                InformatieObjectTypeWithUUID,
+            ),
+            "roltypen": make_expansion(
+                "roltypen", self._get_params_with_status, RolTypeWithUUID
+            ),
+            "deelzaaktypen": expand_deelzaaktype,
+            "zaakobjecttypen": make_expansion(
+                "zaakobjecttypen", self._key, ZaakObjectTypeWithUUID
+            ),
+            "selectielijst_procestype": self.expand_selectielijstprocestype,
+        }
+
+    def expand_selectielijstprocestype(
+        self, _: APIClient, zaaktypen: Iterable[ZaakType]
+    ) -> Iterable[LAXProcesType | None]:
+        # There is only one zaaktype, since we are expanding
+        # the retrieve endpoint.
+        zaaktype = list(zaaktypen)[0]
+        if not zaaktype.selectielijst_procestype:
+            return [None]
+
+        with self.get_selectielijst_client(zaaktype) as selectielijst_client:
+            return [
+                fetch_one(
+                    selectielijst_client,
+                    zaaktype.selectielijst_procestype,
+                    LAXProcesType,
+                )
+                if zaaktype.selectielijst_procestype
+                else None
+                for zaaktype in zaaktypen
+            ]
+
+    def get_fields(self, object):
+        fields = super().get_fields(object)
+        for field in fields:
+            if field.name == "selectielijstProcestype":
+                selectielijst_options: list[OBOption[str]] = (
+                    cache.get_or_set(
+                        "selectielijst_options",
+                        lambda: self.get_selectielijst_options(object),
+                    )
+                    or []
+                )
+                field.options = selectielijst_options
+                break
+
+        return fields
+
+    def get_selectielijst_options(self, object) -> list[OBOption[str]]:
+        selectielijst_client = self.get_selectielijst_client(object)
+        response = selectielijst_client.get("procestypen")
+        response.raise_for_status()
+
+        procestypen = decode(response.content, type=list[LAXProcesType])
+        return [
+            as_ob_option(p)
+            for p in sorted(procestypen, key=lambda v: (-v.jaar, v.naam))
+        ]
+
+    def get_selectielijst_client(self, zaaktype: ZaakType) -> APIClient:
+        if self.selectielijst_client:
+            return self.selectielijst_client
+
+        selectielijst_service = Service.objects.get(
+            slug=settings.SERVICE_SELECTIELIJST_SLUG
+        )
+        if not (selectielijst_service):
+            raise ImproperlyConfigured(__("No Selectielijst service configured"))
+
+        self.selectielijst_client = build_client(selectielijst_service)
+        return self.selectielijst_client
 
     def get_item_versions(
         self, slug: str, data: ZaakType
