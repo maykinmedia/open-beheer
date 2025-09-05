@@ -12,6 +12,9 @@ SESSION_COOKIE_SECURE=False
 # For OIDC
 OIDC_REDIRECT_ALLOWED_HOSTS=localhost:5173
 
+# For selectielijst API (Service)
+SERVICE_SELECTIELIJST_SLUG="selectielijst"
+
 
 # For debugging celery tasks
 # CELERY_TASK_ALWAYS_EAGER=True

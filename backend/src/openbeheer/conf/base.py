@@ -358,6 +358,9 @@ FIXTURE_DIRS = (DJANGO_PROJECT_DIR / "fixtures",)
 PROJECT_NAME = "openbeheer"
 ENVIRONMENT = config("ENVIRONMENT", "")
 
+# Selectielijst API (Service)
+SERVICE_SELECTIELIJST_SLUG = config("SERVICE_SELECTIELIJST_SLUG", "selectielijst")
+
 # Displaying environment information
 ENVIRONMENT_LABEL = config("ENVIRONMENT_LABEL", ENVIRONMENT)
 ENVIRONMENT_BACKGROUND_COLOR = config("ENVIRONMENT_BACKGROUND_COLOR", "orange")
