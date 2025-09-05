@@ -1,3 +1,4 @@
+import re
 from unittest import skip
 
 from django.test import tag
@@ -617,3 +618,46 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "omschrijving": zaaktype1.omschrijving,
             },
         )
+
+    def test_selectielijst_procestype_options(self):
+        zaaktype = self.helper.create_zaaktype()
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+
+        self.client.force_login(self.user)
+        response = self.client.get(endpoint)
+        data = response.json()
+
+        ob_field = next(
+            (f for f in data["fields"] if f["name"] == "selectielijstProcestype")
+        )
+        options = ob_field["options"]
+
+        previous = None
+        for option in options:
+            label = option["label"]
+            value = option["value"]
+            match = re.search(r"\d{4}", label)
+            year = int(match[0]) if match else 0
+
+            previous_label = previous["label"] if previous else ""
+            previous_match = re.search(r"\d{4}", previous_label)
+            previous_year = int(previous_match[0]) if previous_match else year
+
+            # Label should be present
+            self.assertTrue(label)
+
+            # Value should be a URL
+            self.assertIn("https://", value)
+
+            # Within same year, should be sorted alphabetically
+            if year == previous_year:
+                self.assertGreater(label, previous_label)
+            # Years should be descending.
+            else:
+                self.assertLess(year, previous_year)
+
+            previous = option
