@@ -23,6 +23,7 @@ import { CATALOGUS_PARAM, OBContext, SERVICE_PARAM } from "~/App.tsx";
 import { useBreadcrumbItems } from "~/hooks";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getUUIDFromString } from "~/lib/format/string.ts";
+import { getZaaktypeCreateFields } from "~/lib/zaaktype/zaaktypeCreate.ts";
 import {
   ZaakTypeCreateAction,
   ZaaktypeCreateActionPayload,
@@ -56,6 +57,7 @@ export function ZaaktypeCreatePage() {
   >();
 
   const [isValidState, setIsValidState] = React.useState(false);
+  const fields = getZaaktypeCreateFields(valuesState.waarden);
 
   useEffect(() => {
     if (actionData?.invalidParams?.length) {
@@ -69,23 +71,6 @@ export function ZaaktypeCreatePage() {
       setNonFieldErrors(undefined);
     }
   }, [actionData]);
-
-  const fields: FormField[] = [
-    {
-      label: "Identificatienummer",
-      name: "identificatie",
-      type: "text",
-      defaultValue: valuesState.waarden?.identificatie || "",
-      required: true,
-    },
-    {
-      label: "Omschrijving",
-      name: "omschrijvingGeneriek",
-      defaultValue: valuesState.waarden?.omschrijvingGeneriek || "",
-      type: "text",
-      required: true,
-    },
-  ];
 
   const handleSelectTemplate = useCallback(
     (uuid: string | null) => {

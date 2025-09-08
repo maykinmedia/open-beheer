@@ -12,6 +12,7 @@ import {
   Tab,
   Tabs,
   Toolbar,
+  useFormDialog,
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
@@ -27,6 +28,7 @@ import {
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
+import { getZaaktypeCreateFields } from "~/lib/zaaktype/zaaktypeCreate.ts";
 import {
   AttributeGridSection,
   DataGridSection,
@@ -67,6 +69,8 @@ export function ZaaktypePage() {
     Partial<TargetType> & { url: string }
   >({ url: result.url });
   const possiblyUpdatedResult = { ...result, ...pendingUpdatesState };
+
+  const formDialog = useFormDialog();
 
   const breadcrumbItems = useBreadcrumbItems();
   const submitAction = useSubmitAction<ZaaktypeAction>(false);
@@ -180,6 +184,34 @@ export function ZaaktypePage() {
   /**
    * Gets called when the edit button is clicked.
    */
+  const handleSaveAs = useCallback<React.MouseEventHandler>(async () => {
+    const fields = getZaaktypeCreateFields();
+
+    const handle = (overrides: Partial<TargetType>) => {
+      const zaaktype = { ...result, ...overrides };
+
+      submitAction({
+        type: "SAVE_AS",
+        payload: {
+          serviceSlug: serviceSlug as string,
+          zaaktype,
+        },
+      });
+    };
+
+    formDialog(
+      "Opslaan als nieuw Zaaktype",
+      "",
+      fields,
+      "Zaaktype aanmaken",
+      "Annuleren",
+      handle,
+    );
+  }, [serviceSlug, pendingUpdatesState]);
+
+  /**
+   * Gets called when the edit button is clicked.
+   */
   const handlePublish = useCallback<React.MouseEventHandler>(() => {
     submitAction({
       type: "PUBLISH_VERSION",
@@ -225,6 +257,7 @@ export function ZaaktypePage() {
         onEdit={handleEdit}
         onPublish={handlePublish}
         onSave={handleSave}
+        onSaveAs={handleSaveAs}
         onVersionCreate={handleVersionCreate}
       />
     </CardBaseTemplate>
@@ -455,6 +488,7 @@ type ZaaktypeToolbarProps = {
   onEdit: React.MouseEventHandler;
   onPublish: React.MouseEventHandler;
   onSave: React.MouseEventHandler;
+  onSaveAs: React.MouseEventHandler;
   onVersionCreate: React.MouseEventHandler;
 };
 
@@ -466,6 +500,7 @@ function ZaaktypeToolbar({
   onEdit,
   onPublish,
   onSave,
+  onSaveAs,
   onVersionCreate,
 }: ZaaktypeToolbarProps) {
   const { result, versions } = useLoaderData() as ZaaktypeLoaderData;
@@ -499,6 +534,16 @@ function ZaaktypeToolbar({
             onClick: onCancel,
           },
           "spacer",
+          {
+            children: (
+              <>
+                <Outline.DocumentDuplicateIcon />
+                Opslaan als nieuw Zaaktype
+              </>
+            ),
+            variant: "transparent",
+            onClick: onSaveAs,
+          },
           {
             children: (
               <>
