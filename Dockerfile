@@ -41,14 +41,12 @@ RUN npm run build
 FROM python:3.12-slim-bullseye
 
 # Stage 3.1 - Set up the needed production dependencies
-# install all the dependencies for GeoDjango
 RUN apt-get update && apt-get install -y --no-install-recommends \
         procps \
         vim \
         mime-support \
         postgresql-client \
         gettext \
-        gdal-bin \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
