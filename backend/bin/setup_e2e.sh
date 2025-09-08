@@ -13,5 +13,5 @@ if [ "${SKIP_BUILD}" != "yes" ]; then
   npm run build
 fi
 
-ln -s ${toplevel}/frontend/dist/index.html ${toplevel}/backend/src/openbeheer/templates/index.html
-ln -s ${toplevel}/frontend/dist/static/assets ${toplevel}/backend/src/openbeheer/static/assets
+ln -s -f ${toplevel}/frontend/dist/index.html ${toplevel}/backend/src/openbeheer/templates/index.html
+ln -s -f ${toplevel}/frontend/dist/static/assets ${toplevel}/backend/src/openbeheer/static/assets
