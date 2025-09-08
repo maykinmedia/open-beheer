@@ -8,6 +8,7 @@ import { RelatedObject, components } from "~/types";
 export type ZaaktypeAction =
   | TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>
   | TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>
+  | TypedAction<"SAVE_AS", SaveAsZaaktypePayload>
   | TypedAction<"PUBLISH_VERSION", UpdateZaaktypeVersionPayload>
   | TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>
   | TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>
@@ -33,6 +34,8 @@ export async function zaaktypeAction({
       return await createZaaktypeVersionAction({ request, params, context });
     case "UPDATE_VERSION":
       return await updateZaaktypeVersionAction({ request, params, context });
+    case "SAVE_AS":
+      return await saveAsAction({ request, params, context });
     case "PUBLISH_VERSION":
       return await publishZaaktypeVersionAction({ request, params, context });
     case "EDIT_VERSION":
@@ -107,6 +110,66 @@ export async function updateZaaktypeVersionAction(
 
   try {
     await _saveZaaktypeVersion(payload.zaaktype, payload.serviceSlug);
+    return redirect(`../${uuid}`);
+  } catch (e) {
+    return await (e as Response).json();
+  }
+}
+
+/**
+ * Payload for `updateZaaktypeVersionAction`
+ */
+export type SaveAsZaaktypePayload = {
+  serviceSlug: string;
+  zaaktype: Partial<TargetType> & { url: string };
+};
+
+/**
+ * Updates a new zaaktype version.
+ */
+export async function saveAsAction(actionFunctionArgs: ActionFunctionArgs) {
+  const data = await actionFunctionArgs.request.json();
+  const payload = data.payload as PublishZaaktypeVersionPayload;
+  const uuid = getZaaktypeUUID(payload.zaaktype);
+
+  const zaaktype = {
+    ...payload.zaaktype,
+    broncatalogus: payload.zaaktype.broncatalogus ?? {
+      domein: "",
+      rsin: "",
+      url: "",
+      contactpersoonBeheerTelefoonnummer: null,
+      contactpersoonBeheerEmailadres: null,
+      zaaktypen: null,
+      besluittypen: null,
+      informatieobjecttypen: null,
+      naam: null,
+      versie: null,
+      begindatumVersie: null,
+    },
+    bronzaaktype: payload.zaaktype.bronzaaktype ?? {
+      _expand: {},
+      omschrijving: "",
+      identificatie: "",
+      omschrijvingGeneriek: null,
+      toelichting: null,
+      servicenorm: null,
+      verlengingstermijn: null,
+      trefwoorden: null,
+      publicatietekst: null,
+      verantwoordingsrelatie: null,
+      selectielijstProcestype: null,
+      broncatalogus: null,
+      bronzaaktype: null,
+      eindeGeldigheid: null,
+      deelzaaktypen: null,
+    },
+  };
+
+  console.log(zaaktype);
+
+  try {
+    await _saveZaaktypeVersion(zaaktype as TargetType, payload.serviceSlug);
     return redirect(`../${uuid}`);
   } catch (e) {
     return await (e as Response).json();
