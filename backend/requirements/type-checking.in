@@ -3,4 +3,7 @@
 django-stubs
 djangorestframework-stubs
 hypothesis
+playwright
+pytest-playwright
+pytest-django
 maykin-common[vcr]
