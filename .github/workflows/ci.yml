@@ -65,7 +65,7 @@ jobs:
           npm run lint
           CI=false npm run build
         env: 
-          MYKN_API_URL: "http://localhost:8000"
+          MYKN_API_URL: ""
 
       - uses: actions/upload-artifact@v4
         with:
@@ -238,7 +238,7 @@ jobs:
           ./bin/setup_e2e.sh
           python src/manage.py compilemessages
           python src/manage.py collectstatic --noinput --link
-          pytest -k e2e --tracing=retain-on-failure --output=$PLAYWRIGHT_TRACE_PATH src/
+          pytest -k e2e --tracing=retain-on-failure --output=$PLAYWRIGHT_TRACE_PATH --browser=${{ matrix.browser }} src/
         env:
           DJANGO_SETTINGS_MODULE: openbeheer.conf.ci
           SECRET_KEY: dummy
@@ -249,6 +249,14 @@ jobs:
           # See https://github.com/microsoft/playwright-pytest/issues/29
           DJANGO_ALLOW_ASYNC_UNSAFE: yes
           SKIP_BUILD: yes
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: ${{ matrix.browser }}-playwright-trace.zip
+          path: ${{ github.workspace }}/backend/${{ matrix.browser }}-playwright-trace.zip
+          retention-days: 1
+          if-no-files-found: error
     
 
   docs:
