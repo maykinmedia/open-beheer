@@ -210,6 +210,342 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/besluittypen/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Besluittypen
+         * @description Retrive Besluittypen from Open Zaak.
+         */
+        get: operations["service_zaaktypen_besluittypen_retrieve"];
+        put?: never;
+        /**
+         * Create an Besluittypen
+         * @description Create an Besluittypen.
+         */
+        post: operations["service_zaaktypen_besluittypen_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/besluittypen/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an Besluittype
+         * @description Retrieve an Besluittype from Open Zaak.
+         */
+        get: operations["service_besluittypen_retrieve_one"];
+        /**
+         * Put an Besluittype
+         * @description Fully update a Besluittype from Open Zaak.
+         */
+        put: operations["service_zaaktypen_besluittypen_update"];
+        post?: never;
+        /**
+         * Delete an Besluittype
+         * @description Remove permanently a Besluittype from Open Zaak.
+         */
+        delete: operations["service_zaaktypen_besluittypen_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch an Besluittype
+         * @description Partially update a Besluittype from Open Zaak.
+         */
+        patch: operations["service_zaaktypen_besluittypen_partial_update"];
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get eigenschappen
+         * @description Retrieve eigenschappen from Open Zaak.
+         */
+        get: operations["service_zaaktypen_eigenschappen_retrieve"];
+        put?: never;
+        /**
+         * Create an eigenschappen
+         * @description Create an eigenschappen.
+         */
+        post: operations["service_zaaktypen_eigenschappen_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an eigenschappe
+         * @description Retrieve an eigenschappe from Open Zaak.
+         */
+        get: operations["service_eigenschappen_retrieve_one"];
+        /**
+         * Put an eigenschappe
+         * @description Fully update a eigenschappe from Open Zaak.
+         */
+        put: operations["service_zaaktypen_eigenschappen_update"];
+        post?: never;
+        /**
+         * Delete an eigenschappe
+         * @description Remove permanently a eigenschappe from Open Zaak.
+         */
+        delete: operations["service_zaaktypen_eigenschappen_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch an eigenschappe
+         * @description Partially update a eigenschappe from Open Zaak.
+         */
+        patch: operations["service_zaaktypen_eigenschappen_partial_update"];
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/resultaattypen/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get resultaattypen
+         * @description Retrive resultaattypen from Open Zaak.
+         */
+        get: operations["service_zaaktypen_resultaattypen_retrieve"];
+        put?: never;
+        /**
+         * Create an resultaattypen
+         * @description Create an resultaattypen.
+         */
+        post: operations["service_zaaktypen_resultaattypen_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/resultaattypen/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an resultaattype
+         * @description Retrieve an resultaattype from Open Zaak.
+         */
+        get: operations["service_resultaattypen_retrieve_one"];
+        /**
+         * Put an resultaattype
+         * @description Fully update a resultaattype from Open Zaak.
+         */
+        put: operations["service_zaaktypen_resultaattypen_update"];
+        post?: never;
+        /**
+         * Delete an resultaattype
+         * @description Remove permanently a resultaattype from Open Zaak.
+         */
+        delete: operations["service_zaaktypen_resultaattypen_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch an resultaattype
+         * @description Partially update a resultaattype from Open Zaak.
+         */
+        patch: operations["service_zaaktypen_resultaattypen_partial_update"];
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/roltypen/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get roltypen
+         * @description Retrive roltypen from Open Zaak.
+         */
+        get: operations["service_zaaktypen_roltypen_retrieve"];
+        put?: never;
+        /**
+         * Create an roltypen
+         * @description Create an roltypen.
+         */
+        post: operations["service_zaaktypen_roltypen_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/roltypen/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an roltype
+         * @description Retrieve an roltype from Open Zaak.
+         */
+        get: operations["service_roltypen_retrieve_one"];
+        /**
+         * Put an roltype
+         * @description Fully update a roltype from Open Zaak.
+         */
+        put: operations["service_zaaktypen_roltypen_update"];
+        post?: never;
+        /**
+         * Delete an roltype
+         * @description Remove permanently a roltype from Open Zaak.
+         */
+        delete: operations["service_zaaktypen_roltypen_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch an roltype
+         * @description Partially update a roltype from Open Zaak.
+         */
+        patch: operations["service_zaaktypen_roltypen_partial_update"];
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/statustypen/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get statustypen
+         * @description Retrive statustypen from Open Zaak.
+         */
+        get: operations["service_zaaktypen_statustypen_retrieve"];
+        put?: never;
+        /**
+         * Create an statustypen
+         * @description Create an statustypen.
+         */
+        post: operations["service_zaaktypen_statustypen_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/statustypen/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an statustype
+         * @description Retrieve an statustype from Open Zaak.
+         */
+        get: operations["service_statustypen_retrieve_one"];
+        /**
+         * Put an statustype
+         * @description Fully update a statustype from Open Zaak.
+         */
+        put: operations["service_zaaktypen_statustypen_update"];
+        post?: never;
+        /**
+         * Delete an statustype
+         * @description Remove permanently a statustype from Open Zaak.
+         */
+        delete: operations["service_zaaktypen_statustypen_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch an statustype
+         * @description Partially update a statustype from Open Zaak.
+         */
+        patch: operations["service_zaaktypen_statustypen_partial_update"];
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaakobjecttypen/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get zaakobjecttypen
+         * @description Retrive zaakobjecttypen from Open Zaak.
+         */
+        get: operations["service_zaaktypen_zaakobjecttypen_retrieve"];
+        put?: never;
+        /**
+         * Create an zaakobjecttypen
+         * @description Create an zaakobjecttypen.
+         */
+        post: operations["service_zaaktypen_zaakobjecttypen_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaakobjecttypen/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an zaakobjecttype
+         * @description Retrieve an zaakobjecttype from Open Zaak.
+         */
+        get: operations["service_zaakobjecttypen_retrieve_one"];
+        /**
+         * Put an zaakobjecttype
+         * @description Fully update a zaakobjecttype from Open Zaak.
+         */
+        put: operations["service_zaaktypen_zaakobjecttypen_update"];
+        post?: never;
+        /**
+         * Delete an zaakobjecttype
+         * @description Remove permanently a zaakobjecttype from Open Zaak.
+         */
+        delete: operations["service_zaaktypen_zaakobjecttypen_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch an zaakobjecttype
+         * @description Partially update a zaakobjecttype from Open Zaak.
+         */
+        patch: operations["service_zaaktypen_zaakobjecttypen_partial_update"];
+        trace?: never;
+    };
     "/api/v1/service/choices/": {
         parameters: {
             query?: never;
@@ -308,6 +644,82 @@ export interface components {
             username: string;
             /** Wachtwoord */
             password: string;
+        };
+        /** BesluitType */
+        BesluitType: {
+            /** @description URL-referentie naar de CATALOGUS waartoe dit BESLUITTYPE behoort. */
+            catalogus: string;
+            /** @description Aanduiding of BESLUITen van dit BESLUITTYPE gepubliceerd moeten worden. */
+            publicatieIndicatie: boolean;
+            /** @description URL-referenties naar het INFORMATIEOBJECTTYPE van informatieobjecten waarin besluiten van dit BESLUITTYPE worden vastgelegd. */
+            informatieobjecttypen: string[];
+            /**
+             * Format: date
+             * @description De datum waarop het is ontstaan.
+             */
+            beginGeldigheid: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypen: string[] | null;
+            /** @default null */
+            omschrijving: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            besluitcategorie: string | null;
+            /** @default null */
+            reactietermijn: string | null;
+            /** @default null */
+            publicatietekst: string | null;
+            /** @default null */
+            publicatietermijn: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            concept: boolean | null;
+            /** @default null */
+            resultaattypen: string[] | null;
+            /** @default null */
+            resultaattypenOmschrijving: string[] | null;
+            /** @default null */
+            vastgelegdIn: string[] | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** BesluitTypeRequest */
+        BesluitTypeRequest: {
+            /** @description URL-referentie naar de CATALOGUS waartoe dit BESLUITTYPE behoort. */
+            catalogus: string;
+            /** @description Aanduiding of BESLUITen van dit BESLUITTYPE gepubliceerd moeten worden. */
+            publicatieIndicatie: boolean;
+            /** @description URL-referenties naar het INFORMATIEOBJECTTYPE van informatieobjecten waarin besluiten van dit BESLUITTYPE worden vastgelegd. */
+            informatieobjecttypen: string[];
+            /**
+             * Format: date
+             * @description De datum waarop het is ontstaan.
+             */
+            beginGeldigheid: string;
+            /** @default null */
+            omschrijving: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            besluitcategorie: string | null;
+            /** @default null */
+            reactietermijn: string | null;
+            /** @default null */
+            publicatietekst: string | null;
+            /** @default null */
+            publicatietermijn: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
         };
         /** BesluitTypeWithUUID */
         BesluitTypeWithUUID: {
@@ -423,8 +835,50 @@ export interface components {
             /** @default null */
             procestermijn: string | null;
         };
+        /** BrondatumArchiefprocedureRequest */
+        BrondatumArchiefprocedureRequest: {
+            /**
+             * Afleidingswijze brondatum
+             * @description Wijze van bepalen van de brondatum.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `afgehandeld` - (Afgehandeld) De termijn start op de datum waarop de zaak is afgehandeld (ZAAK.Einddatum in het RGBZ).
+             *     * `ander_datumkenmerk` - (Ander datumkenmerk) De termijn start op de datum die is vastgelegd in een ander datumveld dan de datumvelden waarop de overige waarden (van deze attribuutsoort) betrekking hebben. `Objecttype`, `Registratie` en `Datumkenmerk` zijn niet leeg.
+             *     * `eigenschap` - (Eigenschap) De termijn start op de datum die is vastgelegd in een ander datumveld dan de datumvelden waarop de overige waarden (van deze attribuutsoort) betrekking hebben. `Objecttype`, `Registratie` en `Datumkenmerk` zijn niet leeg.
+             *     * `gerelateerde_zaak` - (Gerelateerde zaak) De termijn start op de datum waarop de gerelateerde zaak is afgehandeld (`ZAAK.Einddatum` of `ZAAK.Gerelateerde_zaak.Einddatum` in het RGBZ). `ResultaatType.ZaakType` heeft gerelateerd `ZaakType`
+             *     * `hoofdzaak` - (Hoofdzaak) De termijn start op de datum waarop de gerelateerde zaak is afgehandeld, waarvan de zaak een deelzaak is (`ZAAK.Einddatum` van de hoofdzaak in het RGBZ). ResultaatType.ZaakType is deelzaaktype van ZaakType.
+             *     * `ingangsdatum_besluit` - (Ingangsdatum besluit) De termijn start op de datum waarop het besluit van kracht wordt (`BESLUIT.Ingangsdatum` in het RGBZ).	ResultaatType.ZaakType heeft relevant BesluitType
+             *     * `termijn` - (Termijn) De termijn start een vast aantal jaren na de datum waarop de zaak is afgehandeld (`ZAAK.Einddatum` in het RGBZ).
+             *     * `vervaldatum_besluit` - (Vervaldatum besluit) De termijn start op de dag na de datum waarop het besluit vervalt (`BESLUIT.Vervaldatum` in het RGBZ). ResultaatType.ZaakType heeft relevant BesluitType
+             *     * `zaakobject` - (Zaakobject) De termijn start op de einddatum geldigheid van het zaakobject waarop de zaak betrekking heeft (bijvoorbeeld de overlijdendatum van een Persoon). M.b.v. de attribuutsoort `Objecttype` wordt vastgelegd om welke zaakobjecttype het gaat; m.b.v. de attribuutsoort `Datumkenmerk` wordt vastgelegd welke datum-attribuutsoort van het zaakobjecttype het betreft.
+             * @enum {unknown}
+             */
+            afleidingswijze: "afgehandeld" | "ander_datumkenmerk" | "eigenschap" | "gerelateerde_zaak" | "hoofdzaak" | "ingangsdatum_besluit" | "termijn" | "vervaldatum_besluit" | "zaakobject";
+            /** @default null */
+            datumkenmerk: string | null;
+            /** @default null */
+            einddatumBekend: boolean | null;
+            /** @default null */
+            objecttype: components["schemas"]["ObjecttypeEnum"] | null;
+            /** @default null */
+            registratie: string | null;
+            /** @default null */
+            procestermijn: string | null;
+        };
         /** CheckListItem */
         CheckListItem: {
+            /** @description De betekenisvolle benaming van het checklistitem */
+            itemnaam: string;
+            /** @description Een betekenisvolle vraag waaruit blijkt waarop het aandachtspunt gecontroleerd moet worden. */
+            vraagstelling: string;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            verplicht: boolean | null;
+        };
+        /** CheckListItemRequest */
+        CheckListItemRequest: {
             /** @description De betekenisvolle benaming van het checklistitem */
             itemnaam: string;
             /** @description Een betekenisvolle vraag waaruit blijkt waarop het aandachtspunt gecontroleerd moet worden. */
@@ -453,8 +907,74 @@ export interface components {
             fields: components["schemas"]["OBField"][];
             versions?: components["schemas"]["VersionSummary"][];
         };
+        /** Eigenschap */
+        Eigenschap: {
+            /** @description De naam van de EIGENSCHAP */
+            naam: string;
+            /** @description De beschrijving van de betekenis van deze EIGENSCHAP */
+            definitie: string;
+            specificatie: components["schemas"]["EigenschapSpecificatie"];
+            /** @description URL-referentie naar het ZAAKTYPE van de ZAAKen waarvoor deze EIGENSCHAP van belang is. */
+            zaaktype: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** EigenschapRequest */
+        EigenschapRequest: {
+            /** @description De naam van de EIGENSCHAP */
+            naam: string;
+            /** @description De beschrijving van de betekenis van deze EIGENSCHAP */
+            definitie: string;
+            specificatie: components["schemas"]["EigenschapSpecificatieRequest"];
+            /** @description URL-referentie naar het ZAAKTYPE van de ZAAKen waarvoor deze EIGENSCHAP van belang is. */
+            zaaktype: string;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+        };
         /** EigenschapSpecificatie */
         EigenschapSpecificatie: {
+            /** @description Het soort tekens waarmee waarden van de EIGENSCHAP kunnen worden vastgelegd.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `tekst` - Tekst
+             *     * `getal` - Getal
+             *     * `datum` - Datum
+             *     * `datum_tijd` - Datum/tijd */
+            formaat: components["schemas"]["FormaatEnum"];
+            /** @description Het aantal karakters (lengte) waarmee waarden van de EIGENSCHAP worden vastgelegd. */
+            lengte: string;
+            /** @description Het aantal mogelijke voorkomens van waarden van deze EIGENSCHAP bij een zaak van het ZAAKTYPE. */
+            kardinaliteit: string;
+            /** @default null */
+            groep: string | null;
+            /** @default null */
+            waardenverzameling: string[] | null;
+        };
+        /** EigenschapSpecificatieRequest */
+        EigenschapSpecificatieRequest: {
             /** @description Het soort tekens waarmee waarden van de EIGENSCHAP kunnen worden vastgelegd.
              *
              *     Uitleg bij mogelijke waarden:
@@ -955,7 +1475,25 @@ export interface components {
          * @description Used by frontend to decide widget etc.
          * @enum {unknown}
          */
-        OBFieldType: "boolean" | "date" | "number" | "string";
+        OBFieldType: "boolean" | "date" | "number" | "string" | "text";
+        /**
+         * OBList[BesluitTypeWithUUID]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_BesluitTypeWithUUID_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["BesluitTypeWithUUID"][];
+        };
+        /**
+         * OBList[EigenschapWithUUID]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_EigenschapWithUUID_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["EigenschapWithUUID"][];
+        };
         /**
          * OBList[InformatieObjectTypeSummary]
          * @description Used to draw list views on the frontend.
@@ -964,6 +1502,42 @@ export interface components {
             fields: components["schemas"]["OBField"][];
             pagination: components["schemas"]["OBPagination"];
             results: components["schemas"]["InformatieObjectTypeSummary"][];
+        };
+        /**
+         * OBList[ResultaatTypeWithUUID]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_ResultaatTypeWithUUID_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["ResultaatTypeWithUUID"][];
+        };
+        /**
+         * OBList[RolTypeWithUUID]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_RolTypeWithUUID_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["RolTypeWithUUID"][];
+        };
+        /**
+         * OBList[StatusTypeWithUUID]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_StatusTypeWithUUID_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["StatusTypeWithUUID"][];
+        };
+        /**
+         * OBList[ZaakObjectTypeWithUUID]
+         * @description Used to draw list views on the frontend.
+         */
+        OBList_ZaakObjectTypeWithUUID_: {
+            fields: components["schemas"]["OBField"][];
+            pagination: components["schemas"]["OBPagination"];
+            results: components["schemas"]["ZaakObjectTypeWithUUID"][];
         };
         /**
          * OBList[ZaakTypeSummary]
@@ -1026,6 +1600,11 @@ export interface components {
             opmerkingInformatieobjecttypeOmschrijvingGeneriek: string | null;
         };
         /**
+         * OmschrijvingGeneriek4
+         * @enum {unknown}
+         */
+        OmschrijvingGeneriek4: "adviseur" | "behandelaar" | "belanghebbende" | "beslisser" | "initiator" | "klantcontacter" | "mede_initiator" | "zaakcoordinator";
+        /**
          * OmschrijvingGeneriekEnum
          * @enum {unknown}
          */
@@ -1052,8 +1631,23 @@ export interface components {
             /** @default null */
             opmerkingInformatieobjecttypeOmschrijvingGeneriek: string | null;
         };
-        /** OptionalZaakType */
-        OptionalZaakType: {
+        /** OptionalExpandableZaakTypeRequest */
+        OptionalExpandableZaakTypeRequest: {
+            /**
+             * ZaakTypeExtension
+             * @default {}
+             */
+            _expand: {
+                besluittypen?: components["schemas"]["BesluitTypeWithUUID"][];
+                statustypen?: components["schemas"]["StatusTypeWithUUID"][];
+                resultaattypen?: components["schemas"]["ResultaatTypeWithUUID"][];
+                eigenschappen?: components["schemas"]["EigenschapWithUUID"][];
+                informatieobjecttypen?: components["schemas"]["InformatieObjectTypeWithUUID"][];
+                roltypen?: components["schemas"]["RolTypeWithUUID"][];
+                deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
+                zaakobjecttypen?: components["schemas"]["ZaakObjectTypeWithUUID"][];
+                selectielijstProcestype?: components["schemas"]["ProcesType"];
+            };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving?: string;
             /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
@@ -1101,7 +1695,7 @@ export interface components {
             /** @description Het product of de dienst die door ZAAKen van dit ZAAKTYPE wordt voortgebracht. */
             productenOfDiensten?: string[];
             /** @description Het Referentieproces dat ten grondslag ligt aan dit ZAAKTYPE. */
-            referentieproces?: components["schemas"]["ReferentieProces"];
+            referentieproces?: components["schemas"]["ReferentieProcesRequest"];
             /** @description De (soort) organisatorische eenheid of (functie van) medewerker die verantwoordelijk is voor de uitvoering van zaken van het ZAAKTYPE. */
             verantwoordelijke?: string;
             /**
@@ -1122,9 +1716,7 @@ export interface components {
              */
             besluittypen?: string[];
             /** @description De ZAAKTYPEn van zaken die relevant zijn voor zaken van dit ZAAKTYPE. */
-            gerelateerdeZaaktypen?: components["schemas"]["ZaakTypenRelatie"][];
-            /** @default null */
-            url: string | null;
+            gerelateerdeZaaktypen?: components["schemas"]["ZaakTypenRelatieRequest"][];
             /** @default null */
             identificatie: string | null;
             /** @default null */
@@ -1144,31 +1736,59 @@ export interface components {
             /** @default null */
             selectielijstProcestype: string | null;
             /** @default null */
-            concept: boolean | null;
+            broncatalogus: null | components["schemas"]["BronCatalogusRequest"];
             /** @default null */
-            broncatalogus: null | components["schemas"]["BronCatalogus"];
-            /** @default null */
-            bronzaaktype: null | components["schemas"]["BronZaaktype"];
+            bronzaaktype: null | components["schemas"]["BronZaaktypeRequest"];
             /** @default null */
             eindeGeldigheid: string | null;
             /** @default null */
-            beginObject: string | null;
+            deelzaaktypen: (string | null)[] | null;
+        };
+        /** PatchedBesluitTypeRequest */
+        PatchedPatchedBesluitTypeRequest: {
             /** @default null */
-            eindeObject: string | null;
+            catalogus: string | null;
             /** @default null */
-            statustypen: string[] | null;
+            omschrijving: string | null;
             /** @default null */
-            resultaattypen: string[] | null;
+            omschrijvingGeneriek: string | null;
             /** @default null */
-            eigenschappen: string[] | null;
+            besluitcategorie: string | null;
+            /** @default null */
+            reactietermijn: string | null;
+            /** @default null */
+            publicatieIndicatie: boolean | null;
+            /** @default null */
+            publicatietekst: string | null;
+            /** @default null */
+            publicatietermijn: string | null;
+            /** @default null */
+            toelichting: string | null;
             /** @default null */
             informatieobjecttypen: string[] | null;
             /** @default null */
-            roltypen: string[] | null;
+            beginGeldigheid: string | null;
             /** @default null */
-            deelzaaktypen: (string | null)[] | null;
+            eindeGeldigheid: string | null;
+        };
+        /** PatchedEigenschapRequest */
+        PatchedPatchedEigenschapRequest: {
             /** @default null */
-            zaakobjecttypen: string[] | null;
+            naam: string | null;
+            /** @default null */
+            definitie: string | null;
+            /** @default null */
+            specificatie: null | components["schemas"]["EigenschapSpecificatieRequest"];
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            zaaktype: string | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
         };
         /** PatchedInformatieObjectTypeRequest */
         PatchedPatchedInformatieObjectTypeRequest: {
@@ -1188,6 +1808,94 @@ export interface components {
             trefwoord: string[] | null;
             /** @default null */
             omschrijvingGeneriek: null | components["schemas"]["OmschrijvingGeneriekRequest"];
+        };
+        /** PatchedResultaatTypeRequest */
+        PatchedPatchedResultaatTypeRequest: {
+            /** @default null */
+            zaaktype: string | null;
+            /** @default null */
+            omschrijving: string | null;
+            /** @default null */
+            resultaattypeomschrijving: string | null;
+            /** @default null */
+            selectielijstklasse: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            archiefnominatie: components["schemas"]["ArchiefnominatieEnum"] | null;
+            /** @default null */
+            archiefactietermijn: string | null;
+            /** @default null */
+            brondatumArchiefprocedure: null | components["schemas"]["BrondatumArchiefprocedureRequest"];
+            /** @default null */
+            procesobjectaard: string | null;
+            /** @default null */
+            indicatieSpecifiek: boolean | null;
+            /** @default null */
+            procestermijn: string | null;
+            /** @default null */
+            besluittypen: (string | null)[] | null;
+            /** @default null */
+            informatieobjecttypen: (string | null)[] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+        };
+        /** PatchedRolTypeRequest */
+        PatchedPatchedRolTypeRequest: {
+            /** @default null */
+            zaaktype: string | null;
+            /** @default null */
+            omschrijving: string | null;
+            /** @default null */
+            omschrijvingGeneriek: components["schemas"]["OmschrijvingGeneriekEnum"] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+        };
+        /** PatchedStatusTypeRequest */
+        PatchedPatchedStatusTypeRequest: {
+            /** @default null */
+            omschrijving: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            statustekst: string | null;
+            /** @default null */
+            zaaktype: string | null;
+            /** @default null */
+            volgnummer: number | null;
+            /** @default null */
+            informeren: boolean | null;
+            /** @default null */
+            doorlooptijd: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            checklistitemStatustype: components["schemas"]["CheckListItemRequest"][] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+        };
+        /** PatchedZaakObjectTypeRequest */
+        PatchedPatchedZaakObjectTypeRequest: {
+            /** @default null */
+            anderObjecttype: boolean | null;
+            /** @default null */
+            objecttype: string | null;
+            /** @default null */
+            relatieOmschrijving: string | null;
+            /** @default null */
+            zaaktype: string | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
         };
         /** PatchedZaakTypeRequest */
         PatchedPatchedZaakTypeRequest: {
@@ -1313,6 +2021,94 @@ export interface components {
             /** @default null */
             link: string | null;
         };
+        /** ResultaatType */
+        ResultaatType: {
+            /**
+             * is van
+             * @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin resultaten van dit RESULTAATTYPE bereikt kunnen worden.
+             */
+            zaaktype: string;
+            /** @description Omschrijving van de aard van resultaten van het RESULTAATTYPE. */
+            omschrijving: string;
+            /** @description Algemeen gehanteerde omschrijving van de aard van resultaten van het RESULTAATTYPE. Dit moet een URL-referentie zijn naar de referenlijst van generieke resultaattypeomschrijvingen. Im ImZTC heet dit 'omschrijving generiek' */
+            resultaattypeomschrijving: string;
+            /** @description URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie. */
+            selectielijstklasse: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            archiefnominatie: components["schemas"]["ArchiefnominatieEnum"] | null;
+            /** @default null */
+            archiefactietermijn: string | null;
+            /** @default null */
+            brondatumArchiefprocedure: null | components["schemas"]["BrondatumArchiefprocedure"];
+            /** @default null */
+            procesobjectaard: string | null;
+            /** @default null */
+            indicatieSpecifiek: boolean | null;
+            /** @default null */
+            procestermijn: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            besluittypen: (string | null)[] | null;
+            /** @default null */
+            besluittypeOmschrijving: string[] | null;
+            /** @default null */
+            informatieobjecttypen: (string | null)[] | null;
+            /** @default null */
+            informatieobjecttypeOmschrijving: string[] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** ResultaatTypeRequest */
+        ResultaatTypeRequest: {
+            /**
+             * is van
+             * @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin resultaten van dit RESULTAATTYPE bereikt kunnen worden.
+             */
+            zaaktype: string;
+            /** @description Omschrijving van de aard van resultaten van het RESULTAATTYPE. */
+            omschrijving: string;
+            /** @description Algemeen gehanteerde omschrijving van de aard van resultaten van het RESULTAATTYPE. Dit moet een URL-referentie zijn naar de referenlijst van generieke resultaattypeomschrijvingen. Im ImZTC heet dit 'omschrijving generiek' */
+            resultaattypeomschrijving: string;
+            /** @description URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie. */
+            selectielijstklasse: string;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            archiefnominatie: components["schemas"]["ArchiefnominatieEnum"] | null;
+            /** @default null */
+            archiefactietermijn: string | null;
+            /** @default null */
+            brondatumArchiefprocedure: null | components["schemas"]["BrondatumArchiefprocedureRequest"];
+            /** @default null */
+            procesobjectaard: string | null;
+            /** @default null */
+            indicatieSpecifiek: boolean | null;
+            /** @default null */
+            procestermijn: string | null;
+            /** @default null */
+            besluittypen: (string | null)[] | null;
+            /** @default null */
+            informatieobjecttypen: (string | null)[] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+        };
         /** ResultaatTypeWithUUID */
         ResultaatTypeWithUUID: {
             uuid?: string;
@@ -1366,6 +2162,64 @@ export interface components {
             /** @default null */
             eindeObject: string | null;
         };
+        /** RolType */
+        RolType: {
+            /** @description URL-referentie naar het ZAAKTYPE waar deze ROLTYPEn betrokken kunnen zijn. */
+            zaaktype: string;
+            /** @description Omschrijving van de aard van de ROL. */
+            omschrijving: string;
+            /** @description Algemeen gehanteerde omschrijving van de aard van de ROL.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `adviseur` - (Adviseur) Kennis in dienst stellen van de behandeling van (een deel van) een zaak.
+             *     * `behandelaar` - (Behandelaar) De vakinhoudelijke behandeling doen van (een deel van) een zaak.
+             *     * `belanghebbende` - (Belanghebbende) Vanuit eigen en objectief belang rechtstreeks betrokken zijn bij de behandeling en/of de uitkomst van een zaak.
+             *     * `beslisser` - (Beslisser) Nemen van besluiten die voor de uitkomst van een zaak noodzakelijk zijn.
+             *     * `initiator` - (Initiator) Aanleiding geven tot de start van een zaak ..
+             *     * `klantcontacter` - (Klantcontacter) Het eerste aanspreekpunt zijn voor vragen van burgers en bedrijven ..
+             *     * `zaakcoordinator` - (Zaakcoördinator) Er voor zorg dragen dat de behandeling van de zaak in samenhang uitgevoerd wordt conform de daarover gemaakte afspraken.
+             *     * `mede_initiator` - (Mede-initiator)  */
+            omschrijvingGeneriek: components["schemas"]["OmschrijvingGeneriekEnum"];
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** RolTypeRequest */
+        RolTypeRequest: {
+            /** @description URL-referentie naar het ZAAKTYPE waar deze ROLTYPEn betrokken kunnen zijn. */
+            zaaktype: string;
+            /** @description Omschrijving van de aard van de ROL. */
+            omschrijving: string;
+            /** @description Algemeen gehanteerde omschrijving van de aard van de ROL.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `adviseur` - (Adviseur) Kennis in dienst stellen van de behandeling van (een deel van) een zaak.
+             *     * `behandelaar` - (Behandelaar) De vakinhoudelijke behandeling doen van (een deel van) een zaak.
+             *     * `belanghebbende` - (Belanghebbende) Vanuit eigen en objectief belang rechtstreeks betrokken zijn bij de behandeling en/of de uitkomst van een zaak.
+             *     * `beslisser` - (Beslisser) Nemen van besluiten die voor de uitkomst van een zaak noodzakelijk zijn.
+             *     * `initiator` - (Initiator) Aanleiding geven tot de start van een zaak ..
+             *     * `klantcontacter` - (Klantcontacter) Het eerste aanspreekpunt zijn voor vragen van burgers en bedrijven ..
+             *     * `zaakcoordinator` - (Zaakcoördinator) Er voor zorg dragen dat de behandeling van de zaak in samenhang uitgevoerd wordt conform de daarover gemaakte afspraken.
+             *     * `mede_initiator` - (Mede-initiator)  */
+            omschrijvingGeneriek: components["schemas"]["OmschrijvingGeneriekEnum"];
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+        };
         /** RolTypeWithUUID */
         RolTypeWithUUID: {
             uuid?: string;
@@ -1402,10 +2256,10 @@ export interface components {
             eindeObject: string | null;
         };
         /**
-         * Sjabloon[OptionalZaakType]
+         * Sjabloon[OptionalExpandableZaakTypeRequest]
          * @description Een SJABLOON
          */
-        Sjabloon_OptionalZaakType_: {
+        Sjabloon_OptionalExpandableZaakTypeRequest_: {
             /** @description Korte titel van het sjabloon */
             naam: string;
             /** @description Beknopte omschrijving van het sjabloon */
@@ -1413,7 +2267,7 @@ export interface components {
             /** @description Voorbeelden van toepassingen */
             voorbeelden: string[];
             /** @description De vooringevulde waarden */
-            waarden: components["schemas"]["OptionalZaakType"];
+            waarden: components["schemas"]["OptionalExpandableZaakTypeRequest"];
             /** Format: uuid */
             uuid?: string;
         };
@@ -1422,6 +2276,72 @@ export interface components {
          * @enum {unknown}
          */
         Status: "alles" | "concept" | "definitief";
+        /** StatusType */
+        StatusType: {
+            /** @description Een korte, voor de initiator van de zaak relevante, omschrijving van de aard van de STATUS van zaken van een ZAAKTYPE. */
+            omschrijving: string;
+            /** @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin STATUSsen van dit STATUSTYPE bereikt kunnen worden. */
+            zaaktype: string;
+            /** @description Een volgnummer voor statussen van het STATUSTYPE binnen een zaak. */
+            volgnummer: number;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            statustekst: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            isEindstatus: boolean | null;
+            /** @default null */
+            informeren: boolean | null;
+            /** @default null */
+            doorlooptijd: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            checklistitemStatustype: components["schemas"]["CheckListItem"][] | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            eigenschappen: string[] | null;
+            /** @default null */
+            zaakobjecttypen: string[] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** StatusTypeRequest */
+        StatusTypeRequest: {
+            /** @description Een korte, voor de initiator van de zaak relevante, omschrijving van de aard van de STATUS van zaken van een ZAAKTYPE. */
+            omschrijving: string;
+            /** @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin STATUSsen van dit STATUSTYPE bereikt kunnen worden. */
+            zaaktype: string;
+            /** @description Een volgnummer voor statussen van het STATUSTYPE binnen een zaak. */
+            volgnummer: number;
+            /** @default null */
+            omschrijvingGeneriek: string | null;
+            /** @default null */
+            statustekst: string | null;
+            /** @default null */
+            informeren: boolean | null;
+            /** @default null */
+            doorlooptijd: string | null;
+            /** @default null */
+            toelichting: string | null;
+            /** @default null */
+            checklistitemStatustype: components["schemas"]["CheckListItemRequest"][] | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+        };
         /** StatusTypeWithUUID */
         StatusTypeWithUUID: {
             uuid?: string;
@@ -1473,9 +2393,9 @@ export interface components {
              */
             username: string;
             /** Voornaam */
-            first_name?: string;
+            firstName?: string;
             /** Achternaam */
-            last_name?: string;
+            lastName?: string;
             /**
              * E-mailadres
              * Format: email
@@ -1486,7 +2406,7 @@ export interface components {
          * VersionSummary
          * @description Summary of the different version of a ZTC resource.
          *
-         *     # TODO: what do we need to show per version?
+         *         # TODO: what do we need to show per version?
          */
         VersionSummary: {
             uuid: string;
@@ -1516,12 +2436,58 @@ export interface components {
             /** @default null */
             type: string | null;
         };
-        /** ZGWResponse[Sjabloon[OptionalZaakType]] */
-        ZGWResponse_Sjabloon_OptionalZaakType_: {
+        /** ZGWResponse[Sjabloon[OptionalExpandableZaakTypeRequest]] */
+        ZGWResponse_Sjabloon_OptionalExpandableZaakTypeRequest_: {
             count: number;
             next: string | null;
             previous: string | null;
-            results: components["schemas"]["Sjabloon_OptionalZaakType_"][];
+            results: components["schemas"]["Sjabloon_OptionalExpandableZaakTypeRequest_"][];
+        };
+        /** ZaakObjectType */
+        ZaakObjectType: {
+            /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
+            anderObjecttype: boolean;
+            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            objecttype: string;
+            /** @description Omschrijving van de betrekking van het Objecttype op zaken van het gerelateerde ZAAKTYPE. */
+            relatieOmschrijving: string;
+            /** @description URL-referentie naar de ZAAKTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            zaaktype: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            resultaattypen: string[] | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
+        /** ZaakObjectTypeRequest */
+        ZaakObjectTypeRequest: {
+            /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
+            anderObjecttype: boolean;
+            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            objecttype: string;
+            /** @description Omschrijving van de betrekking van het Objecttype op zaken van het gerelateerde ZAAKTYPE. */
+            relatieOmschrijving: string;
+            /** @description URL-referentie naar de ZAAKTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            zaaktype: string;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
         };
         /** ZaakObjectTypeWithUUID */
         ZaakObjectTypeWithUUID: {
@@ -2417,6 +3383,1400 @@ export interface operations {
             };
         };
     };
+    service_zaaktypen_besluittypen_retrieve: {
+        parameters: {
+            query?: {
+                datumGeldigheid?: string;
+                informatieobjecttypen?: string | null;
+                omschrijving?: string | null;
+                page?: number;
+                status?: "alles" | "concept" | "definitief";
+                zaaktypen?: string;
+            };
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OBList_BesluitTypeWithUUID_"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_besluittypen_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BesluitTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["BesluitTypeRequest"];
+                "multipart/form-data": components["schemas"]["BesluitTypeRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BesluitType"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_besluittypen_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BesluitType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_besluittypen_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BesluitTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["BesluitTypeRequest"];
+                "multipart/form-data": components["schemas"]["BesluitTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BesluitType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_besluittypen_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_besluittypen_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatchedBesluitTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatchedBesluitTypeRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatchedBesluitTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BesluitType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_eigenschappen_retrieve: {
+        parameters: {
+            query?: {
+                datumGeldigheid?: string;
+                page?: number;
+                status?: "alles" | "concept" | "definitief";
+                zaaktype?: string;
+                zaaktypeIdentificatie?: string;
+            };
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OBList_EigenschapWithUUID_"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_eigenschappen_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EigenschapRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["EigenschapRequest"];
+                "multipart/form-data": components["schemas"]["EigenschapRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Eigenschap"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_eigenschappen_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Eigenschap"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_eigenschappen_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EigenschapRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["EigenschapRequest"];
+                "multipart/form-data": components["schemas"]["EigenschapRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Eigenschap"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_eigenschappen_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_eigenschappen_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatchedEigenschapRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatchedEigenschapRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatchedEigenschapRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Eigenschap"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_resultaattypen_retrieve: {
+        parameters: {
+            query?: {
+                datumGeldigheid?: string;
+                page?: number;
+                status?: "alles" | "concept" | "definitief";
+                zaaktype?: string;
+                zaaktypeIdentificatie?: string;
+            };
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OBList_ResultaatTypeWithUUID_"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_resultaattypen_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultaatTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ResultaatTypeRequest"];
+                "multipart/form-data": components["schemas"]["ResultaatTypeRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultaatType"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_resultaattypen_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultaatType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_resultaattypen_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultaatTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ResultaatTypeRequest"];
+                "multipart/form-data": components["schemas"]["ResultaatTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultaatType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_resultaattypen_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_resultaattypen_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatchedResultaatTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatchedResultaatTypeRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatchedResultaatTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultaatType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_roltypen_retrieve: {
+        parameters: {
+            query?: {
+                datumGeldigheid?: string;
+                omschrijving?: string | null;
+                omschrijvingGeneriek?: components["schemas"]["OmschrijvingGeneriek4"];
+                page?: number;
+                status?: "alles" | "concept" | "definitief";
+                zaaktype?: string;
+                zaaktypeIdentificatie?: string;
+            };
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OBList_RolTypeWithUUID_"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_roltypen_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RolTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["RolTypeRequest"];
+                "multipart/form-data": components["schemas"]["RolTypeRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolType"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_roltypen_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_roltypen_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RolTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["RolTypeRequest"];
+                "multipart/form-data": components["schemas"]["RolTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_roltypen_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_roltypen_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatchedRolTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatchedRolTypeRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatchedRolTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_statustypen_retrieve: {
+        parameters: {
+            query?: {
+                datumGeldigheid?: string;
+                page?: number;
+                status?: "alles" | "concept" | "definitief";
+                zaaktype?: string;
+                zaaktypeIdentificatie?: string;
+            };
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OBList_StatusTypeWithUUID_"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_statustypen_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["StatusTypeRequest"];
+                "multipart/form-data": components["schemas"]["StatusTypeRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatusType"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_statustypen_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatusType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_statustypen_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["StatusTypeRequest"];
+                "multipart/form-data": components["schemas"]["StatusTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatusType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_statustypen_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_statustypen_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatchedStatusTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatchedStatusTypeRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatchedStatusTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatusType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaakobjecttypen_retrieve: {
+        parameters: {
+            query?: {
+                anderObjecttype?: boolean;
+                catalogus?: string;
+                datumBeginGeldigheid?: string;
+                datumEindeGeldigheid?: string;
+                datumGeldigheid?: string;
+                objecttype?: string | null;
+                page?: number;
+                relatieOmschrijving?: string;
+                zaaktype?: string;
+                zaaktypeIdentificatie?: string;
+            };
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OBList_ZaakObjectTypeWithUUID_"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaakobjecttypen_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ZaakObjectTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ZaakObjectTypeRequest"];
+                "multipart/form-data": components["schemas"]["ZaakObjectTypeRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZaakObjectType"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaakobjecttypen_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZaakObjectType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaakobjecttypen_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ZaakObjectTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ZaakObjectTypeRequest"];
+                "multipart/form-data": components["schemas"]["ZaakObjectTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZaakObjectType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaakobjecttypen_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaakobjecttypen_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatchedZaakObjectTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatchedZaakObjectTypeRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatchedZaakObjectTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZaakObjectType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
     service_choices_retrieve: {
         parameters: {
             query?: never;
@@ -2450,7 +4810,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZGWResponse_Sjabloon_OptionalZaakType_"];
+                    "application/json": components["schemas"]["ZGWResponse_Sjabloon_OptionalExpandableZaakTypeRequest_"];
                 };
             };
         };
@@ -2471,7 +4831,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Sjabloon_OptionalZaakType_"];
+                    "application/json": components["schemas"]["Sjabloon_OptionalExpandableZaakTypeRequest_"];
                 };
             };
         };

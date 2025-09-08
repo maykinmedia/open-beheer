@@ -2,12 +2,8 @@ import { request } from "~/api";
 import { loginRequired } from "~/loaders/loginRequired.loader.ts";
 import { components } from "~/types";
 
-export type ZaaktypeCreateLoaderData = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: components["schemas"]["Sjabloon_OptionalZaakType_"][];
-};
+export type ZaaktypeCreateLoaderData =
+  components["schemas"]["ZGWResponse_Sjabloon_OptionalExpandableZaakTypeRequest_"];
 
 /**
  * Zaaktypecreate loader.
@@ -16,7 +12,7 @@ export type ZaaktypeCreateLoaderData = {
 export const zaaktypeCreateLoader = loginRequired(
   async (): Promise<ZaaktypeCreateLoaderData> => {
     return await request<
-      components["schemas"]["ZGWResponse_Sjabloon_OptionalZaakType_"]
+      components["schemas"]["ZGWResponse_Sjabloon_OptionalExpandableZaakTypeRequest_"]
     >("GET", `/template/zaaktype/`);
   },
 );
