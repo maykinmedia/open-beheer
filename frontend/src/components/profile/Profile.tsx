@@ -46,8 +46,6 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               <Grid gutter={false}>
                 <Column span={12}>
                   <P bold>
-                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                    {/* @ts-expect-error */}
                     {user?.firstName} {user?.lastName}
                   </P>
                 </Column>
