@@ -102,7 +102,7 @@ jobs:
       - name: Set up backend environment
         uses: maykinmedia/setup-django-backend@v1.3
         with:
-          apt-packages: 'gettext postgresql-client libgdal-dev libyaml-dev gdal-bin'
+          apt-packages: 'gettext postgresql-client'
           python-version: '3.12'
           optimize-postgres: 'yes'
           pg-service: 'postgres'
@@ -169,7 +169,88 @@ jobs:
           flags: jest
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        
+  
+  e2e-tests:
+    runs-on: ubuntu-latest
+    needs: frontend-build
+
+    defaults:
+      run:
+        working-directory: backend
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chromium
+          - firefox
+          - webkit
+    name: E2E tests ${{ matrix.browser }}
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        # Needed because the postgres container does not provide a healthcheck
+        options:
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+          --name postgres
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up backend environment
+        uses: maykinmedia/setup-django-backend@v1.3
+        with:
+          apt-packages: 'gettext postgresql-client'
+          python-version: '3.12'
+          optimize-postgres: 'yes'
+          pg-service: 'postgres'
+          setup-node: 'no'
+          working-directory: backend
+
+      # See https://playwright.dev/python/docs/ci#caching-browsers
+      - name: Cache Playwright browser
+        id: cache-browser
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key:
+            ${{ runner.os }}-${{ matrix.browser }}-playwright-${{ hashFiles('requirements/ci.txt') }}
+
+      - name: Install playwright deps
+        run: playwright install --with-deps ${{ matrix.browser }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: ${{ github.workspace }}/frontend/dist
+
+      - name: Run tests
+        working-directory: backend
+        run: |
+          ./bin/setup_e2e.sh
+          python src/manage.py compilemessages
+          python src/manage.py collectstatic --noinput --link
+          pytest -k e2e --tracing=retain-on-failure --output=$PLAYWRIGHT_TRACE_PATH src/
+        env:
+          DJANGO_SETTINGS_MODULE: openbeheer.conf.ci
+          SECRET_KEY: dummy
+          DB_USER: postgres
+          DB_PASSWORD: ''
+          E2E_TESTS: yes
+          PLAYWRIGHT_TRACE_PATH: ${{ matrix.browser }}-playwright-trace.zip
+          # See https://github.com/microsoft/playwright-pytest/issues/29
+          DJANGO_ALLOW_ASYNC_UNSAFE: yes
+          SKIP_BUILD: yes
+    
+
   docs:
    name: Build and check documentation
    runs-on: ubuntu-latest
@@ -207,6 +288,7 @@ jobs:
     needs:
       - backend-tests
       - frontend-tests
+      - e2e-tests
       - docker_build
 
     name: Push Docker image
