@@ -1,14 +1,11 @@
-from django.test import tag
+import pytest
+from playwright.sync_api import Page
 
-from openbeheer.utils.e2e import browser_page
-from openbeheer.utils.gherkin_e2e import GherkinLikeTestCase
+from openbeheer.utils.gherkin_e2e import GherkinRunner
 
 
-@tag("e2e")
-class TestRootView(GherkinLikeTestCase):
-    async def test_root_view(self):
-        async with browser_page() as page:
-            await page.goto(f"{self.live_server_url}/")
-            await self.then.page_should_contain_text(
-                page, "403"
-            )  # TODO: Update when redirect to login is fixed
+@pytest.mark.e2e
+def test_live_server(page: Page, runner: GherkinRunner):
+    runner.when.go_to_root_page(page)
+
+    runner.then.page_should_contain_text(page, "403")

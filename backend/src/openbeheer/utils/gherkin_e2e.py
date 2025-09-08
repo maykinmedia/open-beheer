@@ -1,17 +1,25 @@
-from playwright.async_api import Locator, Page, TimeoutError, expect
+from playwright.sync_api import Locator, Page, TimeoutError, expect
+from pytest_django.live_server_helper import LiveServer
 
-from openbeheer.utils.e2e import PlaywrightTestCase
+
+class GherkinScenario:
+    def __init__(self, runner: "GherkinRunner") -> None:
+        self.runner = runner
 
 
-class GerkinMixin:
+class GherkinRunner:
     """
-    Experimental approach to writing Gherkin-like style test scenarios.
+    Experimental approach to writing Gherkin-like style test scenarios in pytest.
+
+    The gherkin runner is made available through the pytest fixture `runner`.
+    The runner exposes the :class:`pytest_django.live_server_helper.LiveServer` through `runner.live_server`.
+
     Example:
 
-        async with browser_page() as page:
-            await self.given.record_manager_exists()
-            await self.when.record_manager_logs_in(page)
-            await self.then.page_should_contain_text(page, "Vernietigingslijsten")
+        def test_not_logged_in(page: Page, runner: GherkinRunner):
+            runner.when.go_to_root_page(page)
+
+            runner.then.page_should_contain_text(page, "403")
 
 
     Overview:
@@ -33,9 +41,12 @@ class GerkinMixin:
     understand the test flow and the expected outcomes.
     """
 
+    def __init__(self, live_server: LiveServer):
+        self.live_server = live_server
+
     @property
     def given(self):
-        return self.Given(self)  # TODO fix typing
+        return self.Given(self)
 
     @property
     def when(self):
@@ -45,40 +56,31 @@ class GerkinMixin:
     def then(self):
         return self.Then(self)
 
-    class Given:
+    class Given(GherkinScenario):
         """
         The "Given" steps set up the initial context or state for the scenario.
         These steps are used to describe the initial situation before an action is taken.
         """
 
-        def __init__(self, testcase: PlaywrightTestCase):
-            self.testcase = testcase
+        pass
 
-    class When:
+    class When(GherkinScenario):
         """
         The "When" steps describe the actions or events that occur.
         These steps are used to specify the actions taken by the user or the system.
         """
 
-        def __init__(self, testcase: PlaywrightTestCase):
-            self.testcase = testcase
+        def go_to_root_page(self, page):
+            page.goto(f"{self.runner.live_server.url}/")
 
-    class Then:
+    class Then(GherkinScenario):
         """
         The "Then" steps specify the expected outcomes or results.
         These steps are used to verify the results of the actions taken in the "When" steps.
-
-        Example:
-
-            async with browser_page() as page:
-                await self.then.page_should_contain_text(page, "TEST")
         """
 
         # This indicates that the test is inverted (not_), this can be used to optimize tests.
         is_inverted = False
-
-        def __init__(self, testcase: PlaywrightTestCase):
-            self.testcase = testcase
 
         @property
         def not_(self):
@@ -90,9 +92,9 @@ class GerkinMixin:
                 def __getattr__(self, item):
                     method = getattr(self.then, item)
 
-                    async def inverted_method(*args, **kwargs):
+                    def inverted_method(*args, **kwargs):
                         try:
-                            await method(*args, **kwargs)
+                            method(*args, **kwargs)
                         except (AssertionError, TimeoutError):
                             return
 
@@ -104,23 +106,19 @@ class GerkinMixin:
 
             return InvertedThen(self)
 
-        async def url_should_be(self, page: Page, url: str) -> None:
-            await expect(page).to_have_url(url)
+        def url_should_be(self, page: Page, url: str) -> None:
+            expect(page).to_have_url(url)
 
-        async def page_should_contain_text(
+        def page_should_contain_text(
             self, page: Page, text: str, timeout: int | None = None
         ) -> Locator:
             if timeout is None:
                 timeout = 500 if self.is_inverted else 10000
 
             # Wait for the text to appear in the DOM
-            await page.wait_for_selector(f"text={text}", timeout=timeout)
+            page.wait_for_selector(f"text={text}", timeout=timeout)
 
             # Confirm the element with the text is visible
             element = page.locator(f"text={text}").nth(0)
-            await expect(element).to_be_visible(timeout=timeout)
+            expect(element).to_be_visible(timeout=timeout)
             return element
-
-
-class GherkinLikeTestCase(GerkinMixin, PlaywrightTestCase):
-    pass
