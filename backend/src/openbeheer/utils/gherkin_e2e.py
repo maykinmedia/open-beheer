@@ -1,4 +1,4 @@
-from playwright.sync_api import Locator, Page, TimeoutError, expect
+from playwright.sync_api import Locator, Page, expect
 from pytest_django.live_server_helper import LiveServer
 
 
@@ -70,7 +70,7 @@ class GherkinRunner:
         These steps are used to specify the actions taken by the user or the system.
         """
 
-        def go_to_root_page(self, page):
+        def go_to_root_page(self, page: Page) -> None:
             page.goto(f"{self.runner.live_server.url}/")
 
     class Then(GherkinScenario):
@@ -79,41 +79,17 @@ class GherkinRunner:
         These steps are used to verify the results of the actions taken in the "When" steps.
         """
 
-        # This indicates that the test is inverted (not_), this can be used to optimize tests.
-        is_inverted = False
-
-        @property
-        def not_(self):
-            class InvertedThen:
-                def __init__(self, then):
-                    self.then = then
-                    self.then.is_inverted = True
-
-                def __getattr__(self, item):
-                    method = getattr(self.then, item)
-
-                    def inverted_method(*args, **kwargs):
-                        try:
-                            method(*args, **kwargs)
-                        except (AssertionError, TimeoutError):
-                            return
-
-                        raise AssertionError(
-                            f'Expected {method.__name__} to raise an AssertionError due to "not_".'
-                        )
-
-                    return inverted_method
-
-            return InvertedThen(self)
-
         def url_should_be(self, page: Page, url: str) -> None:
             expect(page).to_have_url(url)
+
+        def path_should_be(self, page: Page, path: str) -> None:
+            self.url_should_be(page, self.runner.live_server.url + path)
 
         def page_should_contain_text(
             self, page: Page, text: str, timeout: int | None = None
         ) -> Locator:
             if timeout is None:
-                timeout = 500 if self.is_inverted else 10000
+                timeout = 500
 
             # Wait for the text to appear in the DOM
             page.wait_for_selector(f"text={text}", timeout=timeout)
