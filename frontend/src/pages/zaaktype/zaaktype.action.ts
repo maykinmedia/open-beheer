@@ -130,14 +130,54 @@ export type SaveAsZaaktypePayload = {
 export async function saveAsAction(actionFunctionArgs: ActionFunctionArgs) {
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as PublishZaaktypeVersionPayload;
-  const uuid = getZaaktypeUUID(payload.zaaktype);
 
+  const serviceSlug = payload.serviceSlug;
   const zaaktype = payload.zaaktype;
   delete zaaktype.broncatalogus;
   delete zaaktype.bronzaaktype;
 
+  // 1/2 - Filter these fields from related objects in `_expand`
+  const expandFieldBlackList = ["url", "uuid"];
+
+  // 2/2 - Unless the related object's key is one of
+  const expandObjectWhitelist = [
+    "besluittypen",
+    "informatieobjecttypen",
+    "selectielijstProcestype",
+  ];
+
+  // Perform filtering as describe above.
+  for (const _key in zaaktype._expand) {
+    const key = _key as keyof typeof zaaktype._expand;
+    const value = zaaktype._expand[key];
+
+    // Don't filter if key is in expandObjectWhitelist
+    if (expandObjectWhitelist.includes(_key.toLowerCase())) {
+      continue;
+    }
+
+    // Handler, can be used with Array item or direct value
+    const handle = <T>(obj: T) => {
+      if (!obj) return obj;
+      return Object.fromEntries(
+        Object.entries(obj).filter(([k]) => !expandFieldBlackList.includes(k)),
+      );
+    };
+
+    // Reassign filtered value
+    // @ts-expect-error - Dropping keys here.
+    zaaktype._expand[key] = Array.isArray(value)
+      ? value.map(handle)
+      : handle(value);
+  }
+
   try {
-    await _saveZaaktypeVersion(zaaktype as TargetType, payload.serviceSlug);
+    const { uuid } = await request<components["schemas"]["ZaakTypeWithUUID"]>(
+      "POST",
+      `/service/${serviceSlug}/zaaktypen/`,
+      {},
+      zaaktype,
+    );
     return redirect(`../${uuid}`);
   } catch (e) {
     return await (e as Response).json();
