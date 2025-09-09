@@ -138,3 +138,52 @@ Next Steps
 ----------
 
 - Refer to :doc:`environment-variables` for a complete breakdown of required configuration.
+
+Running end-to-end tests
+========================
+
+The E2E tests use pytest instead of the Django test framework (based on unittest). They make use of the libraries
+``pytest-django`` and ``pytest-playwright``.
+
+We currently use the ``sync`` interface of Playwright, which is a wrapper around the ``async`` API that abstracts
+``asyncio`` usage. Since under the hood Playwright remains asynchronous, it needs to be run with the environment variable 
+``DJANGO_ALLOW_ASYNC_UNSAFE=yes`` (see `this issue`_ for more details).
+
+.. _this issue: https://github.com/microsoft/playwright-pytest/issues/29
+
+To run the tests locally, you first need to build the frontend. This can be done 
+with the script ``backend/bin/setup_e2e.sh``. This will build the frontend with the environment
+variable ``MYKN_API_URL=""`` and then symlink the ``index.html`` and the javascript/css assets into the templates
+and the static folders of the backend respectively. You can skip the building step with the environment variable ``SKIP_BUILD=yes``.
+
+Then, set the environment variable ``E2E_TESTS=yes``. This will tell the backend to use the ``index.html`` as 
+the template on the root page instead of the ``master.html``.
+
+Finally, run the e2e tests from the ``backend/`` folder with (possible browsers are ``firefox|chromium|webkit``):
+
+.. code:: bash
+
+   pytest -k e2e --headed --browser=firefox src/
+
+TL;DR
+-----
+
+#. From ``backend/``, run ``./bin/setup_e2e.sh``.
+#. Set environment variables ``E2E_TESTS=yes`` and ``DJANGO_ALLOW_ASYNC_UNSAFE=yes``.
+#. Run tests from ``backend/`` with ``pytest -k e2e --headed --browser=firefox src/``.
+
+Adding tests
+------------
+
+Make sure that the tests are decorated with ``@pytest.mark.e2e``:
+
+.. code:: python
+
+   import pytest
+
+   @pytest.mark.e2e
+   def test_some_feature(page, runner):
+      ...
+
+
+This marker is used to discover all the E2E tests.
