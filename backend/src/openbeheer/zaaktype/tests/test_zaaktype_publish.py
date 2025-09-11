@@ -5,11 +5,12 @@ from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from zgw_consumers.constants import APITypes, AuthTypes
+from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.clients import ztc_client
+from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
 
 
@@ -18,18 +19,13 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
+        APIConfigFactory.create()
         cls.service = ServiceFactory.create(
             api_type=APITypes.ztc,
             api_root="http://localhost:8003/catalogi/api/v1",
             client_id="test-vcr",
             secret="test-vcr",
             slug="OZ",
-        )
-        cls.selectielijst_service = ServiceFactory.create(
-            api_type=APITypes.orc,
-            api_root="https://selectielijst.openzaak.nl/api/v1/",
-            auth_type=AuthTypes.no_auth,
-            slug="selectielijst",
         )
         cls.user = UserFactory.create()
 
