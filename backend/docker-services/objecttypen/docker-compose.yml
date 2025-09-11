@@ -1,0 +1,71 @@
+#
+# DISCLAIMER: THIS IS FOR DEVELOPMENT PURPOSES ONLY AND NOT SUITABLE FOR PRODUCTION.
+#
+# You can use this docker-compose to spin up a local stack for demo/try-out
+# purposes, or to get some insight in the various components involved (e.g. to build
+# your Helm charts from). Note that various environment variables are UNSAFE and merely
+# specified so that you can get up and running with the least amount of friction.
+
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: objecttypes
+      POSTGRES_PASSWORD: objecttypes
+    command: postgres -c max_connections=300 -c log_min_messages=LOG
+    networks:
+      - objecttypen 
+
+  redis:
+    image: redis
+    networks:
+      - objecttypen 
+
+  web:
+    image: maykinmedia/objecttypes-api:3.2.1
+    environment: &app-env
+      DB_USER: objecttypes
+      DB_PASSWORD: objecttypes
+      DB_HOST: db
+      DJANGO_SETTINGS_MODULE: objecttypes.conf.docker
+      SECRET_KEY: ${SECRET_KEY:-fgv=c0hz&tl*8*3m3893@m+1pstrvidc9e^5@fpspmg%cyf15d}
+      ALLOWED_HOSTS: '*'
+      CACHE_DEFAULT: redis:6379/0
+      CACHE_AXES: redis:6379/0
+      DISABLE_2FA: yes
+      SUBPATH: ${SUBPATH:-/}
+      DB_CONN_MAX_AGE: "0"
+      DB_POOL_ENABLED: True
+    ports:
+      - 8004:8000
+    depends_on:
+      web-init:
+        condition: service_completed_successfully
+    labels:
+      - app=objecttypes-api
+      - service=api
+    networks:
+      - objecttypen 
+    
+
+  web-init:
+    image: maykinmedia/objecttypes-api:3.2.1
+    environment:
+      <<: *app-env
+      RUN_SETUP_CONFIG: true
+    command: /setup_configuration.sh
+    volumes:
+      - ./setup_configuration:/app/setup_configuration
+    depends_on:
+      - db
+      - redis
+    networks:
+      - objecttypen 
+
+volumes:
+  db:
+
+networks:
+  objecttypen:
+    name: objecttypen
