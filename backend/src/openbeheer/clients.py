@@ -17,7 +17,7 @@ from openbeheer.config.models import APIConfig
 
 @cache
 def ztc_client(slug: str = "") -> APIClient | NoReturn:
-    """Return and APIClient for the configured ZTC service
+    """Return the APIClient for the configured ZTC service
 
     The empty slug `""` wil return whatever the "first" is if it exists.
     """
@@ -59,19 +59,37 @@ def selectielijst_client() -> APIClient | NoReturn:
     return build_client(config.selectielijst_api_service)
 
 
+@cache
+def objecttypen_client() -> APIClient | NoReturn:
+    """Return the APIClient for the configured Objecttypen service"""
+    api_config = APIConfig.get_solo()
+
+    if api_config.objecttypen_api_service is None:
+        raise ImproperlyConfigured(__("No Objecttypen service configured"))
+
+    return build_client(api_config.objecttypen_api_service)
+
+
 @receiver([post_delete, post_save], sender=Service, weak=False)
 def _(sender, instance, **_):
     if instance.api_type == APITypes.ztc:
         ztc_client.cache_clear()
+
     selectielijst_client.cache_clear()
+    objecttypen_client.cache_clear()
     # get_solo is broken. It won't invalidate cache when foreign keys get deleted
-    if instance == APIConfig.get_solo().selectielijst_api_service:
+    api_config = APIConfig.get_solo()
+    if instance in [
+        api_config.selectielijst_api_service,
+        api_config.objecttypen_api_service,
+    ]:
         APIConfig.clear_cache()
 
 
 @receiver([post_delete, post_save], sender=APIConfig, weak=False)
 def _(sender, instance, **_):
     selectielijst_client.cache_clear()
+    objecttypen_client.cache_clear()
 
 
 class ZGWPagedResponseProtocol[T](Protocol):
