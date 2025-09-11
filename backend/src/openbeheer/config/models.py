@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from solo.models import SingletonModel
+from zgw_consumers.constants import APITypes
 
 
 class APIConfig(SingletonModel):
@@ -12,6 +13,18 @@ class APIConfig(SingletonModel):
         null=True,
         blank=True,
         help_text=_("Which service to use to query the Selectielijst API."),
+        limit_choices_to={"api_type": APITypes.orc},
+        related_name="+",
+    )
+    objecttypen_api_service = models.ForeignKey(
+        to="zgw_consumers.Service",
+        verbose_name=_("objecttypen API service"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text=_("Which service to use to query the Objecttypen API."),
+        limit_choices_to={"api_type": APITypes.orc},
+        related_name="+",
     )
 
     class Meta:  # pyright:ignore[reportIncompatibleVariableOverride]
