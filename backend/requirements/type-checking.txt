@@ -177,6 +177,10 @@ face==24.0.0
     # via
     #   -r requirements/base.txt
     #   glom
+factory-boy==3.3.3
+    # via -r requirements/type-checking.in
+faker==37.6.0
+    # via factory-boy
 furl==2.1.4
     # via
     #   -r requirements/base.txt
@@ -404,6 +408,8 @@ typing-inspection==0.4.0
     #   -r requirements/base.txt
     #   pydantic
     #   pydantic-settings
+tzdata==2025.2
+    # via faker
 uritemplate==4.1.1
     # via
     #   -r requirements/base.txt

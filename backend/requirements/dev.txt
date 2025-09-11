@@ -336,10 +336,12 @@ factory-boy==3.3.3
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
-faker==37.1.0
+    #   -r requirements/type-checking.txt
+faker==37.6.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   -r requirements/type-checking.txt
     #   factory-boy
 freezegun==1.5.1
     # via
@@ -901,6 +903,7 @@ tzdata==2025.2
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
+    #   -r requirements/type-checking.txt
     #   faker
 uritemplate==4.1.1
     # via

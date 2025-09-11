@@ -2,6 +2,7 @@
 
 django-stubs
 djangorestframework-stubs
+factory-boy
 hypothesis
 playwright
 pytest-playwright
