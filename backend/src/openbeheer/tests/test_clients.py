@@ -5,12 +5,15 @@ from ape_pie import APIClient
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
-from ..clients import ztc_client
+from openbeheer.config.tests.factories import APIConfigFactory
+
+from ..clients import selectielijst_client, ztc_client
 
 
 class ClientsTests(TestCase):
     def setUp(self):
         self.addCleanup(ztc_client.cache_clear)
+        self.addCleanup(selectielijst_client.cache_clear)
 
     def test_no_services_configured_raises_error(self):
         with self.assertRaises(ImproperlyConfigured):
@@ -51,3 +54,49 @@ class ClientsTests(TestCase):
         client3 = ztc_client("slurm")
         self.assertIsNot(client, client3)
         self.assertEqual(client3.base_url, service.api_root)
+
+    def test_selectielijst_client_cache(self):
+        APIConfigFactory.create()
+
+        client = selectielijst_client()
+        client2 = selectielijst_client()
+
+        assert client is client2
+
+    def test_configuring_different_service_invalidates_selectielijst_client_cache(self):
+        config = APIConfigFactory.create()
+
+        initial = selectielijst_client()
+
+        config.selectielijst_api_service = ServiceFactory.create(
+            api_root="https://example.com/something-completely-different/"
+        )
+        config.save()
+
+        client = selectielijst_client()
+
+        assert client is not initial
+        assert client.base_url == "https://example.com/something-completely-different/"
+
+    def test_deleting_configured_service_invalidates_selectielijst_client_cache(self):
+        config = APIConfigFactory.create()
+
+        initial = selectielijst_client()
+        assert initial
+
+        config.selectielijst_api_service.delete()
+
+        with self.assertRaises(ImproperlyConfigured):
+            selectielijst_client()
+
+    def test_reconfigured_service_invalidates_selectielijst_client_cache(self):
+        config = APIConfigFactory.create()
+
+        initial = selectielijst_client()
+        assert initial
+
+        config.selectielijst_api_service = None
+        config.save()
+
+        with self.assertRaises(ImproperlyConfigured):
+            selectielijst_client()
