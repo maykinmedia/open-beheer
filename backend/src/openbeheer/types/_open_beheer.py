@@ -394,3 +394,16 @@ class ExpandableZaakType(ZaakTypeWithUUID, Struct):
 
 def _camelize(s: str) -> str:
     return "".join(part.title() if n else part for n, part in enumerate(s.split("_")))
+
+
+class LAXProcesType(ProcesType):
+    """
+    Overrides ProcesType ignoring "toelichting" min_length as restriction seems incorrect.
+    """
+
+    toelichting: str
+
+
+@as_ob_option.register
+def _lax_procestype_as_option(arg: ProcesType) -> OBOption[str]:
+    return OBOption(label=f"{arg.naam} - {arg.jaar}", value=arg.url or "")

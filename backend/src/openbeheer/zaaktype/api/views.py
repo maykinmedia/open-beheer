@@ -4,8 +4,8 @@ import datetime  # noqa: TC003
 from functools import partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
-from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import gettext as _, gettext_lazy as __
+from django.core.cache import cache
+from django.utils.translation import gettext as _
 
 import structlog
 from ape_pie import APIClient
@@ -16,8 +16,6 @@ from msgspec.json import decode
 from msgspec.structs import asdict, replace
 from rest_framework import status
 from rest_framework.response import Response
-from zgw_consumers.client import build_client
-from zgw_consumers.models import Service
 
 from openbeheer.api.views import (
     DetailView,
@@ -28,7 +26,7 @@ from openbeheer.api.views import (
     fetch_one,
     make_expansion,
 )
-from openbeheer.clients import iter_pages, ztc_client
+from openbeheer.clients import iter_pages, selectielijst_client, ztc_client
 from openbeheer.types import (
     BesluitTypeWithUUID,
     DetailResponse,
@@ -49,9 +47,10 @@ from openbeheer.types import (
 from openbeheer.types._open_beheer import (
     ExpandableZaakType,
     ExpandableZaakTypeRequest,
+    LAXProcesType,
     VersionedResourceSummary,
+    as_ob_option,
 )
-from openbeheer.types.selectielijst import ProcesType
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -80,7 +79,6 @@ if TYPE_CHECKING:
 
     from ape_pie import APIClient
     from rest_framework.request import Request
-
 
 logger = structlog.get_logger(__name__)
 
@@ -297,28 +295,18 @@ def expand_deelzaaktype(
     ]
 
 
-# TODO: If we are going to expand the selectielijst fields of the expanded resources,
-# we will need to revisit this because we shouldn't construct the client everytime.
 def expand_selectielijstprocestype(
     client: APIClient, zaaktypen: Iterable[ZaakType]
-) -> Iterable[ProcesType | None]:
+) -> Iterable[LAXProcesType | None]:
     # There is only one zaaktype, since we are expanding
     # the retrieve endpoint.
     zaaktype = list(zaaktypen)[0]
     if not zaaktype.selectielijst_procestype:
         return [None]
 
-    selectielijst_service = Service.get_service(zaaktype.selectielijst_procestype)
-    if not (selectielijst_service):
-        raise ImproperlyConfigured(__("No Selectielijst service configured"))
-
-    selectielijst_client = build_client(selectielijst_service)
-
-    with selectielijst_client:
+    with selectielijst_client() as client:
         return [
-            fetch_one(
-                selectielijst_client, zaaktype.selectielijst_procestype, ProcesType
-            )
+            fetch_one(client, zaaktype.selectielijst_procestype, LAXProcesType)
             if zaaktype.selectielijst_procestype
             else None
             for zaaktype in zaaktypen
@@ -382,6 +370,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     return_data_type = DetailResponse[ExpandableZaakType]
     endpoint_path = "zaaktypen/{uuid}"
     serializer_class = None
+    selectielijst_client: APIClient | None = None
 
     @staticmethod
     def _get_params_with_status(zaaktype: ZaakType):
