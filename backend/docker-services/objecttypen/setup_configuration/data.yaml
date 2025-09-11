@@ -1,0 +1,10 @@
+tokenauth_config_enable: true
+tokenauth:
+  items:
+    - identifier: open-beheer-token
+      token: 18b2b74ef994314b84021d47b9422e82b685d82f
+      contact_person: John Doe
+      email: j.doe@example.com
+      organization: Maykin
+      application: Open Beheer
+      administration: Maykin
