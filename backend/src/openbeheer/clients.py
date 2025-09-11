@@ -12,10 +12,12 @@ from zgw_consumers.client import build_client
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 
+from openbeheer.config.models import APIConfig
+
 
 @cache
 def ztc_client(slug: str = "") -> APIClient | NoReturn:
-    """Return and APIClient for the configured ZTC service
+    """Return the APIClient for the configured ZTC service
 
     The empty slug `""` wil return whatever the "first" is if it exists.
     """
@@ -30,6 +32,17 @@ def ztc_client(slug: str = "") -> APIClient | NoReturn:
     # passing as arg to build_client doesn't work
     client.headers["Accept-Crs"] = "EPSG:4326"
     return client
+
+
+@cache
+def objecttypen_client() -> APIClient | NoReturn:
+    """Return the APIClient for the configured Objecttypen service"""
+    api_config = APIConfig.get_solo()
+
+    if not (api_config.objecttypen_api_service):
+        raise ImproperlyConfigured(__("No Objecttypen service configured"))
+
+    return build_client(api_config.objecttypen_api_service)
 
 
 @receiver(post_save, sender=Service)
