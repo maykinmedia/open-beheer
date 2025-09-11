@@ -28,7 +28,7 @@ class HealthCheckTests(TestCase):
         self.assertEqual(
             errors[0].message,
             _(
-                "Withing API configuration, the Selectielijst API service is not selected."
+                "Within API configuration, the Selectielijst API service is not selected."
             ),
         )
         self.assertEqual(errors[0].severity, "error")
