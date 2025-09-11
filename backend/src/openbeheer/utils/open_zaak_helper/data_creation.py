@@ -3,19 +3,21 @@ from dataclasses import dataclass
 from random import choice
 from typing import Literal, Mapping, Sequence, Type
 
+from furl import furl
 from msgspec import to_builtins
 from msgspec.json import decode
 
-from openbeheer.clients import ztc_client
+from openbeheer.clients import objecttypen_client, ztc_client
 from openbeheer.types import (
     BesluitTypeWithUUID,
     EigenschapWithUUID,
     ResultaatTypeWithUUID,
     RolTypeWithUUID,
     StatusTypeWithUUID,
+    ZaakObjectTypeWithUUID,
     ZaakTypeWithUUID,
 )
-from openbeheer.types._open_beheer import ZaakObjectTypeWithUUID
+from openbeheer.types.objecttypen import ObjectType
 from openbeheer.types.ztc import (
     Catalogus,
     EigenschapSpecificatieRequest,
@@ -243,12 +245,17 @@ class OpenZaakDataCreationHelper:
         )
 
     def create_zaakobjecttype(
-        self, zaaktype: str = "", **overrides: _JSONEncodable
+        self, zaaktype: str = "", objecttype_url: str = "", **overrides: _JSONEncodable
     ) -> ZaakObjectTypeWithUUID:
+        if objecttype_url == "":
+            objecttype = self._create_objecttype()
+            assert objecttype.url
+            objecttype_url = objecttype.url
+
         defaults: dict = to_builtins(
             ZaakObjectTypeRequest(
                 ander_objecttype=True,
-                objecttype="http://example.com",
+                objecttype=objecttype_url,
                 relatie_omschrijving="Open",
                 zaaktype=self._get_zaaktype(zaaktype),
                 # statustype: str | None = None,
@@ -259,3 +266,50 @@ class OpenZaakDataCreationHelper:
         return self._create_resource(
             defaults | overrides, "zaakobjecttypen", ZaakObjectTypeWithUUID
         )
+
+    def _create_objecttype(self, **overrides: _JSONEncodable) -> ObjectType:
+        defaults = {"name": "Parkeer vergunning", "namePlural": "Parkeer vergunningen"}
+        data = defaults | overrides
+        with objecttypen_client() as client:
+            response = client.post("objecttypes", json=data)
+
+            if response.status_code == 400:
+                raise Exception(decode(response.content))
+
+            response.raise_for_status()
+
+        return decode(
+            response.content,
+            type=ObjectType,
+            strict=False,
+        )
+
+    def create_published_zaaktype(
+        self, **overrides: _JSONEncodable
+    ) -> ZaakTypeWithUUID:
+        zaaktype = self.create_zaaktype(overrides=overrides)
+        assert zaaktype.url
+
+        self.create_zaakobjecttype(zaaktype=zaaktype.url)
+        self.create_roltype(zaaktype=zaaktype.url)
+        self.create_resultaattype(zaaktype=zaaktype.url)
+        self.create_statustype(
+            zaaktype=zaaktype.url,
+            omschrijving="begin",
+            volgnummer=1,
+        )
+        self.create_statustype(
+            zaaktype=zaaktype.url,
+            omschrijving="eind",
+            volgnummer=2,
+        )
+
+        with ztc_client("OZ") as client:
+            uuid = furl(zaaktype.url).path.segments[-1]
+            response = client.post(f"zaaktypen/{uuid}/publish")
+
+            if response.status_code == 400:
+                raise Exception(decode(response.content))
+
+            response.raise_for_status()
+        return zaaktype
