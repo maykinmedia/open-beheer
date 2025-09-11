@@ -34,6 +34,7 @@ from rest_framework import status
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
+from typing_extensions import TypeIs
 
 from openbeheer.api.drf_spectacular.schema import MsgSpecFilterBackend
 from openbeheer.clients import iter_pages, ztc_client
@@ -619,13 +620,18 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
         return [adapt(f) for f in ob_fields if f.name != "Expand"]
 
+    def _has_return_type(self, obj: object) -> TypeIs[T | ZGWError]:
+        # obj has correct return_data_type, so we can return it
+        # see pyright #10916 why this is pulled into a type guard
+        return isinstance(
+            obj, (ZGWError, get_origin(self.return_data_type) or self.return_data_type)
+        )
+
     @handle_service_errors
     def get(self, request: Request, slug: str, uuid: UUID, *args, **kwargs) -> Response:
         data, status_code = self.get_item_data(slug, uuid)
 
-        if isinstance(
-            data, (ZGWError, get_origin(self.return_data_type) or self.return_data_type)
-        ):
+        if self._has_return_type(data):
             return Response(data, status=status_code)
 
         versions = []
