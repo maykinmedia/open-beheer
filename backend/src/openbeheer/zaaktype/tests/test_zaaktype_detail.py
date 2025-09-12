@@ -1,4 +1,5 @@
 from unittest import skip
+from unittest.mock import patch
 
 from django.test import tag
 
@@ -11,6 +12,7 @@ from zgw_consumers.constants import APITypes, AuthTypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.config.models import APIConfig
 from openbeheer.utils.open_zaak_helper.data_creation import (
     OpenZaakDataCreationHelper,
 )
@@ -34,9 +36,26 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             auth_type=AuthTypes.no_auth,
             slug="selectielijst",
         )
+        cls.objecttypen_service = ServiceFactory.create(
+            api_type=APITypes.orc,
+            api_root="http://localhost:8004/api/v2/",
+            auth_type=AuthTypes.api_key,
+            header_key="Authorization",
+            header_value="Token 18b2b74ef994314b84021d47b9422e82b685d82f",
+        )
         cls.user = UserFactory.create()
 
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+
+        patcher = patch(
+            "openbeheer.clients.APIConfig.get_solo",
+            return_value=APIConfig(
+                objecttypen_api_service=cls.objecttypen_service,
+                selectielijst_api_service=cls.selectielijst_service,
+            ),
+        )
+        patcher.start()
+        cls.addClassCleanup(patcher.stop)
 
     def test_not_authenticated(self):
         endpoint = reverse(
@@ -616,4 +635,36 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "identificatie": zaaktype1.identificatie,
                 "omschrijving": zaaktype1.omschrijving,
             },
+        )
+
+    def test_retrieve_published_zaaktype(self):
+        """
+        We need the zaaktype to be pulished, because otherwise we can't
+        retrieve the related zaakobjecttypen from openzaak (see issue open-zaak/open-zaak#2178)
+        """
+        zaaktype = self.helper.create_published_zaaktype()
+
+        self.client.force_login(self.user)
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        zaakobjecttypen = data["result"]["_expand"]["zaakobjecttypen"]
+
+        self.assertEqual(len(zaakobjecttypen), 1)
+
+        zaakobjecttype = zaakobjecttypen[0]
+
+        self.assertIn("_expand", zaakobjecttype)
+        self.assertIn("objecttype", zaakobjecttype["_expand"])
+
+        self.assertEqual(
+            "Parkeer vergunning", zaakobjecttype["_expand"]["objecttype"]["name"]
         )
