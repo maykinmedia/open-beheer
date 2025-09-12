@@ -11,10 +11,10 @@ from openbeheer.clients import objecttypen_client, ztc_client
 from openbeheer.types import (
     BesluitTypeWithUUID,
     EigenschapWithUUID,
+    ExpandableZaakObjectTypeWithUUID,
     ResultaatTypeWithUUID,
     RolTypeWithUUID,
     StatusTypeWithUUID,
-    ZaakObjectTypeWithUUID,
     ZaakTypeWithUUID,
 )
 from openbeheer.types.objecttypen import ObjectType
@@ -246,9 +246,9 @@ class OpenZaakDataCreationHelper:
 
     def create_zaakobjecttype(
         self, zaaktype: str = "", objecttype_url: str = "", **overrides: _JSONEncodable
-    ) -> ZaakObjectTypeWithUUID:
+    ) -> ExpandableZaakObjectTypeWithUUID:
         if objecttype_url == "":
-            objecttype = self._create_objecttype()
+            objecttype = self.create_objecttype()
             assert objecttype.url
             objecttype_url = objecttype.url
 
@@ -264,10 +264,10 @@ class OpenZaakDataCreationHelper:
             )
         )
         return self._create_resource(
-            defaults | overrides, "zaakobjecttypen", ZaakObjectTypeWithUUID
+            defaults | overrides, "zaakobjecttypen", ExpandableZaakObjectTypeWithUUID
         )
 
-    def _create_objecttype(self, **overrides: _JSONEncodable) -> ObjectType:
+    def create_objecttype(self, **overrides: _JSONEncodable) -> ObjectType:
         defaults = {"name": "Parkeer vergunning", "namePlural": "Parkeer vergunningen"}
         data = defaults | overrides
         with objecttypen_client() as client:

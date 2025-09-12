@@ -630,7 +630,6 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
 
     def test_selectielijst_procestype_options(self):
         zaaktype = self.helper.create_zaaktype()
-
         endpoint = reverse(
             "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
@@ -670,3 +669,35 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 self.assertLess(year, previous_year)
 
             previous = option
+
+    def test_retrieve_published_zaaktype(self):
+        """
+        We need the zaaktype to be pulished, because otherwise we can't
+        retrieve the related zaakobjecttypen from openzaak (see issue open-zaak/open-zaak#2178)
+        """
+        zaaktype = self.helper.create_published_zaaktype()
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+
+        self.client.force_login(self.user)
+
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        zaakobjecttypen = data["result"]["_expand"]["zaakobjecttypen"]
+
+        self.assertEqual(len(zaakobjecttypen), 1)
+
+        zaakobjecttype = zaakobjecttypen[0]
+
+        self.assertIn("_expand", zaakobjecttype)
+        self.assertIn("objecttype", zaakobjecttype["_expand"])
+
+        self.assertEqual(
+            "Parkeer vergunning", zaakobjecttype["_expand"]["objecttype"]["name"]
+        )
