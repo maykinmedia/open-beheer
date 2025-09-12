@@ -1,3 +1,4 @@
+import re
 from unittest import skip
 
 from django.test import tag
@@ -7,10 +8,11 @@ from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from zgw_consumers.constants import APITypes, AuthTypes
+from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.utils.open_zaak_helper.data_creation import (
     OpenZaakDataCreationHelper,
 )
@@ -21,18 +23,13 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
+        APIConfigFactory.create()
         cls.service = ServiceFactory.create(
             api_type=APITypes.ztc,
             api_root="http://localhost:8003/catalogi/api/v1",
             client_id="test-vcr",
             secret="test-vcr",
             slug="OZ",
-        )
-        cls.selectielijst_service = ServiceFactory.create(
-            api_type=APITypes.orc,
-            api_root="https://selectielijst.openzaak.nl/api/v1/",
-            auth_type=AuthTypes.no_auth,
-            slug="selectielijst",
         )
         cls.user = UserFactory.create()
 
@@ -617,3 +614,46 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
                 "omschrijving": zaaktype1.omschrijving,
             },
         )
+
+    def test_selectielijst_procestype_options(self):
+        zaaktype = self.helper.create_zaaktype()
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+
+        self.client.force_login(self.user)
+        response = self.client.get(endpoint)
+        data = response.json()
+
+        ob_field = next(
+            (f for f in data["fields"] if f["name"] == "selectielijstProcestype")
+        )
+        options = ob_field["options"]
+
+        previous = None
+        for option in options:
+            label = option["label"]
+            value = option["value"]
+            match = re.search(r"\d{4}", label)
+            year = int(match[0]) if match else 0
+
+            previous_label = previous["label"] if previous else ""
+            previous_match = re.search(r"\d{4}", previous_label)
+            previous_year = int(previous_match[0]) if previous_match else year
+
+            # Label should be present
+            self.assertTrue(label)
+
+            # Value should be a URL
+            self.assertIn("https://", value)
+
+            # Within same year, should be sorted alphabetically
+            if year == previous_year:
+                self.assertGreater(label, previous_label)
+            # Years should be descending.
+            else:
+                self.assertLess(year, previous_year)
+
+            previous = option

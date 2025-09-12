@@ -344,6 +344,11 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
         continue;
       }
 
+      // Related fields that are directly editable should not be in overrides.
+      if (isEditing && field.options) {
+        continue;
+      }
+
       overrides[fieldName] = (
         // TODO: Handle errors for related objects.
         <RelatedObjectRenderer

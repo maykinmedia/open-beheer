@@ -17,7 +17,7 @@ class APIConfigHealthCheck(HealthCheck):
                 HealthCheckError(
                     code="missing_selectielijst_api",
                     message=_(
-                        "Withing API configuration, the Selectielijst API service is not selected."
+                        "Within API configuration, the Selectielijst API service is not selected."
                     ),
                     severity="error",
                 )

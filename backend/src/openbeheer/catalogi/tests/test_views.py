@@ -1,4 +1,5 @@
 from maykin_common.vcr import VCRMixin
+from requests import Timeout
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -49,8 +50,6 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
             "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
         )
 
-
-class CatalogiChoicesErrorViewTests(APITestCase):
     def test_openzaak_down(self):
         user = UserFactory.create()
         ServiceFactory.create(
@@ -62,9 +61,11 @@ class CatalogiChoicesErrorViewTests(APITestCase):
         )
 
         self.client.force_login(user)
-        response = self.client.get(
-            reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"})
-        )
+
+        with self.vcr_raises(Timeout):
+            response = self.client.get(
+                reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"})
+            )
 
         self.assertEqual(response.status_code, status.HTTP_502_BAD_GATEWAY)
         self.assertEqual(response.json()["code"], "connection_error")

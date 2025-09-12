@@ -280,9 +280,13 @@ face==24.0.0
     #   -r requirements/type-checking.txt
     #   glom
 factory-boy==3.3.3
-    # via -r requirements/test-tools.in
-faker==37.1.0
-    # via factory-boy
+    # via
+    #   -r requirements/test-tools.in
+    #   -r requirements/type-checking.txt
+faker==37.6.0
+    # via
+    #   -r requirements/type-checking.txt
+    #   factory-boy
 freezegun==1.5.1
     # via -r requirements/test-tools.in
 furl==2.1.4
@@ -686,7 +690,9 @@ typing-inspection==0.4.0
     #   pydantic
     #   pydantic-settings
 tzdata==2025.2
-    # via faker
+    # via
+    #   -r requirements/type-checking.txt
+    #   faker
 uritemplate==4.1.1
     # via
     #   -c requirements/base.txt
