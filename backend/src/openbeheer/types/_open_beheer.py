@@ -29,6 +29,7 @@ from msgspec import UNSET, Meta, Struct, UnsetType, structs
 from msgspec.json import decode
 
 from openbeheer.clients import selectielijst_client
+from openbeheer.types.objecttypen import ObjectType
 
 from .selectielijst import ProcesType
 from .ztc import (
@@ -432,8 +433,13 @@ class ZaakTypeWithUUID(UUIDMixin, ZaakType):
     ) = None
 
 
-class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
+class ZaakObjectTypeExtension(Struct, frozen=True, rename="camel"):
+    objecttype: UnsetType | ObjectType = UNSET
+
+
+class ExpandableZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: str | UnsetType = UNSET
+    _expand: ZaakObjectTypeExtension = ZaakObjectTypeExtension()
 
 
 class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
@@ -448,7 +454,7 @@ class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
     informatieobjecttypen: UnsetType | list[InformatieObjectTypeWithUUID] = UNSET
     roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
     deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
-    zaakobjecttypen: UnsetType | list[ZaakObjectTypeWithUUID] = UNSET
+    zaakobjecttypen: UnsetType | list[ExpandableZaakObjectTypeWithUUID] = UNSET
     selectielijst_procestype: UnsetType | LAXProcesType = UNSET
 
 
