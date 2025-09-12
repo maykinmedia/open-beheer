@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import datetime  # noqa: TC003
-from functools import cache, partial
+from functools import partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
 from django.utils.translation import gettext as _
@@ -28,10 +28,10 @@ from openbeheer.api.views import (
 )
 from openbeheer.clients import (
     iter_pages,
-    objecttypen_client,
     selectielijst_client,
     ztc_client,
 )
+from openbeheer.helpers import retrieve_objecttypen_for_zaaktype
 from openbeheer.types import (
     BesluitTypeWithUUID,
     DetailResponse,
@@ -56,7 +56,6 @@ from openbeheer.types._open_beheer import (
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
 )
-from openbeheer.types.objecttypen import ObjectType
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -317,17 +316,6 @@ def expand_selectielijstprocestype(
             else None
             for zaaktype in zaaktypen
         ]
-
-
-@cache
-def retrieve_objecttypen_for_zaaktype(zaaktype_url: str) -> dict[str, ObjectType]:
-    with objecttypen_client() as ot_client:
-        objecttypen = fetch_all(
-            ot_client, "objecttypes", {"zaaktype": zaaktype_url}, ObjectType
-        )
-        return {
-            item.url: item for item in objecttypen if item.url
-        }  # They should always have a URL
 
 
 def expand_zaakobjecttypen(
