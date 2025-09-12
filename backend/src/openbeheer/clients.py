@@ -2,7 +2,7 @@ from functools import cache
 from typing import Iterator, NoReturn, Protocol
 
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models.signals import post_save
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as __
 
@@ -45,10 +45,16 @@ def objecttypen_client() -> APIClient | NoReturn:
     return build_client(api_config.objecttypen_api_service)
 
 
-@receiver(post_save, sender=Service)
+@receiver([post_delete, post_save], sender=Service)
 def _(sender, instance, **_):
     if instance.api_type == APITypes.ztc:
         ztc_client.cache_clear()
+    objecttypen_client.cache_clear()
+
+
+@receiver([post_delete, post_save], sender=APIConfig)
+def _(sender, instance, **_):
+    objecttypen_client.cache_clear()
 
 
 class ZGWPagedResponseProtocol[T](Protocol):
