@@ -370,6 +370,10 @@ class ZaakObjectTypeExtension(Struct, frozen=True, rename="camel"):
     objecttype: UnsetType | ObjectType = UNSET
 
 
+class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
+    uuid: str | UnsetType = UNSET
+
+
 class ExpandableZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: str | UnsetType = UNSET
     _expand: ZaakObjectTypeExtension = ZaakObjectTypeExtension()
