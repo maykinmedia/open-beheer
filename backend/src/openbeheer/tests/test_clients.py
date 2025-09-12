@@ -12,7 +12,9 @@ from ..clients import selectielijst_client, ztc_client
 
 class ClientsTests(TestCase):
     def setUp(self):
+        ztc_client.cache_clear()
         self.addCleanup(ztc_client.cache_clear)
+        selectielijst_client.cache_clear()
         self.addCleanup(selectielijst_client.cache_clear)
 
     def test_no_services_configured_raises_error(self):
