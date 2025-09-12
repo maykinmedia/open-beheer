@@ -11,12 +11,12 @@ from openbeheer.clients import objecttypen_client, ztc_client
 from openbeheer.types import (
     BesluitTypeWithUUID,
     EigenschapWithUUID,
-    ExpandableZaakObjectTypeWithUUID,
     ResultaatTypeWithUUID,
     RolTypeWithUUID,
     StatusTypeWithUUID,
     ZaakTypeWithUUID,
 )
+from openbeheer.types._open_beheer import ZaakObjectTypeWithUUID
 from openbeheer.types.objecttypen import ObjectType
 from openbeheer.types.ztc import (
     Catalogus,
@@ -242,7 +242,7 @@ class OpenZaakDataCreationHelper:
 
     def create_zaakobjecttype(
         self, zaaktype: str = "", objecttype_url: str = "", **overrides: _JSONEncodable
-    ) -> ExpandableZaakObjectTypeWithUUID:
+    ) -> ZaakObjectTypeWithUUID:
         if objecttype_url == "":
             objecttype = self.create_objecttype()
             assert objecttype.url
@@ -260,7 +260,7 @@ class OpenZaakDataCreationHelper:
             )
         )
         return self._create_resource(
-            defaults | overrides, "zaakobjecttypen", ExpandableZaakObjectTypeWithUUID
+            defaults | overrides, "zaakobjecttypen", ZaakObjectTypeWithUUID
         )
 
     def create_objecttype(self, **overrides: _JSONEncodable) -> ObjectType:
