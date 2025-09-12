@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import datetime  # noqa: TC003
-from functools import partial
+from functools import cache, partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
 from django.utils.translation import gettext as _
@@ -22,10 +22,16 @@ from openbeheer.api.views import (
     ListView,
     MsgspecAPIView,
     create_many,
+    fetch_all,
     fetch_one,
     make_expansion,
 )
-from openbeheer.clients import iter_pages, selectielijst_client, ztc_client
+from openbeheer.clients import (
+    iter_pages,
+    objecttypen_client,
+    selectielijst_client,
+    ztc_client,
+)
 from openbeheer.types import (
     BesluitTypeWithUUID,
     DetailResponse,
@@ -39,16 +45,18 @@ from openbeheer.types import (
     RolTypeWithUUID,
     StatusTypeWithUUID,
     VersionSummary,
-    ZaakObjectTypeWithUUID,
     ZGWError,
     ZGWResponse,
 )
 from openbeheer.types._open_beheer import (
+    ExpandableZaakObjectTypeWithUUID,
     ExpandableZaakType,
     ExpandableZaakTypeRequest,
     LAXProcesType,
     VersionedResourceSummary,
+    ZaakObjectTypeExtension,
 )
+from openbeheer.types.objecttypen import ObjectType
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -311,6 +319,50 @@ def expand_selectielijstprocestype(
         ]
 
 
+@cache
+def retrieve_objecttypen_for_zaaktype(zaaktype_url: str) -> dict[str, ObjectType]:
+    with objecttypen_client() as ot_client:
+        objecttypen = fetch_all(
+            ot_client, "objecttypes", {"zaaktype": zaaktype_url}, ObjectType
+        )
+        return {
+            item.url: item for item in objecttypen if item.url
+        }  # They should always have a URL
+
+
+def expand_zaakobjecttypen(
+    client: APIClient, zaaktypen: Iterable[ZaakType]
+) -> Iterable[Iterable[ExpandableZaakObjectTypeWithUUID | None]]:
+    def expand_zaakobjecttypen(
+        zaaktype: ZaakType,
+    ) -> Iterable[ExpandableZaakObjectTypeWithUUID | None]:
+        if not zaaktype.zaakobjecttypen:
+            return []
+
+        dict_objecttypen = retrieve_objecttypen_for_zaaktype(zaaktype.url)
+
+        zaakobjecttypen = fetch_all(
+            client,
+            "zaakobjecttypen",
+            {"zaaktype": zaaktype.url},
+            ExpandableZaakObjectTypeWithUUID,
+        )
+        for zaakobjecttype in zaakobjecttypen:
+            try:
+                zaakobjecttype._expand = ZaakObjectTypeExtension(
+                    objecttype=dict_objecttypen[zaakobjecttype.objecttype]
+                )
+            except KeyError:
+                logger.warning(
+                    "Open Zaak and Objecttypes API out of sync.",
+                    zaakobjecttype=zaakobjecttype.url,
+                    zaaktype=zaaktype.url,
+                )
+        return zaakobjecttypen
+
+    return [expand_zaakobjecttypen(zaaktype) for zaaktype in zaaktypen]
+
+
 @extend_schema_view(
     get=extend_schema(
         operation_id="service_zaaktype_retrieve_one",
@@ -403,9 +455,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             "roltypen", _get_params_with_status, RolTypeWithUUID
         ),
         "deelzaaktypen": expand_deelzaaktype,
-        "zaakobjecttypen": make_expansion(
-            "zaakobjecttypen", _key, ZaakObjectTypeWithUUID
-        ),
+        "zaakobjecttypen": expand_zaakobjecttypen,
         "selectielijst_procestype": expand_selectielijstprocestype,
     }
 

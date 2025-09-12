@@ -74,6 +74,12 @@ def objecttypen_client() -> APIClient | NoReturn:
 def _(sender, instance, **_):
     if instance.api_type == APITypes.ztc:
         ztc_client.cache_clear()
+    objecttypen_client.cache_clear()
+
+
+@receiver([post_delete, post_save], sender=APIConfig)
+def _(sender, instance, **_):
+    objecttypen_client.cache_clear()
 
     selectielijst_client.cache_clear()
     objecttypen_client.cache_clear()
