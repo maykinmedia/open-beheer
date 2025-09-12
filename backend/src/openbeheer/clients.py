@@ -2,7 +2,7 @@ from functools import cache
 from typing import Iterator, NoReturn, Protocol
 
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models.signals import post_save
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as __
 
@@ -12,10 +12,12 @@ from zgw_consumers.client import build_client
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 
+from openbeheer.config.models import APIConfig
+
 
 @cache
 def ztc_client(slug: str = "") -> APIClient | NoReturn:
-    """Return and APIClient for the configured ZTC service
+    """Return the APIClient for the configured ZTC service
 
     The empty slug `""` wil return whatever the "first" is if it exists.
     """
@@ -32,10 +34,27 @@ def ztc_client(slug: str = "") -> APIClient | NoReturn:
     return client
 
 
-@receiver(post_save, sender=Service)
+@cache
+def objecttypen_client() -> APIClient | NoReturn:
+    """Return the APIClient for the configured Objecttypen service"""
+    api_config = APIConfig.get_solo()
+
+    if not (api_config.objecttypen_api_service):
+        raise ImproperlyConfigured(__("No Objecttypen service configured"))
+
+    return build_client(api_config.objecttypen_api_service)
+
+
+@receiver([post_delete, post_save], sender=Service)
 def _(sender, instance, **_):
     if instance.api_type == APITypes.ztc:
         ztc_client.cache_clear()
+    objecttypen_client.cache_clear()
+
+
+@receiver([post_delete, post_save], sender=APIConfig)
+def _(sender, instance, **_):
+    objecttypen_client.cache_clear()
 
 
 class ZGWPagedResponseProtocol[T](Protocol):

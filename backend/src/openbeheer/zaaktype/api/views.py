@@ -25,10 +25,12 @@ from openbeheer.api.views import (
     ListView,
     MsgspecAPIView,
     create_many,
+    fetch_all,
     fetch_one,
     make_expansion,
 )
 from openbeheer.clients import iter_pages, ztc_client
+from openbeheer.helpers import retrieve_objecttypen_for_zaaktype
 from openbeheer.types import (
     BesluitTypeWithUUID,
     DetailResponse,
@@ -42,14 +44,15 @@ from openbeheer.types import (
     RolTypeWithUUID,
     StatusTypeWithUUID,
     VersionSummary,
-    ZaakObjectTypeWithUUID,
     ZGWError,
     ZGWResponse,
 )
 from openbeheer.types._open_beheer import (
+    ExpandableZaakObjectTypeWithUUID,
     ExpandableZaakType,
     ExpandableZaakTypeRequest,
     VersionedResourceSummary,
+    ZaakObjectTypeExtension,
 )
 from openbeheer.types.selectielijst import ProcesType
 from openbeheer.types.ztc import (
@@ -325,6 +328,39 @@ def expand_selectielijstprocestype(
         ]
 
 
+def expand_zaakobjecttypen(
+    client: APIClient, zaaktypen: Iterable[ZaakType]
+) -> Iterable[Iterable[ExpandableZaakObjectTypeWithUUID | None]]:
+    def expand_zaakobjecttypen(
+        zaaktype: ZaakType,
+    ) -> Iterable[ExpandableZaakObjectTypeWithUUID | None]:
+        if not zaaktype.zaakobjecttypen:
+            return []
+
+        dict_objecttypen = retrieve_objecttypen_for_zaaktype(zaaktype.url)
+
+        zaakobjecttypen = fetch_all(
+            client,
+            "zaakobjecttypen",
+            {"zaaktype": zaaktype.url},
+            ExpandableZaakObjectTypeWithUUID,
+        )
+        for zaakobjecttype in zaakobjecttypen:
+            try:
+                zaakobjecttype._expand = ZaakObjectTypeExtension(
+                    objecttype=dict_objecttypen[zaakobjecttype.objecttype]
+                )
+            except KeyError:
+                logger.warning(
+                    "Open Zaak and Objecttypes API out of sync.",
+                    zaakobjecttype=zaakobjecttype.url,
+                    zaaktype=zaaktype.url,
+                )
+        return zaakobjecttypen
+
+    return [expand_zaakobjecttypen(zaaktype) for zaaktype in zaaktypen]
+
+
 @extend_schema_view(
     get=extend_schema(
         operation_id="service_zaaktype_retrieve_one",
@@ -417,9 +453,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             "roltypen", _get_params_with_status, RolTypeWithUUID
         ),
         "deelzaaktypen": expand_deelzaaktype,
-        "zaakobjecttypen": make_expansion(
-            "zaakobjecttypen", _key, ZaakObjectTypeWithUUID
-        ),
+        "zaakobjecttypen": expand_zaakobjecttypen,
         "selectielijst_procestype": expand_selectielijstprocestype,
     }
 

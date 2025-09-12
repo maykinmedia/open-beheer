@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import tag
 
 from maykin_common.vcr import VCRMixin
@@ -5,11 +7,12 @@ from msgspec import to_builtins
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from zgw_consumers.constants import APITypes
+from zgw_consumers.constants import APITypes, AuthTypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.clients import ztc_client
+from openbeheer.config.models import APIConfig
 from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
 
@@ -26,11 +29,26 @@ class ZaakObjectTypeListViewTests(VCRMixin, APITestCase):
             secret="test-vcr",
             slug="OZ",
         )
+        cls.objecttypen_service = ServiceFactory.create(
+            api_type=APITypes.orc,
+            api_root="http://localhost:8004/api/v2/",
+            auth_type=AuthTypes.api_key,
+            header_key="Authorization",
+            header_value="Token 18b2b74ef994314b84021d47b9422e82b685d82f",
+        )
         cls.user = UserFactory.create()
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
 
     def setUp(self):
         super().setUp()
+
+        patcher = patch(
+            "openbeheer.clients.APIConfig.get_solo",
+            return_value=APIConfig(objecttypen_api_service=self.objecttypen_service),
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
         # create a fresh zaaktype and set its zaakobjecttype endpoint
         self.zaaktype = self.helper.create_zaaktype(
             vertrouwelijkheidaanduiding=VertrouwelijkheidaanduidingEnum.openbaar.value,
@@ -111,7 +129,7 @@ class ZaakObjectTypeListViewTests(VCRMixin, APITestCase):
 
 
 @tag("vcr")
-class ZaakoBjectTypeDetailViewTest(VCRMixin, APITestCase):
+class ZaakObjectTypeDetailViewTest(VCRMixin, APITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -122,19 +140,34 @@ class ZaakoBjectTypeDetailViewTest(VCRMixin, APITestCase):
             secret="test-vcr",
             slug="OZ",
         )
+        cls.objecttypen_service = ServiceFactory.create(
+            api_type=APITypes.orc,
+            api_root="http://localhost:8004/api/v2/",
+            auth_type=AuthTypes.api_key,
+            header_key="Authorization",
+            header_value="Token 18b2b74ef994314b84021d47b9422e82b685d82f",
+        )
         cls.user = UserFactory.create()
 
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
 
     def setUp(self):
         super().setUp()
+
+        patcher = patch(
+            "openbeheer.clients.APIConfig.get_solo",
+            return_value=APIConfig(objecttypen_api_service=self.objecttypen_service),
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
         # create a fresh zaakobjecttype and set its endpoint
         self.zaaktype = self.helper.create_zaaktype(
             vertrouwelijkheidaanduiding=VertrouwelijkheidaanduidingEnum.openbaar.value,
         )
         assert self.zaaktype.url
         self.zaakobjecttype = self.helper.create_zaakobjecttype(
-            zaaktype=self.zaaktype.url
+            zaaktype=self.zaaktype.url,
         )
 
         self.endpoint = reverse(
@@ -191,7 +224,11 @@ class ZaakoBjectTypeDetailViewTest(VCRMixin, APITestCase):
             "url",
             "zaaktype",
             "zaaktypeIdentificatie",
+            "_expand",
+            "uuid",
         }
+
+        self.assertIn("objecttype", data["_expand"])
 
     def test_patch_zaakobjecttype(self):
         self.client.force_login(self.user)
@@ -205,7 +242,7 @@ class ZaakoBjectTypeDetailViewTest(VCRMixin, APITestCase):
 
         expected = to_builtins(self.zaakobjecttype) | changes
 
-        del expected["uuid"]
+        del data["_expand"]
 
         self.assertEqual(data, expected)
 
