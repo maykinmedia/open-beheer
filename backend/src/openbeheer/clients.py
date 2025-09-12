@@ -61,14 +61,14 @@ def selectielijst_client() -> APIClient:
     return build_client(config.selectielijst_api_service)
 
 
-@receiver([post_delete, post_save], sender=Service)
+@receiver([post_delete, post_save], sender=Service, weak=False)
 def _(sender, instance, **_):
     if instance.api_type == APITypes.ztc:
         ztc_client.cache_clear()
     selectielijst_client.cache_clear()
 
 
-@receiver([post_delete, post_save], sender=APIConfig)
+@receiver([post_delete, post_save], sender=APIConfig, weak=False)
 def _(sender, instance, **_):
     selectielijst_client.cache_clear()
 
