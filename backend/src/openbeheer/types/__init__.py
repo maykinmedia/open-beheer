@@ -6,6 +6,7 @@ from ._open_beheer import (
     DetailResponse,
     DetailResponseWithoutVersions,
     EigenschapWithUUID,
+    ExpandableZaakObjectTypeWithUUID,
     ExternalServiceError,
     FrontendFieldSet,
     FrontendFieldsets,
@@ -20,7 +21,6 @@ from ._open_beheer import (
     RolTypeWithUUID,
     StatusTypeWithUUID,
     VersionSummary,
-    ZaakObjectTypeWithUUID,
     ZaakTypeWithUUID,
     as_ob_fieldtype,
     as_ob_option,
@@ -55,6 +55,6 @@ __all__ = [
     "InformatieObjectTypeWithUUID",
     "RolTypeWithUUID",
     "ZaakTypeWithUUID",
-    "ZaakObjectTypeWithUUID",
+    "ExpandableZaakObjectTypeWithUUID",
     "OIDCInfo",
 ]
