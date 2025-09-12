@@ -35,7 +35,9 @@ export type BaseTabSection<
   icon?: ReactNode;
   label: string;
   valueTransform?: Partial<{
-    [K in keyof Expand<T>]: (value: Expand<T>[K]) => Record<string, unknown>;
+    [K in keyof Expand<T>]: (
+      value: Expand<T>[K],
+    ) => Record<string, unknown> | Record<string, unknown>[];
   }>;
 };
 export type AttributeGridSection<T extends object> = BaseTabSection<T> & {

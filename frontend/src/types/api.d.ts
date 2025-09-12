@@ -58,6 +58,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/oidc-info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieve OIDC info
+         * @description Returns info about OIDC that is needed by the frontend.
+         */
+        get: operations["oidc_info_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/service/{slug}/catalogi/choices/": {
         parameters: {
             query?: never;
@@ -102,7 +122,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/informatieobjecttypen//{uuid}": {
+    "/api/v1/service/{slug}/informatieobjecttypen/{uuid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -888,6 +908,11 @@ export interface components {
             /** @default null */
             verplicht: boolean | null;
         };
+        /**
+         * DataClassificationEnum
+         * @enum {unknown}
+         */
+        DataClassificationEnum: "confidential" | "intern" | "open" | "strictly_confidential";
         /** DetailResponseWithoutVersions[InformatieObjectType] */
         DetailResponseWithoutVersions_InformatieObjectType_: {
             result: components["schemas"]["InformatieObjectType"];
@@ -1022,6 +1047,43 @@ export interface components {
             /** @default null */
             eindeObject: string | null;
         };
+        /** ExpandableZaakObjectTypeWithUUID */
+        ExpandableZaakObjectTypeWithUUID: {
+            uuid?: string;
+            /**
+             * ZaakObjectTypeExtension
+             * @default {}
+             */
+            _expand: {
+                objecttype?: components["schemas"]["ObjectType"];
+            };
+            /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
+            anderObjecttype: boolean;
+            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            objecttype: string;
+            /** @description Omschrijving van de betrekking van het Objecttype op zaken van het gerelateerde ZAAKTYPE. */
+            relatieOmschrijving: string;
+            /** @description URL-referentie naar de ZAAKTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            zaaktype: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            resultaattypen: string[] | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            catalogus: string | null;
+            /** @default null */
+            beginGeldigheid: string | null;
+            /** @default null */
+            eindeGeldigheid: string | null;
+            /** @default null */
+            beginObject: string | null;
+            /** @default null */
+            eindeObject: string | null;
+        };
         /** ExpandableZaakType */
         ExpandableZaakType: {
             uuid?: string;
@@ -1037,7 +1099,7 @@ export interface components {
                 informatieobjecttypen?: components["schemas"]["InformatieObjectTypeWithUUID"][];
                 roltypen?: components["schemas"]["RolTypeWithUUID"][];
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
-                zaakobjecttypen?: components["schemas"]["ZaakObjectTypeWithUUID"][];
+                zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["ProcesType"];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
@@ -1170,7 +1232,7 @@ export interface components {
                 informatieobjecttypen?: components["schemas"]["InformatieObjectTypeWithUUID"][];
                 roltypen?: components["schemas"]["RolTypeWithUUID"][];
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
-                zaakobjecttypen?: components["schemas"]["ZaakObjectTypeWithUUID"][];
+                zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["ProcesType"];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
@@ -1572,6 +1634,52 @@ export interface components {
             next: string | null;
             previous: string | null;
         };
+        /** OIDCInfo */
+        OIDCInfo: {
+            enabled: boolean;
+            loginUrl?: string;
+        };
+        /** ObjectType */
+        ObjectType: {
+            /** @description Name of the object type */
+            name: string;
+            /** @description Plural name of the object type */
+            namePlural: string;
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            uuid: string | null;
+            /** @default null */
+            description: string | null;
+            /** @default null */
+            dataClassification: components["schemas"]["DataClassificationEnum"] | null;
+            /** @default null */
+            maintainerOrganization: string | null;
+            /** @default null */
+            maintainerDepartment: string | null;
+            /** @default null */
+            contactPerson: string | null;
+            /** @default null */
+            contactEmail: string | null;
+            /** @default null */
+            source: string | null;
+            /** @default null */
+            updateFrequency: components["schemas"]["UpdateFrequencyEnum"] | null;
+            /** @default null */
+            providerOrganization: string | null;
+            /** @default null */
+            documentationUrl: string | null;
+            /** @default null */
+            labels: unknown | null;
+            /** @default null */
+            createdAt: string | null;
+            /** @default null */
+            modifiedAt: string | null;
+            /** @default null */
+            allowGeometry: boolean | null;
+            /** @default null */
+            versions: string[] | null;
+        };
         /**
          * ObjecttypeEnum
          * @enum {unknown}
@@ -1645,7 +1753,7 @@ export interface components {
                 informatieobjecttypen?: components["schemas"]["InformatieObjectTypeWithUUID"][];
                 roltypen?: components["schemas"]["RolTypeWithUUID"][];
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
-                zaakobjecttypen?: components["schemas"]["ZaakObjectTypeWithUUID"][];
+                zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["ProcesType"];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
@@ -2260,11 +2368,38 @@ export interface components {
          * @description Een SJABLOON
          */
         Sjabloon_OptionalExpandableZaakTypeRequest_: {
-            /** @description Korte titel van het sjabloon */
+            /**
+             * @description Korte titel van het sjabloon
+             * @example Aanvraag met besluit
+             * @example Burgerzaken proces
+             * @example Productverstrekking
+             */
             naam: string;
-            /** @description Beknopte omschrijving van het sjabloon */
+            /**
+             * @description Beknopte omschrijving van het sjabloon
+             * @example Voor processen waarbij een burger of bedrijf iets aanvraagt en daar een formeel besluit of volgt.
+             * @example Voor veelvoorkomende balie- of burgerprocessen.
+             * @example Voor het aanvragen en uitgeven van een fysiek product.
+             */
             omschrijving: string;
-            /** @description Voorbeelden van toepassingen */
+            /**
+             * @description Voorbeelden van toepassingen
+             * @example [
+             *       "parkeervergunning",
+             *       "evenementenvergunning"
+             *     ]
+             * @example [
+             *       "adreswijziging",
+             *       "uittreksel BRP",
+             *       "reisdocument aanvragen"
+             *     ]
+             * @example [
+             *       "afvalpas",
+             *       "milieupas",
+             *       "GFT-bak",
+             *       "pas voor buurtcontainer"
+             *     ]
+             */
             voorbeelden: string[];
             /** @description De vooringevulde waarden */
             waarden: components["schemas"]["OptionalExpandableZaakTypeRequest"];
@@ -2384,6 +2519,11 @@ export interface components {
             /** @default null */
             eindeObject: string | null;
         };
+        /**
+         * UpdateFrequencyEnum
+         * @enum {unknown}
+         */
+        UpdateFrequencyEnum: "daily" | "hourly" | "monthly" | "real_time" | "unknown" | "weekly" | "yearly";
         User: {
             /** ID */
             readonly pk: number;
@@ -2472,6 +2612,10 @@ export interface components {
             /** @default null */
             eindeObject: string | null;
         };
+        /** ZaakObjectTypeExtension */
+        ZaakObjectTypeExtension: {
+            objecttype?: components["schemas"]["ObjectType"];
+        };
         /** ZaakObjectTypeRequest */
         ZaakObjectTypeRequest: {
             /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
@@ -2528,7 +2672,7 @@ export interface components {
             informatieobjecttypen?: components["schemas"]["InformatieObjectTypeWithUUID"][];
             roltypen?: components["schemas"]["RolTypeWithUUID"][];
             deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
-            zaakobjecttypen?: components["schemas"]["ZaakObjectTypeWithUUID"][];
+            zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
             selectielijstProcestype?: components["schemas"]["ProcesType"];
         };
         /** ZaakTypeRequest */
@@ -2860,6 +3004,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["list_HealthCheckSerialisedResult_"];
+                };
+            };
+        };
+    };
+    oidc_info_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OIDCInfo"];
                 };
             };
         };
