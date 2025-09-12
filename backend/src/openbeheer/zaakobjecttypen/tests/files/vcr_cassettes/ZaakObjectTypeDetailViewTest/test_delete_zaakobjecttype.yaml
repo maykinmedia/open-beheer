@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"domein": "DCJEX", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+    body: '{"domein": "KEAYL", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
       "naam": "Test catalogus"}'
     headers:
       Accept:
@@ -9,17 +9,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
       Content-Length:
       - '104'
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d","domein":"DCJEX","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","domein":"KEAYL","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
         catalogus","versie":"","begindatumVersie":null}'
     headers:
       API-version:
@@ -30,14 +34,25 @@ interactions:
       - keep-alive
       Content-Length:
       - '365'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:29 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d
+      - http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -55,7 +70,7 @@ interactions:
       false, "verlengingMogelijk": true, "verlengingstermijn": "P40D", "publicatieIndicatie":
       false, "productenOfDiensten": ["https://example.com/product/321"], "referentieproces":
       {"naam": "ReferentieProces 1"}, "verantwoordelijke": "200000000", "beginGeldigheid":
-      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d",
+      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd",
       "besluittypen": [], "gerelateerdeZaaktypen": [], "selectielijstProcestype":
       "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"}'
     headers:
@@ -65,21 +80,25 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
       Content-Length:
       - '922'
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478","identificatie":"ZAAKTYPE-2025-0000000076","omschrijving":"Another
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9","identificatie":"ZAAKTYPE-2025-0000000111","omschrijving":"Another
         test zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -89,14 +108,25 @@ interactions:
       - keep-alive
       Content-Length:
       - '1373'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:30 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -107,8 +137,58 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"anderObjecttype": true, "objecttype": "http://example.com", "relatieOmschrijving":
-      "Open", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478",
+    body: '{"name": "Parkeer vergunning", "namePlural": "Parkeer vergunningen"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Token 18b2b74ef994314b84021d47b9422e82b685d82f
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.4
+    method: POST
+    uri: http://localhost:8004/api/v2/objecttypes
+  response:
+    body:
+      string: '{"url":"http://localhost:8004/api/v2/objecttypes/a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78","uuid":"a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-12","modifiedAt":"2025-09-12","allowGeometry":true,"versions":[]}'
+    headers:
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Content-Length:
+      - '519'
+      Content-Security-Policy:
+      - 'object-src ''none''; font-src ''self'' fonts.gstatic.com; worker-src ''self''
+        blob:; frame-src ''self''; base-uri ''self''; img-src ''self'' data: cdn.redoc.ly;
+        frame-ancestors ''none''; form-action ''self''; default-src ''self''; script-src
+        ''self'' ''unsafe-inline''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8004/api/v2/objecttypes/a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"anderObjecttype": true, "objecttype": "http://localhost:8004/api/v2/objecttypes/a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78",
+      "relatieOmschrijving": "Open", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9",
       "statustype": null, "beginGeldigheid": null, "eindeGeldigheid": null}'
     headers:
       Accept:
@@ -117,17 +197,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
       Content-Length:
-      - '262'
+      - '321'
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/1d94e16b-6c32-4894-88c0-6a04596ad5a4","anderObjecttype":true,"objecttype":"http://example.com","relatieOmschrijving":"Open","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000076","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/709341b9-ee3c-47e7-9b1f-ad8450091509","anderObjecttype":true,"objecttype":"http://localhost:8004/api/v2/objecttypes/a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78","relatieOmschrijving":"Open","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000111","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -136,15 +220,26 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '559'
+      - '618'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:30 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaakobjecttypen/1d94e16b-6c32-4894-88c0-6a04596ad5a4
+      - http://localhost:8003/catalogi/api/v1/zaakobjecttypen/709341b9-ee3c-47e7-9b1f-ad8450091509
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -155,7 +250,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478",
+    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9",
       "omschrijving": "Vastgesteld", "omschrijvingGeneriek": "initiator"}'
     headers:
       Accept:
@@ -164,17 +259,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
       Content-Length:
       - '168'
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/roltypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/roltypen/09ec1f4e-88fe-4179-aa5f-c9f4bf28257c","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000076","omschrijving":"Vastgesteld","omschrijvingGeneriek":"initiator","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/roltypen/eb664606-691b-4cef-93dd-b0fe07de5c81","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000111","omschrijving":"Vastgesteld","omschrijvingGeneriek":"initiator","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -184,14 +283,25 @@ interactions:
       - keep-alive
       Content-Length:
       - '492'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:30 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/roltypen/09ec1f4e-88fe-4179-aa5f-c9f4bf28257c
+      - http://localhost:8003/catalogi/api/v1/roltypen/eb664606-691b-4cef-93dd-b0fe07de5c81
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -202,7 +312,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478",
+    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9",
       "omschrijving": "Gegrond", "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c",
       "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
       "archiefnominatie": "vernietigen", "brondatumArchiefprocedure": {"afleidingswijze":
@@ -215,17 +325,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
       Content-Length:
       - '586'
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/resultaattypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/resultaattypen/41f135f0-9918-4c32-a1d2-afe1f2bc25a7","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000076","omschrijving":"Gegrond","resultaattypeomschrijving":"https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c","omschrijvingGeneriek":"Gegrond","selectielijstklasse":"https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc","toelichting":"","archiefnominatie":"vernietigen","archiefactietermijn":null,"brondatumArchiefprocedure":{"afleidingswijze":"afgehandeld","datumkenmerk":"","einddatumBekend":false,"objecttype":"","registratie":"","procestermijn":null},"procesobjectaard":"","indicatieSpecifiek":null,"procestermijn":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d","besluittypen":[],"besluittypeOmschrijving":[],"informatieobjecttypen":[],"informatieobjecttypeOmschrijving":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/resultaattypen/2c68f24f-e4e6-4de4-b327-603533090ba9","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000111","omschrijving":"Gegrond","resultaattypeomschrijving":"https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c","omschrijvingGeneriek":"Gegrond","selectielijstklasse":"https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc","toelichting":"","archiefnominatie":"vernietigen","archiefactietermijn":null,"brondatumArchiefprocedure":{"afleidingswijze":"afgehandeld","datumkenmerk":"","einddatumBekend":false,"objecttype":"","registratie":"","procestermijn":null},"procesobjectaard":"","indicatieSpecifiek":null,"procestermijn":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","besluittypen":[],"besluittypeOmschrijving":[],"informatieobjecttypen":[],"informatieobjecttypeOmschrijving":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -235,14 +349,25 @@ interactions:
       - keep-alive
       Content-Length:
       - '1157'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:30 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/resultaattypen/41f135f0-9918-4c32-a1d2-afe1f2bc25a7
+      - http://localhost:8003/catalogi/api/v1/resultaattypen/2c68f24f-e4e6-4de4-b327-603533090ba9
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -253,7 +378,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "begin", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478",
+    body: '{"omschrijving": "begin", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9",
       "volgnummer": 1, "omschrijving_generiek": "", "statustekst": "", "informeren":
       false, "checklistitem_statustype": []}'
     headers:
@@ -263,17 +388,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
       Content-Length:
       - '243'
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/statustypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/c442a01d-2646-43bb-8bb2-c77b5582a2b6","omschrijving":"begin","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000076","volgnummer":1,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/f6a2738f-cfcf-4583-ad82-461a43f62e0e","omschrijving":"begin","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000111","volgnummer":1,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -283,14 +412,25 @@ interactions:
       - keep-alive
       Content-Length:
       - '659'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:31 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/statustypen/c442a01d-2646-43bb-8bb2-c77b5582a2b6
+      - http://localhost:8003/catalogi/api/v1/statustypen/f6a2738f-cfcf-4583-ad82-461a43f62e0e
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -301,7 +441,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "eind", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478",
+    body: '{"omschrijving": "eind", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9",
       "volgnummer": 2, "omschrijving_generiek": "", "statustekst": "", "informeren":
       false, "checklistitem_statustype": []}'
     headers:
@@ -311,17 +451,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
       Content-Length:
       - '242'
       Content-Type:
       - application/json
+      User-Agent:
+      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/statustypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/f1214592-78fc-459e-832d-ced071d73a00","omschrijving":"eind","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/4930f8ca-7355-4212-b298-e1359c8bc478","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000076","volgnummer":2,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/2f4a1db6-1821-4b02-822c-f8f5b19e006d","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/2848f015-4ae2-44f5-9369-d3fd04f6d197","omschrijving":"eind","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000111","volgnummer":2,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -331,14 +475,25 @@ interactions:
       - keep-alive
       Content-Length:
       - '658'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:31 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/statustypen/f1214592-78fc-459e-832d-ced071d73a00
+      - http://localhost:8003/catalogi/api/v1/statustypen/2848f015-4ae2-44f5-9369-d3fd04f6d197
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -357,15 +512,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NzY4MjIwOSwiZXhwIjoxNzU3NzI1NDA5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.itCwa8U9wN5j_0-dJ3LPt5EEqdscO_FOJ_qfelNiO34
       Connection:
       - keep-alive
-      Content-Length:
-      - '0'
-    method: DELETE
-    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen/1d94e16b-6c32-4894-88c0-6a04596ad5a4
+      User-Agent:
+      - python-requests/2.32.4
+    method: GET
+    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen/709341b9-ee3c-47e7-9b1f-ad8450091509
   response:
     body:
-      string: ''
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/709341b9-ee3c-47e7-9b1f-ad8450091509","anderObjecttype":true,"objecttype":"http://localhost:8004/api/v2/objecttypes/a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78","relatieOmschrijving":"Open","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/f7be6e1f-8cac-4eb4-83cf-400767b718e9","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000111","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/d0d686da-0f20-4f19-bcc8-437356df51fd","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -374,11 +531,26 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '0'
+      - '618'
+      Content-Security-Policy:
+      - 'form-action ''self''; frame-ancestors ''none''; connect-src ''self'' raw.githubusercontent.com;
+        script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
+        font-src ''self'' fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
+        tile.openstreetmap.org; default-src ''self''; frame-src ''self''; style-src
+        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
+        worker-src ''self'' blob:; object-src ''none''; base-uri ''self'''
+      Content-Type:
+      - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      Date:
+      - Fri, 12 Sep 2025 13:03:31 GMT
+      ETag:
+      - '"ae2a6f2cd2ff45752a26fd4a19afa618"'
       Referrer-Policy:
       - same-origin
+      Server:
+      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -386,34 +558,60 @@ interactions:
       X-Frame-Options:
       - DENY
     status:
-      code: 204
-      message: No Content
+      code: 200
+      message: OK
 - request:
     body: null
     headers:
       Accept:
       - '*/*'
-      Accept-Crs:
-      - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Token 18b2b74ef994314b84021d47b9422e82b685d82f
       Connection:
       - keep-alive
+      User-Agent:
+      - python-requests/2.32.4
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen/1d94e16b-6c32-4894-88c0-6a04596ad5a4
+    uri: http://localhost:8004/api/v2/objecttypes?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Ff7be6e1f-8cac-4eb4-83cf-400767b718e9
   response:
     body:
-      string: '{"type":"http://localhost:8003/ref/fouten/NotFound/","code":"not_found","title":"Niet
-        gevonden.","status":404,"detail":"Niet gevonden.","instance":"urn:uuid:a1b2af07-c2a0-4a9f-99ca-99b2717c921a"}'
+      string: '{"count":24,"next":null,"previous":null,"results":[{"url":"http://localhost:8004/api/v2/objecttypes/a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78","uuid":"a7dedcf2-1925-4b5d-a93c-4c1e68d1eb78","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-12","modifiedAt":"2025-09-12","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/b080ae46-8fed-4098-a002-f2e434c85e2d","uuid":"b080ae46-8fed-4098-a002-f2e434c85e2d","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-12","modifiedAt":"2025-09-12","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/7389643a-6b0a-4af8-81bc-9fbdfc3537a3","uuid":"7389643a-6b0a-4af8-81bc-9fbdfc3537a3","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/d2bfc103-97d2-4f17-8015-73b6879c46a2","uuid":"d2bfc103-97d2-4f17-8015-73b6879c46a2","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/7e007664-5e6f-4146-b269-9bb8c4a86a40","uuid":"7e007664-5e6f-4146-b269-9bb8c4a86a40","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/3b735cdf-0451-47e9-b69e-900337381348","uuid":"3b735cdf-0451-47e9-b69e-900337381348","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/0a4c2c1e-ed00-4569-8047-c757af2260e9","uuid":"0a4c2c1e-ed00-4569-8047-c757af2260e9","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/d6ef5669-1e95-4f65-b85b-a5fc679943f7","uuid":"d6ef5669-1e95-4f65-b85b-a5fc679943f7","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/50a3c9b0-513b-4104-877e-c4348db55558","uuid":"50a3c9b0-513b-4104-877e-c4348db55558","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/a837cc8d-35b9-4293-942f-1e0c814b8a1d","uuid":"a837cc8d-35b9-4293-942f-1e0c814b8a1d","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/b11cc792-1d96-4f10-9319-a6c1543c817c","uuid":"b11cc792-1d96-4f10-9319-a6c1543c817c","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/329c2311-3fa4-42e0-b0a3-680c901e60c1","uuid":"329c2311-3fa4-42e0-b0a3-680c901e60c1","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/739718ab-02cc-4372-8531-6c6955a6ff7b","uuid":"739718ab-02cc-4372-8531-6c6955a6ff7b","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/e410e07a-77d7-4566-b29f-040c226232f4","uuid":"e410e07a-77d7-4566-b29f-040c226232f4","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/30cb1549-c44d-4900-b2c3-41c8dd2b6d45","uuid":"30cb1549-c44d-4900-b2c3-41c8dd2b6d45","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/b15b927f-9178-43ed-89a7-93be8eb73ae3","uuid":"b15b927f-9178-43ed-89a7-93be8eb73ae3","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/d11962d3-0cd1-418b-b785-3c6732bbc321","uuid":"d11962d3-0cd1-418b-b785-3c6732bbc321","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/4e97a825-cbf7-4de3-bee9-adfd101e05ae","uuid":"4e97a825-cbf7-4de3-bee9-adfd101e05ae","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/4783b9a0-1427-4ba2-b2f7-8552907c34a2","uuid":"4783b9a0-1427-4ba2-b2f7-8552907c34a2","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/2f27a2f4-c098-4169-85a0-1b58c7be37e7","uuid":"2f27a2f4-c098-4169-85a0-1b58c7be37e7","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/b4a6c2ec-88f7-484d-95f0-b226415d11e6","uuid":"b4a6c2ec-88f7-484d-95f0-b226415d11e6","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/cbfd606c-1751-4a14-b3d2-54974fea155c","uuid":"cbfd606c-1751-4a14-b3d2-54974fea155c","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/d8c93de6-095d-443c-95af-39d497a534ef","uuid":"d8c93de6-095d-443c-95af-39d497a534ef","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/93d0a399-bb48-457d-bf6a-6526e8df2d48","uuid":"93d0a399-bb48-457d-bf6a-6526e8df2d48","name":"Parkeer
+        vergunning","namePlural":"Parkeer vergunningen","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-11","modifiedAt":"2025-09-11","allowGeometry":true,"versions":[]}]}'
     headers:
-      API-version:
-      - 1.3.1
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      Connection:
-      - keep-alive
+      - GET, POST, HEAD, OPTIONS
       Content-Length:
-      - '195'
+      - '12532'
+      Content-Security-Policy:
+      - 'object-src ''none''; font-src ''self'' fonts.gstatic.com; worker-src ''self''
+        blob:; frame-src ''self''; base-uri ''self''; img-src ''self'' data: cdn.redoc.ly;
+        frame-ancestors ''none''; form-action ''self''; default-src ''self''; script-src
+        ''self'' ''unsafe-inline''; style-src ''self'' ''unsafe-inline'' fonts.googleapis.com'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
@@ -421,12 +619,12 @@ interactions:
       Referrer-Policy:
       - same-origin
       Vary:
-      - Accept, origin
+      - origin
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
       - DENY
     status:
-      code: 404
-      message: Not Found
+      code: 200
+      message: OK
 version: 1

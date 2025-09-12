@@ -196,7 +196,11 @@ class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
             "url",
             "zaaktype",
             "zaaktypeIdentificatie",
+            "_expand",
+            "uuid",
         }
+
+        self.assertIn("objecttype", data["_expand"])
 
     def test_patch_zaakobjecttype(self):
         self.client.force_login(self.user)
@@ -210,7 +214,7 @@ class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
 
         expected = to_builtins(self.zaakobjecttype) | changes
 
-        del expected["uuid"]
+        del data["_expand"]
 
         self.assertEqual(data, expected)
 
