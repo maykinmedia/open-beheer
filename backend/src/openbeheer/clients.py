@@ -77,7 +77,7 @@ def _(sender, instance, **_):
     objecttypen_client.cache_clear()
 
 
-@receiver([post_delete, post_save], sender=APIConfig)
+@receiver([post_delete, post_save], sender=APIConfig, weak=False)
 def _(sender, instance, **_):
     objecttypen_client.cache_clear()
 
