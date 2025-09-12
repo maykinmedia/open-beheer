@@ -21,6 +21,7 @@ from ._open_beheer import (
     RolTypeWithUUID,
     StatusTypeWithUUID,
     VersionSummary,
+    ZaakObjectTypeWithUUID,
     ZaakTypeWithUUID,
     as_ob_fieldtype,
     as_ob_option,
@@ -56,5 +57,6 @@ __all__ = [
     "RolTypeWithUUID",
     "ZaakTypeWithUUID",
     "ExpandableZaakObjectTypeWithUUID",
+    "ZaakObjectTypeWithUUID",
     "OIDCInfo",
 ]
