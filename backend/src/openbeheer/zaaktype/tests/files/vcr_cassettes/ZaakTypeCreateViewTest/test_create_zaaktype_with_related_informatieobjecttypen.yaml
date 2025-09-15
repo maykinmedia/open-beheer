@@ -19,21 +19,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NDU2MDM0NiwiZXhwIjoxNzU0NjAzNTQ2LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.N9ov-mGTK1unnt8y4oJPOrdjw45GUQIrWTBUqs8sf3c
       Connection:
       - keep-alive
       Content-Length:
       - '1037'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/533bf1b9-9358-467a-8010-e5b5cc33922e","identificatie":"ZAAKTYPE-2025-0000000627","omschrijving":"New
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/eb40c8f9-b217-4fa6-b5f4-db2770674541","identificatie":"ZAAKTYPE-2025-0000000064","omschrijving":"New
         Zaaktype 001","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"geheim","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"","referentieproces":{"naam":"ReferentieProces
@@ -47,25 +43,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '1277'
-      Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; frame-src ''self''; object-src ''none''; script-src ''self''
-        ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; connect-src ''self''
-        raw.githubusercontent.com; form-action ''self''; default-src ''self''; frame-ancestors
-        ''none''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        font-src ''self'' fonts.gstatic.com; worker-src ''self'' blob:; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Thu, 07 Aug 2025 09:52:28 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/533bf1b9-9358-467a-8010-e5b5cc33922e
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/eb40c8f9-b217-4fa6-b5f4-db2770674541
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -79,7 +64,7 @@ interactions:
     body: '{"catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
       "omschrijving": "Gewoon een bestand", "vertrouwelijkheidaanduiding": "geheim",
       "informatieobjectcategorie": "Aard- en nagelvast", "begin_geldigheid": "2025-07-30",
-      "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/533bf1b9-9358-467a-8010-e5b5cc33922e"}'
+      "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/eb40c8f9-b217-4fa6-b5f4-db2770674541"}'
     headers:
       Accept:
       - '*/*'
@@ -87,21 +72,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NDU2MDM0NiwiZXhwIjoxNzU0NjAzNTQ2LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.N9ov-mGTK1unnt8y4oJPOrdjw45GUQIrWTBUqs8sf3c
       Connection:
       - keep-alive
       Content-Length:
       - '368'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/59dc7099-078e-4ce7-822a-5531197f6532","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","omschrijving":"Gewoon
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a6aa9a2f-acf4-445b-b47e-0b24091a580a","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","omschrijving":"Gewoon
         een bestand","vertrouwelijkheidaanduiding":"geheim","beginGeldigheid":"2025-07-30","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Aard-
         en nagelvast","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-30","eindeObject":null}'
     headers:
@@ -113,25 +94,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '786'
-      Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; frame-src ''self''; object-src ''none''; script-src ''self''
-        ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; connect-src ''self''
-        raw.githubusercontent.com; form-action ''self''; default-src ''self''; frame-ancestors
-        ''none''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        font-src ''self'' fonts.gstatic.com; worker-src ''self'' blob:; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Thu, 07 Aug 2025 09:52:28 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/informatieobjecttypen/59dc7099-078e-4ce7-822a-5531197f6532
+      - http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a6aa9a2f-acf4-445b-b47e-0b24091a580a
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:

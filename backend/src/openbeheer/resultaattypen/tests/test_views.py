@@ -1,20 +1,16 @@
-from django.test import tag
-
-from maykin_common.vcr import VCRMixin
 from msgspec import to_builtins
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
+from openbeheer.utils.tests import VCRAPITestCase
 
 
-@tag("vcr")
-class ResultaatTypeListViewTests(VCRMixin, APITestCase):
+class ResultaatTypeListViewTests(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -43,9 +39,14 @@ class ResultaatTypeListViewTests(VCRMixin, APITestCase):
         )
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
         response = self.client.get(self.endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_retrieve_resultaattypen(self):
         # Frontend uses _expand instead, but this works too
@@ -89,8 +90,7 @@ class ResultaatTypeListViewTests(VCRMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
-@tag("vcr")
-class ResultaatTypeDetailViewTest(VCRMixin, APITestCase):
+class ResultaatTypeDetailViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -126,9 +126,14 @@ class ResultaatTypeDetailViewTest(VCRMixin, APITestCase):
         )
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
         response = self.client.get(self.endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_retrieve_resultaattype(self):
         self.client.force_login(self.user)

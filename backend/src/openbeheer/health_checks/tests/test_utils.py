@@ -1,19 +1,17 @@
 from unittest.mock import patch
 
-from django.test import TestCase, tag
 from django.utils.translation import gettext as _
 
-from maykin_common.vcr import VCRMixin
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.config.models import APIConfig
+from openbeheer.utils.tests import VCRTestCase
 
 from ..utils import run_health_checks
 
 
-@tag("vcr")
-class RunningHealthChecksTests(VCRMixin, TestCase):
+class RunningHealthChecksTests(VCRTestCase):
     def test_everything_configured_correctly(self):
         ServiceFactory.create(
             api_type=APITypes.ztc,

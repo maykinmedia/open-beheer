@@ -6,12 +6,8 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc0ODg3NjU0NiwiZXhwIjoxNzQ4OTE5NzQ2LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.tRj-RdqAZGOlAy0VKZA8ydXdmCAS8vNueTIJ_HolvQM
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.3
     method: GET
     uri: http://localhost:8003/catalogi/api/v1/WRONG/
   response:
@@ -48,24 +44,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '2203'
-      Content-Security-Policy:
-      - 'object-src ''none''; form-action ''self''; base-uri ''self''; font-src ''self''
-        fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        default-src ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
-        cdn.jsdelivr.net; worker-src ''self'' blob:; frame-ancestors ''none''; frame-src
-        ''self'''
       Content-Type:
       - text/html; charset=utf-8
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Mon, 02 Jun 2025 15:02:26 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.0
       Vary:
       - origin, Cookie
       X-Content-Type-Options:
@@ -82,12 +66,8 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIiLCJpYXQiOjE3NDg4NzY1NDYsImV4cCI6MTc0ODkxOTc0NiwiY2xpZW50X2lkIjoiIiwidXNlcl9pZCI6IiIsInVzZXJfcmVwcmVzZW50YXRpb24iOiIifQ.2j5LDCXztKjj83BjTOznOOWB_nNBSC68M1H3dtE9b2o
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.3
     method: GET
     uri: https://selectielijst.openzaak.nl/api/v1/
   response:
@@ -104,8 +84,6 @@ interactions:
       - '238'
       Content-Type:
       - application/json
-      Date:
-      - Mon, 02 Jun 2025 15:02:26 GMT
       Feature-Policy:
       - autoplay 'none'; camera 'none'
       Referrer-Policy:
@@ -130,12 +108,8 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc0ODg3NjU0NiwiZXhwIjoxNzQ4OTE5NzQ2LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.tRj-RdqAZGOlAy0VKZA8ydXdmCAS8vNueTIJ_HolvQM
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.3
     method: GET
     uri: http://localhost:8003/catalogi/api/v1/WRONG/catalogussen
   response:
@@ -172,24 +146,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '2203'
-      Content-Security-Policy:
-      - 'object-src ''none''; form-action ''self''; base-uri ''self''; font-src ''self''
-        fonts.gstatic.com; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        default-src ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
-        cdn.jsdelivr.net; worker-src ''self'' blob:; frame-ancestors ''none''; frame-src
-        ''self'''
       Content-Type:
       - text/html; charset=utf-8
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Mon, 02 Jun 2025 15:02:26 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.0
       Vary:
       - origin, Cookie
       X-Content-Type-Options:

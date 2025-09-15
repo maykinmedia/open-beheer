@@ -6,12 +6,8 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTM2NDc1NSwiZXhwIjoxNzUxNDA3OTU1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.FdZjwykVrPEWjUEQ-IVm7-zMbf_m7f3fInXc7btwnaA
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
     method: GET
     uri: http://localhost:8003/catalogi/api/v0-alpha-non-existent/
   response:
@@ -48,24 +44,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '2203'
-      Content-Security-Policy:
-      - 'script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        frame-src ''self''; object-src ''none''; style-src ''self'' ''unsafe-inline''
-        fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net; default-src ''self'';
-        base-uri ''self''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
-        worker-src ''self'' blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
-        ''none'''
       Content-Type:
       - text/html; charset=utf-8
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Tue, 01 Jul 2025 10:12:35 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - origin, Cookie
       X-Content-Type-Options:
@@ -82,12 +66,8 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MTM2NDc1NSwiZXhwIjoxNzUxNDA3OTU1LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.FdZjwykVrPEWjUEQ-IVm7-zMbf_m7f3fInXc7btwnaA
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
     method: GET
     uri: http://localhost:8003/catalogi/api/v0-alpha-non-existent/catalogussen
   response:
@@ -124,24 +104,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '2203'
-      Content-Security-Policy:
-      - 'script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        frame-src ''self''; object-src ''none''; style-src ''self'' ''unsafe-inline''
-        fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net; default-src ''self'';
-        base-uri ''self''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
-        worker-src ''self'' blob:; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
-        ''none'''
       Content-Type:
       - text/html; charset=utf-8
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Tue, 01 Jul 2025 10:12:35 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - origin, Cookie
       X-Content-Type-Options:

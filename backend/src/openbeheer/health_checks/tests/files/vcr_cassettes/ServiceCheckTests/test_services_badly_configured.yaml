@@ -6,12 +6,8 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc0ODg3MzgyMywiZXhwIjoxNzQ4OTE3MDIzLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.hL6MqApZ129qwyBRTEREqC8II9c5H7VRAokojT4oEHg
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.3
     method: GET
     uri: http://localhost:8003/catalogi/api/v1/WRONG/
   response:
@@ -48,24 +44,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '2203'
-      Content-Security-Policy:
-      - 'form-action ''self''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com
-        tile.openstreetmap.org; connect-src ''self'' raw.githubusercontent.com; default-src
-        ''self''; frame-src ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com
-        cdn.jsdelivr.net; font-src ''self'' fonts.gstatic.com; style-src ''self''
-        ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        worker-src ''self'' blob:; object-src ''none''; frame-ancestors ''none'';
-        base-uri ''self'''
       Content-Type:
       - text/html; charset=utf-8
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Mon, 02 Jun 2025 14:17:03 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.0
       Vary:
       - origin, Cookie
       X-Content-Type-Options:
@@ -82,12 +66,8 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIiLCJpYXQiOjE3NDg4NzM4MjMsImV4cCI6MTc0ODkxNzAyMywiY2xpZW50X2lkIjoiIiwidXNlcl9pZCI6IiIsInVzZXJfcmVwcmVzZW50YXRpb24iOiIifQ.c19PO8Mg58beVTSmfcpJUlatphtUJnMZBuH2egdH7PY
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.3
     method: GET
     uri: https://selectielijst.openzaak.nl/api/v1/WRONG/
   response:
@@ -107,8 +87,6 @@ interactions:
       - '611'
       Content-Type:
       - text/html; charset=utf-8
-      Date:
-      - Mon, 02 Jun 2025 14:17:03 GMT
       Feature-Policy:
       - autoplay 'none'; camera 'none'
       Strict-Transport-Security:

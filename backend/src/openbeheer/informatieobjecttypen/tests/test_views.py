@@ -1,18 +1,15 @@
-from django.test import tag
-
 from furl import furl
-from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
+from openbeheer.utils.tests import VCRAPITestCase
 
 
-class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
+class InformatieObjectTypeListViewTests(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -31,9 +28,14 @@ class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
         response = self.client.get(self.endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_retrieve_informatieobjecttypen(self):
         self.helper.create_informatieobjecttype()
@@ -148,8 +150,7 @@ class InformatieObjectTypeListViewTests(VCRMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
-@tag("vcr")
-class InformatieObjectTypeDetailViewTest(VCRMixin, APITestCase):
+class InformatieObjectTypeDetailViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -165,6 +166,7 @@ class InformatieObjectTypeDetailViewTest(VCRMixin, APITestCase):
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
         endpoint = reverse(
             "api:informatieobjecttypen:informatieobjecttypen-detail",
             kwargs={"slug": "OZ", "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487"},
@@ -172,7 +174,10 @@ class InformatieObjectTypeDetailViewTest(VCRMixin, APITestCase):
         response = self.client.get(endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(self.cassette.play_count, 0)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_retrieve_informatieobjecttype(self):
         iot = self.helper.create_informatieobjecttype()

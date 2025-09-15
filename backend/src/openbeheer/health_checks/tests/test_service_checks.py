@@ -1,16 +1,15 @@
-from django.test import TestCase, tag
 from django.utils.translation import gettext as _
 
-from maykin_common.vcr import VCRMixin
 from requests.exceptions import ConnectTimeout
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
+from openbeheer.utils.tests import VCRTestCase
+
 from ..checks import CatalogueHealthCheck, ServiceHealthCheck
 
 
-@tag("vcr")
-class ServiceCheckTests(VCRMixin, TestCase):
+class ServiceCheckTests(VCRTestCase):
     def test_ztc_and_orc_services_configured(self):
         ServiceFactory.create(
             api_type=APITypes.ztc,
@@ -103,8 +102,7 @@ class ServiceCheckTests(VCRMixin, TestCase):
         self.assertEqual(errors[1].exc, "")
 
 
-@tag("vcr")
-class CatalogueCheckTests(VCRMixin, TestCase):
+class CatalogueCheckTests(VCRTestCase):
     def test_catalogue_configured(self):
         ServiceFactory.create(
             api_type=APITypes.ztc,

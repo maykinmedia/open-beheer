@@ -2,9 +2,10 @@ from io import StringIO
 
 from django.core.management import call_command
 
-from maykin_common.vcr import VCRTestCase
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
+
+from openbeheer.utils.tests import VCRTestCase
 
 
 class HealthCheckManagementTest(VCRTestCase):

@@ -6,17 +6,30 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc0ODg3NDE3OCwiZXhwIjoxNzQ4OTE3Mzc4LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.CDIDJiiVpIwpuDJPTJI-HDCfEDCNrRuwqVdMLTUXT6U
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.3
     method: GET
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","domein":"VAVAV","rsin":"100000000","contactpersoonBeheerNaam":"Contact
+      string: '{"count":18,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/1b68836e-3723-41f5-b0fe-1b9034830da4","domein":"ISEAV","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/8b5648f3-4b71-4828-862b-0ca20152a42c"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/cf7573c5-a808-41e6-977f-21467b992b84","domein":"QGSYW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/e4b8b0f8-a104-41aa-b6e2-f8b1ad4e4ec9"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/451d0dbc-88e7-43e6-8f2e-8d19563da6d9","domein":"RPQRK","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/67bcec70-11c0-4ad6-b6c1-40c01ad4bd73"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b7c0fe9c-ce5b-4b54-b2ad-f3d5f3d38d19","domein":"RWNHH","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/a57143e9-30e9-4463-9943-5579ea65c7ea"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/275b2524-98e4-476c-bbcb-e91d4e56eccd","domein":"VCTRW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/87c2a3a6-d96c-4b9a-831e-77872cc039fe"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/979a4907-d5bb-4d84-a1ac-94fd2007bb65","domein":"VJISI","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/a40ef6bf-c075-47c6-97bf-1bf033f41612"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/f62a1330-76d1-43c9-9c2c-8aaf338954c7","domein":"VDNXO","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/515ca0af-effc-4628-820f-e532ecac547a"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/185e8a7b-4633-46ae-ae06-945555f2b33b","domein":"CTHGU","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/0e1af15b-990a-47a1-a38d-cd5df15373ce"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/81106305-1b3b-4920-99ee-26f62a3ecace","domein":"FIFKL","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        Catalogue","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/33698c58-602a-40e3-8896-e3fd7ff4011f","domein":"TUEMZ","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/2f4a6810-b1e8-4fce-8302-e518c8431f9a"],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/ed43008d-1cf5-4ed1-b439-54b102115868"],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/1037aede-9a4a-4f2a-a697-521981b44a3b","domein":"EGJMH","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/446b3ed2-bb5f-49f4-aeb0-0b322c7be56c"],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/fc7b0245-23ab-4175-8ff2-348e53454d80"],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/f468c9c9-18cc-4d97-9666-b24cb25629f9","domein":"JTLMQ","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/3433e261-e820-4421-b63a-247e523eaa64"],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/d71dcd7a-9a90-448e-bc06-84252f691d28"],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/86b51624-2880-4996-9d59-0caced9e30ef","domein":"JBEQW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/5e85fb04-c816-4e11-bad1-a3e0899a0b3e"],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/b9f34d7d-5741-4dad-82a3-b4cb8fce5b1f"],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a","domein":"IGOYH","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/f35cf7ca-b2a4-4a7d-befb-59f9308a4417"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b6a6272c-3179-43b7-9e35-00ef650d42da","domein":"AFUKU","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/f715709a-b002-406e-8c0b-2597e6379447"],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/786fccb5-7726-4bfe-abb8-559f5b055cf8"],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/f8ec03c2-86f9-4f39-9862-a41ac2c95b03","domein":"VPYWF","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/a6b5a482-a1f2-4159-82e4-39591df916fd"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0","domein":"QYWBT","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316"],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/61c2be8f-7bc4-4427-81e1-f3127f15c251"],"informatieobjecttypen":[],"naam":"Test
+        catalogus","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77","domein":"VAVAV","rsin":"100000000","contactpersoonBeheerNaam":"Contact
         persoon beheer 0","contactpersoonBeheerTelefoonnummer":"0612345678","contactpersoonBeheerEmailadres":"contact_0@example.com","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/ec9ebcdb-b652-466d-a651-fdb8ea787487","http://localhost:8003/catalogi/api/v1/zaaktypen/be210495-20b6-48ff-8d3d-3e44f74c43a4","http://localhost:8003/catalogi/api/v1/zaaktypen/ecd08880-5081-4d7a-afc3-ade1d6e6346f","http://localhost:8003/catalogi/api/v1/zaaktypen/ce9feadd-00cb-46c8-a0ef-1d1dfc78586a"],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a8089bdf-72d3-414f-a9cd-953cfa602b6c","http://localhost:8003/catalogi/api/v1/informatieobjecttypen/9dee6712-122e-464a-99a3-c16692de5485"],"naam":"Test
         Catalogue","versie":"","begindatumVersie":null}]}'
     headers:
@@ -27,25 +40,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1010'
-      Content-Security-Policy:
-      - 'form-action ''self''; object-src ''none''; frame-src ''self''; script-src
-        ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; default-src
-        ''self''; font-src ''self'' fonts.gstatic.com; frame-ancestors ''none''; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; connect-src
-        ''self'' raw.githubusercontent.com; worker-src ''self'' blob:; style-src ''self''
-        ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        base-uri ''self'''
+      - '9143'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Mon, 02 Jun 2025 14:22:58 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:
