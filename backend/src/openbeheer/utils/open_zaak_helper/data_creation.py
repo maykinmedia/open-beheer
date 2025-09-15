@@ -46,7 +46,7 @@ class OpenZaakDataCreationHelper:
         resource_path: str,
         resource_type: Type[T],
     ) -> T:
-        with ztc_client("OZ") as client:
+        with ztc_client(self.service_identifier) as client:
             response = client.post(resource_path, json=data)
 
             if response.status_code == 400:
@@ -59,6 +59,10 @@ class OpenZaakDataCreationHelper:
             type=resource_type,
             strict=False,
         )
+
+    def delete_resource(self, resource):
+        with ztc_client(self.service_identifier) as client:
+            client.delete(resource.url)
 
     def _get_catalogus(self, catalogus="", **_) -> str:
         assert (url := catalogus or self.create_catalogus().url)
