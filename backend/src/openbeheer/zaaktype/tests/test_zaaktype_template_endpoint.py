@@ -1,21 +1,26 @@
-from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.utils.tests import VCRAPITestCase
 
 
-class ZaakTypeTemplateListViewTest(VCRMixin, APITestCase):
+class ZaakTypeTemplateListViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.user = UserFactory.create()
         cls.url = reverse("api:zaaktypetemplate-list")
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
+
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_retrieve_list(self):
         self.client.force_login(self.user)

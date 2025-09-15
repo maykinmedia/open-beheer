@@ -4,10 +4,8 @@ from unittest import skip
 from django.test import tag
 
 from furl import furl
-from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
@@ -16,10 +14,10 @@ from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.utils.open_zaak_helper.data_creation import (
     OpenZaakDataCreationHelper,
 )
+from openbeheer.utils.tests import VCRAPITestCase
 
 
-@tag("vcr")
-class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
+class ZaakTypeDetailViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -36,6 +34,7 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
         endpoint = reverse(
             "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487"},
@@ -43,7 +42,10 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
         response = self.client.get(endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(self.cassette.play_count, 0)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_retrieve_zaaktype(self):
         zaaktype = self.helper.create_zaaktype(
@@ -67,7 +69,9 @@ class ZaakTypeDetailViewTest(VCRMixin, APITestCase):
             omschrijving="Behandelend afdeling",
             omschrijvingGeneriek="behandelaar",
         )
-        statustype = self.helper.create_statustype(zaaktype.url)
+        statustype = self.helper.create_statustype(
+            zaaktype.url, omschrijving="Omschrijving A"
+        )
 
         iot = self.helper.create_informatieobjecttype(catalogus=zaaktype.catalogus)
         assert (

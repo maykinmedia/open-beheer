@@ -16,21 +16,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDkzMzczOSwiZXhwIjoxNzUwOTc2OTM5LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.EfhaYz-_awfAqdZNbvPr8QWFDLPrWAxxkittRtg08-8
       Connection:
       - keep-alive
       Content-Length:
       - '809'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/96dbaf76-0c38-41f9-8f78-efc679832d64","identificatie":"ZAAKTYPE-2025-0000000007","omschrijving":"New
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/e907a9bc-54ab-4790-a803-87657fd092e2","identificatie":"ZAAKTYPE-2025-0000000055","omschrijving":"New
         Zaaktype 001","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"geheim","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"","referentieproces":{"naam":"ReferentieProces
@@ -44,26 +40,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '1277'
-      Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self''; base-uri
-        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
-        img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
-        ''none'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Thu, 26 Jun 2025 10:28:59 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/96dbaf76-0c38-41f9-8f78-efc679832d64
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/e907a9bc-54ab-4790-a803-87657fd092e2
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:

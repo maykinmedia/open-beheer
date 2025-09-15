@@ -1,16 +1,17 @@
-from maykin_common.vcr import VCRMixin
 from requests import Timeout
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
+from openbeheer.utils.tests import VCRAPITestCase
 
 
-class CatalogiChoicesView(VCRMixin, APITestCase):
+class CatalogiChoicesView(VCRAPITestCase):
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
         ServiceFactory.create(
             api_type=APITypes.ztc,
             api_root="http://localhost:8003/catalogi/api/v1",
@@ -24,6 +25,10 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
+
     def test_retrieve_choices(self):
         user = UserFactory.create()
         ServiceFactory.create(
@@ -34,6 +39,9 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
             slug="tralala-service",
         )
 
+        helper = OpenZaakDataCreationHelper(service_identifier="tralala-service")
+        catalogus = helper.create_catalogus(naam="Test Catalogue")
+        self.addCleanup(lambda: helper.delete_resource(catalogus))
         self.client.force_login(user)
         response = self.client.get(
             reverse("api:catalogi:choices", kwargs={"slug": "tralala-service"})
@@ -43,12 +51,10 @@ class CatalogiChoicesView(VCRMixin, APITestCase):
 
         data = response.json()
 
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]["label"], "Test Catalogue (VAVAV)")
-        self.assertEqual(
-            data[0]["value"],
-            "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-        )
+        self.assertGreaterEqual(len(data), 1)
+
+        self.assertEqual(data[0]["label"], f"Test Catalogue ({catalogus.domein})")
+        self.assertEqual(data[0]["value"], catalogus.url)
 
     def test_openzaak_down(self):
         user = UserFactory.create()

@@ -25,21 +25,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NDU2MDM0NiwiZXhwIjoxNzU0NjAzNTQ2LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.N9ov-mGTK1unnt8y4oJPOrdjw45GUQIrWTBUqs8sf3c
       Connection:
       - keep-alive
       Content-Length:
       - '1696'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/e70207fa-6d58-45e0-a065-14e20ab4f938","identificatie":"ZAAKTYPE-2025-0000000624","omschrijving":"New
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/b3639dd3-f4e3-4248-b7d5-cca750502041","identificatie":"ZAAKTYPE-2025-0000000061","omschrijving":"New
         Zaaktype 001","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"geheim","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"","referentieproces":{"naam":"ReferentieProces
@@ -53,25 +49,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '1277'
-      Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; frame-src ''self''; object-src ''none''; script-src ''self''
-        ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; connect-src ''self''
-        raw.githubusercontent.com; form-action ''self''; default-src ''self''; frame-ancestors
-        ''none''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        font-src ''self'' fonts.gstatic.com; worker-src ''self'' blob:; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Thu, 07 Aug 2025 09:52:27 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/e70207fa-6d58-45e0-a065-14e20ab4f938
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/b3639dd3-f4e3-4248-b7d5-cca750502041
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -98,21 +83,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NDU2MDM0NiwiZXhwIjoxNzU0NjAzNTQ2LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.N9ov-mGTK1unnt8y4oJPOrdjw45GUQIrWTBUqs8sf3c
       Connection:
       - keep-alive
       Content-Length:
       - '831'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/b58892d9-0d1c-4fe5-9882-c756e41fc036","identificatie":"ZAAKTYPE-2025-0000000625","omschrijving":"Sub
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/59c48528-7058-420a-ba54-093599564a72","identificatie":"ZAAKTYPE-2025-0000000062","omschrijving":"Sub
         Zaaktype 001","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"geheim","doel":"Sub
         Zaaktype 001","aanleiding":"Sub Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"Sub
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"","referentieproces":{"naam":"ReferentieProces
@@ -126,25 +107,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '1277'
-      Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; frame-src ''self''; object-src ''none''; script-src ''self''
-        ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; connect-src ''self''
-        raw.githubusercontent.com; form-action ''self''; default-src ''self''; frame-ancestors
-        ''none''; img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        font-src ''self'' fonts.gstatic.com; worker-src ''self'' blob:; base-uri ''self'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Thu, 07 Aug 2025 09:52:27 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/b58892d9-0d1c-4fe5-9882-c756e41fc036
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/59c48528-7058-420a-ba54-093599564a72
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:

@@ -1,10 +1,6 @@
-from django.test import tag
-
 from furl import furl
-from maykin_common.vcr import VCRMixin
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
@@ -12,10 +8,10 @@ from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.clients import ztc_client
 from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
+from openbeheer.utils.tests import VCRAPITestCase
 
 
-@tag("vcr")
-class ZaakTypePublishViewTest(VCRMixin, APITestCase):
+class ZaakTypePublishViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -32,6 +28,7 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
         cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
         endpoint = reverse(
             "api:zaaktypen:zaaktype-publish",
             kwargs={"slug": "OZ", "uuid": "ec9ebcdb-b652-466d-a651-fdb8ea787487"},
@@ -39,6 +36,10 @@ class ZaakTypePublishViewTest(VCRMixin, APITestCase):
         response = self.client.get(endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_publish_zaaktype(self):
         zaaktype = self.helper.create_zaaktype(

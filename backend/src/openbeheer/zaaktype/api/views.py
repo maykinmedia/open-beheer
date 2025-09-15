@@ -4,7 +4,6 @@ import datetime  # noqa: TC003
 from functools import partial
 from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
 
-from django.core.cache import cache
 from django.utils.translation import gettext as _
 
 import structlog

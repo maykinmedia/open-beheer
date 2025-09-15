@@ -16,22 +16,18 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1MDkzMzY1OCwiZXhwIjoxNzUwOTc2ODU4LCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.6C875eD33ITa0KuiP4T_aG4jsSdMMK0ByouFS-JoFJ4
       Connection:
       - keep-alive
       Content-Length:
       - '773'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
       string: '{"type":"http://localhost:8003/ref/fouten/ValidationError/","code":"invalid","title":"Invalid
-        input.","status":400,"detail":"","instance":"urn:uuid:503d2fe3-2de0-4abb-885f-68a186fca3ea","invalidParams":[{"name":"omschrijving","code":"required","reason":"Dit
+        input.","status":400,"detail":"","instance":"urn:uuid:6cc44995-4e37-424c-ad18-8c1bb397e1ca","invalidParams":[{"name":"omschrijving","code":"required","reason":"Dit
         veld is verplicht."}]}'
     headers:
       API-version:
@@ -42,24 +38,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '280'
-      Content-Security-Policy:
-      - 'style-src ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com
-        cdn.jsdelivr.net; worker-src ''self'' blob:; default-src ''self''; base-uri
-        ''self''; script-src ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; font-src ''self'' fonts.gstatic.com; form-action ''self'';
-        img-src ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org;
-        frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; frame-ancestors
-        ''none'''
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Thu, 26 Jun 2025 10:27:38 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.0
       Vary:
       - Accept, origin
       X-Content-Type-Options:

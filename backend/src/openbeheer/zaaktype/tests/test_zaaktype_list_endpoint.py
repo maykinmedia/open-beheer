@@ -1,11 +1,7 @@
-from django.test import tag
-
-from maykin_common.vcr import VCRMixin
 from msgspec import to_builtins
 from requests import get
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
@@ -14,10 +10,10 @@ from openbeheer.types.ztc import Status
 from openbeheer.utils.open_zaak_helper.data_creation import (
     OpenZaakDataCreationHelper,
 )
+from openbeheer.utils.tests import VCRAPITestCase
 
 
-@tag("vcr")
-class ZaakTypeListViewTest(VCRMixin, APITestCase):
+class ZaakTypeListViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -32,9 +28,15 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         cls.url = reverse("api:zaaktypen:zaaktype-list", kwargs={"slug": "OZ"})
 
     def test_not_authenticated(self):
+        calls_during_setup = len(self.cassette.requests) if self.cassette else 0
+
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        if self.cassette:
+            # These should be no requests to the backend if unauthenticated
+            assert len(self.cassette.requests) == calls_during_setup
 
     def test_retrieve_list(self):
         self.client.force_login(self.user)
@@ -167,8 +169,7 @@ class ZaakTypeListViewTest(VCRMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-@tag("vcr")
-class ZaakTypeCreateViewTest(VCRMixin, APITestCase):
+class ZaakTypeCreateViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()

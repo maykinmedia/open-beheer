@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"domein": "RWBLU", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+    body: '{"domein": "IGOYH", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
       "naam": "Test catalogus"}'
     headers:
       Accept:
@@ -9,21 +9,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NjMyMzUyMiwiZXhwIjoxNzU2MzY2NzIyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.k5wL5YGXc97evhZGP7mcz0xKkoln7S09C0pkwtPZopk
       Connection:
       - keep-alive
       Content-Length:
       - '104'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/19f9d149-f56d-4a03-8205-d5e97c268e8e","domein":"RWBLU","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a","domein":"IGOYH","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
         catalogus","versie":"","begindatumVersie":null}'
     headers:
       API-version:
@@ -34,26 +30,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '365'
-      Content-Security-Policy:
-      - 'frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; script-src
-        ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; form-action ''self''; frame-ancestors ''none''; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; base-uri
-        ''self''; worker-src ''self'' blob:; default-src ''self''; font-src ''self''
-        fonts.gstatic.com'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Wed, 27 Aug 2025 19:38:42 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/19f9d149-f56d-4a03-8205-d5e97c268e8e
+      - http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -71,7 +55,7 @@ interactions:
       false, "verlengingMogelijk": true, "verlengingstermijn": "P40D", "publicatieIndicatie":
       false, "productenOfDiensten": ["https://example.com/product/321"], "referentieproces":
       {"naam": "ReferentieProces 1"}, "verantwoordelijke": "200000000", "beginGeldigheid":
-      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/19f9d149-f56d-4a03-8205-d5e97c268e8e",
+      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a",
       "besluittypen": [], "gerelateerdeZaaktypen": [], "selectielijstProcestype":
       "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"}'
     headers:
@@ -81,25 +65,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NjMyMzUyMiwiZXhwIjoxNzU2MzY2NzIyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.k5wL5YGXc97evhZGP7mcz0xKkoln7S09C0pkwtPZopk
       Connection:
       - keep-alive
       Content-Length:
       - '922'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/7b40c911-7763-4d1e-84cd-96015769c4dc","identificatie":"ZAAKTYPE-2025-0000001481","omschrijving":"Another
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/f35cf7ca-b2a4-4a7d-befb-59f9308a4417","identificatie":"ZAAKTYPE-2025-0000000004","omschrijving":"Another
         test zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/19f9d149-f56d-4a03-8205-d5e97c268e8e","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -109,26 +89,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '1373'
-      Content-Security-Policy:
-      - 'frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; script-src
-        ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; form-action ''self''; frame-ancestors ''none''; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; base-uri
-        ''self''; worker-src ''self'' blob:; default-src ''self''; font-src ''self''
-        fonts.gstatic.com'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Wed, 27 Aug 2025 19:38:42 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/7b40c911-7763-4d1e-84cd-96015769c4dc
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/f35cf7ca-b2a4-4a7d-befb-59f9308a4417
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -140,7 +108,7 @@ interactions:
       message: Created
 - request:
     body: '{"publicatieIndicatie": false, "informatieobjecttypen": [], "beginGeldigheid":
-      "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/19f9d149-f56d-4a03-8205-d5e97c268e8e"}'
+      "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a"}'
     headers:
       Accept:
       - '*/*'
@@ -148,21 +116,17 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NjMyMzUyMiwiZXhwIjoxNzU2MzY2NzIyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.k5wL5YGXc97evhZGP7mcz0xKkoln7S09C0pkwtPZopk
       Connection:
       - keep-alive
       Content-Length:
       - '196'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/besluittypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/besluittypen/be29a819-3ac8-4b2b-80ef-e72018d684d1","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/19f9d149-f56d-4a03-8205-d5e97c268e8e","zaaktypen":[],"omschrijving":"","omschrijvingGeneriek":"","besluitcategorie":"","reactietermijn":null,"publicatieIndicatie":false,"publicatietekst":"","publicatietermijn":null,"toelichting":"","informatieobjecttypen":[],"beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"concept":true,"resultaattypen":[],"resultaattypenOmschrijving":[],"vastgelegdIn":[],"beginObject":"2025-06-19","eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/besluittypen/81b5a07e-5b50-4129-b5dc-8efcbd513dc0","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a","zaaktypen":[],"omschrijving":"","omschrijvingGeneriek":"","besluitcategorie":"","reactietermijn":null,"publicatieIndicatie":false,"publicatietekst":"","publicatietermijn":null,"toelichting":"","informatieobjecttypen":[],"beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"concept":true,"resultaattypen":[],"resultaattypenOmschrijving":[],"vastgelegdIn":[],"beginObject":"2025-06-19","eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -172,26 +136,14 @@ interactions:
       - keep-alive
       Content-Length:
       - '605'
-      Content-Security-Policy:
-      - 'frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; script-src
-        ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; form-action ''self''; frame-ancestors ''none''; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; base-uri
-        ''self''; worker-src ''self'' blob:; default-src ''self''; font-src ''self''
-        fonts.gstatic.com'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Wed, 27 Aug 2025 19:38:42 GMT
       Location:
-      - http://localhost:8003/catalogi/api/v1/besluittypen/be29a819-3ac8-4b2b-80ef-e72018d684d1
+      - http://localhost:8003/catalogi/api/v1/besluittypen/81b5a07e-5b50-4129-b5dc-8efcbd513dc0
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -202,7 +154,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"besluittypen": ["http://localhost:8003/catalogi/api/v1/besluittypen/be29a819-3ac8-4b2b-80ef-e72018d684d1"]}'
+    body: '{"besluittypen": ["http://localhost:8003/catalogi/api/v1/besluittypen/81b5a07e-5b50-4129-b5dc-8efcbd513dc0"]}'
     headers:
       Accept:
       - '*/*'
@@ -210,25 +162,21 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NjMyMzUyMiwiZXhwIjoxNzU2MzY2NzIyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.k5wL5YGXc97evhZGP7mcz0xKkoln7S09C0pkwtPZopk
       Connection:
       - keep-alive
       Content-Length:
       - '109'
       Content-Type:
       - application/json
-      User-Agent:
-      - python-requests/2.32.4
     method: PATCH
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/7b40c911-7763-4d1e-84cd-96015769c4dc
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/f35cf7ca-b2a4-4a7d-befb-59f9308a4417
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/7b40c911-7763-4d1e-84cd-96015769c4dc","identificatie":"ZAAKTYPE-2025-0000001481","omschrijving":"Another
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/f35cf7ca-b2a4-4a7d-befb-59f9308a4417","identificatie":"ZAAKTYPE-2025-0000000004","omschrijving":"Another
         test zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/19f9d149-f56d-4a03-8205-d5e97c268e8e","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/be29a819-3ac8-4b2b-80ef-e72018d684d1"],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/3e007ea7-682f-4286-b659-48c3beb7e40a","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/81b5a07e-5b50-4129-b5dc-8efcbd513dc0"],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -238,24 +186,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '1462'
-      Content-Security-Policy:
-      - 'frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; script-src
-        ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; form-action ''self''; frame-ancestors ''none''; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; base-uri
-        ''self''; worker-src ''self'' blob:; default-src ''self''; font-src ''self''
-        fonts.gstatic.com'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Wed, 27 Aug 2025 19:38:42 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -274,16 +210,12 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NjMyMzUyMiwiZXhwIjoxNzU2MzY2NzIyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.k5wL5YGXc97evhZGP7mcz0xKkoln7S09C0pkwtPZopk
       Connection:
       - keep-alive
       Content-Length:
       - '0'
-      User-Agent:
-      - python-requests/2.32.4
     method: DELETE
-    uri: http://localhost:8003/catalogi/api/v1/besluittypen/be29a819-3ac8-4b2b-80ef-e72018d684d1
+    uri: http://localhost:8003/catalogi/api/v1/besluittypen/81b5a07e-5b50-4129-b5dc-8efcbd513dc0
   response:
     body:
       string: ''
@@ -296,22 +228,10 @@ interactions:
       - keep-alive
       Content-Length:
       - '0'
-      Content-Security-Policy:
-      - 'frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; script-src
-        ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; form-action ''self''; frame-ancestors ''none''; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; base-uri
-        ''self''; worker-src ''self'' blob:; default-src ''self''; font-src ''self''
-        fonts.gstatic.com'
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Wed, 27 Aug 2025 19:38:42 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:
@@ -330,18 +250,14 @@ interactions:
       - EPSG:4326
       Accept-Encoding:
       - gzip, deflate
-      Authorization:
-      - Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LXZjciIsImlhdCI6MTc1NjMyMzUyMiwiZXhwIjoxNzU2MzY2NzIyLCJjbGllbnRfaWQiOiJ0ZXN0LXZjciIsInVzZXJfaWQiOiIiLCJ1c2VyX3JlcHJlc2VudGF0aW9uIjoiIn0.k5wL5YGXc97evhZGP7mcz0xKkoln7S09C0pkwtPZopk
       Connection:
       - keep-alive
-      User-Agent:
-      - python-requests/2.32.4
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/besluittypen/be29a819-3ac8-4b2b-80ef-e72018d684d1
+    uri: http://localhost:8003/catalogi/api/v1/besluittypen/81b5a07e-5b50-4129-b5dc-8efcbd513dc0
   response:
     body:
       string: '{"type":"http://localhost:8003/ref/fouten/NotFound/","code":"not_found","title":"Niet
-        gevonden.","status":404,"detail":"Niet gevonden.","instance":"urn:uuid:82e0820c-afb1-4926-b480-7a5be7ad28e1"}'
+        gevonden.","status":404,"detail":"Niet gevonden.","instance":"urn:uuid:4918cac3-b69b-4cd7-bf9c-88a1d341c350"}'
     headers:
       API-version:
       - 1.3.1
@@ -351,24 +267,12 @@ interactions:
       - keep-alive
       Content-Length:
       - '195'
-      Content-Security-Policy:
-      - 'frame-src ''self''; connect-src ''self'' raw.githubusercontent.com; script-src
-        ''self'' ''unsafe-inline'' cdnjs.cloudflare.com cdn.jsdelivr.net; style-src
-        ''self'' ''unsafe-inline'' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net;
-        object-src ''none''; form-action ''self''; frame-ancestors ''none''; img-src
-        ''self'' data: cdn.redoc.ly cdnjs.cloudflare.com tile.openstreetmap.org; base-uri
-        ''self''; worker-src ''self'' blob:; default-src ''self''; font-src ''self''
-        fonts.gstatic.com'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
-      Date:
-      - Wed, 27 Aug 2025 19:38:42 GMT
       Referrer-Policy:
       - same-origin
-      Server:
-      - nginx/1.27.4
       Vary:
       - Accept, origin
       X-Content-Type-Options:

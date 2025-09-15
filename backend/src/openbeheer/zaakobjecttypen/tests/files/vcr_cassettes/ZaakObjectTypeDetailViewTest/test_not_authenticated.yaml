@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"domein": "QOXBH", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+    body: '{"domein": "QYBUE", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
       "naam": "Test catalogus"}'
     headers:
       Accept:
@@ -19,7 +19,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c","domein":"QOXBH","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528","domein":"QYBUE","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
         catalogus","versie":"","begindatumVersie":null}'
     headers:
       API-version:
@@ -35,7 +35,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c
+      - http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528
       Referrer-Policy:
       - same-origin
       Vary:
@@ -55,7 +55,7 @@ interactions:
       false, "verlengingMogelijk": true, "verlengingstermijn": "P40D", "publicatieIndicatie":
       false, "productenOfDiensten": ["https://example.com/product/321"], "referentieproces":
       {"naam": "ReferentieProces 1"}, "verantwoordelijke": "200000000", "beginGeldigheid":
-      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c",
+      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528",
       "besluittypen": [], "gerelateerdeZaaktypen": [], "selectielijstProcestype":
       "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"}'
     headers:
@@ -75,11 +75,11 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2","identificatie":"ZAAKTYPE-2025-0000000043","omschrijving":"Another
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135","identificatie":"ZAAKTYPE-2025-0000000046","omschrijving":"Another
         test zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -94,7 +94,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135
       Referrer-Policy:
       - same-origin
       Vary:
@@ -107,7 +107,55 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2",
+    body: '{"anderObjecttype": true, "objecttype": "http://example.com", "relatieOmschrijving":
+      "Open", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135",
+      "statustype": null, "beginGeldigheid": null, "eindeGeldigheid": null}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '262'
+      Content-Type:
+      - application/json
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/91dad853-7edf-41c9-8522-0b5e93f6a2bc","anderObjecttype":true,"objecttype":"http://example.com","relatieOmschrijving":"Open","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000046","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '559'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8003/catalogi/api/v1/zaakobjecttypen/91dad853-7edf-41c9-8522-0b5e93f6a2bc
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135",
       "omschrijving": "Vastgesteld", "omschrijvingGeneriek": "initiator"}'
     headers:
       Accept:
@@ -126,7 +174,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/roltypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/roltypen/f9c2d399-3609-4ad7-98d1-03c2ff4ecf56","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000043","omschrijving":"Vastgesteld","omschrijvingGeneriek":"initiator","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/roltypen/26f78743-6c42-4542-a966-c9f161d5f11d","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000046","omschrijving":"Vastgesteld","omschrijvingGeneriek":"initiator","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -141,7 +189,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/roltypen/f9c2d399-3609-4ad7-98d1-03c2ff4ecf56
+      - http://localhost:8003/catalogi/api/v1/roltypen/26f78743-6c42-4542-a966-c9f161d5f11d
       Referrer-Policy:
       - same-origin
       Vary:
@@ -154,7 +202,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2",
+    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135",
       "omschrijving": "Gegrond", "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c",
       "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
       "archiefnominatie": "vernietigen", "brondatumArchiefprocedure": {"afleidingswijze":
@@ -177,7 +225,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/resultaattypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/resultaattypen/4ea6e76d-e9a0-40fe-a313-ebc8f597f7a2","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000043","omschrijving":"Gegrond","resultaattypeomschrijving":"https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c","omschrijvingGeneriek":"Gegrond","selectielijstklasse":"https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc","toelichting":"","archiefnominatie":"vernietigen","archiefactietermijn":null,"brondatumArchiefprocedure":{"afleidingswijze":"afgehandeld","datumkenmerk":"","einddatumBekend":false,"objecttype":"","registratie":"","procestermijn":null},"procesobjectaard":"","indicatieSpecifiek":null,"procestermijn":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c","besluittypen":[],"besluittypeOmschrijving":[],"informatieobjecttypen":[],"informatieobjecttypeOmschrijving":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/resultaattypen/9b21dd0a-b1f2-47fd-9800-9d54b4901722","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000046","omschrijving":"Gegrond","resultaattypeomschrijving":"https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c","omschrijvingGeneriek":"Gegrond","selectielijstklasse":"https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc","toelichting":"","archiefnominatie":"vernietigen","archiefactietermijn":null,"brondatumArchiefprocedure":{"afleidingswijze":"afgehandeld","datumkenmerk":"","einddatumBekend":false,"objecttype":"","registratie":"","procestermijn":null},"procesobjectaard":"","indicatieSpecifiek":null,"procestermijn":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528","besluittypen":[],"besluittypeOmschrijving":[],"informatieobjecttypen":[],"informatieobjecttypeOmschrijving":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -192,7 +240,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/resultaattypen/4ea6e76d-e9a0-40fe-a313-ebc8f597f7a2
+      - http://localhost:8003/catalogi/api/v1/resultaattypen/9b21dd0a-b1f2-47fd-9800-9d54b4901722
       Referrer-Policy:
       - same-origin
       Vary:
@@ -205,7 +253,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "begin", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2",
+    body: '{"omschrijving": "begin", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135",
       "volgnummer": 1, "omschrijving_generiek": "", "statustekst": "", "informeren":
       false, "checklistitem_statustype": []}'
     headers:
@@ -225,7 +273,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/statustypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/993967ed-de7c-42a6-888c-6dfdcf12be1f","omschrijving":"begin","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000043","volgnummer":1,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/d9f60a1f-f563-4176-8e89-2497f1f8e2bc","omschrijving":"begin","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000046","volgnummer":1,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -240,7 +288,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/statustypen/993967ed-de7c-42a6-888c-6dfdcf12be1f
+      - http://localhost:8003/catalogi/api/v1/statustypen/d9f60a1f-f563-4176-8e89-2497f1f8e2bc
       Referrer-Policy:
       - same-origin
       Vary:
@@ -253,7 +301,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "eind", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2",
+    body: '{"omschrijving": "eind", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135",
       "volgnummer": 2, "omschrijving_generiek": "", "statustekst": "", "informeren":
       false, "checklistitem_statustype": []}'
     headers:
@@ -273,7 +321,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/statustypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/ca8664f3-9ebd-46c2-a2cb-bf01e535bc1e","omschrijving":"eind","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/c870dde4-e361-40f4-9a87-2b0a4b9130d2","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000043","volgnummer":2,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/ef014d8b-03fa-4d48-84cd-6518a8a25c6c","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/94118f91-5c68-4167-95cf-8a34b9d817f4","omschrijving":"eind","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/eeac70c6-ed06-4599-b0cf-df6d07484135","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000046","volgnummer":2,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e8b6c4a3-7448-4289-b789-88b9d8f0f528","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -288,7 +336,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/statustypen/ca8664f3-9ebd-46c2-a2cb-bf01e535bc1e
+      - http://localhost:8003/catalogi/api/v1/statustypen/94118f91-5c68-4167-95cf-8a34b9d817f4
       Referrer-Policy:
       - same-origin
       Vary:
