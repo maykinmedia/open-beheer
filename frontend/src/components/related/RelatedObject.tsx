@@ -16,7 +16,7 @@ import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
 import { BaseTabSection, TabConfig } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
-import { ExpandItemKeys, RelatedObject } from "~/types";
+import { ExpandItemKeys, RelatedObject, components } from "~/types";
 
 /**
  * Props for the {@link RelatedObjectRenderer} component.
@@ -25,7 +25,7 @@ import { ExpandItemKeys, RelatedObject } from "~/types";
  */
 type RelatedObjectRendererProps<T extends object> = {
   /** The related object(s) to display or edit. */
-  relatedObject: RelatedObject<T>;
+  relatedObject: RelatedObject<T> | RelatedObject<T>[];
   /** The type of view to render (e.g., "DataGrid" or "AttributeGrid"). */
   view: TabConfig<T>["view"];
   /** The set of fields to expand and render. */
@@ -34,6 +34,7 @@ type RelatedObjectRendererProps<T extends object> = {
   field: ExpandItemKeys<T>;
   /** UUID of the zaaktype the related object belongs to. */
   zaaktypeUuid: string;
+  nestedFields: components["schemas"]["OBField"][] | undefined;
 };
 
 /**
@@ -52,6 +53,7 @@ export function RelatedObjectRenderer<T extends object>({
   expandFields,
   field,
   zaaktypeUuid,
+  nestedFields,
 }: RelatedObjectRendererProps<T>) {
   const params = useParams();
   const submitAction = useSubmitAction<ZaaktypeAction>();
@@ -65,10 +67,27 @@ export function RelatedObjectRenderer<T extends object>({
   const { state } = useNavigation();
   const isLoading = state !== "idle";
 
-  const typedFields = expandFields.map((f) =>
-    field2TypedField(f as TypedField<typeof relatedObject>),
-  );
+  const typedFields = expandFields.map((f) => {
+    if (nestedFields) {
+      const nestedField = nestedFields.find(
+        (nestedField) => nestedField.name === f,
+      );
+      if (nestedField) return nestedField;
+    }
+
+    return field2TypedField(f as TypedField<typeof relatedObject>);
+  });
   const fieldNames = typedFields.map((t) => t.name);
+
+  // FIXME: In non-edit mode, we want to use the name of the objecttype, while
+  // in edit mode the select uses automatically the label of the options.
+  if (!isEditing && field == "zaakobjecttypen") {
+    if (Array.isArray(relatedObject)) {
+      relatedObject.map((zaakobjecttype) => {
+        zaakobjecttype.objecttype = `${zaakobjecttype._expand.objecttype?.name}`;
+      });
+    }
+  }
 
   /**
    * Handles adding a new related object stub with default values.
@@ -116,6 +135,19 @@ export function RelatedObjectRenderer<T extends object>({
           }
         }
 
+        if (nestedFields) {
+          const nestedFieldDefinition = nestedFields.find(
+            (nestedField) => nestedField.name === name,
+          );
+          if (
+            nestedFieldDefinition &&
+            nestedFieldDefinition.options &&
+            nestedFieldDefinition.options.length
+          ) {
+            value = nestedFieldDefinition.options[0].value;
+          }
+        }
+
         return {
           ...acc,
           [name]: value,
@@ -124,7 +156,6 @@ export function RelatedObjectRenderer<T extends object>({
       {},
     );
 
-    // @ts-expect-error - Loosely typed.
     if (fieldNames.includes("volgnummer")) {
       // @ts-expect-error - Loosely typed.
       relatedObjectStub["volgnummer"] = nextIndex;
@@ -206,7 +237,7 @@ export function RelatedObjectRenderer<T extends object>({
     return (
       <RelatedObjectBadge
         relatedObject={relatedObject}
-        allowedFields={fieldNames}
+        allowedFields={fieldNames as ExpandItemKeys<RelatedObject<T>>[]}
       />
     );
   }
@@ -217,7 +248,7 @@ export function RelatedObjectRenderer<T extends object>({
         <DataGrid<(typeof relatedObject)[number]>
           objectList={augmentedObjectList}
           fields={[
-            ...expandFields,
+            ...(typedFields as TypedField[]),
             { name: "", type: "jsx", editable: false, sortable: false },
           ]}
           boolProps={{ explicit: true }}

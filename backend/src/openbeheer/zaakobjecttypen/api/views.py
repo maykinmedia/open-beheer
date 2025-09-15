@@ -9,7 +9,7 @@ from openbeheer.api.views import (
     DetailViewWithoutVersions,
     ListView,
 )
-from openbeheer.helpers import retrieve_objecttypen_for_zaaktype
+from openbeheer.helpers import retrieve_objecttypen
 from openbeheer.types import (
     ExpandableZaakObjectTypeWithUUID,
     ExternalServiceError,
@@ -74,7 +74,7 @@ def expand_zaakobjecttype(
 ) -> Iterable[ObjectType | None]:
     # We are in the detail endpoint, so there is only one ZaakObjectType
     zaakobjecttype = list(zaakobjecttypen)[0]
-    dict_objecttypen = retrieve_objecttypen_for_zaaktype(zaakobjecttype.zaaktype)
+    dict_objecttypen = retrieve_objecttypen(zaakobjecttype.zaaktype)
 
     try:
         return [dict_objecttypen[zaakobjecttype.objecttype]]
