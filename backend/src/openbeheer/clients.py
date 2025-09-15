@@ -35,7 +35,7 @@ def ztc_client(slug: str = "") -> APIClient | NoReturn:
 
 
 @cache
-def selectielijst_client() -> APIClient:
+def selectielijst_client() -> APIClient | NoReturn:
     # This is probably strongly tied to the ZTC service, because
     # for selectielijsten Open Zaak has a "ReferentieLijstConfig" singleton
     # service configured with an array of acceptable years.
@@ -51,12 +51,10 @@ def selectielijst_client() -> APIClient:
     # Access-Control-Allow-Origin: *
     # so the UI can just call them directly.
 
-    try:
-        config = APIConfig.get_solo()
-        if config.selectielijst_api_service is None:
-            raise ValueError
-    except (APIConfig.DoesNotExist, ValueError) as e:
-        raise ImproperlyConfigured(__("No Selectielijst service configured")) from e
+    config = APIConfig.get_solo()
+
+    if config.selectielijst_api_service is None:
+        raise ImproperlyConfigured(__("No Selectielijst service configured"))
 
     return build_client(config.selectielijst_api_service)
 
@@ -66,6 +64,9 @@ def _(sender, instance, **_):
     if instance.api_type == APITypes.ztc:
         ztc_client.cache_clear()
     selectielijst_client.cache_clear()
+    # get_solo is broken. It won't invalidate cache when foreign keys get deleted
+    if instance == APIConfig.get_solo().selectielijst_api_service:
+        APIConfig.clear_cache()
 
 
 @receiver([post_delete, post_save], sender=APIConfig, weak=False)

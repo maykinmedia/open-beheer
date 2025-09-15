@@ -17,6 +17,9 @@ E2E_TESTS = config("E2E_TESTS", default=True)
 
 from .base import *  # noqa isort:skip
 
+# Setting SOLO_CACHE name to "" disables it
+SOLO_CACHE = config("SOLO_CACHE", default="")
+
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 CACHES.update(
