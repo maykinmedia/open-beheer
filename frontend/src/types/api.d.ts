@@ -1670,7 +1670,9 @@ export interface components {
             /** @default null */
             documentationUrl: string | null;
             /** @default null */
-            labels: unknown | null;
+            labels: {
+                [key: string]: string | number | Record<string, never>;
+            } | null;
             /** @default null */
             createdAt: string | null;
             /** @default null */

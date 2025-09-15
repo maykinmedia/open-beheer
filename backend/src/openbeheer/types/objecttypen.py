@@ -168,7 +168,7 @@ class ObjectType(Struct, kw_only=True):
     ) = field(name="documentationUrl", default=None)
     labels: (
         Annotated[
-            Any,
+            dict[str, str | int | dict],
             Meta(description="Key-value pairs of keywords related for the object type"),
         ]
         | None
@@ -371,7 +371,7 @@ class PatchedObjectType(Struct, kw_only=True):
     ) = field(name="documentationUrl", default=None)
     labels: (
         Annotated[
-            Any,
+            dict[str, str],
             Meta(description="Key-value pairs of keywords related for the object type"),
         ]
         | None
