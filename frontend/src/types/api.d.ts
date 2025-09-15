@@ -58,7 +58,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/oidc-info": {
+    "/api/v1/oidc-info/": {
         parameters: {
             query?: never;
             header?: never;
@@ -1531,6 +1531,7 @@ export interface components {
             filterLookup?: string;
             options?: components["schemas"]["OBOption"][];
             editable?: boolean;
+            nestedFields?: components["schemas"]["OBField"][];
         };
         /**
          * OBFieldType
