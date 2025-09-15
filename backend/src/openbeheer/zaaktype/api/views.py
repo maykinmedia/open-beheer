@@ -49,7 +49,6 @@ from openbeheer.types._open_beheer import (
     ExpandableZaakTypeRequest,
     LAXProcesType,
     VersionedResourceSummary,
-    as_ob_option,
 )
 from openbeheer.types.ztc import (
     BesluitType,

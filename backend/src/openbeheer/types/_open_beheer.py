@@ -12,6 +12,7 @@ from typing import (
     Annotated,
     Iterable,
     Mapping,
+    NewType,
     Self,
     Sequence,
     Type,
@@ -23,6 +24,9 @@ import msgspec
 from ape_pie import APIClient
 from furl import furl
 from msgspec import UNSET, Meta, Struct, UnsetType, structs
+from msgspec.json import decode
+
+from openbeheer.clients import selectielijst_client
 
 from .selectielijst import ProcesType
 from .ztc import (
@@ -147,6 +151,17 @@ def options(t: type | UnionType | Annotated) -> list[OBOption]:
             return OBOption.from_enum(t)
         case _ if get_args(t):
             return sum(map(options, get_args(t)), [])
+        case _ if t is ProcesTypeURL:
+            with selectielijst_client() as client:
+                response = client.get("procestypen")
+
+            response.raise_for_status()
+
+            procestypen = decode(response.content, type=list[LAXProcesType])
+            return [
+                as_ob_option(p)
+                for p in sorted(procestypen, key=lambda v: (-v.jaar, v.naam))
+            ]
         case _:
             return []
 
@@ -360,8 +375,22 @@ class RolTypeWithUUID(UUIDMixin, RolType):
     uuid: str | UnsetType = UNSET
 
 
+ProcesTypeURL = NewType("ProcesTypeURL", str)
+
+
 class ZaakTypeWithUUID(UUIDMixin, ZaakType):
     uuid: str | UnsetType = UNSET
+    selectielijst_procestype: (  # pyright: ignore[reportIncompatibleVariableOverride]
+        Annotated[
+            ProcesTypeURL,
+            Meta(
+                description="URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie.",
+                max_length=1000,
+                min_length=1,
+            ),
+        ]
+        | None
+    ) = None
 
 
 class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
@@ -405,5 +434,5 @@ class LAXProcesType(ProcesType):
 
 
 @as_ob_option.register
-def _lax_procestype_as_option(arg: ProcesType) -> OBOption[str]:
-    return OBOption(label=f"{arg.naam} - {arg.jaar}", value=arg.url or "")
+def _lax_procestype_as_option(arg: ProcesType) -> OBOption[str | None]:
+    return OBOption(label=f"{arg.naam} - {arg.jaar}", value=arg.url)
