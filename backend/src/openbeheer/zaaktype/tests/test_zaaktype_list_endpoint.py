@@ -180,7 +180,7 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
             secret="test-vcr",
             slug="OZ",
         )
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
         cls.user = UserFactory.create()
         cls.url = reverse("api:zaaktypen:zaaktype-list", kwargs={"slug": "OZ"})
 
