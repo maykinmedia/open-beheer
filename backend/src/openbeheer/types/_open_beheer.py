@@ -410,15 +410,22 @@ class RolTypeWithUUID(UUIDMixin, RolType):
 ProcesTypeURL = NewType("ProcesTypeURL", str)
 
 
+class LAXProcesType(ProcesType):
+    """
+    Overrides ProcesType ignoring "toelichting" min_length as restriction seems incorrect.
+    """
+
+    toelichting: str
+
+
 class ZaakTypeWithUUID(UUIDMixin, ZaakType):
     uuid: str | UnsetType = UNSET
     selectielijst_procestype: (  # pyright: ignore[reportIncompatibleVariableOverride]
         Annotated[
             ProcesTypeURL,
             Meta(
-                description="URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie.",
-                max_length=1000,
-                min_length=1,
+                description="URL-referentie naar een vanuit archiveringsoptiek onderkende groep processen met dezelfde kenmerken (PROCESTYPE in de Selectielijst API).",
+                max_length=200,
             ),
         ]
         | None
@@ -442,7 +449,7 @@ class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
     roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
     deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
     zaakobjecttypen: UnsetType | list[ZaakObjectTypeWithUUID] = UNSET
-    selectielijst_procestype: UnsetType | ProcesType = UNSET
+    selectielijst_procestype: UnsetType | LAXProcesType = UNSET
 
 
 class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
@@ -458,14 +465,6 @@ def _camelize(s: str) -> str:
         head, *tail = s.split(".")
         return f"{head}.{'.'.join(map(_camelize, tail))}"
     return "".join(part.title() if n else part for n, part in enumerate(s.split("_")))
-
-
-class LAXProcesType(ProcesType):
-    """
-    Overrides ProcesType ignoring "toelichting" min_length as restriction seems incorrect.
-    """
-
-    toelichting: str
 
 
 @as_ob_option.register
