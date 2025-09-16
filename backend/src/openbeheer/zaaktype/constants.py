@@ -17,23 +17,18 @@ from openbeheer.types.ztc import (
     ReferentieProces,
     StatusType,
     VertrouwelijkheidaanduidingEnum,
-    ZaakType,
 )
 from openbeheer.zaaktype.api.views import ExpandableZaakTypeRequest
-
-ZAAKTYPE_FIELDS = {
-    field: getattr(ZaakType, field).__name__ for field in ZaakType.__struct_fields__
-}
 
 ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
     (
         "Overview",
         FrontendFieldSet(
             fields=[
-                ZAAKTYPE_FIELDS["identificatie"],
-                ZAAKTYPE_FIELDS["omschrijving"],
-                ZAAKTYPE_FIELDS["doel"],
-                ZAAKTYPE_FIELDS["selectielijst_procestype"],
+                "identificatie",
+                "omschrijving",
+                "doel",
+                "selectielijst_procestype",
             ]
         ),
     ),
@@ -41,34 +36,204 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         "General details",
         FrontendFieldSet(
             fields=[
-                ZAAKTYPE_FIELDS["doel"],
-                ZAAKTYPE_FIELDS["onderwerp"],
-                ZAAKTYPE_FIELDS["aanleiding"],
-                ZAAKTYPE_FIELDS["handeling_initiator"],
-                ZAAKTYPE_FIELDS["handeling_behandelaar"],
-                ZAAKTYPE_FIELDS["verantwoordelijke"],
-                ZAAKTYPE_FIELDS["producten_of_diensten"],
-                ZAAKTYPE_FIELDS["doorlooptijd"],
-                ZAAKTYPE_FIELDS["servicenorm"],
-                ZAAKTYPE_FIELDS["omschrijving"],
-                ZAAKTYPE_FIELDS["omschrijving_generiek"],
-                ZAAKTYPE_FIELDS["indicatie_intern_of_extern"],
-                ZAAKTYPE_FIELDS["vertrouwelijkheidaanduiding"],
-                ZAAKTYPE_FIELDS["publicatie_indicatie"],
-                ZAAKTYPE_FIELDS["publicatietekst"],
+                "doel",
+                "onderwerp",
+                "aanleiding",
+                "handeling_initiator",
+                "handeling_behandelaar",
+                "verantwoordelijke",
+                "producten_of_diensten",
+                "doorlooptijd",
+                "servicenorm",
+                "omschrijving",
+                "omschrijving_generiek",
+                "indicatie_intern_of_extern",
+                "vertrouwelijkheidaanduiding",
+                "publicatie_indicatie",
+                "publicatietekst",
                 # TODO: fields about selectielijst_procestype that need to be expanded.
-                ZAAKTYPE_FIELDS["selectielijst_procestype"],
+                "selectielijst_procestype",
                 # TODO: expand fields of the referentie process,
-                ZAAKTYPE_FIELDS["referentieproces"],
+                "referentieproces",
                 # TODO: Zaaktype UUID
-                ZAAKTYPE_FIELDS["identificatie"],
+                "identificatie",
                 # TODO: expand with some sort of label
-                ZAAKTYPE_FIELDS["gerelateerde_zaaktypen"],
+                "gerelateerde_zaaktypen",
                 # TODO: expand catalogus
-                ZAAKTYPE_FIELDS["broncatalogus"],
+                "broncatalogus",
             ],
         ),
     ),
+    (
+        "Statustypen",
+        FrontendFieldSet(
+            fields=[
+                "_expand.statustype.volgnummer",
+                "_expand.statustype.omschrijving_generiek",
+                "_expand.statustype.uuid",
+            ]
+        ),
+    ),
+    (
+        "Objecttypen",
+        FrontendFieldSet(
+            fields=[
+                # TODO: needs design
+                "_expand.zaakobjecttypen.anderObjecttype",
+                "_expand.zaakobjecttypen.objecttype",
+                "_expand.zaakobjecttypen.relatieOmschrijving",
+                "_expand.zaakobjecttypen.resultaattypen",
+                "_expand.zaakobjecttypen.statustype",
+                "_expand.zaakobjecttypen.beginGeldigheid",
+                "_expand.zaakobjecttypen.eindeGeldigheid",
+                "_expand.zaakobjecttypen.uuid",
+            ]
+        ),
+    ),
+    (
+        "Documenttypen",
+        FrontendFieldSet(
+            fields=[
+                # TODO: needs design
+                "_expand.informatieobjecttypen.omschrijving",
+                "_expand.informatieobjecttypen.omschrijvingGeneriek",
+                "_expand.informatieobjecttypen.vertrouwelijkheidaanduiding",
+                "_expand.informatieobjecttypen.informatieobjectcategorie",
+                "_expand.informatieobjecttypen.beginGeldigheid",
+                "_expand.informatieobjecttypen.eindeGeldigheid",
+                "_expand.informatieobjecttypen.concept",
+                "_expand.informatieobjecttypen.besluittypen",
+                "_expand.informatieobjecttypen.trefwoord",
+                "_expand.informatieobjecttypen.uuid",
+            ]
+        ),
+    ),
+    (
+        "Roltypen",
+        FrontendFieldSet(
+            fields=[
+                "_expand.roltypen.omschrijving",
+                "_expand.roltypen.omschrijvingGeneriek",
+                "_expand.roltypen.uuid",
+            ]
+        ),
+    ),
+    (
+        "Resultaattypen",
+        FrontendFieldSet(
+            fields=[
+                "_expand.resultaattypen.omschrijving",
+                "_expand.resultaattypen.resultaattypeomschrijving",
+                "_expand.resultaattypen.omschrijvingGeneriek",
+                "_expand.resultaattypen.selectielijstklasse",
+                "_expand.resultaattypen.uuid",
+            ]
+        ),
+    ),
+    (
+        "Eigenschappen",
+        FrontendFieldSet(
+            fields=[
+                # TODO needs design
+                "_expand.eigenschappen.naam",
+                "_expand.eigenschappen.definitie",
+                "_expand.eigenschappen.specificatie",
+                "_expand.eigenschappen.toelichting",
+                "_expand.eigenschappen.statustype",
+                "_expand.eigenschappen.beginGeldigheid",
+                "_expand.eigenschappen.eindeGeldigheid",
+                "_expand.eigenschappen.uuid",
+            ]
+        ),
+    ),
+    (
+        "Relaties",
+        FrontendFieldSet(
+            fields=[
+                # TODO needs design
+                # '_expand.deelzaaktypen.omschrijving',
+                # '_expand.deelzaaktypen.vertrouwelijkheidaanduiding',
+                # '_expand.deelzaaktypen.doel',
+                # '_expand.deelzaaktypen.aanleiding',
+                # '_expand.deelzaaktypen.indicatieInternOfExtern',
+                # '_expand.deelzaaktypen.handelingInitiator',
+                # '_expand.deelzaaktypen.onderwerp',
+                # '_expand.deelzaaktypen.handelingBehandelaar',
+                # '_expand.deelzaaktypen.doorlooptijd',
+                # '_expand.deelzaaktypen.opschortingEnAanhoudingMogelijk',
+                # '_expand.deelzaaktypen.verlengingMogelijk',
+                # '_expand.deelzaaktypen.publicatieIndicatie',
+                # '_expand.deelzaaktypen.productenOfDiensten',
+                # '_expand.deelzaaktypen.referentieproces',
+                # '_expand.deelzaaktypen.verantwoordelijke',
+                # '_expand.deelzaaktypen.beginGeldigheid',
+                # '_expand.deelzaaktypen.versiedatum',
+                # '_expand.deelzaaktypen.catalogus',
+                # '_expand.deelzaaktypen.besluittypen',
+                # '_expand.deelzaaktypen.gerelateerdeZaaktypen',
+                # '_expand.deelzaaktypen.url',
+                # '_expand.deelzaaktypen.identificatie',
+                # '_expand.deelzaaktypen.omschrijvingGeneriek',
+                # '_expand.deelzaaktypen.toelichting',
+                # '_expand.deelzaaktypen.servicenorm',
+                # '_expand.deelzaaktypen.verlengingstermijn',
+                # '_expand.deelzaaktypen.trefwoorden',
+                # '_expand.deelzaaktypen.publicatietekst',
+                # '_expand.deelzaaktypen.verantwoordingsrelatie',
+                # '_expand.deelzaaktypen.selectielijstProcestype',
+                # '_expand.deelzaaktypen.concept',
+                # '_expand.deelzaaktypen.broncatalogus',
+                # '_expand.deelzaaktypen.bronzaaktype',
+                # '_expand.deelzaaktypen.eindeGeldigheid',
+                # '_expand.deelzaaktypen.beginObject',
+                # '_expand.deelzaaktypen.eindeObject',
+                # '_expand.deelzaaktypen.statustypen',
+                # '_expand.deelzaaktypen.resultaattypen',
+                # '_expand.deelzaaktypen.eigenschappen',
+                # '_expand.deelzaaktypen.informatieobjecttypen',
+                # '_expand.deelzaaktypen.roltypen',
+                # '_expand.deelzaaktypen.deelzaaktypen',
+                # '_expand.deelzaaktypen.zaakobjecttypen',
+                # '_expand.deelzaaktypen.uuid',
+            ]
+        ),
+    ),
+    (
+        "Archivering",
+        FrontendFieldSet(
+            fields=[
+                # TODO bewaartermijn etc?
+                "_expand.selectielijstProcestype.naam",
+                "_expand.selectielijstProcestype.nummer",
+                "_expand.selectielijstProcestype.jaar",
+                "_expand.selectielijstProcestype.omschrijving",
+                "_expand.selectielijstProcestype.toelichting",
+                "_expand.selectielijstProcestype.procesobject",
+                "_expand.selectielijstProcestype.url",
+            ]
+        ),
+    ),
+    # '_expand.besluittypen.catalogus',
+    # '_expand.besluittypen.publicatieIndicatie',
+    # '_expand.besluittypen.informatieobjecttypen',
+    # '_expand.besluittypen.beginGeldigheid',
+    # '_expand.besluittypen.url',
+    # '_expand.besluittypen.zaaktypen',
+    # '_expand.besluittypen.omschrijving',
+    # '_expand.besluittypen.omschrijvingGeneriek',
+    # '_expand.besluittypen.besluitcategorie',
+    # '_expand.besluittypen.reactietermijn',
+    # '_expand.besluittypen.publicatietekst',
+    # '_expand.besluittypen.publicatietermijn',
+    # '_expand.besluittypen.toelichting',
+    # '_expand.besluittypen.eindeGeldigheid',
+    # '_expand.besluittypen.concept',
+    # '_expand.besluittypen.resultaattypen',
+    # '_expand.besluittypen.resultaattypenOmschrijving',
+    # '_expand.besluittypen.vastgelegdIn',
+    # '_expand.besluittypen.beginObject',
+    # '_expand.besluittypen.eindeObject',
+    # '_expand.besluittypen.uuid',
 ]
 
 

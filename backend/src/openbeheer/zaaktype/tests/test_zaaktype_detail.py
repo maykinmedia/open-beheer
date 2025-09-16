@@ -102,13 +102,15 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         self.assertIn("fields", data)
 
         fields_by_name = {f["name"]: f for f in data["fields"]}
-        fields = set(fields_by_name)
-        # misspelled too, to catch camelize bugs
-        expand = {"_expand", "Expand"}
-        # fields are still undefined for expansion
-        self.assertSetEqual(fields & expand, set())
+        fields = {f for f in fields_by_name if not f.startswith("_expand")}
         # all fields should exist on the result
         self.assertSetEqual(fields, set(data["result"].keys()) - {"_expand"})
+
+        # all expansion_fields should exist on the expansion
+        expansion_fields = {
+            f.split(".")[1] for f in fields_by_name if f.startswith("_expand")
+        }
+        self.assertSetEqual(expansion_fields, set(data["result"]["_expand"]))
 
         self.assertEqual(len(data["versions"]), 1)
 
