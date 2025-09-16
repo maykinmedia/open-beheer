@@ -56,7 +56,7 @@ cryptography==44.0.2
     #   mozilla-django-oidc
     #   pyopenssl
     #   webauthn
-django==5.2.3
+django==5.2.6
     # via
     #   -r requirements/base.txt
     #   django-admin-index
