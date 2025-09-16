@@ -6,6 +6,7 @@
 coverage
 django-webtest
 factory-boy
+Faker
 freezegun
 pyquery  # integrates with webtest
 requests-mock  # required by zgw_consumers.test.factories
