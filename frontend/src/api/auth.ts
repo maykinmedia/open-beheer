@@ -64,5 +64,5 @@ export async function logout(signal?: AbortSignal) {
  * API call to get info about OIDC.
  */
 export async function getOIDCInfo() {
-  return request<OidcInfoType>("GET", "/oidc-info");
+  return request<OidcInfoType>("GET", "/oidc-info/");
 }
