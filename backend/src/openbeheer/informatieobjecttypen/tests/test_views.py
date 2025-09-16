@@ -25,7 +25,7 @@ class InformatieObjectTypeListViewTests(VCRAPITestCase):
             "api:informatieobjecttypen:informatieobjecttypen-list",
             kwargs={"slug": "OZ"},
         )
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def test_not_authenticated(self):
         calls_during_setup = len(self.cassette.requests) if self.cassette else 0
@@ -163,7 +163,7 @@ class InformatieObjectTypeDetailViewTest(VCRAPITestCase):
         )
         cls.user = UserFactory.create()
 
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def test_not_authenticated(self):
         calls_during_setup = len(self.cassette.requests) if self.cassette else 0

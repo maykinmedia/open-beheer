@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from random import choice
 from typing import Literal, Mapping, Sequence, Type
 
+from faker import Faker
+from faker.providers import lorem
 from furl import furl
 from msgspec import to_builtins
 from msgspec.json import decode
@@ -37,10 +39,13 @@ type _JSONEncodable = (
     | Mapping[str, _JSONEncodable]
 )
 
+faker = Faker()
+faker.add_provider(lorem)
+
 
 @dataclass
 class OpenZaakDataCreationHelper:
-    service_identifier: str
+    ztc_service_slug: str
 
     def _create_resource[T](
         self,
@@ -48,7 +53,7 @@ class OpenZaakDataCreationHelper:
         resource_path: str,
         resource_type: Type[T],
     ) -> T:
-        with ztc_client(self.service_identifier) as client:
+        with ztc_client(self.ztc_service_slug) as client:
             response = client.post(resource_path, json=data)
 
             if response.status_code == 400:
@@ -63,7 +68,7 @@ class OpenZaakDataCreationHelper:
         )
 
     def delete_resource(self, resource):
-        with ztc_client(self.service_identifier) as client:
+        with ztc_client(self.ztc_service_slug) as client:
             client.delete(resource.url)
 
     def _get_catalogus(self, catalogus="", **_) -> str:
@@ -96,7 +101,7 @@ class OpenZaakDataCreationHelper:
             "domein": "".join([choice(string.ascii_uppercase) for _ in range(5)]),
             "rsin": "123456782",
             "contactpersoonBeheerNaam": "Ubaldo",
-            "naam": "Test catalogus",
+            "naam": faker.sentence(),
         } | overrides
 
         return self._create_resource(data, "catalogussen", Catalogus)
@@ -137,7 +142,7 @@ class OpenZaakDataCreationHelper:
         self, catalogus: str = "", **overrides: _JSONEncodable
     ) -> ZaakTypeWithUUID:
         data: dict[str, _JSONEncodable] = {
-            "omschrijving": "Another test zaaktype",
+            "omschrijving": faker.sentence(),
             "vertrouwelijkheidaanduiding": "geheim",
             "doel": "New Zaaktype 001",
             "aanleiding": "New Zaaktype 001",
@@ -268,7 +273,8 @@ class OpenZaakDataCreationHelper:
         )
 
     def create_objecttype(self, **overrides: _JSONEncodable) -> ObjectType:
-        defaults = {"name": "Parkeer vergunning", "namePlural": "Parkeer vergunningen"}
+        name = faker.sentence()
+        defaults = {"name": name, "namePlural": name}
         data = defaults | overrides
         with objecttypen_client() as client:
             response = client.post("objecttypes", json=data)
@@ -284,8 +290,8 @@ class OpenZaakDataCreationHelper:
             strict=False,
         )
 
-    def create_published_zaaktype(
-        self, **overrides: _JSONEncodable
+    def create_zaaktype_with_relations(
+        self, publish: bool = False, **overrides: _JSONEncodable
     ) -> ZaakTypeWithUUID:
         zaaktype = self.create_zaaktype(overrides=overrides)
         assert zaaktype.url
@@ -304,12 +310,13 @@ class OpenZaakDataCreationHelper:
             volgnummer=2,
         )
 
-        with ztc_client("OZ") as client:
-            uuid = furl(zaaktype.url).path.segments[-1]
-            response = client.post(f"zaaktypen/{uuid}/publish")
+        if publish:
+            with ztc_client(self.ztc_service_slug) as client:
+                uuid = furl(zaaktype.url).path.segments[-1]
+                response = client.post(f"zaaktypen/{uuid}/publish")
 
-            if response.status_code == 400:
-                raise Exception(decode(response.content))
+                if response.status_code == 400:
+                    raise Exception(decode(response.content))
 
-            response.raise_for_status()
+                response.raise_for_status()
         return zaaktype
