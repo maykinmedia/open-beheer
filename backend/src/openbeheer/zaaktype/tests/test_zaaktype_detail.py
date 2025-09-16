@@ -31,7 +31,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         )
         cls.user = UserFactory.create()
 
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def test_not_authenticated(self):
         calls_during_setup = len(self.cassette.requests) if self.cassette else 0
@@ -675,7 +675,10 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         We need the zaaktype to be pulished, because otherwise we can't
         retrieve the related zaakobjecttypen from openzaak (see issue open-zaak/open-zaak#2178)
         """
-        zaaktype = self.helper.create_published_zaaktype()
+        zaaktype = self.helper.create_zaaktype_with_relations(publish=True)
+
+        self.client.force_login(self.user)
+
         endpoint = reverse(
             "api:zaaktypen:zaaktype-detail",
             kwargs={"slug": "OZ", "uuid": zaaktype.uuid},

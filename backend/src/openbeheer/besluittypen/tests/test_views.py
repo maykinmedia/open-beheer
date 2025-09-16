@@ -23,7 +23,7 @@ class BesluitTypeListViewTests(VCRAPITestCase):
             slug="OZ",
         )
         cls.user = UserFactory.create()
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def setUp(self):
         super().setUp()
@@ -109,7 +109,7 @@ class BesluitTypeDetailViewTest(VCRAPITestCase):
         )
         cls.user = UserFactory.create()
 
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def setUp(self):
         super().setUp()
