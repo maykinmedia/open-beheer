@@ -618,7 +618,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             field.editable = field.name not in self.expansions
             return field
 
-        return [adapt(f) for f in ob_fields if f.name != "Expand"]
+        return [adapt(f) for f in ob_fields]
 
     def _has_return_type(self, obj: object) -> TypeIs[T | ZGWError]:
         # obj has correct return_data_type, so we can return it

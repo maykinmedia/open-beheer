@@ -20,6 +20,8 @@ from typing import (
     get_type_hints,
 )
 
+from django.core.cache import cache as django_cache
+
 import msgspec
 from ape_pie import APIClient
 from furl import furl
@@ -144,6 +146,18 @@ def as_ob_fieldtype(
             return OBFieldType.string
 
 
+def _fetch_procestype_options():
+    with selectielijst_client() as client:
+        response = client.get("procestypen")
+
+    response.raise_for_status()
+
+    procestypen = decode(response.content, type=list[LAXProcesType])
+    return [
+        as_ob_option(p) for p in sorted(procestypen, key=lambda v: (-v.jaar, v.naam))
+    ]
+
+
 def options(t: type | UnionType | Annotated) -> list[OBOption]:
     "Find an enum in the type and turn it into options."
     match t:
@@ -152,16 +166,11 @@ def options(t: type | UnionType | Annotated) -> list[OBOption]:
         case _ if get_args(t):
             return sum(map(options, get_args(t)), [])
         case _ if t is ProcesTypeURL:
-            with selectielijst_client() as client:
-                response = client.get("procestypen")
-
-            response.raise_for_status()
-
-            procestypen = decode(response.content, type=list[LAXProcesType])
-            return [
-                as_ob_option(p)
-                for p in sorted(procestypen, key=lambda v: (-v.jaar, v.naam))
-            ]
+            return django_cache.get_or_set(  # type: ignore get_or_set annotation is bad
+                "processtype_options",
+                default=_fetch_procestype_options,
+                timeout=60 * 60 * 24,
+            )
         case _:
             return []
 
@@ -192,12 +201,40 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
         self.name = _camelize(self.name)
 
 
+def _core_type(annotation):
+    # drill down into Generics / Annotaitons and  find the main type
+    match get_args(annotation):
+        case ():
+            return annotation
+        case args:
+            return next(
+                (
+                    a
+                    for a in map(_core_type, args)
+                    if a not in (UnsetType, NoneType, Meta)
+                ),
+                annotation,
+            )
+
+
 def ob_fields_of_type(
     data_type: type,
     query_params: OBPagedQueryParams | None = None,
     option_overrides: Mapping[str, list[OBOption]] = {},
+    prefix: str = "",
 ) -> Iterable[OBField]:
-    def to_ob_field(name: str, annotation: type) -> OBField:
+    def to_ob_fields(name: str, annotation: type) -> list[OBField]:
+        if name == "_expand":
+            attrs = get_type_hints(annotation, include_extras=True)
+            return [
+                field
+                for attr, attr_type in attrs.items()
+                for field in ob_fields_of_type(
+                    _core_type(attr_type),
+                    prefix=f"_expand.{_camelize(attr)}.",
+                )
+            ]
+
         # closure over option_overrides
         not_applicable = object()
 
@@ -206,6 +243,7 @@ def ob_fields_of_type(
             type=as_ob_fieldtype(annotation),
             options=option_overrides.get(name, options(annotation)) or UNSET,
         )
+        ob_field.name = prefix + ob_field.name
 
         if query_params:
             for filter_name in [name, f"{name}__in"]:
@@ -215,10 +253,10 @@ def ob_fields_of_type(
                     ob_field.filter_lookup = filter_name
                     ob_field.filter_value = value
 
-        return ob_field
+        return [ob_field]
 
     attrs = get_type_hints(data_type, include_extras=True)
-    return starmap(to_ob_field, attrs.items())
+    return sum(starmap(to_ob_fields, attrs.items()), [])
 
 
 class OBList[T](Struct):
@@ -251,13 +289,7 @@ class FrontendFieldSet(Struct):
     span: int | UnsetType = msgspec.UNSET
 
     def __post_init__(self):
-        # camelize value of field names
-        self.fields = [
-            "".join(
-                part.title() if n else part for n, part in enumerate(field.split("_"))
-            )
-            for field in self.fields
-        ]
+        self.fields = [_camelize(field) for field in self.fields]
 
 
 type FrontendFieldsets = list[tuple[str, FrontendFieldSet]]
@@ -422,6 +454,9 @@ class ExpandableZaakType(ZaakTypeWithUUID, Struct):
 
 
 def _camelize(s: str) -> str:
+    if "." in s:
+        head, *tail = s.split(".")
+        return f"{head}.{'.'.join(map(_camelize, tail))}"
     return "".join(part.title() if n else part for n, part in enumerate(s.split("_")))
 
 
