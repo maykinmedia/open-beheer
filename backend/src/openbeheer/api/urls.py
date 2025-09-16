@@ -130,7 +130,7 @@ urlpatterns = [
                 path(
                     "health-checks/", HealthChecksView.as_view(), name="health-checks"
                 ),
-                path("oidc-info", OIDCInfoView.as_view(), name="oidc-info"),
+                path("oidc-info/", OIDCInfoView.as_view(), name="oidc-info"),
             ]
         ),
     ),
