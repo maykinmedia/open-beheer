@@ -8,7 +8,7 @@ from zgw_consumers.test.factories import ServiceFactory
 from openbeheer.config.models import APIConfig
 from openbeheer.config.tests.factories import APIConfigFactory
 
-from ..clients import selectielijst_client, ztc_client
+from ..clients import objecttypen_client, selectielijst_client, ztc_client
 
 
 @override_settings(SOLO_CACHE="default")
@@ -16,8 +16,13 @@ class ClientsTests(TestCase):
     def setUp(self):
         ztc_client.cache_clear()
         self.addCleanup(ztc_client.cache_clear)
+
         selectielijst_client.cache_clear()
         self.addCleanup(selectielijst_client.cache_clear)
+
+        objecttypen_client.cache_clear()
+        self.addCleanup(objecttypen_client.cache_clear)
+
         APIConfig.get_solo().delete()
         self.addCleanup(lambda: APIConfig.get_solo().delete())
 
@@ -27,6 +32,9 @@ class ClientsTests(TestCase):
 
         with self.assertRaises(ImproperlyConfigured):
             selectielijst_client()
+
+        with self.assertRaises(ImproperlyConfigured):
+            objecttypen_client()
 
     def test_get_default(self):
         ServiceFactory.create(api_type=APITypes.ztc)
