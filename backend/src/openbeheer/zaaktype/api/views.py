@@ -368,7 +368,6 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     return_data_type = DetailResponse[ExpandableZaakType]
     endpoint_path = "zaaktypen/{uuid}"
     serializer_class = None
-    selectielijst_client: APIClient | None = None
 
     @staticmethod
     def _get_params_with_status(zaaktype: ZaakType):
