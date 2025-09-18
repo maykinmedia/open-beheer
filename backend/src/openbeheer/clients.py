@@ -74,15 +74,10 @@ def objecttypen_client() -> APIClient | NoReturn:
 def _(sender, instance, **_):
     if instance.api_type == APITypes.ztc:
         ztc_client.cache_clear()
-    objecttypen_client.cache_clear()
-
-
-@receiver([post_delete, post_save], sender=APIConfig, weak=False)
-def _(sender, instance, **_):
-    objecttypen_client.cache_clear()
 
     selectielijst_client.cache_clear()
     objecttypen_client.cache_clear()
+
     # get_solo is broken. It won't invalidate cache when foreign keys get deleted
     api_config = APIConfig.get_solo()
     if instance in [
