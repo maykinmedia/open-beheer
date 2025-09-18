@@ -217,7 +217,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False)
 EMAIL_TIMEOUT = 10
 
-DEFAULT_FROM_EMAIL = "openbeheer@example.com"
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="openbeheer@example.com")
 
 #
 # LOGGING
