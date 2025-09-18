@@ -9,8 +9,8 @@ import {
   Outline,
   Select,
 } from "@maykin-ui/admin-ui";
-// @ts-expect-error - no ts modules
 import "@maykin-ui/admin-ui/style";
+import "@maykin-ui/admin-ui/style/themes/blue-suede-shoes.css";
 import { string2Title } from "@maykin-ui/client-common";
 import { createContext, useEffect, useMemo, useState } from "react";
 import {
