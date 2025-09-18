@@ -347,6 +347,13 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             # has some editable fields
             assert any(f.get("editable") for f in fields_by_name.values())
 
+        with self.subTest("All fields in the fieldsets should exist"):
+            fields_in_fieldsets = set(
+                sum((fieldset["fields"] for _, fieldset in data["fieldsets"]), [])
+            )
+            field_names = set(fields_by_name.keys())
+            assert fields_in_fieldsets - field_names == set()
+
     def test_patch_zaaktype(self):
         zaaktype = self.helper.create_zaaktype()
 

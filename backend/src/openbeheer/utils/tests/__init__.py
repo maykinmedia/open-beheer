@@ -41,7 +41,6 @@ class VCRAPITestCase(VCRMixin, _APITestCase):
     cassette: Cassette | None = None
 
 
-@tag("vcr")
 class VCRTestCase(VCRMixin, _TestCase):
     """A DRF ``APITestCase`` with the ``VCRMixin`` and a ``vcr`` tag.
 

@@ -68,14 +68,14 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         "Statustypen",
         FrontendFieldSet(
             fields=[
-                "_expand.statustype.volgnummer",
-                "_expand.statustype.omschrijving_generiek",
-                "_expand.statustype.uuid",
+                "_expand.statustypen.volgnummer",
+                "_expand.statustypen.omschrijving_generiek",
+                "_expand.statustypen.uuid",
             ]
         ),
     ),
     (
-        "Objecttypen",
+        "Zaakobjecttypen",
         FrontendFieldSet(
             fields=[
                 # TODO: needs design
@@ -91,7 +91,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         ),
     ),
     (
-        "Documenttypen",
+        "Informatieobjecttypen",
         FrontendFieldSet(
             fields=[
                 # TODO: needs design
@@ -151,50 +151,17 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         FrontendFieldSet(
             fields=[
                 # TODO needs design
-                # '_expand.deelzaaktypen.omschrijving',
-                # '_expand.deelzaaktypen.vertrouwelijkheidaanduiding',
-                # '_expand.deelzaaktypen.doel',
-                # '_expand.deelzaaktypen.aanleiding',
-                # '_expand.deelzaaktypen.indicatieInternOfExtern',
-                # '_expand.deelzaaktypen.handelingInitiator',
-                # '_expand.deelzaaktypen.onderwerp',
-                # '_expand.deelzaaktypen.handelingBehandelaar',
-                # '_expand.deelzaaktypen.doorlooptijd',
-                # '_expand.deelzaaktypen.opschortingEnAanhoudingMogelijk',
-                # '_expand.deelzaaktypen.verlengingMogelijk',
-                # '_expand.deelzaaktypen.publicatieIndicatie',
-                # '_expand.deelzaaktypen.productenOfDiensten',
-                # '_expand.deelzaaktypen.referentieproces',
-                # '_expand.deelzaaktypen.verantwoordelijke',
-                # '_expand.deelzaaktypen.beginGeldigheid',
-                # '_expand.deelzaaktypen.versiedatum',
-                # '_expand.deelzaaktypen.catalogus',
-                # '_expand.deelzaaktypen.besluittypen',
-                # '_expand.deelzaaktypen.gerelateerdeZaaktypen',
-                # '_expand.deelzaaktypen.url',
-                # '_expand.deelzaaktypen.identificatie',
-                # '_expand.deelzaaktypen.omschrijvingGeneriek',
-                # '_expand.deelzaaktypen.toelichting',
-                # '_expand.deelzaaktypen.servicenorm',
-                # '_expand.deelzaaktypen.verlengingstermijn',
-                # '_expand.deelzaaktypen.trefwoorden',
-                # '_expand.deelzaaktypen.publicatietekst',
-                # '_expand.deelzaaktypen.verantwoordingsrelatie',
-                # '_expand.deelzaaktypen.selectielijstProcestype',
-                # '_expand.deelzaaktypen.concept',
-                # '_expand.deelzaaktypen.broncatalogus',
-                # '_expand.deelzaaktypen.bronzaaktype',
-                # '_expand.deelzaaktypen.eindeGeldigheid',
-                # '_expand.deelzaaktypen.beginObject',
-                # '_expand.deelzaaktypen.eindeObject',
-                # '_expand.deelzaaktypen.statustypen',
-                # '_expand.deelzaaktypen.resultaattypen',
-                # '_expand.deelzaaktypen.eigenschappen',
-                # '_expand.deelzaaktypen.informatieobjecttypen',
-                # '_expand.deelzaaktypen.roltypen',
-                # '_expand.deelzaaktypen.deelzaaktypen',
-                # '_expand.deelzaaktypen.zaakobjecttypen',
-                # '_expand.deelzaaktypen.uuid',
+                # Assumed "Relaties" meant deelzaaktypen, went with roughly the
+                # same fields as the zaaktype listview.
+                # But there's a Droste-effect here we should be leveraging, maybe?
+                "_expand.deelzaaktypen.url",
+                "_expand.deelzaaktypen.identificatie",
+                "_expand.deelzaaktypen.omschrijving",
+                "_expand.deelzaaktypen.vertrouwelijkheidaanduiding",
+                "_expand.deelzaaktypen.versiedatum",
+                "_expand.deelzaaktypen.beginGeldigheid",
+                "_expand.deelzaaktypen.eindeGeldigheid",
+                "_expand.deelzaaktypen.concept",
             ]
         ),
     ),
@@ -213,27 +180,37 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
             ]
         ),
     ),
-    # '_expand.besluittypen.catalogus',
-    # '_expand.besluittypen.publicatieIndicatie',
-    # '_expand.besluittypen.informatieobjecttypen',
-    # '_expand.besluittypen.beginGeldigheid',
-    # '_expand.besluittypen.url',
-    # '_expand.besluittypen.zaaktypen',
-    # '_expand.besluittypen.omschrijving',
-    # '_expand.besluittypen.omschrijvingGeneriek',
-    # '_expand.besluittypen.besluitcategorie',
-    # '_expand.besluittypen.reactietermijn',
-    # '_expand.besluittypen.publicatietekst',
-    # '_expand.besluittypen.publicatietermijn',
-    # '_expand.besluittypen.toelichting',
-    # '_expand.besluittypen.eindeGeldigheid',
-    # '_expand.besluittypen.concept',
-    # '_expand.besluittypen.resultaattypen',
-    # '_expand.besluittypen.resultaattypenOmschrijving',
-    # '_expand.besluittypen.vastgelegdIn',
-    # '_expand.besluittypen.beginObject',
-    # '_expand.besluittypen.eindeObject',
-    # '_expand.besluittypen.uuid',
+    # TODO??: This probably needs some careful UX design, there's a
+    # Many to Many (zaaktypen, besluittypen, resultaattypen, informatieobjecttypen)
+    # naive editing in a grid on a tab under a zaaktype may be disorienting
+    # (
+    #     "Besluittypen",
+    #     FrontendFieldSet(
+    #         fields=[
+    #             "_expand.besluittypen.catalogus",
+    #             "_expand.besluittypen.publicatieIndicatie",
+    #             "_expand.besluittypen.informatieobjecttypen",
+    #             "_expand.besluittypen.beginGeldigheid",
+    #             "_expand.besluittypen.url",
+    #             "_expand.besluittypen.zaaktypen",
+    #             "_expand.besluittypen.omschrijving",
+    #             "_expand.besluittypen.omschrijvingGeneriek",
+    #             "_expand.besluittypen.besluitcategorie",
+    #             "_expand.besluittypen.reactietermijn",
+    #             "_expand.besluittypen.publicatietekst",
+    #             "_expand.besluittypen.publicatietermijn",
+    #             "_expand.besluittypen.toelichting",
+    #             "_expand.besluittypen.eindeGeldigheid",
+    #             "_expand.besluittypen.concept",
+    #             "_expand.besluittypen.resultaattypen",
+    #             "_expand.besluittypen.resultaattypenOmschrijving",
+    #             "_expand.besluittypen.vastgelegdIn",
+    #             "_expand.besluittypen.beginObject",
+    #             "_expand.besluittypen.eindeObject",
+    #             "_expand.besluittypen.uuid",
+    #         ]
+    #     ),
+    # ),
 ]
 
 
