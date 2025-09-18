@@ -110,7 +110,11 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         expansion_fields = {
             f.split(".")[1] for f in fields_by_name if f.startswith("_expand")
         }
-        self.assertSetEqual(expansion_fields, set(data["result"]["_expand"]))
+        # FIXME: the result won't have zaakobjecttypen (and therefore no objecttype), unless the zaaktype is published
+        # see: open-zaak/open-zaak#2178
+        self.assertSetEqual(
+            expansion_fields - {"objecttype"}, set(data["result"]["_expand"])
+        )
 
         self.assertEqual(len(data["versions"]), 1)
 
