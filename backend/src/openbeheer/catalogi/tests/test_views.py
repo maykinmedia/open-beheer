@@ -39,7 +39,7 @@ class CatalogiChoicesView(VCRAPITestCase):
             slug="tralala-service",
         )
 
-        helper = OpenZaakDataCreationHelper(service_identifier="tralala-service")
+        helper = OpenZaakDataCreationHelper(ztc_service_slug="tralala-service")
         catalogus = helper.create_catalogus(naam="Test Catalogue")
         self.addCleanup(lambda: helper.delete_resource(catalogus))
         self.client.force_login(user)
