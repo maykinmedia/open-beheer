@@ -1,13 +1,9 @@
 html,
 body,
 #root {
-  --page-color-primary: rgb(47, 140, 221) !important;
-  --page-color-secondary: rgba(47, 140, 222, 0.3) !important;
-  --page-color-secondary-contrast: var(--typography-color-body);
   height: 100%;
 }
 
 body {
-  background-color: var(--typography-color-background-alt);
   margin: 0;
 }
