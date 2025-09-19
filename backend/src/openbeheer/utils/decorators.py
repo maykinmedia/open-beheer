@@ -1,6 +1,8 @@
 from functools import wraps
 from typing import Callable, ParamSpec
 
+from django.core.exceptions import ImproperlyConfigured
+
 from requests.exceptions import ConnectionError, ReadTimeout
 from rest_framework.response import Response
 
@@ -44,6 +46,14 @@ def handle_service_errors(
                 status=504,
             )
             return Response(data, status=504)
+        except ImproperlyConfigured as e:
+            data = ExternalServiceError(
+                title="Configuration error",
+                detail=str(e),
+                code="configuration_error",
+                status=503,  # Service Unavailable
+            )
+            return Response(data, status=503)
 
         return response
 
