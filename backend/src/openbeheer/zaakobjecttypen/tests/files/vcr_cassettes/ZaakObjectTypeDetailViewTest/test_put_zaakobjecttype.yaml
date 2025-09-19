@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"domein": "PGTYW", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
-      "naam": "Challenge fill general we significant condition others."}'
+    body: '{"domein": "UJHWX", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Forward born after kitchen."}'
     headers:
       Accept:
       - '*/*'
@@ -12,15 +12,15 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '145'
+      - '117'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","domein":"PGTYW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Challenge
-        fill general we significant condition others.","versie":"","begindatumVersie":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","domein":"UJHWX","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Forward
+        born after kitchen.","versie":"","begindatumVersie":null}'
     headers:
       API-version:
       - 1.3.1
@@ -29,13 +29,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '406'
+      - '378'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c
+      - http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60
       Referrer-Policy:
       - same-origin
       Vary:
@@ -48,15 +48,14 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "Operation sure during production so truth along opportunity.",
-      "vertrouwelijkheidaanduiding": "openbaar", "doel": "New Zaaktype 001", "aanleiding":
-      "New Zaaktype 001", "indicatieInternOfExtern": "intern", "handelingInitiator":
-      "aanvragen", "onderwerp": "New Zaaktype 001", "handelingBehandelaar": "handelin",
-      "doorlooptijd": "P40D", "opschortingEnAanhoudingMogelijk": false, "verlengingMogelijk":
-      true, "verlengingstermijn": "P40D", "publicatieIndicatie": false, "productenOfDiensten":
-      ["https://example.com/product/321"], "referentieproces": {"naam": "ReferentieProces
-      1"}, "verantwoordelijke": "200000000", "beginGeldigheid": "2025-06-19", "versiedatum":
-      "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c",
+    body: '{"omschrijving": "Rise member hope friend realize body watch tax.", "vertrouwelijkheidaanduiding":
+      "openbaar", "doel": "New Zaaktype 001", "aanleiding": "New Zaaktype 001", "indicatieInternOfExtern":
+      "intern", "handelingInitiator": "aanvragen", "onderwerp": "New Zaaktype 001",
+      "handelingBehandelaar": "handelin", "doorlooptijd": "P40D", "opschortingEnAanhoudingMogelijk":
+      false, "verlengingMogelijk": true, "verlengingstermijn": "P40D", "publicatieIndicatie":
+      false, "productenOfDiensten": ["https://example.com/product/321"], "referentieproces":
+      {"naam": "ReferentieProces 1"}, "verantwoordelijke": "200000000", "beginGeldigheid":
+      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60",
       "besluittypen": [], "gerelateerdeZaaktypen": [], "selectielijstProcestype":
       "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"}'
     headers:
@@ -69,18 +68,18 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '961'
+      - '948'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b","identificatie":"ZAAKTYPE-2025-0000000032","omschrijving":"Operation
-        sure during production so truth along opportunity.","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7","identificatie":"ZAAKTYPE-2025-0000000035","omschrijving":"Rise
+        member hope friend realize body watch tax.","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -89,13 +88,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1412'
+      - '1399'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7
       Referrer-Policy:
       - same-origin
       Vary:
@@ -108,8 +107,8 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"name": "Behind lay international follow financial since message.", "namePlural":
-      "Behind lay international follow financial since message."}'
+    body: '{"name": "Responsibility here involve value ground practice mind.", "namePlural":
+      "Responsibility here involve value ground practice mind."}'
     headers:
       Accept:
       - '*/*'
@@ -118,27 +117,27 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '142'
+      - '140'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8004/api/v2/objecttypes
   response:
     body:
-      string: '{"url":"http://localhost:8004/api/v2/objecttypes/b88a64af-11e8-422f-aa94-f811eeff0e18","uuid":"b88a64af-11e8-422f-aa94-f811eeff0e18","name":"Behind
-        lay international follow financial since message.","namePlural":"Behind lay
-        international follow financial since message.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]}'
+      string: '{"url":"http://localhost:8004/api/v2/objecttypes/2831c9d0-c308-41c3-9ff4-858b357d831f","uuid":"2831c9d0-c308-41c3-9ff4-858b357d831f","name":"Responsibility
+        here involve value ground practice mind.","namePlural":"Responsibility here
+        involve value ground practice mind.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]}'
     headers:
       Allow:
       - GET, POST, HEAD, OPTIONS
       Content-Length:
-      - '593'
+      - '591'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8004/api/v2/objecttypes/b88a64af-11e8-422f-aa94-f811eeff0e18
+      - http://localhost:8004/api/v2/objecttypes/2831c9d0-c308-41c3-9ff4-858b357d831f
       Referrer-Policy:
       - same-origin
       Vary:
@@ -151,8 +150,8 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"anderObjecttype": true, "objecttype": "http://localhost:8004/api/v2/objecttypes/b88a64af-11e8-422f-aa94-f811eeff0e18",
-      "relatieOmschrijving": "Open", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b",
+    body: '{"anderObjecttype": true, "objecttype": "http://localhost:8004/api/v2/objecttypes/2831c9d0-c308-41c3-9ff4-858b357d831f",
+      "relatieOmschrijving": "Open", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7",
       "statustype": null, "beginGeldigheid": null, "eindeGeldigheid": null}'
     headers:
       Accept:
@@ -171,7 +170,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/806ce906-fb70-40ba-9e39-4a520dfdc79e","anderObjecttype":true,"objecttype":"http://localhost:8004/api/v2/objecttypes/b88a64af-11e8-422f-aa94-f811eeff0e18","relatieOmschrijving":"Open","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000032","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/b3cbc0cb-60b1-49b3-86c8-6b60f3e6dd73","anderObjecttype":true,"objecttype":"http://localhost:8004/api/v2/objecttypes/2831c9d0-c308-41c3-9ff4-858b357d831f","relatieOmschrijving":"Open","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000035","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -186,7 +185,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaakobjecttypen/806ce906-fb70-40ba-9e39-4a520dfdc79e
+      - http://localhost:8003/catalogi/api/v1/zaakobjecttypen/b3cbc0cb-60b1-49b3-86c8-6b60f3e6dd73
       Referrer-Policy:
       - same-origin
       Vary:
@@ -199,7 +198,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b",
+    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7",
       "omschrijving": "Vastgesteld", "omschrijvingGeneriek": "initiator"}'
     headers:
       Accept:
@@ -218,7 +217,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/roltypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/roltypen/7bd2e1cb-a39e-4040-80ce-381f95981946","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000032","omschrijving":"Vastgesteld","omschrijvingGeneriek":"initiator","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/roltypen/3b2e395d-c682-4067-a155-eebbced79086","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000035","omschrijving":"Vastgesteld","omschrijvingGeneriek":"initiator","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -233,7 +232,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/roltypen/7bd2e1cb-a39e-4040-80ce-381f95981946
+      - http://localhost:8003/catalogi/api/v1/roltypen/3b2e395d-c682-4067-a155-eebbced79086
       Referrer-Policy:
       - same-origin
       Vary:
@@ -246,7 +245,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b",
+    body: '{"zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7",
       "omschrijving": "Gegrond", "resultaattypeomschrijving": "https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c",
       "selectielijstklasse": "https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc",
       "archiefnominatie": "vernietigen", "brondatumArchiefprocedure": {"afleidingswijze":
@@ -269,7 +268,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/resultaattypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/resultaattypen/3ac869fb-b528-4145-afc3-b1a37089bc5b","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000032","omschrijving":"Gegrond","resultaattypeomschrijving":"https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c","omschrijvingGeneriek":"Gegrond","selectielijstklasse":"https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc","toelichting":"","archiefnominatie":"vernietigen","archiefactietermijn":null,"brondatumArchiefprocedure":{"afleidingswijze":"afgehandeld","datumkenmerk":"","einddatumBekend":false,"objecttype":"","registratie":"","procestermijn":null},"procesobjectaard":"","indicatieSpecifiek":null,"procestermijn":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","besluittypen":[],"besluittypeOmschrijving":[],"informatieobjecttypen":[],"informatieobjecttypeOmschrijving":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/resultaattypen/6137afcd-26ed-4476-af99-f34a60f11698","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000035","omschrijving":"Gegrond","resultaattypeomschrijving":"https://selectielijst.openzaak.nl/api/v1/resultaattypeomschrijvingen/3a0a9c3c-0847-4e7e-b7d9-765b9434094c","omschrijvingGeneriek":"Gegrond","selectielijstklasse":"https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc","toelichting":"","archiefnominatie":"vernietigen","archiefactietermijn":null,"brondatumArchiefprocedure":{"afleidingswijze":"afgehandeld","datumkenmerk":"","einddatumBekend":false,"objecttype":"","registratie":"","procestermijn":null},"procesobjectaard":"","indicatieSpecifiek":null,"procestermijn":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","besluittypen":[],"besluittypeOmschrijving":[],"informatieobjecttypen":[],"informatieobjecttypeOmschrijving":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -284,7 +283,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/resultaattypen/3ac869fb-b528-4145-afc3-b1a37089bc5b
+      - http://localhost:8003/catalogi/api/v1/resultaattypen/6137afcd-26ed-4476-af99-f34a60f11698
       Referrer-Policy:
       - same-origin
       Vary:
@@ -297,7 +296,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "begin", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b",
+    body: '{"omschrijving": "begin", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7",
       "volgnummer": 1, "omschrijving_generiek": "", "statustekst": "", "informeren":
       false, "checklistitem_statustype": []}'
     headers:
@@ -317,7 +316,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/statustypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/c399a30d-d4cc-45c4-9961-6212474fb3f3","omschrijving":"begin","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000032","volgnummer":1,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/0002c0bc-fd7b-4da0-aa98-4774f9a6d7bd","omschrijving":"begin","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000035","volgnummer":1,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -332,7 +331,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/statustypen/c399a30d-d4cc-45c4-9961-6212474fb3f3
+      - http://localhost:8003/catalogi/api/v1/statustypen/0002c0bc-fd7b-4da0-aa98-4774f9a6d7bd
       Referrer-Policy:
       - same-origin
       Vary:
@@ -345,7 +344,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "eind", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b",
+    body: '{"omschrijving": "eind", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7",
       "volgnummer": 2, "omschrijving_generiek": "", "statustekst": "", "informeren":
       false, "checklistitem_statustype": []}'
     headers:
@@ -365,7 +364,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/statustypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/09d11a19-d505-4843-9715-5b5512bacf5c","omschrijving":"eind","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000032","volgnummer":2,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/statustypen/81a02eff-4d16-4e92-a121-159551d4ad8d","omschrijving":"eind","omschrijvingGeneriek":"","statustekst":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000035","volgnummer":2,"isEindstatus":true,"informeren":false,"doorlooptijd":null,"toelichting":null,"checklistitemStatustype":[],"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","eigenschappen":[],"zaakobjecttypen":[],"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -380,7 +379,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/statustypen/09d11a19-d505-4843-9715-5b5512bacf5c
+      - http://localhost:8003/catalogi/api/v1/statustypen/81a02eff-4d16-4e92-a121-159551d4ad8d
       Referrer-Policy:
       - same-origin
       Vary:
@@ -393,8 +392,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"name": "Produce resource hold why.", "namePlural": "Produce resource
-      hold why."}'
+    body: '{"name": "Compare I a fish.", "namePlural": "Compare I a fish."}'
     headers:
       Accept:
       - '*/*'
@@ -403,26 +401,26 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '82'
+      - '64'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8004/api/v2/objecttypes
   response:
     body:
-      string: '{"url":"http://localhost:8004/api/v2/objecttypes/626346af-11ba-4a6b-81cc-881eb9349b34","uuid":"626346af-11ba-4a6b-81cc-881eb9349b34","name":"Produce
-        resource hold why.","namePlural":"Produce resource hold why.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]}'
+      string: '{"url":"http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e","uuid":"9af65590-a950-408b-aab5-95e3693a208e","name":"Compare
+        I a fish.","namePlural":"Compare I a fish.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]}'
     headers:
       Allow:
       - GET, POST, HEAD, OPTIONS
       Content-Length:
-      - '533'
+      - '515'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8004/api/v2/objecttypes/626346af-11ba-4a6b-81cc-881eb9349b34
+      - http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e
       Referrer-Policy:
       - same-origin
       Vary:
@@ -435,8 +433,8 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"ander_objecttype": false, "objecttype": "http://localhost:8004/api/v2/objecttypes/626346af-11ba-4a6b-81cc-881eb9349b34",
-      "relatie_omschrijving": "In de PUT :(", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b"}'
+    body: '{"ander_objecttype": false, "objecttype": "http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e",
+      "relatie_omschrijving": "In de PUT :(", "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7"}'
     headers:
       Accept:
       - '*/*'
@@ -451,11 +449,11 @@ interactions:
       Content-Type:
       - application/json
     method: PUT
-    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen/806ce906-fb70-40ba-9e39-4a520dfdc79e
+    uri: http://localhost:8003/catalogi/api/v1/zaakobjecttypen/b3cbc0cb-60b1-49b3-86c8-6b60f3e6dd73
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/806ce906-fb70-40ba-9e39-4a520dfdc79e","anderObjecttype":false,"objecttype":"http://localhost:8004/api/v2/objecttypes/626346af-11ba-4a6b-81cc-881eb9349b34","relatieOmschrijving":"In
-        de PUT :(","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/a5d5e551-bd73-4f4c-95ec-bea43d5fa91b","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000032","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/39441af0-7d82-4d01-a66a-0772610b906c","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaakobjecttypen/b3cbc0cb-60b1-49b3-86c8-6b60f3e6dd73","anderObjecttype":false,"objecttype":"http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e","relatieOmschrijving":"In
+        de PUT :(","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/0b81a9ec-1cee-4c54-a964-f8ff2fc753a7","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000035","resultaattypen":[],"statustype":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/a7177e08-08bb-44c7-80e3-8cdbbc6d6b60","beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -490,16 +488,51 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8004/api/v2/objecttypes/626346af-11ba-4a6b-81cc-881eb9349b34
+    uri: http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e
   response:
     body:
-      string: '{"url":"http://localhost:8004/api/v2/objecttypes/626346af-11ba-4a6b-81cc-881eb9349b34","uuid":"626346af-11ba-4a6b-81cc-881eb9349b34","name":"Produce
-        resource hold why.","namePlural":"Produce resource hold why.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]}'
+      string: '{"url":"http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e","uuid":"9af65590-a950-408b-aab5-95e3693a208e","name":"Compare
+        I a fish.","namePlural":"Compare I a fish.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]}'
     headers:
       Allow:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       Content-Length:
-      - '533'
+      - '515'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+    method: GET
+    uri: http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e
+  response:
+    body:
+      string: '{"url":"http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e","uuid":"9af65590-a950-408b-aab5-95e3693a208e","name":"Compare
+        I a fish.","namePlural":"Compare I a fish.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]}'
+    headers:
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      Content-Length:
+      - '515'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
