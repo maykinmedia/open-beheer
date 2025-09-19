@@ -6,11 +6,9 @@ from openbeheer.types.objecttypen import ObjectType
 
 
 @cache
-def retrieve_objecttypen_for_zaaktype(zaaktype_url: str) -> dict[str, ObjectType]:
+def retrieve_objecttypen() -> dict[str, ObjectType]:
     with objecttypen_client() as ot_client:
-        objecttypen = fetch_all(
-            ot_client, "objecttypes", {"zaaktype": zaaktype_url}, ObjectType
-        )
+        objecttypen = fetch_all(ot_client, "objecttypes", {}, ObjectType)
         return {
             item.url: item for item in objecttypen if item.url
         }  # They should always have a URL
