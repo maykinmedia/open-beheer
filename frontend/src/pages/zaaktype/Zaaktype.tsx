@@ -390,7 +390,6 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
           view={tabConfig.view}
           field={fieldName as ExpandItemKeys<TargetType>}
           zaaktypeUuid={zaaktypeUuid}
-          nestedFields={field.nestedFields}
         />
       );
     }

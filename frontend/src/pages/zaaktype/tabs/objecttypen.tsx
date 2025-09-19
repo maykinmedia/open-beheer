@@ -6,39 +6,35 @@ export const TABS_CONFIG_OBJECTTYPEN: TabConfig<TargetType> = {
   sections: [
     {
       expandFields: [
-        "objecttype",
+        {
+          name: "objecttype",
+          type: "string",
+          // @ts-expect-error - FIXME: Extending TypedField here.
+          initValue: () => undefined,
+        },
         {
           name: "anderObjecttype",
           type: "boolean",
           // @ts-expect-error - FIXME: Extending TypedField here.
-          initValue: () => false,
+          initValue: () => undefined,
         },
         {
           name: "beginGeldigheid",
           type: "string", // FIXME: if we use date, the value is not turned into a YYYY-MM-DD format
           // @ts-expect-error - FIXME: Extending TypedField here.
-          initValue: () => {
-            const today = new Date();
-            return today.toISOString().split("T")[0];
-          },
+          initValue: () => undefined,
         },
         {
           name: "eindeGeldigheid",
           type: "string", // FIXME: if we use date, the value is not turned into a YYYY-MM-DD format
           // @ts-expect-error - FIXME: Extending TypedField here.
-          initValue: () => {
-            const today = new Date();
-            today.setFullYear(today.getFullYear() + 1);
-            return today.toISOString().split("T")[0];
-          },
+          initValue: () => undefined,
         },
         {
           name: "relatieOmschrijving",
           type: "string",
           // @ts-expect-error - FIXME: Extending TypedField here.
-          initValue: () => {
-            return "Object relation";
-          },
+          initValue: () => undefined,
         },
       ],
       label: "Objecttypen",
