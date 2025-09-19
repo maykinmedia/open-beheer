@@ -1,11 +1,9 @@
-from unittest.mock import patch
-
 from django.utils.translation import gettext as _
 
-from zgw_consumers.constants import APITypes
+from zgw_consumers.constants import APITypes, AuthTypes
 from zgw_consumers.test.factories import ServiceFactory
 
-from openbeheer.config.models import APIConfig
+from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.utils.tests import VCRTestCase
 
 from ..utils import run_health_checks
@@ -19,15 +17,22 @@ class RunningHealthChecksTests(VCRTestCase):
             client_id="test-vcr",
             secret="test-vcr",
         )
-        service = ServiceFactory.create(
+        service_selectielijst = ServiceFactory.create(
             api_type=APITypes.orc, api_root="https://selectielijst.openzaak.nl/api/v1/"
         )
+        service_objecttypes = ServiceFactory.create(
+            api_type=APITypes.orc,
+            api_root="http://localhost:8004/api/v2/",
+            auth_type=AuthTypes.api_key,
+            header_key="Authorization",
+            header_value="Token 18b2b74ef994314b84021d47b9422e82b685d82f",
+        )
+        APIConfigFactory.create(
+            objecttypen_api_service=service_objecttypes,
+            selectielijst_api_service=service_selectielijst,
+        )
 
-        with patch(
-            "openbeheer.config.health_checks.APIConfig.get_solo",
-            return_value=APIConfig(selectielijst_api_service=service),
-        ):
-            results = run_health_checks()
+        results = run_health_checks()
 
         for item in results:
             with self.subTest(item["check"]):
@@ -47,13 +52,12 @@ class RunningHealthChecksTests(VCRTestCase):
             api_root="https://selectielijst.openzaak.nl/api/v1/",
         )
 
-        with patch(
-            "openbeheer.config.health_checks.APIConfig.get_solo",
-            return_value=APIConfig(
-                selectielijst_api_service=None
-            ),  # No selectielijst configured
-        ):
-            results = run_health_checks(with_traceback=True)
+        # No selectielijst configured
+        APIConfigFactory.create(
+            objecttypen_api_service=None, selectielijst_api_service=None
+        )
+
+        results = run_health_checks(with_traceback=True)
 
         self.assertEqual(len(results), 3)
 
@@ -76,7 +80,7 @@ class RunningHealthChecksTests(VCRTestCase):
         self.assertIn("404 Client Error", results[1]["errors"][0].get("traceback", ""))
 
         self.assertFalse(results[2]["success"])
-        self.assertEqual(len(results[2]["errors"]), 1)
+        self.assertEqual(len(results[2]["errors"]), 2)
         self.assertEqual(
             results[2]["errors"][0]["message"],
             _(
@@ -84,3 +88,8 @@ class RunningHealthChecksTests(VCRTestCase):
             ),
         )
         self.assertEqual("", results[2]["errors"][0].get("traceback"))
+        self.assertEqual(
+            results[2]["errors"][1]["message"],
+            _("Within API configuration, the Objecttypes API service is not selected."),
+        )
+        self.assertEqual("", results[2]["errors"][1].get("traceback"))
