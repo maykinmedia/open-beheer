@@ -10,6 +10,7 @@ from itertools import starmap
 from types import NoneType, UnionType
 from typing import (
     Annotated,
+    Callable,
     Iterable,
     Mapping,
     NewType,
@@ -28,10 +29,13 @@ from furl import furl
 from msgspec import UNSET, Meta, Struct, UnsetType, structs
 from msgspec.json import decode
 
-from openbeheer.clients import selectielijst_client
+from openbeheer.clients import iter_pages, selectielijst_client
 from openbeheer.types.objecttypen import ObjectType
 
-from .selectielijst import ProcesType
+from .selectielijst import (
+    ProcesType,
+    ResultaatTypeOmschrijvingGeneriek as _ResultaatTypeOmschrijvingGeneriek,
+)
 from .ztc import (
     BesluitType,
     Eigenschap,
@@ -147,7 +151,22 @@ def as_ob_fieldtype(
             return OBFieldType.string
 
 
-def _fetch_procestype_options():
+def _cached[F: Callable[[], object]](f: F) -> F:
+    """Caching decorator, used for caching results in the default django cache for a day
+
+    Like functools cache/lru_cache adds a `clear_cache` method on the function
+    """
+    key = f.__qualname__
+    function: F = lambda: django_cache.get_or_set(  # type: ignore get_or_set annotation is bad
+        key, default=f, timeout=60 * 60 * 24
+    )
+    function.clear_cache = lambda: django_cache.delete(key)  # pyright: ignore[reportFunctionMemberAccess]
+
+    return function
+
+
+@_cached
+def fetch_procestype_options():
     with selectielijst_client() as client:
         response = client.get("procestypen")
 
@@ -167,11 +186,11 @@ def options(t: type | UnionType | Annotated) -> list[OBOption]:
         case _ if get_args(t):
             return sum(map(options, get_args(t)), [])
         case _ if t is ProcesTypeURL:
-            return django_cache.get_or_set(  # type: ignore get_or_set annotation is bad
-                "processtype_options",
-                default=_fetch_procestype_options,
-                timeout=60 * 60 * 24,
-            )
+            return fetch_procestype_options()
+        case _ if t is ResultaatTypeOmschrijvingURL:
+            return fetch_resultaattypeomschrijving_options()
+        case _ if t is ResultaatURL:
+            return fetch_resultaat_options()
         case _:
             return []
 
@@ -392,8 +411,148 @@ class StatusTypeWithUUID(UUIDMixin, StatusType):
     uuid: str | UnsetType = UNSET
 
 
+ResultaatTypeOmschrijvingURL = NewType("ResultaatTypeOmschrijvingURL", str)
+
+
+class ResultaatTypeOmschrijvingGeneriek(_ResultaatTypeOmschrijvingGeneriek):
+    url: (  # pyright: ignore[reportIncompatibleVariableOverride]
+        Annotated[
+            ResultaatTypeOmschrijvingURL,
+            Meta(
+                description="URL-referentie naar dit object. Dit is de unieke identificatie en locatie van dit object.",
+                max_length=1000,
+                min_length=1,
+                title="Url",
+            ),
+        ]
+        | None
+    ) = None
+
+
+@as_ob_option.register
+def _resultaattypeomschrijving_as_option(
+    omschrijving: ResultaatTypeOmschrijvingGeneriek, **kwargs
+) -> OBOption[ResultaatTypeOmschrijvingURL]:
+    assert omschrijving.url
+    return OBOption(label=omschrijving.omschrijving, value=omschrijving.url)
+
+
+@_cached
+def fetch_resultaattypeomschrijving_options():
+    with selectielijst_client() as client:
+        response = client.get("resultaattypeomschrijvingen")
+
+    response.raise_for_status()
+
+    omschrijvingen = decode(
+        response.content, type=list[ResultaatTypeOmschrijvingGeneriek]
+    )
+    return [
+        as_ob_option(p)
+        for p in sorted(omschrijvingen, key=lambda o: o.omschrijving)
+        if p.url
+    ]
+
+
+ResultaatURL = NewType("ResultaatURL", str)
+
+
+class LAXWaardering(enum.Enum):
+    blijvend_bewaren = "blijvend_bewaren"
+    vernietigen = "vernietigen"
+    field_ = ""
+
+
+ProcesTypeURL = NewType("ProcesTypeURL", str)
+
+
+class LAXResultaat(Struct, rename="camel"):
+    "A version of selectielijst.Resultaat with just the fields we need for the option labels"
+
+    url: ResultaatURL
+    nummer: Annotated[
+        int,
+        Meta(
+            description="Nummer van het resultaat. Dit wordt samengesteld met het procestype en generiek resultaat indien van toepassing.",
+            ge=0,
+            le=32767,
+            title="Nummer",
+        ),
+    ]
+    naam: Annotated[
+        str,
+        Meta(
+            description="Benaming van het procestype",
+            max_length=40,
+            min_length=1,
+            title="Naam",
+        ),
+    ]
+    waardering: Annotated[LAXWaardering, Meta(title="Waardering")]
+    proces_type: ProcesTypeURL | None = None
+    volledig_nummer: str | None = None
+    # ISO8601 PY is ambiguous in days, so not convertible to timedelta
+    bewaartermijn: Annotated[str, Meta(title="Bewaartermijn")] | None = None
+    omschrijving: str | None = None
+
+
+@as_ob_option.register
+def _resultaat_as_option(resultaat: LAXResultaat, **kwargs) -> OBOption[ResultaatURL]:
+    label_values = filter(
+        None,
+        (
+            resultaat.volledig_nummer,
+            resultaat.naam,
+            resultaat.waardering.value,
+            resultaat.bewaartermijn,
+            resultaat.omschrijving,
+        ),
+    )
+    label = " - ".join(label_values)
+    return OBOption(
+        label=f"{label} - {resultaat.proces_type}",
+        value=resultaat.url,
+    )
+
+
+@_cached
+def fetch_resultaat_options():
+    class PagedResultaat(Struct):
+        next: str | None
+        results: list[LAXResultaat]
+
+    with selectielijst_client() as client:
+        response = client.get("resultaten")
+
+        response.raise_for_status()
+
+        resultaten = iter_pages(client, decode(response.content, type=PagedResultaat))
+        result = [
+            as_ob_option(p)
+            for p in sorted(
+                resultaten,
+                key=lambda r: (r.proces_type, r.volledig_nummer, r.nummer, r.naam),
+            )
+        ]
+    return result
+
+
 class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
     uuid: str | UnsetType = UNSET
+    resultaattypeomschrijving: Annotated[  # pyright: ignore[reportIncompatibleVariableOverride]
+        ResultaatTypeOmschrijvingURL,
+        Meta(
+            description="Algemeen gehanteerde omschrijving van de aard van resultaten van het RESULTAATTYPE. Dit moet een URL-referentie zijn naar de referenlijst van generieke resultaattypeomschrijvingen. Im ImZTC heet dit 'omschrijving generiek'",
+            max_length=1000,
+        ),
+    ]
+    selectielijstklasse: Annotated[  # pyright: ignore[reportIncompatibleVariableOverride]
+        ResultaatURL,
+        Meta(
+            description="URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie.",
+            max_length=1000,
+        ),
+    ]
 
 
 class EigenschapWithUUID(UUIDMixin, Eigenschap):
@@ -408,15 +567,24 @@ class RolTypeWithUUID(UUIDMixin, RolType):
     uuid: str | UnsetType = UNSET
 
 
-ProcesTypeURL = NewType("ProcesTypeURL", str)
-
-
 class LAXProcesType(ProcesType):
     """
     Overrides ProcesType ignoring "toelichting" min_length as restriction seems incorrect.
     """
 
     toelichting: str
+    url: (  # pyright: ignore[reportIncompatibleVariableOverride]
+        Annotated[
+            ProcesTypeURL,
+            Meta(
+                description="URL-referentie naar dit object. Dit is de unieke identificatie en locatie van dit object.",
+                max_length=1000,
+                min_length=1,
+                title="Url",
+            ),
+        ]
+        | None
+    ) = None
 
 
 class ZaakTypeWithUUID(UUIDMixin, ZaakType):

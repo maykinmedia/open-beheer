@@ -335,18 +335,32 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 },
             )
 
-        vertrouwelijkheidaanduiding_field = next(
-            (
-                field
-                for field in data["fields"]
-                if field["name"] == "vertrouwelijkheidaanduiding"
-            ),
-            None,
-        )
-        assert vertrouwelijkheidaanduiding_field
         with self.subTest("fields"):
+            vertrouwelijkheidaanduiding_field = fields_by_name[
+                "vertrouwelijkheidaanduiding"
+            ]
             self.assertEqual(len(vertrouwelijkheidaanduiding_field["options"]), 8)
             self.assertEqual(fields_by_name["beginGeldigheid"]["type"], "date")
+
+            resultaattypeomschrijving_field = fields_by_name[
+                "_expand.resultaattypen.resultaattypeomschrijving"
+            ]
+
+            assert resultaattypeomschrijving_field["type"] == "string"
+            assert len(resultaattypeomschrijving_field["options"]) > 0
+            assert all(
+                option["value"] for option in resultaattypeomschrijving_field["options"]
+            )
+
+            selectielijstklasse_field = fields_by_name[
+                "_expand.resultaattypen.selectielijstklasse"
+            ]
+
+            assert selectielijstklasse_field["type"] == "string"
+            assert len(selectielijstklasse_field["options"]) > 0
+            assert all(
+                option["value"] for option in selectielijstklasse_field["options"]
+            )
 
             # has some editable fields
             assert any(f.get("editable") for f in fields_by_name.values())
