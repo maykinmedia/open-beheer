@@ -223,12 +223,13 @@ class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
 
     def test_put_zaakobjecttype(self):
         self.client.force_login(self.user)
+        objecttype = self.helper.create_objecttype()
 
         response = self.client.put(
             self.endpoint,
             data={
                 "anderObjecttype": False,
-                "objecttype": "https://example.com",
+                "objecttype": objecttype.url,
                 "relatieOmschrijving": "In de PUT :(",
             },
             format="json",
