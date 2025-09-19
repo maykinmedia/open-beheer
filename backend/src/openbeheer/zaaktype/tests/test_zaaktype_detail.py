@@ -21,7 +21,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
-        APIConfigFactory.create()
+        cls.api_config = APIConfigFactory.create()
         cls.service = ServiceFactory.create(
             api_type=APITypes.ztc,
             api_root="http://localhost:8003/catalogi/api/v1",
@@ -46,6 +46,28 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         if self.cassette:
             # These should be no requests to the backend if unauthenticated
             assert len(self.cassette.requests) == calls_during_setup
+
+    def test_improperly_configured(self):
+        zaaktype = self.helper.create_zaaktype(
+            selectielijstProcestype="https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"
+        )
+        assert zaaktype.uuid
+        self.api_config.selectielijst_api_service.delete()
+
+        self.client.force_login(self.user)
+
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+        response = self.client.get(endpoint)
+
+        assert response.json() == {
+            "code": "configuration_error",
+            "title": "Configuration error",
+            "detail": "No Selectielijst service configured",
+            "status": 503,
+        }
 
     def test_retrieve_zaaktype(self):
         zaaktype = self.helper.create_zaaktype(
