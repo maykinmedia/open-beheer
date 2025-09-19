@@ -5,6 +5,7 @@ from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
 from openbeheer.utils.tests import VCRAPITestCase
@@ -21,6 +22,7 @@ class ResultaatTypeListViewTests(VCRAPITestCase):
             secret="test-vcr",
             slug="OZ",
         )
+        APIConfigFactory.create()
         cls.user = UserFactory.create()
         cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
