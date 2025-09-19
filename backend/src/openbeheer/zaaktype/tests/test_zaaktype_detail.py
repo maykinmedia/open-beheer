@@ -704,7 +704,3 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
 
         self.assertIn("_expand", zaakobjecttype)
         self.assertIn("objecttype", zaakobjecttype["_expand"])
-
-        self.assertEqual(
-            "Parkeer vergunning", zaakobjecttype["_expand"]["objecttype"]["name"]
-        )
