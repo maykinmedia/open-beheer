@@ -384,11 +384,15 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
     def post(self, request: Request, slug: str = "", **path_params) -> Response:
         as_url = reverse(slug)
         with ztc_client(slug) as client:
-            data = request.data | {
-                param: url
-                for param, value in path_params.items()
-                if (url := as_url(param, value))
-            }
+            data = (
+                self.get_post_defaults()
+                | request.data
+                | {
+                    param: url
+                    for param, value in path_params.items()
+                    if (url := as_url(param, value))
+                }
+            )
             response = client.post(self.endpoint_path, json=data)
 
             if not response.ok:
@@ -413,6 +417,9 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
                 )
 
         return Response(data, status.HTTP_201_CREATED)
+
+    def get_post_defaults(self) -> dict:
+        return {}
 
     def create_related(
         self, api_client: APIClient, obj: S, request_data: Mapping
