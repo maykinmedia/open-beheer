@@ -41,7 +41,7 @@ export const TABS_CONFIG_OVERVIEW: TabConfig<TargetType> = {
   view: "AttributeGrid",
   sections: [
     {
-      expandFields: ["procestype", "naam", "omschrijving"],
+      expandFields: ["procestype", "naam", "omschrijving", "objecttype"],
       label: "Overzicht",
       fieldsets: FIELDSETS_OVERVIEW,
       valueTransform: {
@@ -50,6 +50,16 @@ export const TABS_CONFIG_OVERVIEW: TabConfig<TargetType> = {
             ...record,
             procestype: record ? `${record?.naam} - ${record?.jaar}` : "-",
           };
+        },
+        zaakobjecttypen: (zaakobjecttypen) => {
+          return (zaakobjecttypen || []).map((zaakobjecttype) => {
+            return {
+              ...zaakobjecttype,
+              objecttype: zaakobjecttype
+                ? `${zaakobjecttype._expand?.objecttype?.name}`
+                : "-",
+            };
+          });
         },
       },
     },

@@ -6,6 +6,7 @@ from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.clients import ztc_client
+from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
 from openbeheer.utils.tests import VCRAPITestCase
@@ -22,8 +23,9 @@ class ZaakObjectTypeListViewTests(VCRAPITestCase):
             secret="test-vcr",
             slug="OZ",
         )
+        APIConfigFactory.create()
         cls.user = UserFactory.create()
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def setUp(self):
         super().setUp()
@@ -122,9 +124,10 @@ class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
             secret="test-vcr",
             slug="OZ",
         )
+        APIConfigFactory.create()
         cls.user = UserFactory.create()
 
-        cls.helper = OpenZaakDataCreationHelper(service_identifier="OZ")
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def setUp(self):
         super().setUp()
@@ -196,7 +199,11 @@ class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
             "url",
             "zaaktype",
             "zaaktypeIdentificatie",
+            "_expand",
+            "uuid",
         }
+
+        self.assertIn("objecttype", data["_expand"])
 
     def test_patch_zaakobjecttype(self):
         self.client.force_login(self.user)
@@ -210,18 +217,19 @@ class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
 
         expected = to_builtins(self.zaakobjecttype) | changes
 
-        del expected["uuid"]
+        del data["_expand"]
 
         self.assertEqual(data, expected)
 
     def test_put_zaakobjecttype(self):
         self.client.force_login(self.user)
+        objecttype = self.helper.create_objecttype()
 
         response = self.client.put(
             self.endpoint,
             data={
                 "anderObjecttype": False,
-                "objecttype": "https://example.com",
+                "objecttype": objecttype.url,
                 "relatieOmschrijving": "In de PUT :(",
             },
             format="json",

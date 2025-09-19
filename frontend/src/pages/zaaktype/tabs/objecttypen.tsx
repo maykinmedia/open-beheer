@@ -13,6 +13,16 @@ export const TABS_CONFIG_OBJECTTYPEN: TabConfig<TargetType> = {
       ],
       label: "Objecttypen",
       key: "zaakobjecttypen",
+      valueTransform: {
+        zaakobjecttypen: (zaakobjecttypen) => {
+          return (zaakobjecttypen || []).map((item) => {
+            return {
+              ...item,
+              objecttype: item ? `${item._expand.objecttype?.name}` : "-",
+            };
+          });
+        },
+      },
     },
   ],
 };
