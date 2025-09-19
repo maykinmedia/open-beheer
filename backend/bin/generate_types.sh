@@ -1,10 +1,28 @@
 #!/bin/sh
 
-ZTC_URL=${ZTC_URL:-"http://localhost:8003/catalogi/api/v1/schema/openapi.yaml"}
+API="$1"
+
+case "$API" in
+    ztc)
+        API_URL=${ZTC_URL:-"http://localhost:8003/catalogi/api/v1/schema/openapi.yaml"}
+        DOCKER_DIR="${BACKEND_ROOT}/docker-services/openzaak"
+        ;;
+    selectielijst)
+        API_URL=${SELECTIELIJST_API_URL:-"https://selectielijst.openzaak.nl/api/v1/schema/openapi.json"}
+        ;;
+    objecttypen)
+        API_URL=${OBJECTTYPEN_URL:-"http://localhost:8004/api/v2/schema/openapi.yaml"}
+        DOCKER_DIR="${BACKEND_ROOT}/docker-services/objecttypen"
+        ;;
+    *)
+        echo "Invalid argument: $API"
+        echo "Usage: $0 {ztc|selectielijst|objecttypen}"
+        exit 1
+        ;;
+esac
 
 PWD=$(pwd)
 BACKEND_ROOT=$(dirname "${0}")/..
-DOCKER_DIR="${BACKEND_ROOT}/docker-services/openzaak"
 TARGET_DIR="${BACKEND_ROOT}/src/openbeheer/types"
 
 go_back() {
@@ -18,7 +36,7 @@ error() {
 }
 
 use_docker() {
-    cd "${DOCKER_DIR}" || error "Open Zaak docker not found"
+    cd "${DOCKER_DIR}" || error "Docker compose not found"
     (type datamodel-codegen) || error "datamodel-codegen not found; try activating venv"
 
     if (type docker-compose) then
@@ -40,13 +58,13 @@ use_docker() {
 }
 
 url_ready() {
-    httpx -m HEAD "${ZTC_URL}" > /dev/null
+    httpx -m HEAD "${API_URL}" > /dev/null
 }
 
 url_ready || use_docker
 
 while ! url_ready  ; do
-  echo "Waiting for ${ZTC_URL} to be ready."
+  echo "Waiting for ${API_URL} to be ready."
   sleep 2
 done
 
@@ -54,7 +72,7 @@ mkdir -p "${TARGET_DIR}"
 
 datamodel-codegen \
     --input-file-type openapi \
-    --url "${ZTC_URL}" \
+    --url "${API_URL}" \
     --formatters ruff-check ruff-format \
     --target-python-version 3.12 \
     --openapi-scopes schemas paths parameters \
@@ -64,5 +82,5 @@ datamodel-codegen \
     --use-union-operator \
     --enable-version-header \
     --keyword-only \
-    --output "${TARGET_DIR}/ztc.py" \
+    --output "${TARGET_DIR}/${API}.py" \
     || error "Could not generate types"

@@ -206,7 +206,7 @@ export function RelatedObjectRenderer<T extends object>({
     return (
       <RelatedObjectBadge
         relatedObject={relatedObject}
-        allowedFields={fieldNames}
+        allowedFields={fieldNames as ExpandItemKeys<RelatedObject<T>>[]}
       />
     );
   }
@@ -217,7 +217,7 @@ export function RelatedObjectRenderer<T extends object>({
         <DataGrid<(typeof relatedObject)[number]>
           objectList={augmentedObjectList}
           fields={[
-            ...expandFields,
+            ...(typedFields as TypedField[]),
             { name: "", type: "jsx", editable: false, sortable: false },
           ]}
           boolProps={{ explicit: true }}
