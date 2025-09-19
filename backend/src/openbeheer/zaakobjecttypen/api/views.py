@@ -4,6 +4,7 @@ import structlog
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
+from msgspec import ValidationError
 
 from openbeheer.api.views import (
     DetailView,
@@ -82,13 +83,15 @@ def expand_zaakobjecttype(
         objecttype = fetch_one(ot_client, f"objecttypes/{objecttype_uuid}", ObjectType)
 
     try:
-        return [objecttype]
-    except KeyError:
+        objecttype = fetch_one(ot_client, f"objecttypes/{objecttype_uuid}", ObjectType)
+    except ValidationError:
         logger.warning(
             "Open Zaak and Objecttypes API out of sync.",
             zaakobjecttype=zaakobjecttype.url,
         )
-    return [None]
+        return [None]
+
+    return [objecttype]
 
 
 @extend_schema_view(
