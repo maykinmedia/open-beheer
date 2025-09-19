@@ -1086,6 +1086,8 @@ export interface components {
         };
         /** ExpandableZaakType */
         ExpandableZaakType: {
+            /** @default null */
+            selectielijstProcestype: string | null;
             uuid?: string;
             /**
              * ZaakTypeExtension
@@ -1100,7 +1102,7 @@ export interface components {
                 roltypen?: components["schemas"]["RolTypeWithUUID"][];
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
-                selectielijstProcestype?: components["schemas"]["ProcesType"];
+                selectielijstProcestype?: components["schemas"]["LAXProcesType"];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
@@ -1190,8 +1192,6 @@ export interface components {
             /** @default null */
             verantwoordingsrelatie: string[] | null;
             /** @default null */
-            selectielijstProcestype: string | null;
-            /** @default null */
             concept: boolean | null;
             /** @default null */
             broncatalogus: null | components["schemas"]["BronCatalogus"];
@@ -1233,7 +1233,7 @@ export interface components {
                 roltypen?: components["schemas"]["RolTypeWithUUID"][];
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
-                selectielijstProcestype?: components["schemas"]["ProcesType"];
+                selectielijstProcestype?: components["schemas"]["LAXProcesType"];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
@@ -1519,6 +1519,40 @@ export interface components {
             /** @description Uitleg wat er precies fout is met de gegevens */
             reason: string;
         };
+        /**
+         * LAXProcesType
+         * @description Overrides ProcesType ignoring "toelichting" min_length as restriction seems incorrect.
+         */
+        LAXProcesType: {
+            toelichting: string;
+            /**
+             * Procestypenummer
+             * @description Nummer van de selectielijstcategorie
+             */
+            nummer: number;
+            /**
+             * Jaar
+             * @description Het jaartal waartoe dit ProcesType behoort
+             */
+            jaar: number;
+            /**
+             * Procestypenaam
+             * @description Benaming van het procestype
+             */
+            naam: string;
+            /**
+             * Procestypeomschrijving
+             * @description Omschrijving van het procestype
+             */
+            omschrijving: string;
+            /**
+             * Procesobject
+             * @description Object waar de uitvoering van het proces op van toepassing is en waarvan de bestaans- of geldigheidsduur eventueel van belang is bij het bepalen van de start van de bewaartermijn
+             */
+            procesobject: string;
+            /** @default null */
+            url: string | null;
+        };
         None: null;
         /**
          * OBField
@@ -1531,7 +1565,6 @@ export interface components {
             filterLookup?: string;
             options?: components["schemas"]["OBOption"][];
             editable?: boolean;
-            nestedFields?: components["schemas"]["OBField"][];
         };
         /**
          * OBFieldType
@@ -1757,7 +1790,7 @@ export interface components {
                 roltypen?: components["schemas"]["RolTypeWithUUID"][];
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
-                selectielijstProcestype?: components["schemas"]["ProcesType"];
+                selectielijstProcestype?: components["schemas"]["LAXProcesType"];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving?: string;
@@ -2076,41 +2109,6 @@ export interface components {
             deelzaaktypen: (string | null)[] | null;
             /** @default null */
             gerelateerdeZaaktypen: components["schemas"]["ZaakTypenRelatieRequest"][] | null;
-        };
-        /** ProcesType */
-        ProcesType: {
-            /**
-             * Procestypenummer
-             * @description Nummer van de selectielijstcategorie
-             */
-            nummer: number;
-            /**
-             * Jaar
-             * @description Het jaartal waartoe dit ProcesType behoort
-             */
-            jaar: number;
-            /**
-             * Procestypenaam
-             * @description Benaming van het procestype
-             */
-            naam: string;
-            /**
-             * Procestypeomschrijving
-             * @description Omschrijving van het procestype
-             */
-            omschrijving: string;
-            /**
-             * Procestypetoelichting
-             * @description Toelichting van het procestype
-             */
-            toelichting: string;
-            /**
-             * Procesobject
-             * @description Object waar de uitvoering van het proces op van toepassing is en waarvan de bestaans- of geldigheidsduur eventueel van belang is bij het bepalen van de start van de bewaartermijn
-             */
-            procesobject: string;
-            /** @default null */
-            url: string | null;
         };
         /** ReferentieProces */
         ReferentieProces: {
@@ -2676,7 +2674,7 @@ export interface components {
             roltypen?: components["schemas"]["RolTypeWithUUID"][];
             deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
             zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
-            selectielijstProcestype?: components["schemas"]["ProcesType"];
+            selectielijstProcestype?: components["schemas"]["LAXProcesType"];
         };
         /** ZaakTypeRequest */
         ZaakTypeRequest: {
@@ -2791,6 +2789,8 @@ export interface components {
         };
         /** ZaakTypeWithUUID */
         ZaakTypeWithUUID: {
+            /** @default null */
+            selectielijstProcestype: string | null;
             uuid?: string;
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
@@ -2879,8 +2879,6 @@ export interface components {
             publicatietekst: string | null;
             /** @default null */
             verantwoordingsrelatie: string[] | null;
-            /** @default null */
-            selectielijstProcestype: string | null;
             /** @default null */
             concept: boolean | null;
             /** @default null */
