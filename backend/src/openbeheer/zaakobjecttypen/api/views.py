@@ -3,13 +3,15 @@ from typing import Iterable
 import structlog
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from furl import furl
 
 from openbeheer.api.views import (
     DetailView,
     DetailViewWithoutVersions,
     ListView,
+    fetch_one,
 )
-from openbeheer.helpers import retrieve_objecttypen_for_zaaktype
+from openbeheer.clients import objecttypen_client
 from openbeheer.types import (
     ExpandableZaakObjectTypeWithUUID,
     ExternalServiceError,
@@ -74,10 +76,13 @@ def expand_zaakobjecttype(
 ) -> Iterable[ObjectType | None]:
     # We are in the detail endpoint, so there is only one ZaakObjectType
     zaakobjecttype = list(zaakobjecttypen)[0]
-    dict_objecttypen = retrieve_objecttypen_for_zaaktype(zaakobjecttype.zaaktype)
+
+    with objecttypen_client() as ot_client:
+        objecttype_uuid = furl(zaakobjecttype.objecttype).path.segments[-1]
+        objecttype = fetch_one(ot_client, f"objecttypes/{objecttype_uuid}", ObjectType)
 
     try:
-        return [dict_objecttypen[zaakobjecttype.objecttype]]
+        return [objecttype]
     except KeyError:
         logger.warning(
             "Open Zaak and Objecttypes API out of sync.",
