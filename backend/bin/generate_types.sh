@@ -36,7 +36,7 @@ error() {
 }
 
 use_docker() {
-    cd "${DOCKER_DIR}" || error "Docker compose not found"
+    cd "${DOCKER_DIR}" || error "Docker compose YAML not found"
     (type datamodel-codegen) || error "datamodel-codegen not found; try activating venv"
 
     if (type docker-compose) then

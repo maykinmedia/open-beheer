@@ -31,7 +31,7 @@ from openbeheer.clients import (
     selectielijst_client,
     ztc_client,
 )
-from openbeheer.helpers import retrieve_objecttypen_for_zaaktype
+from openbeheer.helpers import retrieve_objecttypen
 from openbeheer.types import (
     BesluitTypeWithUUID,
     DetailResponse,
@@ -327,7 +327,7 @@ def expand_zaakobjecttypen(
         if not zaaktype.zaakobjecttypen:
             return []
 
-        dict_objecttypen = retrieve_objecttypen_for_zaaktype(zaaktype.url)
+        dict_objecttypen = retrieve_objecttypen()
 
         zaakobjecttypen = fetch_all(
             client,
