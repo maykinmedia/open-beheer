@@ -187,6 +187,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             self.assertIn("roltypen", zaaktype_data)
             self.assertIn("deelzaaktypen", zaaktype_data)
             self.assertIn("zaakobjecttypen", zaaktype_data)
+            self.assertIn("zaaktypeInformatieobjecttypen", zaaktype_data)
 
             self.assertEqual(zaaktype_data["_expand"]["besluittypen"], [])
             self.assertEqual(zaaktype_data["_expand"]["eigenschappen"], [])
@@ -754,3 +755,57 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
 
         self.assertIn("_expand", zaakobjecttype)
         self.assertIn("objecttype", zaakobjecttype["_expand"])
+
+    def test_informatieobjecttype_options_in_same_catalogue(self):
+        zaaktype = self.helper.create_zaaktype()
+        informatieobjecttype = self.helper.create_informatieobjecttype(
+            catalogus=zaaktype.catalogus
+        )
+        # In a different catalogus
+        other_informatieobjecttype = self.helper.create_informatieobjecttype()
+
+        self.client.force_login(self.user)
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        fields_by_name = {f["name"]: f for f in data["fields"]}
+        informatieobjecttype_option_values = [
+            option["value"]
+            for option in fields_by_name[
+                "_expand.zaaktypeInformatieobjecttypen.informatieobjecttype"
+            ]["options"]
+        ]
+        self.assertIn(informatieobjecttype.url, informatieobjecttype_option_values)
+        self.assertNotIn(
+            other_informatieobjecttype.url, informatieobjecttype_option_values
+        )
+
+    def test_expand_zaaktype_informatieobjecttype(self):
+        zaaktype = self.helper.create_zaaktype()
+        informatieobjecttype = self.helper.create_informatieobjecttype(
+            catalogus=zaaktype.catalogus
+        )
+        assert zaaktype.url and informatieobjecttype.url
+        self.helper.relate_zaaktype_informatieobjecttype(
+            zaaktype_url=zaaktype.url, informatieobjecttype_url=informatieobjecttype.url
+        )
+
+        self.client.force_login(self.user)
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+
+        self.assertIn("zaaktypeInformatieobjecttypen", data["result"]["_expand"])
+        self.assertEqual(
+            len(data["result"]["_expand"]["zaaktypeInformatieobjecttypen"]), 1
+        )
