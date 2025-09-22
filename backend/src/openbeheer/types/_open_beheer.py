@@ -29,7 +29,7 @@ from furl import furl
 from msgspec import UNSET, Meta, Struct, UnsetType, structs
 from msgspec.json import decode
 
-from openbeheer.clients import iter_pages, selectielijst_client
+from openbeheer.clients import iter_pages, objecttypen_client, selectielijst_client
 from openbeheer.types.objecttypen import ObjectType
 
 from .selectielijst import (
@@ -178,6 +178,19 @@ def fetch_procestype_options():
     ]
 
 
+@_cached
+def fetch_objecttype_options():
+    from openbeheer.api.views import fetch_all
+
+    with objecttypen_client() as client:
+        objecttypen = fetch_all(client, "objecttypes", {}, ObjectType)
+
+    return [
+        as_ob_option(objecttype)
+        for objecttype in sorted(objecttypen, key=lambda item: (item.name))
+    ]
+
+
 def options(t: type | UnionType | Annotated) -> list[OBOption]:
     "Find an enum in the type and turn it into options."
     match t:
@@ -191,6 +204,8 @@ def options(t: type | UnionType | Annotated) -> list[OBOption]:
             return fetch_resultaattypeomschrijving_options()
         case _ if t is ResultaatURL:
             return fetch_resultaat_options()
+        case _ if t is ObjectTypeURL:
+            return fetch_objecttype_options()
         case _:
             return []
 
@@ -464,6 +479,13 @@ class LAXWaardering(enum.Enum):
 
 
 ProcesTypeURL = NewType("ProcesTypeURL", str)
+ObjectTypeURL = NewType("ObjectTypeURL", str)
+
+
+@as_ob_option.register
+def _objecttype_as_option(objecttype: ObjectType, **kwargs) -> OBOption[str]:
+    assert objecttype.url
+    return OBOption(label=objecttype.name, value=objecttype.url)
 
 
 class LAXResultaat(Struct, rename="camel"):
@@ -611,6 +633,15 @@ class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
 
 class ExpandableZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: str | UnsetType = UNSET
+    objecttype: (  # pyright: ignore[reportIncompatibleVariableOverride]
+        Annotated[
+            ObjectTypeURL,
+            Meta(
+                description="URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort.",
+                max_length=200,
+            ),
+        ]
+    )
     _expand: ZaakObjectTypeExtension = ZaakObjectTypeExtension()
 
 
