@@ -83,4 +83,5 @@ linkcheck_ignore = [
     r"https?://.*\.example.com*",
     r"http://localhost:\d+/",
     r"https://.*sentry.*",
+    "https://www.npmjs.com/"
 ]
