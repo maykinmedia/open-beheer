@@ -18,7 +18,10 @@ from openbeheer.types import (
     StatusTypeWithUUID,
     ZaakTypeWithUUID,
 )
-from openbeheer.types._open_beheer import ZaakObjectTypeWithUUID
+from openbeheer.types._open_beheer import (
+    ZaakObjectTypeWithUUID,
+    ZaakTypeInformatieObjectTypeWithUUID,
+)
 from openbeheer.types.objecttypen import ObjectType
 from openbeheer.types.ztc import (
     Catalogus,
@@ -26,7 +29,6 @@ from openbeheer.types.ztc import (
     FormaatEnum,
     InformatieObjectType,
     ZaakObjectTypeRequest,
-    ZaakTypeInformatieObjectType,
 )
 
 type _JSONEncodable = (
@@ -126,7 +128,7 @@ class OpenZaakDataCreationHelper:
         zaaktype_url: str,
         informatieobjecttype_url: str,
         **overrides: _JSONEncodable,
-    ) -> ZaakTypeInformatieObjectType:
+    ) -> ZaakTypeInformatieObjectTypeWithUUID:
         data: dict[str, _JSONEncodable] = {
             "zaaktype": zaaktype_url,
             "informatieobjecttype": informatieobjecttype_url,
@@ -135,7 +137,7 @@ class OpenZaakDataCreationHelper:
         } | overrides
 
         return self._create_resource(
-            data, "zaaktype-informatieobjecttypen", ZaakTypeInformatieObjectType
+            data, "zaaktype-informatieobjecttypen", ZaakTypeInformatieObjectTypeWithUUID
         )
 
     def create_zaaktype(
