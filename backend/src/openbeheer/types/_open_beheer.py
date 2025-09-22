@@ -49,6 +49,7 @@ from .ztc import (
     StatusType,
     ZaakObjectType,
     ZaakType,
+    ZaakTypeInformatieObjectType,
     ZaakTypeRequest,
 )
 
@@ -663,6 +664,10 @@ class ZaakTypeWithUUID(UUIDMixin, ZaakType):
     ) = None
 
 
+class ZaakTypeInformatieObjectTypeWithUUID(UUIDMixin, ZaakTypeInformatieObjectType):
+    uuid: str | UnsetType = UNSET
+
+
 class ZaakObjectTypeExtension(Struct, frozen=True, rename="camel"):
     objecttype: UnsetType | ObjectType = UNSET
 
@@ -699,6 +704,9 @@ class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
     deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
     zaakobjecttypen: UnsetType | list[ExpandableZaakObjectTypeWithUUID] = UNSET
     selectielijst_procestype: UnsetType | LAXProcesType = UNSET
+    zaaktype_informatieobjecttypen: (
+        UnsetType | list[ZaakTypeInformatieObjectTypeWithUUID]
+    ) = UNSET
 
 
 class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
@@ -707,6 +715,11 @@ class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
 
 class ExpandableZaakType(ZaakTypeWithUUID, Struct):
     _expand: ZaakTypeExtension = ZaakTypeExtension()
+
+    # FIXME: without this, the frontend doesn't pick up the expand field.
+    zaaktype_informatieobjecttypen: None = msgspec.field(
+        name="zaaktypeInformatieobjecttypen", default=None
+    )
 
 
 @as_ob_option.register

@@ -105,6 +105,13 @@ urlpatterns = [
                                     namespace="zaakobjecttypen",
                                 ),
                             ),
+                            path(
+                                "zaaktypeInformatieobjecttypen/",
+                                include(
+                                    "openbeheer.zaaktype_informatieobjecttypen.urls",
+                                    namespace="zaaktype-informatieobjecttypen",
+                                ),
+                            ),
                         ]
                     ),
                 ),
