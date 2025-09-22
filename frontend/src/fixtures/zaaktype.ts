@@ -113,6 +113,7 @@ export const FIXTURE_ZAAKTYPE: components["schemas"]["ExpandableZaakType"] = {
       procesobject: "De vastgestelde organisatie inrichting",
       url: "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
     },
+    zaaktypeInformatieobjecttypen: [],
   },
   omschrijving: "brand world-class initiatives",
   vertrouwelijkheidaanduiding: "openbaar",
@@ -168,6 +169,7 @@ export const FIXTURE_ZAAKTYPE: components["schemas"]["ExpandableZaakType"] = {
   roltypen: [],
   deelzaaktypen: [],
   zaakobjecttypen: [],
+  zaaktypeInformatieobjecttypen: null,
 };
 
 export const FIXTURE_ZAAKTYPE_FIELDS: TypedField<

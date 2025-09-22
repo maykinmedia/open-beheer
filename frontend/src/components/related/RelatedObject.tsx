@@ -123,7 +123,7 @@ export function RelatedObjectRenderer<T extends object>({
 
         if (initValue) {
           value = initValue();
-        } else if (options) {
+        } else if (options && options.length > 0) {
           value = options[0].value;
         } else {
           switch (type) {
