@@ -64,6 +64,7 @@ from openbeheer.types._open_beheer import (
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
     fetch_selectielijst_resultaat_options,
+    ZaakTypeInformatieObjectTypeWithUUID,
 )
 from openbeheer.types.ztc import (
     BesluitType,
@@ -362,6 +363,23 @@ def expand_zaakobjecttypen(
     return [expand_zaakobjecttypen(zaaktype) for zaaktype in zaaktypen]
 
 
+def expand_zaaktype_informatieobjecttype(
+    client: APIClient, zaaktypen: Iterable[ZaakType]
+) -> Iterable[Iterable[ZaakTypeInformatieObjectTypeWithUUID | None]]:
+    # There is only one zaaktype, since we are expanding
+    # the retrieve endpoint.
+    zaaktype = list(zaaktypen)[0]
+
+    return [
+        fetch_all(
+            client,
+            "zaaktype-informatieobjecttypen",
+            {"zaaktype": zaaktype.url, "status": "alles"},
+            ZaakTypeInformatieObjectTypeWithUUID,
+        )
+    ]
+
+
 @extend_schema_view(
     get=extend_schema(
         operation_id="service_zaaktype_retrieve_one",
@@ -456,6 +474,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": expand_zaakobjecttypen,
         "selectielijst_procestype": expand_selectielijstprocestype,
+        "zaaktype_informatieobjecttypen": expand_zaaktype_informatieobjecttype,
     }
 
     def get_item_versions(
@@ -522,6 +541,34 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
+
+    def get_fields(self, object) -> list[OBField]:
+        fields = super().get_fields(object)
+        for field in fields:
+            if (
+                field.name
+                == "_expand.zaaktypeInformatieobjecttypen.informatieobjecttype"
+            ):
+                field.options = self.get_informatieobjecttype_options(object)
+
+        return fields
+
+    def get_informatieobjecttype_options(self, zaaktype: ZaakType) -> list[OBOption]:
+        with ztc_client() as client:
+            informatieobjecttypen = fetch_all(
+                client,
+                "informatieobjecttypen",
+                # You can only relate a Zaaktype and an Informatieobjecttype if they belong to the same catalogus.
+                params={"catalogus": zaaktype.catalogus, "status": "alles"},
+                result_type=InformatieObjectType,
+            )
+
+        return [
+            OBOption(
+                label=informatieobjecttype.omschrijving, value=informatieobjecttype.url
+            )
+            for informatieobjecttype in informatieobjecttypen
+        ]
 
 
 class ZaakTypePublishView(MsgspecAPIView):
