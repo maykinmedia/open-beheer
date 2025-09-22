@@ -483,21 +483,6 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
 
-    def get_fields(self) -> list[OBField]:
-        fields = super().get_fields()
-        for field in fields:
-            if field.name == "_expand.zaakobjecttypen.objecttype":
-                field.options = self.get_objecttype_options()
-
-        return fields
-
-    def get_objecttype_options(self) -> list[OBOption]:
-        objecttypen = retrieve_objecttypen()
-        return [
-            OBOption(label=objecttype.name, value=objecttype.url)
-            for _key, objecttype in objecttypen.items()
-        ]
-
 
 class ZaakTypePublishView(MsgspecAPIView):
     endpoint_path = "zaaktypen/{uuid}/publish"
