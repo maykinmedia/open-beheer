@@ -8,7 +8,7 @@ from msgspec import Meta, Struct
 from msgspec.json import decode, encode
 
 from . import ztc
-from ._open_beheer import _camelize, ob_fields_of_type, options
+from ._open_beheer import camelize, ob_fields_of_type, options
 
 ZTC_DATATYPES = [
     struct
@@ -71,7 +71,7 @@ class OBFieldsTest(TestCase):
         field_names = {field["name"] for field in ob_fields_as_dict}
 
         instance_dict = as_seen_by_frontend(instance)
-        expected_struct_attributes = set(map(_camelize, instance_dict))
+        expected_struct_attributes = set(map(camelize, instance_dict))
 
         assert field_names == expected_struct_attributes
 

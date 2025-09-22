@@ -31,6 +31,7 @@ from msgspec.json import decode
 
 from openbeheer.clients import iter_pages, selectielijst_client
 from openbeheer.types.objecttypen import ObjectType
+from openbeheer.utils import camelize
 
 from .selectielijst import (
     ProcesType,
@@ -218,7 +219,7 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
 
     def __post_init__(self):
         # camelize value of name
-        self.name = _camelize(self.name)
+        self.name = camelize(self.name)
 
 
 def _core_type(annotation):
@@ -251,7 +252,7 @@ def ob_fields_of_type(
                 for attr, attr_type in attrs.items()
                 for field in ob_fields_of_type(
                     _core_type(attr_type),
-                    prefix=f"_expand.{_camelize(attr)}.",
+                    prefix=f"_expand.{camelize(attr)}.",
                 )
             ]
 
@@ -309,7 +310,7 @@ class FrontendFieldSet(Struct):
     span: int | UnsetType = msgspec.UNSET
 
     def __post_init__(self):
-        self.fields = [_camelize(field) for field in self.fields]
+        self.fields = [camelize(field) for field in self.fields]
 
 
 type FrontendFieldsets = list[tuple[str, FrontendFieldSet]]
@@ -636,13 +637,6 @@ class ExpandableZaakTypeRequest(ZaakTypeRequest, Struct):
 
 class ExpandableZaakType(ZaakTypeWithUUID, Struct):
     _expand: ZaakTypeExtension = ZaakTypeExtension()
-
-
-def _camelize(s: str) -> str:
-    if "." in s:
-        head, *tail = s.split(".")
-        return f"{head}.{'.'.join(map(_camelize, tail))}"
-    return "".join(part.title() if n else part for n, part in enumerate(s.split("_")))
 
 
 @as_ob_option.register
