@@ -77,13 +77,13 @@ def expand_zaakobjecttype(
 ) -> Iterable[ObjectType | None]:
     # We are in the detail endpoint, so there is only one ZaakObjectType
     zaakobjecttype = list(zaakobjecttypen)[0]
-
-    with objecttypen_client() as ot_client:
-        objecttype_uuid = furl(zaakobjecttype.objecttype).path.segments[-1]
-        objecttype = fetch_one(ot_client, f"objecttypes/{objecttype_uuid}", ObjectType)
+    objecttype_uuid = furl(zaakobjecttype.objecttype).path.segments[-1]
 
     try:
-        objecttype = fetch_one(ot_client, f"objecttypes/{objecttype_uuid}", ObjectType)
+        with objecttypen_client() as ot_client:
+            objecttype = fetch_one(
+                ot_client, f"objecttypes/{objecttype_uuid}", ObjectType
+            )
     except ValidationError:
         logger.warning(
             "Open Zaak and Objecttypes API out of sync.",
