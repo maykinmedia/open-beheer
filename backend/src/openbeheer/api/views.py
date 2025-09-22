@@ -611,7 +611,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def _expand(self, client, object: T):
         return expand_one(client, self.expansions, object)
 
-    def get_fields(self) -> list[OBField]:
+    def get_fields(self, object: T) -> list[OBField]:
         ob_fields = ob_fields_of_type(self.data_type)
 
         expansions = set(map(camelize, self.expansions))
@@ -650,7 +650,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             versions=(versions if self.has_versions else UNSET),
             result=data,
             fieldsets=self.get_fieldsets(),
-            fields=self.get_fields(),
+            fields=self.get_fields(data),
         )
 
         return Response(response_data)
@@ -697,7 +697,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             versions=versions if self.has_versions else UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
-            fields=self.get_fields(),
+            fields=self.get_fields(data),
         )
 
         return Response(response_data)
