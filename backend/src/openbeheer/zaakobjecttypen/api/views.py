@@ -1,7 +1,4 @@
-from datetime import date, timedelta
 from typing import Iterable
-
-from django.utils.translation import gettext_lazy as __
 
 import structlog
 from ape_pie import APIClient
@@ -16,7 +13,6 @@ from openbeheer.api.views import (
     fetch_one,
 )
 from openbeheer.clients import objecttypen_client
-from openbeheer.helpers import retrieve_objecttypen
 from openbeheer.types import (
     ExpandableZaakObjectTypeWithUUID,
     ExternalServiceError,
@@ -74,25 +70,6 @@ class ZaakObjectTypeListView(
     return_data_type = ZaakObjectTypeWithUUID
     query_type = ZaakobjecttypenGetParametersQuery
     endpoint_path = "zaakobjecttypen"
-
-    def get_post_defaults(self) -> dict:
-        """Return dynamic default values for creating a ZaakObjectType"""
-        objecttypen = retrieve_objecttypen()
-
-        if len(objecttypen.keys()) == 0:
-            raise ValidationError(__("No objecttypes present in the Objects API."))
-
-        defaults = {
-            "objecttype": list(objecttypen.keys())[0],
-            "beginGeldigheid": date.today().isoformat(),
-            "eindeGeldigheid": (
-                date.today() + timedelta(days=365)
-            ).isoformat(),  # Some time in the future...
-            "relatieOmschrijving": "Relation with Objecttype",
-            "anderObjecttype": False,
-        }
-
-        return defaults
 
 
 def expand_zaakobjecttype(
