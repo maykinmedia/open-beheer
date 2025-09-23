@@ -5,9 +5,9 @@ export const TABS_CONFIG_RELATIES: TabConfig<TargetType> = {
   view: "DataGrid",
   sections: [
     {
-      expandFields: ["relatieOmschrijving"],
+      expandFields: ["_expand.deelzaaktypen.omschrijvingGeneriek"],
       label: "Relaties",
-      key: "roltypen", // TODO: Missing "Relaties" key
+      key: "deelzaaktypen",
     },
   ],
 };

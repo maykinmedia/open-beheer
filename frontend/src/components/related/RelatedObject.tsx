@@ -1,10 +1,4 @@
-import {
-  Button,
-  DataGrid,
-  Outline,
-  TypedField,
-  field2TypedField,
-} from "@maykin-ui/admin-ui";
+import { Button, DataGrid, Outline, TypedField } from "@maykin-ui/admin-ui";
 import { string2Title } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
 import { useMemo } from "react";
@@ -16,7 +10,7 @@ import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getZaaktypeUUID } from "~/lib";
 import { BaseTabSection, TabConfig } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
-import { ExpandItemKeys, RelatedObject } from "~/types";
+import { ExpandItemKeys, RelatedObject, components } from "~/types";
 
 /**
  * Props for the {@link RelatedObjectRenderer} component.
@@ -34,6 +28,7 @@ type RelatedObjectRendererProps<T extends object> = {
   field: ExpandItemKeys<T>;
   /** UUID of the zaaktype the related object belongs to. */
   zaaktypeUuid: string;
+  fields: components["schemas"]["OBField"][];
 };
 
 /**
@@ -52,6 +47,7 @@ export function RelatedObjectRenderer<T extends object>({
   expandFields,
   field,
   zaaktypeUuid,
+  fields,
 }: RelatedObjectRendererProps<T>) {
   const params = useParams();
   const submitAction = useSubmitAction<ZaaktypeAction>();
@@ -65,9 +61,34 @@ export function RelatedObjectRenderer<T extends object>({
   const { state } = useNavigation();
   const isLoading = state !== "idle";
 
-  const typedFields = expandFields.map((f) =>
-    field2TypedField(f as TypedField<typeof relatedObject>),
-  );
+  const expandFieldsNames = expandFields.map((expandField) => {
+    if (typeof expandField === "string") {
+      return expandField;
+    } else {
+      return expandField.name;
+    }
+  });
+
+  const typedFields = fields
+    .filter((backendField) => expandFieldsNames.includes(backendField.name))
+    .map((backendField) => {
+      // The expandFields can be either strings (just the name of the field to show) or objects, with
+      // more configurations for the field.
+      const frontendExtras = expandFields.find(
+        (expandField) =>
+          typeof expandField !== "string" &&
+          expandField.name === backendField.name,
+      ) as TypedField<RelatedObject<T>> | undefined;
+
+      const fieldPrefix = `_expand.${field}.`;
+      return {
+        ...frontendExtras,
+        ...backendField,
+        // We removed the prefix, so now the keys are fields of the expanded object.
+        name: backendField.name.replace(fieldPrefix, "") as ExpandItemKeys<T>,
+      };
+    });
+
   const fieldNames = typedFields.map((t) => t.name);
 
   /**
@@ -97,11 +118,13 @@ export function RelatedObjectRenderer<T extends object>({
 
     const relatedObjectStub = typedFields.reduce<RelatedObject<T>>(
       // @ts-expect-error - FIXME: Extending TypedField here.
-      (acc, { name, type, initValue }) => {
+      (acc, { name, type, initValue, options }) => {
         let value;
 
         if (initValue) {
           value = initValue();
+        } else if (options) {
+          value = options[0].value;
         } else {
           switch (type) {
             case "boolean":
@@ -206,7 +229,7 @@ export function RelatedObjectRenderer<T extends object>({
     return (
       <RelatedObjectBadge
         relatedObject={relatedObject}
-        allowedFields={fieldNames as ExpandItemKeys<RelatedObject<T>>[]}
+        allowedFields={fieldNames}
       />
     );
   }
@@ -217,7 +240,12 @@ export function RelatedObjectRenderer<T extends object>({
         <DataGrid<(typeof relatedObject)[number]>
           objectList={augmentedObjectList}
           fields={[
-            ...(typedFields as TypedField[]),
+            // FIXME: Admin UI TypedField and our OBField should be compatible, but currently in admin-ui
+            // filterValue is string | number, while for OBField it is unknown, since in the backend it is
+            // a generic type based on the value of the object.
+            // @ts-expect-error - see above
+            ...typedFields,
+            // @ts-expect-error - see above
             { name: "", type: "jsx", editable: false, sortable: false },
           ]}
           boolProps={{ explicit: true }}

@@ -6,10 +6,10 @@ export const TABS_CONFIG_STATUSTYPEN: TabConfig<TargetType> = {
   sections: [
     {
       expandFields: [
-        { name: "volgnummer", type: "number" },
-        "omschrijving",
-        "omschrijvingGeneriek",
-        { name: "informeren", type: "boolean" },
+        "_expand.statustypen.volgnummer",
+        "_expand.statustypen.omschrijving",
+        "_expand.statustypen.omschrijvingGeneriek",
+        "_expand.statustypen.informeren",
       ],
       label: "Statustypen",
       key: "statustypen",
