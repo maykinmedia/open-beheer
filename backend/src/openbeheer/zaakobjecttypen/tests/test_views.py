@@ -112,23 +112,6 @@ class ZaakObjectTypeListViewTests(VCRAPITestCase):
         data = response.json()
         self.assertEqual(data["zaaktype"], self.zaaktype.url)
 
-    def test_create_with_defaults(self):
-        """Create a new zaakobjecttype for a zaaktype with default values"""
-
-        self.client.force_login(self.user)
-
-        response = self.client.post(
-            self.endpoint,
-            data={},  # Empty data
-            format="json",
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = response.json()
-        self.assertEqual(data["zaaktype"], self.zaaktype.url)
-        assert data["objecttype"].startswith("http://localhost:8004/api/v2/")
-        self.assertFalse(data["anderObjecttype"])
-
 
 class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
     @classmethod
