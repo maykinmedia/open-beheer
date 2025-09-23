@@ -1,7 +1,13 @@
 import { FieldSet, TypedField } from "@maykin-ui/admin-ui";
 import { ReactNode } from "react";
 import { ZaaktypeLoaderData } from "~/pages";
-import { Expand, ExpandItemKeys, Expanded, RelatedObject } from "~/types";
+import {
+  Expand,
+  ExpandItemKeys,
+  Expanded,
+  RelatedObject,
+  components,
+} from "~/types";
 
 /**
  * `TargetType`:
@@ -31,7 +37,11 @@ export type BaseTabSection<
   T extends object,
   R extends RelatedObject<T> = RelatedObject<T>,
 > = {
-  expandFields: (ExpandItemKeysWithString<T> | TypedField<R>)[];
+  expandFields: (
+    | ExpandItemKeysWithString<T>
+    | TypedField<R>
+    | components["schemas"]["OBField"]
+  )[];
   icon?: ReactNode;
   label: string;
   valueTransform?: Partial<{

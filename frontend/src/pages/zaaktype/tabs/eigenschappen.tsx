@@ -1,4 +1,5 @@
 import { TabConfig, TargetType } from "~/pages";
+import { components } from "~/types";
 
 export const TABS_CONFIG_EIGENSCHAPPEN: TabConfig<TargetType> = {
   label: "Eigenschappen",
@@ -7,11 +8,10 @@ export const TABS_CONFIG_EIGENSCHAPPEN: TabConfig<TargetType> = {
     {
       // TODO: Not implemented
       expandFields: [
-        "naam",
-        "definitie",
+        "_expand.eigenschappen.naam",
+        "_expand.eigenschappen.definitie",
         {
-          name: "specificatie",
-          type: "string",
+          name: "_expand.eigenschappen.specificatie",
           // @ts-expect-error - FIXME: Extending TypedField here.
           initValue: (value) => {
             if (typeof value === "undefined") {
@@ -22,7 +22,9 @@ export const TABS_CONFIG_EIGENSCHAPPEN: TabConfig<TargetType> = {
               };
             }
           },
-          valueTransform: (value) => {
+          valueTransform: (
+            value: components["schemas"]["Eigenschap"],
+          ): string => {
             return JSON.stringify(value.specificatie);
           },
         },
