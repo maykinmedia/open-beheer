@@ -33,6 +33,7 @@ from openbeheer.clients import iter_pages, objecttypen_client, selectielijst_cli
 from openbeheer.types.objecttypen import ObjectType
 from openbeheer.utils import camelize
 
+from . import objecttypen, selectielijst
 from .selectielijst import (
     ProcesType,
     ResultaatTypeOmschrijvingGeneriek as _ResultaatTypeOmschrijvingGeneriek,
@@ -229,7 +230,7 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
     options: list[OBOption] | UnsetType = msgspec.UNSET
     "fields that are not query parameter MAY need options too"
 
-    editable: bool | UnsetType = msgspec.UNSET
+    editable: bool = False
     "fields may be included/excluded from editing"
 
     def __post_init__(self):
@@ -278,6 +279,7 @@ def ob_fields_of_type(
             name=name,
             type=as_ob_fieldtype(annotation),
             options=option_overrides.get(name, options(annotation)) or UNSET,
+            editable=_core_type(data_type) not in READ_ONLY_TYPES,
         )
         ob_field.name = prefix + ob_field.name
 
@@ -673,3 +675,13 @@ class ExpandableZaakType(ZaakTypeWithUUID, Struct):
 @as_ob_option.register
 def _lax_procestype_as_option(arg: ProcesType) -> OBOption[str | None]:
     return OBOption(label=f"{arg.naam} - {arg.jaar}", value=arg.url)
+
+
+# Types from read only (or not implemented CUD) API's
+READ_ONLY_TYPES = {
+    t
+    for module in [selectielijst, objecttypen]
+    for name in dir(module)
+    if (t := getattr(module, name))
+    if isinstance(t, type)
+} | {LAXProcesType}

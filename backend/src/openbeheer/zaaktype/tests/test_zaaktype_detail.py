@@ -384,8 +384,17 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 option["value"] for option in selectielijstklasse_field["options"]
             )
 
+            editable_fields = {
+                name for name, f in fields_by_name.items() if f.get("editable")
+            }
             # has some editable fields
-            assert any(f.get("editable") for f in fields_by_name.values())
+            assert len(editable_fields)
+            # but they should come from the ZTC service
+            assert {
+                name
+                for name in editable_fields
+                if name.startswith("_expand.selectielijstProcestype")
+            } == set()
 
         with self.subTest("All fields in the fieldsets should exist"):
             fields_in_fieldsets = set(

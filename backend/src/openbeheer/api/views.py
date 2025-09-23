@@ -51,7 +51,7 @@ from openbeheer.types import (
     ZGWError,
     ZGWResponse,
 )
-from openbeheer.types._open_beheer import ob_fields_of_type
+from openbeheer.types._open_beheer import camelize, ob_fields_of_type
 from openbeheer.utils.decorators import handle_service_errors
 
 if TYPE_CHECKING:
@@ -614,8 +614,10 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def get_fields(self) -> list[OBField]:
         ob_fields = ob_fields_of_type(self.data_type)
 
+        expansions = set(map(camelize, self.expansions))
+
         def adapt[F: OBField](field: F) -> F:
-            field.editable = field.name not in self.expansions
+            field.editable &= field.name not in expansions
             return field
 
         return [adapt(f) for f in ob_fields]
