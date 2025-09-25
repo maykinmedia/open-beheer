@@ -6,11 +6,13 @@ export const TABS_CONFIG_RESULTAATTYPEN: TabConfig<TargetType> = {
   sections: [
     {
       expandFields: [
-        "resultaattypenOmschrijving",
-        "resultaattypeomschrijving",
-        "selectielijstklasse",
-        "url",
-      ], // TODO: Missing "uuid"
+        "_expand.resultaattypen.omschrijving",
+        // See https://vng-realisatie.github.io/gemma-zaken/standaard/catalogi/#ztc-002
+        // omschrijvingGeneriek == label of resultaattypeomschrijving
+        "_expand.resultaattypen.resultaattypeomschrijving",
+        "_expand.resultaattypen.selectielijstklasse",
+        "_expand.resultaattypen.uuid",
+      ],
       label: "Resultaattypen",
       key: "resultaattypen",
     },
