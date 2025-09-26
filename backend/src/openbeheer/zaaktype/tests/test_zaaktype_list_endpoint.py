@@ -74,6 +74,9 @@ class ZaakTypeListViewTest(VCRAPITestCase):
         # [] renders to an empty select
         self.assertNotIn("options", identificatie.keys())
 
+        # no editable fields
+        assert {repr(f) for f in data["fields"] if f.get("editable")} == set()
+
         versiedatum = next(f for f in data["fields"] if f["name"] == "versiedatum")
         self.assertEqual(versiedatum["type"], "date")
 
