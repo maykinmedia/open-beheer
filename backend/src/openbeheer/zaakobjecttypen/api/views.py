@@ -16,10 +16,8 @@ from openbeheer.clients import objecttypen_client
 from openbeheer.types import (
     ExpandableZaakObjectTypeWithUUID,
     ExternalServiceError,
-    ZGWError,
-)
-from openbeheer.types._open_beheer import (
     ZaakObjectTypeWithUUID,
+    ZGWError,
 )
 from openbeheer.types.objecttypen import ObjectType
 from openbeheer.types.ztc import (

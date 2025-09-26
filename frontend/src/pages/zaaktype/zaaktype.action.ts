@@ -315,7 +315,7 @@ export async function editRelatedObjectAction(
   try {
     await request(
       "PUT",
-      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${relatedObjectUuid}`,
+      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${relatedObjectUuid}/`,
       {},
       payload.relatedObject,
     );
@@ -344,7 +344,7 @@ export async function deleteRelatedObjectAction(
   try {
     return await request(
       "DELETE",
-      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${payload.relatedObjectUuid}`,
+      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${payload.relatedObjectUuid}/`,
     );
   } catch (e: unknown) {
     return await (e as Response).json();
