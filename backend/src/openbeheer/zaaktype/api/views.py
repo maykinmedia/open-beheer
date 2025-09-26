@@ -168,6 +168,7 @@ class ZaakTypeListView(
                 )
             },
             sort_key=lambda f: order.index(f.name),
+            base_editable=lambda _: False,  # no editable fields
         )
 
     @override

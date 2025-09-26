@@ -389,6 +389,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             }
             # has some editable fields
             assert len(editable_fields)
+            # but uuid's are added by us
+            assert "_expand.resultaattypen.uuid" not in editable_fields
             # but they should come from the ZTC service
             assert {
                 name
