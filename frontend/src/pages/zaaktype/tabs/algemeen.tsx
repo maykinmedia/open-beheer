@@ -142,7 +142,8 @@ export const FIELDSETS_PUBLICATIE: FieldSet<TargetType>[] = [
   ],
 ];
 
-export const TABS_CONFIG_ALGEMEEN: TabConfig<TargetType> = {
+export const TAB_CONFIG_ALGEMEEN: TabConfig<TargetType> = {
+  key: "general-details",
   label: "Algemeen",
   view: "AttributeGrid",
   sections: [

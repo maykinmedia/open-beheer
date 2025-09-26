@@ -6,6 +6,7 @@ import { TargetType, ZaaktypeLoaderData } from "~/pages";
 import { RelatedObject, components } from "~/types";
 
 export type ZaaktypeAction =
+  | TypedAction<"BATCH", BatchActionPayload>
   | TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>
   | TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>
   | TypedAction<"SAVE_AS", SaveAsZaaktypePayload>
@@ -21,41 +22,73 @@ export type ZaaktypeAction =
  * Zaaktype action.
  * Action data can be obtained using `useActionData()` in ZaaktypePage.
  */
-export async function zaaktypeAction({
-  request,
-  params,
-  context,
-}: ActionFunctionArgs) {
+export async function zaaktypeAction({ request }: ActionFunctionArgs) {
   const data = await request.clone().json();
   const action = data as ZaaktypeAction;
+  return await performAction(action);
+}
 
+export async function performAction(action: ZaaktypeAction): Promise<unknown> {
   switch (action.type) {
+    case "BATCH":
+      return await batchAction(action);
+
     case "CREATE_VERSION":
-      return await createZaaktypeVersionAction({ request, params, context });
+      return await createZaaktypeVersionAction(action);
     case "UPDATE_VERSION":
-      return await updateZaaktypeVersionAction({ request, params, context });
+      return await updateZaaktypeVersionAction(action);
     case "SAVE_AS":
-      return await saveAsAction({ request, params, context });
+      return await saveAsAction(action);
     case "PUBLISH_VERSION":
-      return await publishZaaktypeVersionAction({ request, params, context });
+      return await publishZaaktypeVersionAction(action);
     case "EDIT_VERSION":
-      return await editZaaktypeVersionAction({ request, params, context });
+      return await editZaaktypeVersionAction(action);
     case "EDIT_CANCEL":
-      return await editCancelZaaktypeVersionAction({
-        request,
-        params,
-        context,
-      });
+      return await editCancelZaaktypeVersionAction(action);
     case "SELECT_VERSION":
-      return await selectZaaktypeVersionAction({ request, params, context });
+      return await selectZaaktypeVersionAction(action);
     case "EDIT_RELATED_OBJECT":
-      return await editRelatedObjectAction({ request, params, context });
+      return await editRelatedObjectAction(action);
     case "ADD_RELATED_OBJECT":
-      return await addRelatedObjectAction({ request, params, context });
+      return await addRelatedObjectAction(action);
     case "DELETE_RELATED_OBJECT":
-      return await deleteRelatedObjectAction({ request, params, context });
+      return await deleteRelatedObjectAction(action);
     default:
       throw new Error("INVALID ACTION TYPE SPECIFIED!");
+  }
+}
+
+/**
+ * Payload for `batchAction`
+ */
+export type BatchActionPayload = {
+  zaaktype: TargetType;
+  actions: ZaaktypeAction[];
+};
+
+/**
+ * Runs multiple actions.
+ */
+export async function batchAction(
+  action: TypedAction<"BATCH", BatchActionPayload>,
+) {
+  const payload = action.payload;
+  const uuid = getZaaktypeUUID(payload.zaaktype);
+  const actions = payload.actions;
+  const promises = actions.map((action) => performAction(action));
+
+  try {
+    const result = await Promise.all<object>(promises);
+    const errors = result.filter(
+      (r: object) =>
+        r && "status" in r && typeof r.status === "number" && r.status >= 400,
+    );
+    if (errors?.length) {
+      return errors;
+    }
+    return redirect(`../${uuid}`);
+  } catch (e) {
+    return e;
   }
 }
 
@@ -71,10 +104,9 @@ export type CreateZaaktypeVersionPayload = {
  * Creates a new zaaktype version.
  */
 export async function createZaaktypeVersionAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as CreateZaaktypeVersionPayload;
+  const payload = action.payload;
   const zaaktype = payload.zaaktype;
 
   try {
@@ -102,10 +134,9 @@ export type UpdateZaaktypeVersionPayload = {
  * Updates a new zaaktype version.
  */
 export async function updateZaaktypeVersionAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as PublishZaaktypeVersionPayload;
+  const payload = action.payload;
   const uuid = getZaaktypeUUID(payload.zaaktype);
 
   try {
@@ -127,10 +158,10 @@ export type SaveAsZaaktypePayload = {
 /**
  * Updates a new zaaktype version.
  */
-export async function saveAsAction(actionFunctionArgs: ActionFunctionArgs) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as PublishZaaktypeVersionPayload;
-
+export async function saveAsAction(
+  action: TypedAction<"SAVE_AS", SaveAsZaaktypePayload>,
+) {
+  const payload = action.payload;
   const serviceSlug = payload.serviceSlug;
   const zaaktype = payload.zaaktype;
   delete zaaktype.broncatalogus;
@@ -196,10 +227,9 @@ export type PublishZaaktypeVersionPayload = {
  * Saves and publishes a zaaktype version.
  */
 export async function publishZaaktypeVersionAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"PUBLISH_VERSION", UpdateZaaktypeVersionPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as PublishZaaktypeVersionPayload;
+  const payload = action.payload;
   const uuid = getZaaktypeUUID(payload.zaaktype);
 
   await _saveZaaktypeVersion(payload.zaaktype, payload.serviceSlug);
@@ -240,10 +270,9 @@ export type SelectZaaktypeVersionPayload = {
  * Navigates to a zaaktype version.
  */
 export async function selectZaaktypeVersionAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as SelectZaaktypeVersionPayload;
+  const payload = action.payload;
   return redirect(`../${payload.uuid}`);
 }
 
@@ -258,10 +287,9 @@ export type EditZaaktypeVersionPayload = {
  * Allow the user to edit a zaaktype version.
  */
 export async function editZaaktypeVersionAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as EditZaaktypeVersionPayload;
+  const payload = action.payload;
   return redirect(`../${payload.uuid}?editing=true`);
 }
 
@@ -277,10 +305,9 @@ export type AddRelatedObjectPayload = {
  * Action to add a related object.
  */
 export async function addRelatedObjectAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"ADD_RELATED_OBJECT", AddRelatedObjectPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as AddRelatedObjectPayload;
+  const payload = action.payload;
 
   try {
     await request(
@@ -306,10 +333,9 @@ export type EditRelatedObjectPayload = {
  * Action to edit a related object.
  */
 export async function editRelatedObjectAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"EDIT_RELATED_OBJECT", EditRelatedObjectPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as EditRelatedObjectPayload;
+  const payload = action.payload;
   const relatedObjectUuid = getZaaktypeUUID(payload.relatedObject);
 
   try {
@@ -336,10 +362,9 @@ export type DeleteRelatedObjectPayload = {
  * Action to delete a related object.
  */
 export async function deleteRelatedObjectAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"DELETE_RELATED_OBJECT", DeleteRelatedObjectPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as DeleteRelatedObjectPayload;
+  const payload = action.payload;
 
   try {
     return await request(
@@ -362,9 +387,8 @@ export type EditCancelZaaktypeVersionPayload = {
  * Allow the user to cancel editting a zaaktype version.
  */
 export async function editCancelZaaktypeVersionAction(
-  actionFunctionArgs: ActionFunctionArgs,
+  action: TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>,
 ) {
-  const data = await actionFunctionArgs.request.json();
-  const payload = data.payload as EditZaaktypeVersionPayload;
+  const payload = action.payload;
   return redirect(`../${payload.uuid}`);
 }

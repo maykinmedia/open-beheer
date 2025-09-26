@@ -12,14 +12,25 @@ import {
   Tab,
   Tabs,
   Toolbar,
+  fields2TypedFields,
   useFormDialog,
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
-import React, { ReactNode, useCallback, useMemo, useState } from "react";
+import React, {
+  ReactNode,
+  Ref,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useLoaderData, useParams } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
-import { RelatedObjectRenderer } from "~/components/related";
+import {
+  RelatedObjectRenderer,
+  RelatedObjectRendererHandle,
+} from "~/components/related";
 import {
   useBreadcrumbItems,
   useCombinedSearchParams,
@@ -31,40 +42,33 @@ import { getZaaktypeUUID } from "~/lib";
 import { getZaaktypeCreateFields } from "~/lib/zaaktype/zaaktypeCreate.ts";
 import {
   AttributeGridSection,
+  AttributeGridTabConfig,
   DataGridSection,
-  TABS_CONFIG_ALGEMEEN,
-  TABS_CONFIG_DOCUMENTTYPEN,
-  TABS_CONFIG_EIGENSCHAPPEN,
-  TABS_CONFIG_OVERVIEW,
-  TABS_CONFIG_RELATIES,
-  TABS_CONFIG_RESULTAATTYPEN,
-  TABS_CONFIG_ROLTYPEN,
-  TABS_CONFIG_STATUSTYPEN,
+  DataGridTabConfig,
+  TAB_CONFIG_ALGEMEEN,
+  TAB_CONFIG_OVERVIEW,
   TabConfig,
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
-import { TABS_CONFIG_OBJECTTYPEN } from "~/pages/zaaktype/tabs/objecttypen.tsx";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { Expand, ExpandItemKeys, RelatedObject } from "~/types";
 
-export const TABS_CONFIG: TabConfig<TargetType>[] = [
-  TABS_CONFIG_OVERVIEW,
-  TABS_CONFIG_ALGEMEEN,
-  TABS_CONFIG_STATUSTYPEN,
-  TABS_CONFIG_OBJECTTYPEN,
-  TABS_CONFIG_DOCUMENTTYPEN,
-  TABS_CONFIG_ROLTYPEN,
-  TABS_CONFIG_RESULTAATTYPEN,
-  TABS_CONFIG_EIGENSCHAPPEN,
-  TABS_CONFIG_RELATIES,
+/** Explicit tab configs specified ./tabs, overrides tab config resolved from fieldset. */
+const TAB_CONFIG_OVERRIDES: TabConfig<TargetType>[] = [
+  TAB_CONFIG_OVERVIEW,
+  TAB_CONFIG_ALGEMEEN,
 ];
 
 /**
  * Renders the detail view for a single zaaktype, with tabs for attributes and related data.
  */
 export function ZaaktypePage() {
-  const { result, versions } = useLoaderData() as ZaaktypeLoaderData;
+  const relatedRendererRef = useRef<RelatedObjectRendererHandle>(null);
+
+  const { fields, fieldsets, result, versions } =
+    useLoaderData() as ZaaktypeLoaderData;
+
   const [pendingUpdatesState, setPendingUpdatesState] = useState<
     Partial<TargetType> & { url: string }
   >({ url: result.url });
@@ -73,7 +77,7 @@ export function ZaaktypePage() {
   const formDialog = useFormDialog();
 
   const breadcrumbItems = useBreadcrumbItems();
-  const submitAction = useSubmitAction<ZaaktypeAction>(false);
+  const submitAction = useSubmitAction<ZaaktypeAction>();
 
   const { serviceSlug } = useParams();
   invariant(serviceSlug, "serviceSlug must be provided!");
@@ -110,6 +114,49 @@ export function ZaaktypePage() {
     [sortedVersions],
   );
 
+  // Convert FieldSet[] to TabConfig[].
+  const fieldSetTabConfigs = useMemo<TabConfig<TargetType>[]>(
+    () =>
+      fieldsets.map((fieldset) => {
+        const [label, { fields }] = fieldset;
+        const expandFields = fields2TypedFields(
+          fields.filter((field) => field.includes("_expand")),
+        );
+        const view = expandFields.length ? "DataGrid" : "AttributeGrid";
+
+        if (view === "AttributeGrid") {
+          return {
+            key: slugify(label),
+            label,
+            view,
+            sections: [
+              { expandFields, label, fieldsets: [[label, { fields }]] },
+            ],
+          } as AttributeGridTabConfig<TargetType>;
+        }
+
+        return {
+          key: slugify(label),
+          label,
+          view,
+          sections: [{ expandFields, label, key: slugify(label) }],
+        } as DataGridTabConfig<TargetType>;
+      }),
+    [JSON.stringify([fields, fieldsets])],
+  );
+
+  // Allow custom TabConfig's to override `fieldSetTabConfigs` (matches by `key`).
+  const tabConfigs = useMemo<TabConfig<TargetType>[]>(
+    () =>
+      fieldSetTabConfigs.map((fieldSetTabConfig) => {
+        const override = TAB_CONFIG_OVERRIDES.find(
+          (tabConfig) => tabConfig.key === fieldSetTabConfig.key,
+        );
+        return override ?? fieldSetTabConfig;
+      }),
+    [],
+  );
+
   /**
    * Gets called when the edit button is clicked.
    */
@@ -136,6 +183,8 @@ export function ZaaktypePage() {
    * Gets called when the cancel button is clicked.
    */
   const handleCancel = useCallback<React.MouseEventHandler>(() => {
+    relatedRendererRef.current?.cancel();
+
     submitAction({
       type: "EDIT_CANCEL",
       payload: {
@@ -171,12 +220,47 @@ export function ZaaktypePage() {
   /**
    * Gets called when the edit button is clicked.
    */
-  const handleSave = useCallback<React.MouseEventHandler>(() => {
-    submitAction({
-      type: "UPDATE_VERSION",
+  const handleSave = useCallback<React.MouseEventHandler>(async () => {
+    const saveActions = relatedRendererRef.current?.getSaveActions() || [];
+
+    const zaaktype = result;
+
+    const deletions: ZaaktypeAction[] = [];
+    const updates: ZaaktypeAction[] = [];
+
+    saveActions.forEach((action) => {
+      const isDeletion = action.type.toUpperCase().includes("DELETE");
+      if (isDeletion) {
+        deletions.push(action);
+      } else {
+        updates.push(action);
+      }
+    });
+
+    // First run deletions.
+    await submitAction({
+      type: "BATCH",
       payload: {
-        serviceSlug: serviceSlug as string,
-        zaaktype: pendingUpdatesState,
+        zaaktype,
+        actions: deletions,
+      },
+    });
+
+    // Run updates after deletions are complete.
+    await submitAction({
+      type: "BATCH",
+      payload: {
+        zaaktype,
+        actions: [
+          {
+            type: "UPDATE_VERSION",
+            payload: {
+              serviceSlug: serviceSlug as string,
+              zaaktype: pendingUpdatesState,
+            },
+          },
+          ...updates,
+        ],
       },
     });
   }, [serviceSlug, pendingUpdatesState]);
@@ -249,7 +333,12 @@ export function ZaaktypePage() {
             }
           />
         )}
-        <ZaaktypeTabs object={possiblyUpdatedResult} onChange={handleChange} />
+        <ZaaktypeTabs
+          object={possiblyUpdatedResult}
+          relatedRendererRef={relatedRendererRef}
+          tabConfigs={tabConfigs}
+          onChange={handleChange}
+        />
       </Body>
 
       <ZaaktypeToolbar
@@ -266,13 +355,20 @@ export function ZaaktypePage() {
 
 type ZaaktypeTabsProps = {
   object: TargetType;
+  relatedRendererRef: Ref<RelatedObjectRendererHandle>;
+  tabConfigs: TabConfig<TargetType>[];
   onChange: React.ChangeEventHandler;
 };
 
 /**
  * Renders the tabs for a zaaktype
  */
-function ZaaktypeTabs({ object, onChange }: ZaaktypeTabsProps) {
+function ZaaktypeTabs({
+  object,
+  relatedRendererRef,
+  tabConfigs,
+  onChange,
+}: ZaaktypeTabsProps) {
   // (Horizontal) tab data.
   const [tabHash, setTabHash] = useHashParam("tab", "0");
   const activeTabIndex = parseInt(tabHash);
@@ -293,16 +389,17 @@ function ZaaktypeTabs({ object, onChange }: ZaaktypeTabsProps) {
 
   const tabs = useMemo(
     () =>
-      TABS_CONFIG.map((tabConfig) => (
+      tabConfigs.map((tabConfig) => (
         <Tab key={tabConfig.label} label={tabConfig.label}>
           <ZaaktypeTab
             object={object}
+            relatedRendererRef={relatedRendererRef}
             tabConfig={tabConfig}
             onChange={onChange}
           />
         </Tab>
       )),
-    [TABS_CONFIG, object, onChange],
+    [tabConfigs, object, onChange],
   );
 
   return (
@@ -314,6 +411,7 @@ function ZaaktypeTabs({ object, onChange }: ZaaktypeTabsProps) {
 
 type ZaaktypeTabProps = {
   object: TargetType;
+  relatedRendererRef: Ref<RelatedObjectRendererHandle>;
   tabConfig: TabConfig<TargetType>;
   onChange: React.ChangeEventHandler;
 };
@@ -321,7 +419,12 @@ type ZaaktypeTabProps = {
 /**
  * Renders a single tab, optionally containing different (vertical) section.
  */
-const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
+const ZaaktypeTab = ({
+  object,
+  relatedRendererRef,
+  tabConfig,
+  onChange,
+}: ZaaktypeTabProps) => {
   const { fields } = useLoaderData() as ZaaktypeLoaderData;
   const [combinedSearchParams] = useCombinedSearchParams();
   const isEditing = Boolean(combinedSearchParams.get("editing"));
@@ -353,12 +456,14 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
     const overrides: Partial<Record<keyof TargetType, ReactNode>> = {};
 
     for (const field of fields) {
-      const fieldName = field.name as keyof TargetType;
+      const fieldName = field.name.split(".").pop() as keyof TargetType;
       const originalValue = object[fieldName];
       const expand = object._expand;
 
       // Skip if the field is not expandable or has no value.
-      if (!(fieldName in expand) || originalValue === null) continue;
+      if (!(fieldName in expand) || originalValue === null) {
+        continue;
+      }
       const expandKey = fieldName as keyof Expand<TargetType>;
       const expandValue = expand[expandKey]!;
 
@@ -385,11 +490,12 @@ const ZaaktypeTab = ({ object, tabConfig, onChange }: ZaaktypeTabProps) => {
       overrides[fieldName] = (
         // TODO: Handle errors for related objects.
         <RelatedObjectRenderer
+          ref={relatedRendererRef}
           expandFields={activeSectionConfig.expandFields}
+          object={object}
           relatedObject={relatedObject as RelatedObject<TargetType>}
           view={tabConfig.view}
           field={fieldName as ExpandItemKeys<TargetType>}
-          zaaktypeUuid={zaaktypeUuid}
           fields={fields}
         />
       );
