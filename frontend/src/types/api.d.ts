@@ -566,7 +566,7 @@ export interface paths {
         patch: operations["service_zaaktypen_zaakobjecttypen_partial_update"];
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktype-informatieobjecttypen/": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeInformatieobjecttypen/": {
         parameters: {
             query?: never;
             header?: never;
@@ -574,20 +574,52 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get zaaktype_informatieobjecttypen
-         * @description Retrive zaaktype_informatieobjecttypen from Open Zaak.
+         * Get zaaktype-informatieobjecttypen
+         * @description Retrive zaaktype-informatieobjecttypen from Open Zaak.
          */
-        get: operations["service_zaaktypen_zaaktype_informatieobjecttypen_retrieve"];
+        get: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_retrieve"];
         put?: never;
         /**
-         * Create an zaaktype_informatieobjecttypen
-         * @description Create an zaaktype_informatieobjecttypen.
+         * Create a zaaktype-informatieobjecttype
+         * @description Create a zaaktype-informatieobjecttype. The informatieobjecttype and the zaaktype need to belong to the same catalogus
          */
-        post: operations["service_zaaktypen_zaaktype_informatieobjecttypen_create"];
+        post: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_create"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeInformatieobjecttypen/{uuid}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an zaaktype_informatieobjecttype
+         * @description Retrieve an zaaktype_informatieobjecttype from Open Zaak.
+         */
+        get: operations["service_zaaktype_informatieobjecttypen_retrieve_one"];
+        /**
+         * Put an zaaktype_informatieobjecttype
+         * @description Fully update a zaaktype_informatieobjecttype from Open Zaak.
+         */
+        put: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_update"];
+        post?: never;
+        /**
+         * Delete an zaaktype_informatieobjecttype
+         * @description Remove permanently a zaaktype_informatieobjecttype from Open Zaak.
+         */
+        delete: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_destroy"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch an zaaktype_informatieobjecttype
+         * @description Partially update a zaaktype_informatieobjecttype from Open Zaak.
+         */
+        patch: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_partial_update"];
         trace?: never;
     };
     "/api/v1/service/choices/": {
@@ -1073,6 +1105,8 @@ export interface components {
         };
         /** ExpandableZaakObjectTypeWithUUID */
         ExpandableZaakObjectTypeWithUUID: {
+            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            objecttype: string;
             uuid?: string;
             /**
              * ZaakObjectTypeExtension
@@ -1083,8 +1117,6 @@ export interface components {
             };
             /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
             anderObjecttype: boolean;
-            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
-            objecttype: string;
             /** @description Omschrijving van de betrekking van het Objecttype op zaken van het gerelateerde ZAAKTYPE. */
             relatieOmschrijving: string;
             /** @description URL-referentie naar de ZAAKTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
@@ -1127,7 +1159,7 @@ export interface components {
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectType"][];
+                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             };
             /** @default null */
             zaaktypeInformatieobjecttypen: null;
@@ -1261,7 +1293,7 @@ export interface components {
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectType"][];
+                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
@@ -1592,7 +1624,8 @@ export interface components {
             filterValue?: unknown;
             filterLookup?: string;
             options?: components["schemas"]["OBOption"][];
-            editable?: boolean;
+            /** @default false */
+            editable: boolean;
         };
         /**
          * OBFieldType
@@ -1828,7 +1861,7 @@ export interface components {
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectType"][];
+                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving?: string;
@@ -2078,6 +2111,19 @@ export interface components {
             beginGeldigheid: string | null;
             /** @default null */
             eindeGeldigheid: string | null;
+        };
+        /** PatchedZaakTypeInformatieObjectTypeRequest */
+        PatchedPatchedZaakTypeInformatieObjectTypeRequest: {
+            /** @default null */
+            zaaktype: string | null;
+            /** @default null */
+            informatieobjecttype: string | null;
+            /** @default null */
+            volgnummer: number | null;
+            /** @default null */
+            richting: components["schemas"]["RichtingEnum"] | null;
+            /** @default null */
+            statustype: string | null;
         };
         /** PatchedZaakTypeRequest */
         PatchedPatchedZaakTypeRequest: {
@@ -2723,7 +2769,7 @@ export interface components {
             deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
             zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
             selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-            zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectType"][];
+            zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
         };
         /** ZaakTypeInformatieObjectType */
         ZaakTypeInformatieObjectType: {
@@ -2774,6 +2820,35 @@ export interface components {
             richting: components["schemas"]["RichtingEnum"];
             /** @default null */
             statustype: string | null;
+        };
+        /** ZaakTypeInformatieObjectTypeWithUUID */
+        ZaakTypeInformatieObjectTypeWithUUID: {
+            uuid?: string;
+            /** @description URL-referentie naar het ZAAKTYPE. */
+            zaaktype: string;
+            /**
+             * Informatie object type
+             * @description URL-referentie naar het INFORMATIEOBJECTTYPE.
+             */
+            informatieobjecttype: string;
+            /** @description Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen het ZAAKTYPE. */
+            volgnummer: number;
+            /** @description Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+             *
+             *     Uitleg bij mogelijke waarden:
+             *
+             *     * `inkomend` - Inkomend
+             *     * `intern` - Intern
+             *     * `uitgaand` - Uitgaand */
+            richting: components["schemas"]["RichtingEnum"];
+            /** @default null */
+            url: string | null;
+            /** @default null */
+            zaaktypeIdentificatie: string | null;
+            /** @default null */
+            statustype: string | null;
+            /** @default null */
+            catalogus: string | null;
         };
         /** ZaakTypeRequest */
         ZaakTypeRequest: {
@@ -5040,7 +5115,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_zaaktype_informatieobjecttypen_retrieve: {
+    service_zaaktypen_zaaktypeInformatieobjecttypen_retrieve: {
         parameters: {
             query?: {
                 informatieobjecttype?: string;
@@ -5092,7 +5167,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_zaaktype_informatieobjecttypen_create: {
+    service_zaaktypen_zaaktypeInformatieobjecttypen_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -5132,6 +5207,141 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+        };
+    };
+    service_zaaktype_informatieobjecttypen_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZaakTypeInformatieObjectType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaaktypeInformatieobjecttypen_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ZaakTypeInformatieObjectTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ZaakTypeInformatieObjectTypeRequest"];
+                "multipart/form-data": components["schemas"]["ZaakTypeInformatieObjectTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZaakTypeInformatieObjectType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaaktypeInformatieobjecttypen_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    service_zaaktypen_zaaktypeInformatieobjecttypen_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+                zaaktype: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPatchedZaakTypeInformatieObjectTypeRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedPatchedZaakTypeInformatieObjectTypeRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPatchedZaakTypeInformatieObjectTypeRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZaakTypeInformatieObjectType"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
                 };
             };
         };
