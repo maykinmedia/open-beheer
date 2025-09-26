@@ -103,6 +103,7 @@ export function ZaaktypeFilter({
       label: "Status",
       name: "status",
       type: "radio",
+      direction: "h",
       value: statusState,
       options: StatusChoices,
       // TODO: Type should be HTMLInputElement as this is a radio.,
