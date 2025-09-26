@@ -69,8 +69,9 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         FrontendFieldSet(
             fields=[
                 "_expand.statustypen.volgnummer",
+                "_expand.statustypen.omschrijving",
                 "_expand.statustypen.omschrijving_generiek",
-                "_expand.statustypen.uuid",
+                # "_expand.statustypen.uuid",
             ]
         ),
     ),
@@ -86,7 +87,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "_expand.zaakobjecttypen.statustype",
                 "_expand.zaakobjecttypen.beginGeldigheid",
                 "_expand.zaakobjecttypen.eindeGeldigheid",
-                "_expand.zaakobjecttypen.uuid",
+                # "_expand.zaakobjecttypen.uuid",
             ]
         ),
     ),
@@ -104,7 +105,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "_expand.informatieobjecttypen.concept",
                 "_expand.informatieobjecttypen.besluittypen",
                 "_expand.informatieobjecttypen.trefwoord",
-                "_expand.informatieobjecttypen.uuid",
+                # "_expand.informatieobjecttypen.uuid",
             ]
         ),
     ),
@@ -114,7 +115,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
             fields=[
                 "_expand.roltypen.omschrijving",
                 "_expand.roltypen.omschrijvingGeneriek",
-                "_expand.roltypen.uuid",
+                # "_expand.roltypen.uuid",
             ]
         ),
     ),
@@ -122,11 +123,13 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         "Resultaattypen",
         FrontendFieldSet(
             fields=[
-                "_expand.resultaattypen.omschrijving",
                 "_expand.resultaattypen.resultaattypeomschrijving",
+                "_expand.resultaattypen.omschrijving",
                 "_expand.resultaattypen.omschrijvingGeneriek",
                 "_expand.resultaattypen.selectielijstklasse",
-                "_expand.resultaattypen.uuid",
+                "_expand.resultaattypen.archiefnominatie",
+                "_expand.resultaattypen.brondatumArchiefprocedure",
+                # "_expand.resultaattypen.uuid",
             ]
         ),
     ),
@@ -142,7 +145,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "_expand.eigenschappen.statustype",
                 "_expand.eigenschappen.beginGeldigheid",
                 "_expand.eigenschappen.eindeGeldigheid",
-                "_expand.eigenschappen.uuid",
+                # "_expand.eigenschappen.uuid",
             ]
         ),
     ),

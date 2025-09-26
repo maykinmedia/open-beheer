@@ -36,7 +36,8 @@ export const FIELDSETS_OVERVIEW: FieldSet<TargetType>[] = [
   ],
 ];
 
-export const TABS_CONFIG_OVERVIEW: TabConfig<TargetType> = {
+export const TAB_CONFIG_OVERVIEW: TabConfig<TargetType> = {
+  key: "overview",
   label: "Overzicht",
   view: "AttributeGrid",
   sections: [

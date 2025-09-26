@@ -20,20 +20,27 @@ export type TargetType = ZaaktypeLoaderData["result"];
  * The type a the primary tab.
  */
 export type TabConfig<T extends object> =
-  | {
-      label: string;
-      view: "AttributeGrid";
-      sections: AttributeGridSection<T>[];
-    }
-  | {
-      label: string;
-      view: "DataGrid";
-      sections: DataGridSection<Expanded<T>>[];
-    };
+  | AttributeGridTabConfig<T>
+  | DataGridTabConfig<T>;
+
+type BaseTabConfig = {
+  key: string;
+  label: string;
+};
+
+export type AttributeGridTabConfig<T extends object> = BaseTabConfig & {
+  view: "AttributeGrid";
+  sections: AttributeGridSection<T>[];
+};
+
+export type DataGridTabConfig<T extends object> = BaseTabConfig & {
+  view: "DataGrid";
+  sections: DataGridSection<Expanded<T>>[];
+};
 
 type ExpandItemKeysWithString<T> = ExpandItemKeys<T> | string;
 
-export type BaseTabSection<
+type BaseTabSection<
   T extends object,
   R extends RelatedObject<T> = RelatedObject<T>,
 > = {
