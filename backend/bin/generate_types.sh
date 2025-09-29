@@ -1,5 +1,9 @@
 #!/bin/sh
 
+PWD=$(pwd)
+BACKEND_ROOT=$(dirname "${0}")/..
+TARGET_DIR="${BACKEND_ROOT}/src/openbeheer/types"
+
 API="$1"
 
 case "$API" in
@@ -20,10 +24,6 @@ case "$API" in
         exit 1
         ;;
 esac
-
-PWD=$(pwd)
-BACKEND_ROOT=$(dirname "${0}")/..
-TARGET_DIR="${BACKEND_ROOT}/src/openbeheer/types"
 
 go_back() {
     cd "$PWD" || error "Original working directory $PWD doesn't exist anymore"
