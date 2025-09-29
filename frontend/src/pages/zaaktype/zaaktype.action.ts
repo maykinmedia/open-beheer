@@ -97,7 +97,7 @@ export async function batchAction(
  */
 export type CreateZaaktypeVersionPayload = {
   serviceSlug: string;
-  zaaktype: TargetType;
+  zaaktype: Partial<TargetType> & { url: string };
 };
 
 /**
@@ -108,6 +108,8 @@ export async function createZaaktypeVersionAction(
 ) {
   const payload = action.payload;
   const zaaktype = payload.zaaktype;
+  delete zaaktype.broncatalogus;
+  delete zaaktype.bronzaaktype;
 
   try {
     const result = await request<components["schemas"]["ExpandableZaakType"]>(
