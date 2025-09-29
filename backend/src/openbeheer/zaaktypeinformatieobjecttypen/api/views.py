@@ -15,7 +15,7 @@ from openbeheer.types.ztc import (
     ZaakTypeInformatieObjectType,
     ZaakTypeInformatieObjectTypeRequest,
 )
-from openbeheer.zaaktype_informatieobjecttypen.types import (
+from openbeheer.zaaktypeinformatieobjecttypen.types import (
     ZaaktypeInformatieobjecttypenGetParametersQuery,
 )
 
@@ -51,7 +51,7 @@ class ZaakTypeInformatieobjecttypeListView(
     ]
 ):
     """
-    Endpoint for zaaktype_informatieobjecttypen attached to a particular Zaaktype
+    Endpoint for zaaktypeinformatieobjecttypen attached to a particular Zaaktype
     """
 
     data_type = ZaakTypeInformatieObjectType
@@ -62,7 +62,7 @@ class ZaakTypeInformatieobjecttypeListView(
 
 @extend_schema_view(
     get=extend_schema(
-        operation_id="service_zaaktype_informatieobjecttypen_retrieve_one",
+        operation_id="service_zaaktypeinformatieobjecttypen_retrieve_one",
         tags=["Zaaktype-Informatieobjecttypen"],
         summary="Get an zaaktype_informatieobjecttype",
         description="Retrieve an zaaktype_informatieobjecttype from Open Zaak.",
@@ -105,7 +105,7 @@ class ZaakTypeInformatieObjectTypeDetailView(
     DetailViewWithoutVersions, DetailView[ZaakTypeInformatieObjectType]
 ):
     """
-    Endpoint for zaaktype_informatieobjecttypen attached to a particular Zaaktype
+    Endpoint for zaaktypeinformatieobjecttypen attached to a particular Zaaktype
     """
 
     return_data_type = data_type = ZaakTypeInformatieObjectTypeWithUUID

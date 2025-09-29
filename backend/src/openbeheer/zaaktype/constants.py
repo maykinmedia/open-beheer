@@ -92,20 +92,12 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         ),
     ),
     (
-        "Informatieobjecttypen",
+        "ZaaktypeInformatieobjecttypen",
         FrontendFieldSet(
             fields=[
-                # TODO: needs design
-                "_expand.informatieobjecttypen.omschrijving",
-                "_expand.informatieobjecttypen.omschrijvingGeneriek",
-                "_expand.informatieobjecttypen.vertrouwelijkheidaanduiding",
-                "_expand.informatieobjecttypen.informatieobjectcategorie",
-                "_expand.informatieobjecttypen.beginGeldigheid",
-                "_expand.informatieobjecttypen.eindeGeldigheid",
-                "_expand.informatieobjecttypen.concept",
-                "_expand.informatieobjecttypen.besluittypen",
-                "_expand.informatieobjecttypen.trefwoord",
-                # "_expand.informatieobjecttypen.uuid",
+                "_expand.zaaktypeinformatieobjecttypen.volgnummer",
+                "_expand.zaaktypeinformatieobjecttypen.informatieobjecttype",
+                "_expand.zaaktypeinformatieobjecttypen.richting",
             ]
         ),
     ),
