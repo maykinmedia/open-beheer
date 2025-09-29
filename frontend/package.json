@@ -14,7 +14,8 @@
     "start": "npm run dev",
     "test": "vitest",
     "test:coverage": "vitest --coverage --watch=false",
-    "update-types": "npx openapi-typescript http://localhost:8000/api/v1/ -o ./src/types/api.d.ts",
+    "update-types": "npx openapi-typescript ../backend/openbeheer-oas.yaml -o ./src/types/api.d.ts",
+    "check-types": "npx openapi-typescript ../backend/openbeheer-oas.yaml -o ./src/types/api.d.ts --check",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
