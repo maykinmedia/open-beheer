@@ -263,6 +263,7 @@ export function ZaaktypePage() {
         ],
       },
     });
+    setPendingUpdatesState({ url: result.url });
   }, [serviceSlug, pendingUpdatesState]);
 
   /**
