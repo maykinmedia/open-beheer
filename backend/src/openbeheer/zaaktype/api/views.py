@@ -55,7 +55,10 @@ from openbeheer.types._open_beheer import (
     LAXProcesType,
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
+    as_ob_option,
+    fetch_resultaat_options,
 )
+from openbeheer.types.selectielijst import Resultaat
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -423,7 +426,8 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             "besluittypen",
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
-            lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
+            lambda zt: {"zaaktypen": zt.url, "status": "alles"},
+            # pyright: ignore[reportAttributeAccessIssue]
             BesluitTypeWithUUID,
         ),
         "statustypen": make_expansion(
@@ -445,7 +449,6 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         ),
         "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": expand_zaakobjecttypen,
-        "selectielijst_procestype": expand_selectielijstprocestype,
     }
 
     def get_item_versions(
@@ -480,6 +483,19 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             einde_geldigheid=data.einde_geldigheid,
             concept=data.concept,
         )
+
+    def get_fields(
+        self, data: ExpandableZaakType, option_overrides={}
+    ) -> list[OBField]:
+        selectielijst_options = (
+            fetch_resultaat_options(procestype_url=data.selectielijst_procestype)
+            if data.selectielijst_procestype
+            else []
+        )
+        fields = super().get_fields(
+            data, option_overrides={"selectielijstklasse": selectielijst_options}
+        )
+        return fields
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS

@@ -1,6 +1,7 @@
 from functools import cache
 from typing import Iterator, NoReturn, Protocol
 
+import msgspec
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
@@ -99,12 +100,19 @@ class ZGWPagedResponseProtocol[T](Protocol):
 
 
 def iter_pages[T](
-    client: APIClient, response: ZGWPagedResponseProtocol[T]
+    client: APIClient, response: ZGWPagedResponseProtocol[T], response_type=None
 ) -> Iterator[T]:
+    response_type = (
+        msgspec.defstruct(
+            "johan", fields=[("next", str | None), ("results", list[response_type])]
+        )
+        if response_type
+        else response.__class__
+    )
     yield from response.results
 
     while next_url := response.next:
         resp = client.get(next_url)
         resp.raise_for_status()
-        response = decode(resp.content, type=response.__class__, strict=False)
+        response = decode(resp.content, type=response_type, strict=False)
         yield from response.results
