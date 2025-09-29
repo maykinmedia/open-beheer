@@ -13,7 +13,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Inloggen */
+        /** Login */
         post: operations["auth_login_create"];
         delete?: never;
         options?: never;
@@ -566,7 +566,7 @@ export interface paths {
         patch: operations["service_zaaktypen_zaakobjecttypen_partial_update"];
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeInformatieobjecttypen/": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeinformatieobjecttypen/": {
         parameters: {
             query?: never;
             header?: never;
@@ -577,20 +577,20 @@ export interface paths {
          * Get zaaktype-informatieobjecttypen
          * @description Retrive zaaktype-informatieobjecttypen from Open Zaak.
          */
-        get: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_retrieve"];
+        get: operations["service_zaaktypen_zaaktypeinformatieobjecttypen_retrieve"];
         put?: never;
         /**
          * Create a zaaktype-informatieobjecttype
          * @description Create a zaaktype-informatieobjecttype. The informatieobjecttype and the zaaktype need to belong to the same catalogus
          */
-        post: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_create"];
+        post: operations["service_zaaktypen_zaaktypeinformatieobjecttypen_create"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeInformatieobjecttypen/{uuid}/": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeinformatieobjecttypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -601,25 +601,25 @@ export interface paths {
          * Get an zaaktype_informatieobjecttype
          * @description Retrieve an zaaktype_informatieobjecttype from Open Zaak.
          */
-        get: operations["service_zaaktype_informatieobjecttypen_retrieve_one"];
+        get: operations["service_zaaktypeinformatieobjecttypen_retrieve_one"];
         /**
          * Put an zaaktype_informatieobjecttype
          * @description Fully update a zaaktype_informatieobjecttype from Open Zaak.
          */
-        put: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_update"];
+        put: operations["service_zaaktypen_zaaktypeinformatieobjecttypen_update"];
         post?: never;
         /**
          * Delete an zaaktype_informatieobjecttype
          * @description Remove permanently a zaaktype_informatieobjecttype from Open Zaak.
          */
-        delete: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_destroy"];
+        delete: operations["service_zaaktypen_zaaktypeinformatieobjecttypen_destroy"];
         options?: never;
         head?: never;
         /**
          * Patch an zaaktype_informatieobjecttype
          * @description Partially update a zaaktype_informatieobjecttype from Open Zaak.
          */
-        patch: operations["service_zaaktypen_zaaktypeInformatieobjecttypen_partial_update"];
+        patch: operations["service_zaaktypen_zaaktypeinformatieobjecttypen_partial_update"];
         trace?: never;
     };
     "/api/v1/service/choices/": {
@@ -716,9 +716,7 @@ export interface components {
          */
         ArchiefnominatieEnum: "" | "blijvend_bewaren" | "vernietigen";
         Auth: {
-            /** Gebruikersnaam */
             username: string;
-            /** Wachtwoord */
             password: string;
         };
         /** BesluitType */
@@ -799,6 +797,7 @@ export interface components {
         };
         /** BesluitTypeWithUUID */
         BesluitTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description URL-referentie naar de CATALOGUS waartoe dit BESLUITTYPE behoort. */
             catalogus: string;
@@ -1076,6 +1075,7 @@ export interface components {
         };
         /** EigenschapWithUUID */
         EigenschapWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description De naam van de EIGENSCHAP */
             naam: string;
@@ -1107,6 +1107,7 @@ export interface components {
         ExpandableZaakObjectTypeWithUUID: {
             /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
             objecttype: string;
+            /** Format: uuid */
             uuid?: string;
             /**
              * ZaakObjectTypeExtension
@@ -1144,6 +1145,7 @@ export interface components {
         ExpandableZaakType: {
             /** @default null */
             selectielijstProcestype: string | null;
+            /** Format: uuid */
             uuid?: string;
             /**
              * ZaakTypeExtension
@@ -1159,10 +1161,10 @@ export interface components {
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
+                zaaktypeinformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             };
-            /** @default null */
-            zaaktypeInformatieobjecttypen: null;
+            /** @default [] */
+            zaaktypeinformatieobjecttypen: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
             /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
@@ -1293,7 +1295,7 @@ export interface components {
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
+                zaaktypeinformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
@@ -1523,6 +1525,7 @@ export interface components {
         };
         /** InformatieObjectTypeWithUUID */
         InformatieObjectTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description URL-referentie naar de CATALOGUS waartoe dit INFORMATIEOBJECTTYPE behoort. */
             catalogus: string;
@@ -1861,7 +1864,7 @@ export interface components {
                 deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
                 zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
                 selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-                zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
+                zaaktypeinformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving?: string;
@@ -2308,6 +2311,7 @@ export interface components {
             resultaattypeomschrijving: string;
             /** @description URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie. */
             selectielijstklasse: string;
+            /** Format: uuid */
             uuid?: string;
             /**
              * is van
@@ -2425,6 +2429,7 @@ export interface components {
         };
         /** RolTypeWithUUID */
         RolTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description URL-referentie naar het ZAAKTYPE waar deze ROLTYPEn betrokken kunnen zijn. */
             zaaktype: string;
@@ -2574,6 +2579,7 @@ export interface components {
         };
         /** StatusTypeWithUUID */
         StatusTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description Een korte, voor de initiator van de zaak relevante, omschrijving van de aard van de STATUS van zaken van een ZAAKTYPE. */
             omschrijving: string;
@@ -2622,17 +2628,12 @@ export interface components {
         User: {
             /** ID */
             readonly pk: number;
-            /**
-             * Gebruikersnaam
-             * @description Vereist. 150 tekens of minder. Alleen letters, cijfers en de tekens @/,/+/-/_ zijn toegestaan.
-             */
+            /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
             username: string;
-            /** Voornaam */
             firstName?: string;
-            /** Achternaam */
             lastName?: string;
             /**
-             * E-mailadres
+             * Email address
              * Format: email
              */
             email?: string;
@@ -2730,6 +2731,7 @@ export interface components {
         };
         /** ZaakObjectTypeWithUUID */
         ZaakObjectTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
             anderObjecttype: boolean;
@@ -2769,7 +2771,7 @@ export interface components {
             deelzaaktypen?: components["schemas"]["ZaakTypeWithUUID"][];
             zaakobjecttypen?: components["schemas"]["ExpandableZaakObjectTypeWithUUID"][];
             selectielijstProcestype?: components["schemas"]["LAXProcesType"];
-            zaaktypeInformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
+            zaaktypeinformatieobjecttypen?: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
         };
         /** ZaakTypeInformatieObjectType */
         ZaakTypeInformatieObjectType: {
@@ -2823,6 +2825,7 @@ export interface components {
         };
         /** ZaakTypeInformatieObjectTypeWithUUID */
         ZaakTypeInformatieObjectTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description URL-referentie naar het ZAAKTYPE. */
             zaaktype: string;
@@ -2965,6 +2968,7 @@ export interface components {
         ZaakTypeWithUUID: {
             /** @default null */
             selectielijstProcestype: string | null;
+            /** Format: uuid */
             uuid?: string;
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
@@ -5115,7 +5119,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_zaaktypeInformatieobjecttypen_retrieve: {
+    service_zaaktypen_zaaktypeinformatieobjecttypen_retrieve: {
         parameters: {
             query?: {
                 informatieobjecttype?: string;
@@ -5167,7 +5171,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_zaaktypeInformatieobjecttypen_create: {
+    service_zaaktypen_zaaktypeinformatieobjecttypen_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -5211,7 +5215,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktype_informatieobjecttypen_retrieve_one: {
+    service_zaaktypeinformatieobjecttypen_retrieve_one: {
         parameters: {
             query?: never;
             header?: never;
@@ -5242,7 +5246,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_zaaktypeInformatieobjecttypen_update: {
+    service_zaaktypen_zaaktypeinformatieobjecttypen_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -5279,7 +5283,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_zaaktypeInformatieobjecttypen_destroy: {
+    service_zaaktypen_zaaktypeinformatieobjecttypen_destroy: {
         parameters: {
             query?: never;
             header?: never;
@@ -5309,7 +5313,7 @@ export interface operations {
             };
         };
     };
-    service_zaaktypen_zaaktypeInformatieobjecttypen_partial_update: {
+    service_zaaktypen_zaaktypeinformatieobjecttypen_partial_update: {
         parameters: {
             query?: never;
             header?: never;

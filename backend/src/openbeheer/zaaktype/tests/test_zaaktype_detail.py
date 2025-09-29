@@ -187,7 +187,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             self.assertIn("roltypen", zaaktype_data)
             self.assertIn("deelzaaktypen", zaaktype_data)
             self.assertIn("zaakobjecttypen", zaaktype_data)
-            self.assertIn("zaaktypeInformatieobjecttypen", zaaktype_data)
+            self.assertIn("zaaktypeinformatieobjecttypen", zaaktype_data)
 
             self.assertEqual(zaaktype_data["_expand"]["besluittypen"], [])
             self.assertEqual(zaaktype_data["_expand"]["eigenschappen"], [])
@@ -777,7 +777,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         informatieobjecttype_option_values = [
             option["value"]
             for option in fields_by_name[
-                "_expand.zaaktypeInformatieobjecttypen.informatieobjecttype"
+                "_expand.zaaktypeinformatieobjecttypen.informatieobjecttype"
             ]["options"]
         ]
         self.assertIn(informatieobjecttype.url, informatieobjecttype_option_values)
@@ -805,7 +805,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.json()
 
-        self.assertIn("zaaktypeInformatieobjecttypen", data["result"]["_expand"])
+        self.assertIn("zaaktypeinformatieobjecttypen", data["result"]["_expand"])
         self.assertEqual(
-            len(data["result"]["_expand"]["zaaktypeInformatieobjecttypen"]), 1
+            len(data["result"]["_expand"]["zaaktypeinformatieobjecttypen"]), 1
         )

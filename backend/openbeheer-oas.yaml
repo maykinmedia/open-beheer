@@ -2540,6 +2540,311 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeinformatieobjecttypen/:
+    get:
+      operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_retrieve
+      description: Retrive zaaktype-informatieobjecttypen from Open Zaak.
+      summary: Get zaaktype-informatieobjecttypen
+      parameters:
+      - in: query
+        name: informatieobjecttype
+        schema:
+          description: UUID part of the informatieobjecttype URL.
+          type: string
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: richting
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/Richting'
+          - type: 'null'
+          default: null
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: status
+        schema:
+          default: alles
+          title: Status
+          enum:
+          - alles
+          - concept
+          - definitief
+      - in: path
+        name: zaaktype
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: zaaktype
+        schema:
+          description: UUID part of the zaaktype URL.
+          type: string
+      tags:
+      - Zaaktype-Informatieobjecttypen
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OBList_ZaakTypeInformatieObjectType_'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+    post:
+      operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_create
+      description: Create a zaaktype-informatieobjecttype. The informatieobjecttype
+        and the zaaktype need to belong to the same catalogus
+      summary: Create a zaaktype-informatieobjecttype
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: zaaktype
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Zaaktype-Informatieobjecttypen
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeinformatieobjecttypen/{uuid}/:
+    get:
+      operationId: service_zaaktypeinformatieobjecttypen_retrieve_one
+      description: Retrieve an zaaktype_informatieobjecttype from Open Zaak.
+      summary: Get an zaaktype_informatieobjecttype
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: zaaktype
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Zaaktype-Informatieobjecttypen
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZGWError'
+          description: ''
+    put:
+      operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_update
+      description: Fully update a zaaktype_informatieobjecttype from Open Zaak.
+      summary: Put an zaaktype_informatieobjecttype
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: zaaktype
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Zaaktype-Informatieobjecttypen
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZGWError'
+          description: ''
+    patch:
+      operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_partial_update
+      description: Partially update a zaaktype_informatieobjecttype from Open Zaak.
+      summary: Patch an zaaktype_informatieobjecttype
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: zaaktype
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Zaaktype-Informatieobjecttypen
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPatchedZaakTypeInformatieObjectTypeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPatchedZaakTypeInformatieObjectTypeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPatchedZaakTypeInformatieObjectTypeRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZGWError'
+          description: ''
+    delete:
+      operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_destroy
+      description: Remove permanently a zaaktype_informatieobjecttype from Open Zaak.
+      summary: Delete an zaaktype_informatieobjecttype
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: zaaktype
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Zaaktype-Informatieobjecttypen
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZGWError'
+          description: ''
   /api/v1/service/choices/:
     get:
       operationId: service_choices_retrieve
@@ -4003,7 +4308,16 @@ components:
                 $ref: '#/components/schemas/ExpandableZaakObjectTypeWithUUID'
             selectielijstProcestype:
               $ref: '#/components/schemas/LAXProcesType'
+            zaaktypeinformatieobjecttypen:
+              type: array
+              items:
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
           required: []
+        zaaktypeinformatieobjecttypen:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
+          default: []
         omschrijving:
           description: Omschrijving van de aard van ZAAKen van het ZAAKTYPE.
           type: string
@@ -4365,6 +4679,10 @@ components:
                 $ref: '#/components/schemas/ExpandableZaakObjectTypeWithUUID'
             selectielijstProcestype:
               $ref: '#/components/schemas/LAXProcesType'
+            zaaktypeinformatieobjecttypen:
+              type: array
+              items:
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
           required: []
         omschrijving:
           description: Omschrijving van de aard van ZAAKen van het ZAAKTYPE.
@@ -5267,6 +5585,25 @@ components:
       - fields
       - pagination
       - results
+    OBList_ZaakTypeInformatieObjectType_:
+      title: OBList[ZaakTypeInformatieObjectType]
+      description: Used to draw list views on the frontend.
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/OBField'
+        pagination:
+          $ref: '#/components/schemas/OBPagination'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+      required:
+      - fields
+      - pagination
+      - results
     OBList_ZaakTypeSummary_:
       title: OBList[ZaakTypeSummary]
       description: Used to draw list views on the frontend.
@@ -5677,6 +6014,10 @@ components:
                 $ref: '#/components/schemas/ExpandableZaakObjectTypeWithUUID'
             selectielijstProcestype:
               $ref: '#/components/schemas/LAXProcesType'
+            zaaktypeinformatieobjecttypen:
+              type: array
+              items:
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
           required: []
         omschrijving:
           description: Omschrijving van de aard van ZAAKen van het ZAAKTYPE.
@@ -6504,6 +6845,60 @@ components:
           - description: De datum waarop het is opgeheven.
             type: string
             format: date
+          - type: 'null'
+          default: null
+      required: []
+    PatchedPatchedZaakTypeInformatieObjectTypeRequest:
+      title: PatchedZaakTypeInformatieObjectTypeRequest
+      type: object
+      properties:
+        zaaktype:
+          anyOf:
+          - description: URL-referentie naar het ZAAKTYPE.
+            type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          default: null
+        informatieobjecttype:
+          anyOf:
+          - title: Informatie object type
+            description: URL-referentie naar het INFORMATIEOBJECTTYPE.
+            type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          default: null
+        volgnummer:
+          anyOf:
+          - description: Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen
+              het ZAAKTYPE.
+            type: integer
+            minimum: 1
+            maximum: 999
+          - type: 'null'
+          default: null
+        richting:
+          anyOf:
+          - description: |-
+              Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+
+              Uitleg bij mogelijke waarden:
+
+              * `inkomend` - Inkomend
+              * `intern` - Intern
+              * `uitgaand` - Uitgaand
+            $ref: '#/components/schemas/RichtingEnum'
+          - type: 'null'
+          default: null
+        statustype:
+          anyOf:
+          - title: Status type
+            description: URL-referentie naar het STATUSTYPE waarbij deze INFORMATIEOBJECTTYPEn
+              verplicht aanwezig moeten zijn.
+            type: string
+            maxLength: 1000
+            minLength: 1
           - type: 'null'
           default: null
       required: []
@@ -7369,6 +7764,18 @@ components:
       - selectielijstklasse
       - zaaktype
       - omschrijving
+    Richting:
+      title: Richting
+      enum:
+      - inkomend
+      - intern
+      - uitgaand
+    RichtingEnum:
+      title: RichtingEnum
+      enum:
+      - inkomend
+      - intern
+      - uitgaand
     RolType:
       title: RolType
       type: object
@@ -8460,7 +8867,196 @@ components:
             $ref: '#/components/schemas/ExpandableZaakObjectTypeWithUUID'
         selectielijstProcestype:
           $ref: '#/components/schemas/LAXProcesType'
+        zaaktypeinformatieobjecttypen:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
       required: []
+    ZaakTypeInformatieObjectType:
+      title: ZaakTypeInformatieObjectType
+      type: object
+      properties:
+        zaaktype:
+          description: URL-referentie naar het ZAAKTYPE.
+          type: string
+          maxLength: 1000
+          minLength: 1
+        informatieobjecttype:
+          title: Informatie object type
+          description: URL-referentie naar het INFORMATIEOBJECTTYPE.
+          type: string
+          maxLength: 1000
+          minLength: 1
+        volgnummer:
+          description: Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen het
+            ZAAKTYPE.
+          type: integer
+          minimum: 1
+          maximum: 999
+        richting:
+          description: |-
+            Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+
+            Uitleg bij mogelijke waarden:
+
+            * `inkomend` - Inkomend
+            * `intern` - Intern
+            * `uitgaand` - Uitgaand
+          $ref: '#/components/schemas/RichtingEnum'
+        url:
+          anyOf:
+          - description: URL-referentie naar dit object. Dit is de unieke identificatie
+              en locatie van dit object.
+            type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          default: null
+        zaaktypeIdentificatie:
+          anyOf:
+          - description: Unieke identificatie van het ZAAKTYPE binnen de CATALOGUS
+              waarin het ZAAKTYPE voorkomt.
+            type: string
+          - type: 'null'
+          default: null
+        statustype:
+          anyOf:
+          - title: Status type
+            description: URL-referentie naar het STATUSTYPE waarbij deze INFORMATIEOBJECTTYPEn
+              verplicht aanwezig moeten zijn.
+            type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          default: null
+        catalogus:
+          anyOf:
+          - description: URL-referentie naar de CATALOGUS waartoe dit ZAAKTYPE behoort.
+            type: string
+          - type: 'null'
+          default: null
+      required:
+      - zaaktype
+      - informatieobjecttype
+      - volgnummer
+      - richting
+    ZaakTypeInformatieObjectTypeRequest:
+      title: ZaakTypeInformatieObjectTypeRequest
+      type: object
+      properties:
+        zaaktype:
+          description: URL-referentie naar het ZAAKTYPE.
+          type: string
+          maxLength: 1000
+          minLength: 1
+        informatieobjecttype:
+          title: Informatie object type
+          description: URL-referentie naar het INFORMATIEOBJECTTYPE.
+          type: string
+          maxLength: 1000
+          minLength: 1
+        volgnummer:
+          description: Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen het
+            ZAAKTYPE.
+          type: integer
+          minimum: 1
+          maximum: 999
+        richting:
+          description: |-
+            Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+
+            Uitleg bij mogelijke waarden:
+
+            * `inkomend` - Inkomend
+            * `intern` - Intern
+            * `uitgaand` - Uitgaand
+          $ref: '#/components/schemas/RichtingEnum'
+        statustype:
+          anyOf:
+          - title: Status type
+            description: URL-referentie naar het STATUSTYPE waarbij deze INFORMATIEOBJECTTYPEn
+              verplicht aanwezig moeten zijn.
+            type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          default: null
+      required:
+      - zaaktype
+      - informatieobjecttype
+      - volgnummer
+      - richting
+    ZaakTypeInformatieObjectTypeWithUUID:
+      title: ZaakTypeInformatieObjectTypeWithUUID
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        zaaktype:
+          description: URL-referentie naar het ZAAKTYPE.
+          type: string
+          maxLength: 1000
+          minLength: 1
+        informatieobjecttype:
+          title: Informatie object type
+          description: URL-referentie naar het INFORMATIEOBJECTTYPE.
+          type: string
+          maxLength: 1000
+          minLength: 1
+        volgnummer:
+          description: Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen het
+            ZAAKTYPE.
+          type: integer
+          minimum: 1
+          maximum: 999
+        richting:
+          description: |-
+            Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+
+            Uitleg bij mogelijke waarden:
+
+            * `inkomend` - Inkomend
+            * `intern` - Intern
+            * `uitgaand` - Uitgaand
+          $ref: '#/components/schemas/RichtingEnum'
+        url:
+          anyOf:
+          - description: URL-referentie naar dit object. Dit is de unieke identificatie
+              en locatie van dit object.
+            type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          default: null
+        zaaktypeIdentificatie:
+          anyOf:
+          - description: Unieke identificatie van het ZAAKTYPE binnen de CATALOGUS
+              waarin het ZAAKTYPE voorkomt.
+            type: string
+          - type: 'null'
+          default: null
+        statustype:
+          anyOf:
+          - title: Status type
+            description: URL-referentie naar het STATUSTYPE waarbij deze INFORMATIEOBJECTTYPEn
+              verplicht aanwezig moeten zijn.
+            type: string
+            maxLength: 1000
+            minLength: 1
+          - type: 'null'
+          default: null
+        catalogus:
+          anyOf:
+          - description: URL-referentie naar de CATALOGUS waartoe dit ZAAKTYPE behoort.
+            type: string
+          - type: 'null'
+          default: null
+      required:
+      - zaaktype
+      - informatieobjecttype
+      - volgnummer
+      - richting
     ZaakTypeRequest:
       title: ZaakTypeRequest
       type: object

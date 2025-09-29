@@ -44,7 +44,7 @@ class ZaakTypeInformatieObjectTypeListViewTests(VCRAPITestCase):
             # These should be no requests to the backend if unauthenticated
             assert len(self.cassette.requests) == calls_during_setup
 
-    def test_retrieve_zaaktype_informatieobjecttypen(self):
+    def test_retrieve_zaaktypeinformatieobjecttypen(self):
         zaaktype = self.helper.create_zaaktype()
         informatieobjecttype = self.helper.create_informatieobjecttype(
             catalogus=zaaktype.catalogus

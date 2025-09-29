@@ -474,7 +474,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": expand_zaakobjecttypen,
         "selectielijst_procestype": expand_selectielijstprocestype,
-        "zaaktype_informatieobjecttypen": expand_zaaktype_informatieobjecttype,
+        "zaaktypeinformatieobjecttypen": expand_zaaktype_informatieobjecttype,
     }
 
     def get_item_versions(
@@ -546,7 +546,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         for field in fields:
             if (
                 field.name
-                == "_expand.zaaktypeInformatieobjecttypen.informatieobjecttype"
+                == "_expand.zaaktypeinformatieobjecttypen.informatieobjecttype"
             ):
                 field.options = self.get_informatieobjecttype_options(object)
 

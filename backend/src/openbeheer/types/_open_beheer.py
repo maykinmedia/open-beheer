@@ -665,7 +665,7 @@ class ZaakTypeWithUUID(UUIDMixin, ZaakType):
 
 
 class ZaakTypeInformatieObjectTypeWithUUID(UUIDMixin, ZaakTypeInformatieObjectType):
-    uuid: str | UnsetType = UNSET
+    uuid: UUID | UnsetType = UNSET
 
 
 class ZaakObjectTypeExtension(Struct, frozen=True, rename="camel"):
@@ -704,7 +704,7 @@ class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
     deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
     zaakobjecttypen: UnsetType | list[ExpandableZaakObjectTypeWithUUID] = UNSET
     selectielijst_procestype: UnsetType | LAXProcesType = UNSET
-    zaaktype_informatieobjecttypen: (
+    zaaktypeinformatieobjecttypen: (
         UnsetType | list[ZaakTypeInformatieObjectTypeWithUUID]
     ) = UNSET
 
@@ -717,9 +717,7 @@ class ExpandableZaakType(ZaakTypeWithUUID, Struct):
     _expand: ZaakTypeExtension = ZaakTypeExtension()
 
     # FIXME: without this, the frontend doesn't pick up the expand field.
-    zaaktype_informatieobjecttypen: None = msgspec.field(
-        name="zaaktypeInformatieobjecttypen", default=None
-    )
+    zaaktypeinformatieobjecttypen: Sequence[ZaakTypeInformatieObjectTypeWithUUID] = []
 
 
 @as_ob_option.register
