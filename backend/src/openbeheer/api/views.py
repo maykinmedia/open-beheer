@@ -170,7 +170,11 @@ def fetch_response[T](
 def fetch_all[T](
     client: APIClient, path: str, params: Mapping, result_type: type[T]
 ) -> list[T]:
-    return list(iter_pages(client, fetch_response(client, path, params, result_type)))
+    return list(
+        iter_pages(
+            client, fetch_response(client, path, params, result_type), result_type
+        )
+    )
 
 
 def make_expansion[T: Struct, R](
@@ -619,9 +623,8 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def _expand(self, client, object: T):
         return expand_one(client, self.expansions, object)
 
-    def get_fields(self) -> list[OBField]:
-        ob_fields = ob_fields_of_type(self.data_type)
-
+    def get_fields(self, data: T, option_overrides={}) -> list[OBField]:
+        ob_fields = ob_fields_of_type(self.data_type, option_overrides=option_overrides)
         expansions = set(map(camelize, self.expansions))
 
         def adapt[F: OBField](field: F) -> F:
@@ -658,7 +661,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             versions=(versions if self.has_versions else UNSET),
             result=data,
             fieldsets=self.get_fieldsets(),
-            fields=self.get_fields(),
+            fields=self.get_fields(data),
         )
 
         return Response(response_data)
@@ -705,7 +708,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             versions=versions if self.has_versions else UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
-            fields=self.get_fields(),
+            fields=self.get_fields(data),
         )
 
         return Response(response_data)

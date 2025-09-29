@@ -46,22 +46,24 @@ export const TAB_CONFIG_OVERVIEW: TabConfig<TargetType> = {
       label: "Overzicht",
       fieldsets: FIELDSETS_OVERVIEW,
       valueTransform: {
-        selectielijstProcestype: (record) => {
-          return {
-            ...record,
-            procestype: record ? `${record?.naam} - ${record?.jaar}` : "-",
-          };
-        },
-        zaakobjecttypen: (zaakobjecttypen) => {
-          return (zaakobjecttypen || []).map((zaakobjecttype) => {
-            return {
-              ...zaakobjecttype,
-              objecttype: zaakobjecttype
-                ? `${zaakobjecttype._expand?.objecttype?.name}`
-                : "-",
-            };
-          });
-        },
+        // FIXME FIX OVERRIDES
+        //
+        // selectielijstProcestype: (record) => {
+        //   return {
+        //     ...record,
+        //     procestype: record ? `${record?.naam} - ${record?.jaar}` : "-",
+        //   };
+        // },
+        // zaakobjecttypen: (zaakobjecttypen) => {
+        //   return (zaakobjecttypen || []).map((zaakobjecttype) => {
+        //     return {
+        //       ...zaakobjecttype,
+        //       objecttype: zaakobjecttype
+        //         ? `${zaakobjecttype._expand?.objecttype?.name}`
+        //         : "-",
+        //     };
+        //   });
+        // },
       },
     },
   ],

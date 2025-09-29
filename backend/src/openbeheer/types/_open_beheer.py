@@ -160,8 +160,11 @@ def _cached[F: Callable[[], object]](f: F) -> F:
     Like functools cache/lru_cache adds a `clear_cache` method on the function
     """
     key = f.__qualname__
-    function: F = lambda: django_cache.get_or_set(  # type: ignore get_or_set annotation is bad
-        key, default=f, timeout=60 * 60 * 24
+    function: F = lambda: django_cache.get_or_set(
+        # type: ignore get_or_set annotation is bad
+        key,
+        default=f,
+        timeout=60 * 60 * 24,
     )
     function.clear_cache = lambda: django_cache.delete(key)  # pyright: ignore[reportFunctionMemberAccess]
 
@@ -194,13 +197,13 @@ def fetch_objecttype_options():
     ]
 
 
-def options(t: type | UnionType | Annotated) -> list[OBOption]:
+def options(t: type | UnionType | Annotated) -> list[OBOption] | UnsetType:
     "Find an enum in the type and turn it into options."
     match t:
         case enum.EnumType():
             return OBOption.from_enum(t)
         case _ if get_args(t):
-            return sum(map(options, get_args(t)), [])
+            return options(_core_type(t))
         case _ if t is ProcesTypeURL:
             return fetch_procestype_options()
         case _ if t is ResultaatTypeOmschrijvingURL:
@@ -210,7 +213,7 @@ def options(t: type | UnionType | Annotated) -> list[OBOption]:
         case _ if t is ObjectTypeURL:
             return fetch_objecttype_options()
         case _:
-            return []
+            return UNSET
 
 
 class OBField[T](Struct, rename="camel", omit_defaults=True):
@@ -291,6 +294,7 @@ def ob_fields_of_type(
                 for attr, attr_type in attrs.items()
                 for field in ob_fields_of_type(
                     _core_type(attr_type),
+                    option_overrides=option_overrides,
                     prefix=f"_expand.{camelize(attr)}.",
                 )
             ]
@@ -301,7 +305,7 @@ def ob_fields_of_type(
         ob_field = OBField(
             name=name,
             type=as_ob_fieldtype(annotation),
-            options=option_overrides.get(name, options(annotation)) or UNSET,
+            options=option_overrides.get(name, options(annotation)),
             # only editable if neither the whole type nor the attribute type is READ_ONLY
             editable=base_editable(name)
             and not (set(map(_core_type, (data_type, annotation))) & READ_ONLY_TYPES),
@@ -558,31 +562,36 @@ def _resultaat_as_option(resultaat: LAXResultaat, **kwargs) -> OBOption[Resultaa
     )
     label = " - ".join(label_values)
     return OBOption(
-        label=f"{label} - {resultaat.proces_type}",
+        label=f"{label}",
         value=resultaat.url,
     )
 
 
+def fetch_resultaat_options(
+    procestype_url: str | None = None,
+) -> list[OBOption[LAXResultaat]]:
+    resultaten = fetch_resultaten()
+    return [
+        as_ob_option(p)
+        for p in sorted(
+            resultaten,
+            key=lambda r: (r.proces_type, r.volledig_nummer, r.nummer, r.naam),
+        )
+        if not procestype_url or p.proces_type == procestype_url
+    ]
+
+
 @_cached
-def fetch_resultaat_options():
+def fetch_resultaten() -> list[LAXResultaat]:
     class PagedResultaat(Struct):
         next: str | None
         results: list[LAXResultaat]
 
     with selectielijst_client() as client:
         response = client.get("resultaten")
-
         response.raise_for_status()
 
-        resultaten = iter_pages(client, decode(response.content, type=PagedResultaat))
-        result = [
-            as_ob_option(p)
-            for p in sorted(
-                resultaten,
-                key=lambda r: (r.proces_type, r.volledig_nummer, r.nummer, r.naam),
-            )
-        ]
-    return result
+        return list(iter_pages(client, decode(response.content, type=PagedResultaat)))
 
 
 class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
@@ -594,7 +603,8 @@ class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
             max_length=1000,
         ),
     ]
-    selectielijstklasse: Annotated[  # pyright: ignore[reportIncompatibleVariableOverride]
+    selectielijstklasse: Annotated[
+        # pyright: ignore[reportIncompatibleVariableOverride]
         ResultaatURL,
         Meta(
             description="URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie.",

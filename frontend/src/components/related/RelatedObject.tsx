@@ -202,7 +202,6 @@ export const RelatedObjectRenderer = forwardRef(
                   break;
                 }
                 if (name === "selectielijstklasse") {
-                  value = "NOT_IMPLEMENTED_FRONTEND";
                   break;
                 }
                 if (name === "uuid") {
