@@ -13,7 +13,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Inloggen */
+        /** Login */
         post: operations["auth_login_create"];
         delete?: never;
         options?: never;
@@ -660,9 +660,7 @@ export interface components {
          */
         ArchiefnominatieEnum: "" | "blijvend_bewaren" | "vernietigen";
         Auth: {
-            /** Gebruikersnaam */
             username: string;
-            /** Wachtwoord */
             password: string;
         };
         /** BesluitType */
@@ -743,6 +741,7 @@ export interface components {
         };
         /** BesluitTypeWithUUID */
         BesluitTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description URL-referentie naar de CATALOGUS waartoe dit BESLUITTYPE behoort. */
             catalogus: string;
@@ -1020,6 +1019,7 @@ export interface components {
         };
         /** EigenschapWithUUID */
         EigenschapWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description De naam van de EIGENSCHAP */
             naam: string;
@@ -1049,6 +1049,9 @@ export interface components {
         };
         /** ExpandableZaakObjectTypeWithUUID */
         ExpandableZaakObjectTypeWithUUID: {
+            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
+            objecttype: string;
+            /** Format: uuid */
             uuid?: string;
             /**
              * ZaakObjectTypeExtension
@@ -1059,8 +1062,6 @@ export interface components {
             };
             /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
             anderObjecttype: boolean;
-            /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
-            objecttype: string;
             /** @description Omschrijving van de betrekking van het Objecttype op zaken van het gerelateerde ZAAKTYPE. */
             relatieOmschrijving: string;
             /** @description URL-referentie naar de ZAAKTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
@@ -1088,6 +1089,7 @@ export interface components {
         ExpandableZaakType: {
             /** @default null */
             selectielijstProcestype: string | null;
+            /** Format: uuid */
             uuid?: string;
             /**
              * ZaakTypeExtension
@@ -1463,6 +1465,7 @@ export interface components {
         };
         /** InformatieObjectTypeWithUUID */
         InformatieObjectTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description URL-referentie naar de CATALOGUS waartoe dit INFORMATIEOBJECTTYPE behoort. */
             catalogus: string;
@@ -1525,6 +1528,8 @@ export interface components {
          */
         LAXProcesType: {
             toelichting: string;
+            /** @default null */
+            url: string | null;
             /**
              * Procestypenummer
              * @description Nummer van de selectielijstcategorie
@@ -1550,8 +1555,6 @@ export interface components {
              * @description Object waar de uitvoering van het proces op van toepassing is en waarvan de bestaans- of geldigheidsduur eventueel van belang is bij het bepalen van de start van de bewaartermijn
              */
             procesobject: string;
-            /** @default null */
-            url: string | null;
         };
         None: null;
         /**
@@ -1564,7 +1567,8 @@ export interface components {
             filterValue?: unknown;
             filterLookup?: string;
             options?: components["schemas"]["OBOption"][];
-            editable?: boolean;
+            /** @default false */
+            editable: boolean;
         };
         /**
          * OBFieldType
@@ -2220,6 +2224,11 @@ export interface components {
         };
         /** ResultaatTypeWithUUID */
         ResultaatTypeWithUUID: {
+            /** @description Algemeen gehanteerde omschrijving van de aard van resultaten van het RESULTAATTYPE. Dit moet een URL-referentie zijn naar de referenlijst van generieke resultaattypeomschrijvingen. Im ImZTC heet dit 'omschrijving generiek' */
+            resultaattypeomschrijving: string;
+            /** @description URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie. */
+            selectielijstklasse: string;
+            /** Format: uuid */
             uuid?: string;
             /**
              * is van
@@ -2228,10 +2237,6 @@ export interface components {
             zaaktype: string;
             /** @description Omschrijving van de aard van resultaten van het RESULTAATTYPE. */
             omschrijving: string;
-            /** @description Algemeen gehanteerde omschrijving van de aard van resultaten van het RESULTAATTYPE. Dit moet een URL-referentie zijn naar de referenlijst van generieke resultaattypeomschrijvingen. Im ImZTC heet dit 'omschrijving generiek' */
-            resultaattypeomschrijving: string;
-            /** @description URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie. */
-            selectielijstklasse: string;
             /** @default null */
             url: string | null;
             /** @default null */
@@ -2331,6 +2336,7 @@ export interface components {
         };
         /** RolTypeWithUUID */
         RolTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description URL-referentie naar het ZAAKTYPE waar deze ROLTYPEn betrokken kunnen zijn. */
             zaaktype: string;
@@ -2480,6 +2486,7 @@ export interface components {
         };
         /** StatusTypeWithUUID */
         StatusTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description Een korte, voor de initiator van de zaak relevante, omschrijving van de aard van de STATUS van zaken van een ZAAKTYPE. */
             omschrijving: string;
@@ -2528,17 +2535,12 @@ export interface components {
         User: {
             /** ID */
             readonly pk: number;
-            /**
-             * Gebruikersnaam
-             * @description Vereist. 150 tekens of minder. Alleen letters, cijfers en de tekens @/,/+/-/_ zijn toegestaan.
-             */
+            /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
             username: string;
-            /** Voornaam */
             firstName?: string;
-            /** Achternaam */
             lastName?: string;
             /**
-             * E-mailadres
+             * Email address
              * Format: email
              */
             email?: string;
@@ -2636,6 +2638,7 @@ export interface components {
         };
         /** ZaakObjectTypeWithUUID */
         ZaakObjectTypeWithUUID: {
+            /** Format: uuid */
             uuid?: string;
             /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
             anderObjecttype: boolean;
@@ -2791,6 +2794,7 @@ export interface components {
         ZaakTypeWithUUID: {
             /** @default null */
             selectielijstProcestype: string | null;
+            /** Format: uuid */
             uuid?: string;
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
