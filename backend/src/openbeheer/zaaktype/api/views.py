@@ -63,8 +63,8 @@ from openbeheer.types._open_beheer import (
     LAXProcesType,
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
-    fetch_selectielijst_resultaat_options,
     ZaakTypeInformatieObjectTypeWithUUID,
+    fetch_selectielijst_resultaat_options,
 )
 from openbeheer.types.ztc import (
     BesluitType,
@@ -368,7 +368,9 @@ def expand_zaaktype_informatieobjecttype(
 ) -> Iterable[Iterable[ZaakTypeInformatieObjectTypeWithUUID | None]]:
     # There is only one zaaktype, since we are expanding
     # the retrieve endpoint.
-    zaaktype = list(zaaktypen)[0]
+    zaaktypen = list(zaaktypen)
+    assert len(zaaktypen) == 1
+    zaaktype = zaaktypen[0]
 
     return [
         fetch_all(
@@ -530,7 +532,10 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         return super().get_fields(
             data,
             option_overrides={
-                "_expand.resultaattypen.selectielijstklasse": selectielijst_options
+                "_expand.zaaktypeinformatieobjecttypen.informatieobjecttype": self.get_informatieobjecttype_options(
+                    data
+                ),
+                "_expand.resultaattypen.selectielijstklasse": selectielijst_options,
             },
             base_editable=(
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
@@ -540,17 +545,6 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
-
-    def get_fields(self, object) -> list[OBField]:
-        fields = super().get_fields(object)
-        for field in fields:
-            if (
-                field.name
-                == "_expand.zaaktypeinformatieobjecttypen.informatieobjecttype"
-            ):
-                field.options = self.get_informatieobjecttype_options(object)
-
-        return fields
 
     def get_informatieobjecttype_options(self, zaaktype: ZaakType) -> list[OBOption]:
         with ztc_client() as client:
