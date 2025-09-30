@@ -12,6 +12,7 @@ import {
   Tab,
   Tabs,
   Toolbar,
+  TypedField,
   fields2TypedFields,
   useFormDialog,
 } from "@maykin-ui/admin-ui";
@@ -482,24 +483,23 @@ const ZaaktypeTab = ({
           transformFn(expandValue)
         : expandValue;
 
-      const zaaktypeUuid = getZaaktypeUUID(object);
-      if (!zaaktypeUuid) {
-        console.warn(
-          "Zaaktype UUID is undefined, cannot render related object.",
-        );
-        continue;
-      }
-
       // Related fields that are directly editable should not be in overrides.
       if (isEditing && field.options) {
         continue;
       }
 
+      const expandFields = activeSectionConfig.expandFields?.length
+        ? activeSectionConfig.expandFields
+        : fields
+            .filter((f) => f.type === "string" || f.type === "text")
+            .filter((f) => f.type === "string" || f.name !== "url")
+            .filter((f) => f.name.startsWith("_expand." + fieldName));
+
       overrides[fieldName] = (
         // TODO: Handle errors for related objects.
         <RelatedObjectRenderer
           ref={relatedRendererRef}
-          expandFields={activeSectionConfig.expandFields}
+          expandFields={expandFields as TypedField[]}
           object={object}
           relatedObject={relatedObject as RelatedObject<TargetType>}
           view={tabConfig.view}
@@ -527,11 +527,18 @@ const ZaaktypeTab = ({
    */
   const contents = useMemo(() => {
     if (isAttributeGridSection(tabConfig.view, activeSectionConfig)) {
-      const fieldsets = activeSectionConfig.fieldsets.map((fs) => [
-        fs[0],
+      const fieldsets = activeSectionConfig.fieldsets.map((fieldset) => [
+        fieldset[0],
         {
-          ...fs[1],
-          fields: fs[1].fields.map((f) => fields.find((lf) => lf.name === f)),
+          ...fieldset[1],
+          fields: fieldset[1].fields.map((fieldsetField) => {
+            const field = fields.find((field) => field.name === fieldsetField);
+            const editable =
+              field?.name && field.name in expandedOverrides
+                ? false
+                : field?.editable;
+            return { ...field, editable };
+          }),
         },
       ]) as FieldSet<TargetType>[];
 
