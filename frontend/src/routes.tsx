@@ -15,6 +15,8 @@ import {
   zaaktypenLoader,
 } from "~/pages";
 import { zaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
+import { informatieobjecttypenLoader } from "./pages/informatieobjecttypen/informatieobjecttype.loader";
+import { InformatieObjectTypenPage } from "./pages/informatieobjecttypen";
 
 /**
  * Available routes.
@@ -83,6 +85,13 @@ export const routes: RouteObject[] = [
                     },
                   },
                 ],
+              },
+              {
+                id: "informatieobjecttypen",
+                path: "informatieobjecttypen",
+                element: <InformatieObjectTypenPage />,
+                loader: informatieobjecttypenLoader,
+                children: [],
               },
             ],
           },
