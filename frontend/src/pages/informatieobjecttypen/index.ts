@@ -1,1 +1,2 @@
-export {InformatieObjectTypenPage} from "./InformatieObjectTypenPage";
+export * from "./InformatieObjectTypenPage";
+export * from "./informatieobjecttype.loader.ts";
