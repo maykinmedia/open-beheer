@@ -5,3 +5,4 @@ export * from "./service";
 export * from "./zaaktype";
 export * from "./zaaktypecreate";
 export * from "./zaaktypen";
+export * from "./informatieobjecttypen";
