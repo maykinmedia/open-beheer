@@ -1,4 +1,4 @@
-from typing import Mapping
+from typing import Mapping, override
 
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -59,12 +59,22 @@ class InformatieObjectTypeListView(
     query_type = InformatieObjectTypenGetParametersQuery
     endpoint_path = "informatieobjecttypen"
 
+    @override
     def parse_ob_fields(
         self,
         params: InformatieObjectTypenGetParametersQuery,
         option_overrides: Mapping[str, list[OBOption]] = {},
         **_,
     ) -> list[OBField]:
+        order = [
+            "url",
+            "omschrijving",
+            "vertrouwelijkheidaanduiding",
+            "versiedatum",
+            "actief",
+            "eindeGeldigheid",
+            "concept",
+        ]
         return super().parse_ob_fields(
             params,
             {
@@ -72,6 +82,8 @@ class InformatieObjectTypeListView(
                     VertrouwelijkheidaanduidingEnum
                 )
             },
+            sort_key=lambda f: order.index(f.name),
+            base_editable=lambda _: False,  # no editable fields
         )
 
     def parse_query_params(self, request: Request, api_client: APIClient):
