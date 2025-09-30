@@ -1,4 +1,10 @@
-import { Button, DataGrid, Outline, TypedField } from "@maykin-ui/admin-ui";
+import {
+  Button,
+  DataGrid,
+  Outline,
+  TypedField,
+  field2TypedField,
+} from "@maykin-ui/admin-ui";
 import { string2Title } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
 import {
@@ -15,7 +21,7 @@ import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx"
 import { useCombinedSearchParams } from "~/hooks";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { getUUIDFromString } from "~/lib/format/string.ts";
-import { BaseTabSection, TabConfig, TargetType } from "~/pages";
+import { TabConfig, TargetType } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { ExpandItemKeys, RelatedObject, components } from "~/types";
 
@@ -45,7 +51,7 @@ type RelatedObjectRendererProps<T extends TargetType> = {
   /** The type of view to render (e.g., "DataGrid" or "AttributeGrid"). */
   view: TabConfig<T>["view"];
   /** The set of fields to expand and render. */
-  expandFields: BaseTabSection<T>["expandFields"];
+  expandFields: TypedField[];
   /** The specific expanded field key. */
   field: ExpandItemKeys<T>;
   /** Possible fields. */
@@ -101,7 +107,7 @@ export const RelatedObjectRenderer = forwardRef(
     const { state } = useNavigation();
     const isLoading = state !== "idle";
 
-    // Contains related object as well as their mutating action..
+    // Contains related object as well as their mutating action.
     const [rows, setRows] = useState<RelatedRow<T>[]>(
       Array.isArray(relatedObject) ? relatedObject : [relatedObject],
     );
@@ -113,42 +119,23 @@ export const RelatedObjectRenderer = forwardRef(
     // Deletions as actions, other actions are stored on rows.
     const [deleteActions, setDeleteActions] = useState<TypedAction[]>([]);
 
-    const expandFieldsNames = expandFields.map((expandField) => {
-      if (typeof expandField === "string") {
-        return expandField;
-      } else {
-        return expandField.name;
-      }
-    });
+    const expandFieldsNames = expandFields.map(
+      (expandField) => expandField.name,
+    );
 
-    const expandTypedFields = fields.filter((backendField) => {
-      if (!backendField.name.includes(".")) return; // Not a related path.
-      const backendFieldNameLeaf = backendField.name.split(".").pop();
-      return expandFieldsNames.includes(backendFieldNameLeaf as string);
-    });
+    const typedFields = fields
+      // @ts-expect-error - fixme
+      .filter((field) => expandFieldsNames.includes(field.name))
+      .map((field) => {
+        const name = field.name;
+        const shortName = name.includes(".")
+          ? (name.split(".").pop() as keyof T)
+          : name;
 
-    const typedFields = expandTypedFields.map((backendField) => {
-      // The expandFields can be either strings (just the name of the field to show) or objects, with
-      // more configurations for the field.
-      const frontendExtras = expandFields.find(
-        (expandField) =>
-          typeof expandField !== "string" &&
-          expandField.name === backendField.name,
-      ) as TypedField<RelatedObject<T>> | undefined;
-
-      const fieldPrefix = `_expand.${field}.`;
-      return {
-        ...frontendExtras,
-        ...backendField,
-        // Only editable when isEditing.
-        editable: isEditing ? backendField.editable : false,
-        // We removed the prefix, so now the keys are fields of the expanded object.
-        name: backendField.name.replace(fieldPrefix, "") as ExpandItemKeys<T>,
-        // Show inputs instead of text area's.
-        type: backendField.type === "text" ? "string" : backendField.type,
-      };
-    });
-
+        const typedField = field2TypedField(field as TypedField<T>, undefined);
+        typedField.name = shortName as keyof T;
+        return typedField;
+      });
     const fieldNames = typedFields.map((t) => t.name);
 
     /**
@@ -344,29 +331,39 @@ export const RelatedObjectRenderer = forwardRef(
       [rows, isLoading, isEditing],
     );
 
-    if (!Array.isArray(relatedObject)) {
+    // Single related item in AttributeList.
+    if (view === "AttributeGrid" && !Array.isArray(relatedObject)) {
       if (!relatedObject) return null;
 
       return (
         <RelatedObjectBadge
           relatedObject={relatedObject}
-          allowedFields={fieldNames}
+          // @ts-expect-error - fixme
+          allowedFields={expandFields}
         />
       );
     }
 
-    if (view === "DataGrid") {
+    // Multiple related items in AttributeList.
+    if (view === "AttributeGrid" && Array.isArray(relatedObject)) {
+      console.log(typedFields);
+      return relatedObject.map((relatedObject, index) => (
+        <RelatedObjectBadge
+          key={relatedObject.uuid ?? index}
+          relatedObject={relatedObject}
+          allowedFields={expandFields}
+        />
+      ));
+    }
+
+    // DataGrid view.
+    if (view === "DataGrid" && Array.isArray(relatedObject)) {
       return (
         <>
           <DataGrid<(typeof relatedObject)[number]>
             objectList={augmentedObjectList}
             fields={[
-              // FIXME: Admin UI TypedField and our OBField should be compatible, but currently in admin-ui
-              // filterValue is string | number, while for OBField it is unknown, since in the backend it is
-              // a generic type based on the value of the object.
-              // @ts-expect-error - see above
               ...typedFields,
-              // @ts-expect-error - see above
               { name: "", type: "jsx", editable: false, sortable: false },
             ]}
             boolProps={{ explicit: true }}
@@ -399,15 +396,6 @@ export const RelatedObjectRenderer = forwardRef(
         </>
       );
     }
-
-    // items within an AttributeGrid.
-    return relatedObject.map((relatedObject, index) => (
-      <RelatedObjectBadge
-        key={typeof relatedObject.url === "string" ? relatedObject.url : index}
-        relatedObject={relatedObject}
-        allowedFields={expandFields}
-      />
-    ));
   },
 );
 RelatedObjectRenderer.displayName = "RelatedObjectRenderer";
