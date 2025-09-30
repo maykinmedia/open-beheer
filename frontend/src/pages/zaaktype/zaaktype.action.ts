@@ -1,16 +1,19 @@
+import { invariant } from "@maykin-ui/client-common/assert";
 import { ActionFunctionArgs, redirect } from "react-router";
 import { request } from "~/api";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
-import { getZaaktypeUUID } from "~/lib";
+import { dateToIsoDateString, getZaaktypeUUID, today, yesterday } from "~/lib";
+import { getUUIDFromString } from "~/lib/format/string.ts";
+import { findActiveZaaktypeVersion } from "~/lib/zaaktype";
 import { TargetType, ZaaktypeLoaderData } from "~/pages";
 import { RelatedObject, components } from "~/types";
 
 export type ZaaktypeAction =
   | TypedAction<"BATCH", BatchActionPayload>
   | TypedAction<"CREATE_VERSION", CreateZaaktypeVersionPayload>
-  | TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>
+  | TypedAction<"UPDATE_VERSION", UpdateZaaktypeVersionPayload>
   | TypedAction<"SAVE_AS", SaveAsZaaktypePayload>
-  | TypedAction<"PUBLISH_VERSION", UpdateZaaktypeVersionPayload>
+  | TypedAction<"PUBLISH_VERSION", PublishZaaktypeVersionPayload>
   | TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>
   | TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>
   | TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>
@@ -62,7 +65,7 @@ export async function performAction(action: ZaaktypeAction): Promise<unknown> {
  * Payload for `batchAction`
  */
 export type BatchActionPayload = {
-  zaaktype: TargetType;
+  zaaktype: Partial<TargetType>;
   actions: ZaaktypeAction[];
 };
 
@@ -73,7 +76,10 @@ export async function batchAction(
   action: TypedAction<"BATCH", BatchActionPayload>,
 ) {
   const payload = action.payload;
-  const uuid = getZaaktypeUUID(payload.zaaktype);
+  const zaaktype = payload.zaaktype;
+  const uuid = getUUIDFromString(zaaktype.uuid || zaaktype.url || "");
+  invariant(uuid, "either zaaktype.uuid or zaaktype.url must be set");
+
   const actions = payload.actions;
   const promises = actions.map((action) => performAction(action));
 
@@ -97,7 +103,7 @@ export async function batchAction(
  */
 export type CreateZaaktypeVersionPayload = {
   serviceSlug: string;
-  zaaktype: Partial<TargetType> & { url: string };
+  zaaktype: Partial<TargetType>;
 };
 
 /**
@@ -129,17 +135,19 @@ export async function createZaaktypeVersionAction(
  */
 export type UpdateZaaktypeVersionPayload = {
   serviceSlug: string;
-  zaaktype: Partial<TargetType> & { url: string };
+  zaaktype: Partial<TargetType>;
 };
 
 /**
  * Updates a new zaaktype version.
  */
 export async function updateZaaktypeVersionAction(
-  action: TypedAction<"UPDATE_VERSION", PublishZaaktypeVersionPayload>,
+  action: TypedAction<"UPDATE_VERSION", UpdateZaaktypeVersionPayload>,
 ) {
   const payload = action.payload;
-  const uuid = getZaaktypeUUID(payload.zaaktype);
+  const zaaktype = payload.zaaktype;
+  const uuid = getUUIDFromString(zaaktype.uuid || zaaktype.url || "");
+  invariant(uuid, "either zaaktype.uuid or zaaktype.url must be set");
 
   try {
     await _saveZaaktypeVersion(payload.zaaktype, payload.serviceSlug);
@@ -154,7 +162,7 @@ export async function updateZaaktypeVersionAction(
  */
 export type SaveAsZaaktypePayload = {
   serviceSlug: string;
-  zaaktype: Partial<TargetType> & { url: string };
+  zaaktype: Partial<TargetType>;
 };
 
 /**
@@ -222,21 +230,56 @@ export async function saveAsAction(
  */
 export type PublishZaaktypeVersionPayload = {
   serviceSlug: string;
-  zaaktype: Partial<TargetType> & { url: string };
+  zaaktype: Partial<TargetType>;
+  versions: components["schemas"]["VersionSummary"][];
 };
 
 /**
  * Saves and publishes a zaaktype version.
  */
 export async function publishZaaktypeVersionAction(
-  action: TypedAction<"PUBLISH_VERSION", UpdateZaaktypeVersionPayload>,
+  action: TypedAction<"PUBLISH_VERSION", PublishZaaktypeVersionPayload>,
 ) {
   const payload = action.payload;
-  const uuid = getZaaktypeUUID(payload.zaaktype);
+  const zaaktype = payload.zaaktype;
+  const uuid = getUUIDFromString(zaaktype.uuid || zaaktype.url || "");
+  invariant(uuid, "either zaaktype.uuid or zaaktype.url must be set");
+
+  const versions = payload.versions;
+  const activeVersion = findActiveZaaktypeVersion(versions);
 
   await _saveZaaktypeVersion(payload.zaaktype, payload.serviceSlug);
 
   try {
+    // Unpublish current version (if any)
+    if (activeVersion) {
+      await request(
+        "PATCH",
+        `/service/${payload.serviceSlug}/zaaktypen/${activeVersion.uuid}/`,
+        undefined,
+        {
+          eindeGeldigheid: dateToIsoDateString(yesterday()),
+        },
+      );
+    }
+
+    // Set beginGeldigheid to today (if not set or clashes with previously published version)
+    if (
+      !zaaktype.beginGeldigheid ||
+      (zaaktype.beginGeldigheid &&
+        new Date(zaaktype.beginGeldigheid) <= today())
+    ) {
+      await request(
+        "PATCH",
+        `/service/${payload.serviceSlug}/zaaktypen/${uuid}/`,
+        undefined,
+        {
+          beginGeldigheid: dateToIsoDateString(today()),
+        },
+      );
+    }
+
+    // Publish new version.
     await request(
       "POST",
       `/service/${payload.serviceSlug}/zaaktypen/${uuid}/publish`,
@@ -248,10 +291,11 @@ export async function publishZaaktypeVersionAction(
 }
 
 async function _saveZaaktypeVersion(
-  zaaktype: Partial<TargetType> & { url: string },
+  zaaktype: Partial<TargetType>,
   serviceSlug: string,
 ) {
-  const uuid = getZaaktypeUUID(zaaktype);
+  const uuid = getUUIDFromString(zaaktype.uuid || zaaktype.url || "");
+  invariant(uuid, "either zaaktype.uuid or zaaktype.url must be set");
 
   await request(
     "PATCH",
@@ -338,7 +382,14 @@ export async function editRelatedObjectAction(
   action: TypedAction<"EDIT_RELATED_OBJECT", EditRelatedObjectPayload>,
 ) {
   const payload = action.payload;
-  const relatedObjectUuid = getZaaktypeUUID(payload.relatedObject);
+  const relatedObject = payload.relatedObject;
+  const relatedObjectUuid = getUUIDFromString(
+    relatedObject.uuid || relatedObject.url || "",
+  );
+  invariant(
+    relatedObjectUuid,
+    "either relatedObject.uuid or relatedObject.url must be set",
+  );
 
   try {
     await request(

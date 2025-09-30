@@ -14,7 +14,6 @@ import { SERVICE_PARAM } from "~/App.tsx";
 import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
 import { useCombinedSearchParams } from "~/hooks";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
-import { getZaaktypeUUID } from "~/lib";
 import { getUUIDFromString } from "~/lib/format/string.ts";
 import { BaseTabSection, TabConfig, TargetType } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
@@ -285,6 +284,14 @@ export const RelatedObjectRenderer = forwardRef(
      * @param relatedRow - The related row.
      */
     const handleDelete = (relatedRow: RelatedRow<T>) => {
+      const relatedRowUuid = getUUIDFromString(
+        relatedRow.uuid || relatedRow.url || "",
+      );
+      invariant(
+        relatedRowUuid,
+        "either relatedRow.uuid or relatedRow.url must be set",
+      );
+
       const isStub = SYMBOL_STUB_KEY in relatedRow;
       setRows(rows.filter((r) => r !== relatedRow));
 
@@ -296,7 +303,7 @@ export const RelatedObjectRenderer = forwardRef(
             serviceSlug: serviceSlug,
             zaaktypeUuid: zaaktypeUuid,
             relatedObjectKey: field,
-            relatedObjectUuid: getZaaktypeUUID(relatedRow) ?? "",
+            relatedObjectUuid: relatedRowUuid,
           },
         };
         setDeleteActions([...deleteActions, action]);
