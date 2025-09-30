@@ -397,6 +397,9 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 for name in editable_fields
                 if name.startswith("_expand.selectielijstProcestype")
             } == set()
+            # yet the foreign key on the zaaktype *is* editable
+            assert "selectielijstProcestype" in fields_by_name
+            assert "selectielijstProcestype" in editable_fields
 
         with self.subTest("All fields in the fieldsets should exist"):
             fields_in_fieldsets = set(

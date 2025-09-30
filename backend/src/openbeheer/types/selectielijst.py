@@ -5,11 +5,13 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
 from enum import Enum
-from typing import Annotated, List
+from typing import TYPE_CHECKING, Annotated, List
 
 from msgspec import Meta, Struct, field
+
+if TYPE_CHECKING:
+    from datetime import timedelta
 
 
 class ProcesType(Struct, kw_only=True):

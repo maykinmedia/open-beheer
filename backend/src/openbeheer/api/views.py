@@ -51,7 +51,7 @@ from openbeheer.types import (
     ZGWError,
     ZGWResponse,
 )
-from openbeheer.types._open_beheer import camelize, ob_fields_of_type
+from openbeheer.types._open_beheer import ob_fields_of_type
 from openbeheer.utils.decorators import handle_service_errors
 
 if TYPE_CHECKING:
@@ -623,15 +623,26 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     def _expand(self, client, object: T):
         return expand_one(client, self.expansions, object)
 
-    def get_fields(self, data: T, option_overrides={}) -> list[OBField]:
-        ob_fields = ob_fields_of_type(self.data_type, option_overrides=option_overrides)
-        expansions = set(map(camelize, self.expansions))
+    def get_fields(
+        self,
+        data: T,
+        option_overrides: Mapping[str, list[OBOption]] = {},
+        *,
+        base_editable: Callable[[str], bool] = bool,
+    ) -> Iterable[OBField]:
+        """Create OBFields for the attributes on `data`
 
-        def adapt[F: OBField](field: F) -> F:
-            field.editable &= field.name not in expansions
-            return field
-
-        return [adapt(f) for f in ob_fields]
+        :param option_overrides: Mapping[field name, list[OBOption[field type]]]
+                                 Options are inferred from the type annotation of
+                                 `self.data_type`, but that may be set more general.
+        :param base_editable: A function that takes a field name and returns whether
+                              that field should be editable.
+        """
+        return ob_fields_of_type(
+            self.data_type,
+            option_overrides=option_overrides,
+            base_editable=base_editable,
+        )
 
     def _has_return_type(self, obj: object) -> TypeIs[T | ZGWError]:
         # obj has correct return_data_type, so we can return it
@@ -661,7 +672,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             versions=(versions if self.has_versions else UNSET),
             result=data,
             fieldsets=self.get_fieldsets(),
-            fields=self.get_fields(data),
+            fields=list(self.get_fields(data)),
         )
 
         return Response(response_data)
@@ -708,7 +719,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             versions=versions if self.has_versions else UNSET,
             result=data,
             fieldsets=self.get_fieldsets(),
-            fields=self.get_fields(data),
+            fields=list(self.get_fields(data)),
         )
 
         return Response(response_data)
