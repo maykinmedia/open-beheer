@@ -1,12 +1,12 @@
 from functools import cache
-from typing import Iterator, NoReturn, Protocol
+from typing import Iterator, NoReturn, Protocol, runtime_checkable
 
-import msgspec
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as __
 
+import msgspec
 from ape_pie import APIClient
 from msgspec.json import decode
 from zgw_consumers.client import build_client
@@ -94,6 +94,7 @@ def _(sender, instance, **_):
     objecttypen_client.cache_clear()
 
 
+@runtime_checkable
 class ZGWPagedResponseProtocol[T](Protocol):
     next: str | None
     results: list[T]
@@ -102,14 +103,23 @@ class ZGWPagedResponseProtocol[T](Protocol):
 def iter_pages[T](
     client: APIClient, response: ZGWPagedResponseProtocol[T], response_type=None
 ) -> Iterator[T]:
+    yield from response.results
+
+    # TODO: test and fix iter_pages, maybe we can drop `response_type` param again
+    # response.__class__ may decode to dicts, instead of T
     response_type = (
         msgspec.defstruct(
-            "johan", fields=[("next", str | None), ("results", list[response_type])]
+            str(response_type),
+            fields=[
+                ("next", str | None),  # type: ignore  # UnionType does work
+                ("results", list[response_type]),
+            ],
         )
         if response_type
         else response.__class__
     )
-    yield from response.results
+
+    assert isinstance(response_type, ZGWPagedResponseProtocol)
 
     while next_url := response.next:
         resp = client.get(next_url)

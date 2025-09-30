@@ -4,7 +4,7 @@ from typing import Annotated
 from unittest import TestCase
 
 from hypothesis import assume, given, strategies as st  # noqa: F401
-from msgspec import Meta, Struct
+from msgspec import UNSET, Meta, Struct
 from msgspec.json import decode, encode
 
 from . import ztc
@@ -81,6 +81,7 @@ class OBOptionsTest(TestCase):
     def test_length(self, enum):
         "Every enum member should have an OBOption"
         ob_options = options(enum)
+        assert ob_options is not UNSET
         assert len(ob_options) == len(enum)
 
     @given(enum=st.sampled_from(ZTC_ENUMS))
@@ -88,6 +89,7 @@ class OBOptionsTest(TestCase):
         "Every OBOption.value should be a valid Enum value"
         ob_options = options(enum)
 
+        assert ob_options is not UNSET
         for option in ob_options:
             assert option.value in enum
 
@@ -96,4 +98,6 @@ class OBOptionsTest(TestCase):
             ztc.VertrouwelijkheidaanduidingEnum, Meta(description="blabla")
         ]
         ob_options = options(enum_annotation)
+
+        assert ob_options is not UNSET
         assert len(ob_options) == len(ztc.VertrouwelijkheidaanduidingEnum)

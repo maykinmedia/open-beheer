@@ -95,7 +95,7 @@ jobs:
         working-directory: backend
       - uses: jakebailey/pyright-action@v1
         with:
-          version: 1.1.369
+          version: 1.1.405
           project: pyright-ci-pyproject.toml
 
   backend-oas:
@@ -107,9 +107,9 @@ jobs:
       - name: Set up backend environment
         uses: maykinmedia/setup-django-backend@v1.3
         with:
-          apt-packages: 'gettext'
-          python-version: '3.12'
-          setup-node: 'no'
+          apt-packages: "gettext"
+          python-version: "3.12"
+          setup-node: "no"
           working-directory: backend
 
       - name: Generate OAS
@@ -143,8 +143,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: 'frontend/.nvmrc'
-          
+          node-version-file: "frontend/.nvmrc"
+
       - name: Install frontend dependencies
         run: npm ci
 

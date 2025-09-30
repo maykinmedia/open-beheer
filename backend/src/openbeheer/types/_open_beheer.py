@@ -199,7 +199,8 @@ def fetch_objecttype_options():
 
 def options(t: type | UnionType | Annotated) -> list[OBOption] | UnsetType:
     "Find an enum in the type and turn it into options."
-    match t:
+
+    match t:  # 😭 Why does Annotated rsult in an Any judgement
         case enum.EnumType():
             return OBOption.from_enum(t)
         case _ if get_args(t):
@@ -242,8 +243,9 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
         self.name = camelize(self.name)
 
 
-def _core_type(annotation: type) -> type:
+def _core_type(annotation) -> type:
     """Drill down into Generics / Annotations and return the main type"""
+    # `annotation` has no annotation, because pyright can't follow `get_args` correctly
 
     match get_args(annotation):
         case ():
@@ -603,8 +605,7 @@ class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
             max_length=1000,
         ),
     ]
-    selectielijstklasse: Annotated[
-        # pyright: ignore[reportIncompatibleVariableOverride]
+    selectielijstklasse: Annotated[  # pyright: ignore[reportIncompatibleVariableOverride]
         ResultaatURL,
         Meta(
             description="URL-referentie naar de, voor het archiefregime bij het RESULTAATTYPE relevante, categorie in de Selectielijst Archiefbescheiden (RESULTAAT in de Selectielijst API) van de voor het ZAAKTYPE verantwoordelijke overheidsorganisatie.",

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime  # noqa: TC003
 from functools import partial
-from typing import TYPE_CHECKING, Annotated, Iterable, Mapping, override
+from typing import TYPE_CHECKING, Annotated, Callable, Iterable, Mapping, override
 
 from django.utils.translation import gettext as _
 
@@ -55,10 +55,8 @@ from openbeheer.types._open_beheer import (
     LAXProcesType,
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
-    as_ob_option,
     fetch_resultaat_options,
 )
-from openbeheer.types.selectielijst import Resultaat
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
@@ -74,6 +72,7 @@ from openbeheer.types.ztc import (
     ZaakType,
     ZaakTypeRequest,
 )
+from openbeheer.utils import camelize
 from openbeheer.zaaktype.constants import (
     TEMPLATE_MAPPING,
     ZAAKTYPE_FIELDSETS,
@@ -426,8 +425,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             "besluittypen",
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
-            lambda zt: {"zaaktypen": zt.url, "status": "alles"},
-            # pyright: ignore[reportAttributeAccessIssue]
+            lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
             BesluitTypeWithUUID,
         ),
         "statustypen": make_expansion(
@@ -449,6 +447,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         ),
         "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": expand_zaakobjecttypen,
+        "selectielijst_procestype": expand_selectielijstprocestype,
     }
 
     def get_item_versions(
@@ -485,17 +484,28 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         )
 
     def get_fields(
-        self, data: ExpandableZaakType, option_overrides={}
-    ) -> list[OBField]:
+        self,
+        data: ExpandableZaakType,
+        option_overrides: Mapping[str, list[OBOption]] = {},
+        *,
+        base_editable: Callable[[str], bool] = bool,
+    ) -> Iterable[OBField]:
         selectielijst_options = (
             fetch_resultaat_options(procestype_url=data.selectielijst_procestype)
             if data.selectielijst_procestype
             else []
         )
-        fields = super().get_fields(
-            data, option_overrides={"selectielijstklasse": selectielijst_options}
+
+        expansions = set(map(camelize, self.expansions))
+
+        return super().get_fields(
+            data,
+            option_overrides={"selectielijstklasse": selectielijst_options},
+            base_editable=(
+                # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
+                lambda name: name != "selectielijstProcestype" or name not in expansions
+            ),
         )
-        return fields
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
