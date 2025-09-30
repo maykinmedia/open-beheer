@@ -31,6 +31,7 @@ import {
   RelatedObjectRenderer,
   RelatedObjectRendererHandle,
 } from "~/components/related";
+import zaaktype from "~/fixtures/zaaktype.ts";
 import {
   useBreadcrumbItems,
   useCombinedSearchParams,
@@ -38,7 +39,11 @@ import {
 } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
-import { getZaaktypeUUID } from "~/lib";
+import { findConceptZaaktypeVersion, getZaaktypeUUID } from "~/lib";
+import {
+  findActiveZaaktypeVersion,
+  sortZaaktypeVersions,
+} from "~/lib/zaaktype";
 import { getZaaktypeCreateFields } from "~/lib/zaaktype/zaaktypeCreate.ts";
 import {
   AttributeGridSection,
@@ -69,9 +74,8 @@ export function ZaaktypePage() {
   const { fields, fieldsets, result, versions } =
     useLoaderData() as ZaaktypeLoaderData;
 
-  const [pendingUpdatesState, setPendingUpdatesState] = useState<
-    Partial<TargetType> & { url: string }
-  >({ url: result.url });
+  const [pendingUpdatesState, setPendingUpdatesState] =
+    useState<Partial<TargetType> | null>(null);
   const possiblyUpdatedResult = { ...result, ...pendingUpdatesState };
 
   const formDialog = useFormDialog();
@@ -84,33 +88,19 @@ export function ZaaktypePage() {
 
   // Versions sorted by date.
   const sortedVersions = useMemo(
-    () =>
-      [...(versions || [])].sort(
-        (a, b) =>
-          new Date(a.beginGeldigheid).getTime() -
-          new Date(b.beginGeldigheid).getTime(),
-      ),
+    () => sortZaaktypeVersions(versions || []),
     [versions],
   );
 
   // The (last) concept version, we assume there should be max 1.
-  const conceptVersion = useMemo(() => {
-    const concepts = sortedVersions.filter((v) => v.concept);
-    return concepts[0];
-  }, [sortedVersions]);
+  const conceptVersion = useMemo(
+    () => findConceptZaaktypeVersion(sortedVersions),
+    [sortedVersions],
+  );
 
   // The current active (but not necessarily selected) versions
-  const today = new Date();
   const currentVersion = useMemo(
-    () =>
-      sortedVersions.find((v) => {
-        const beginDate = new Date(v.beginGeldigheid);
-        const endDate = v.eindeGeldigheid ? new Date(v.eindeGeldigheid) : null;
-
-        return (
-          !v.concept && beginDate <= today && (!endDate || endDate > today)
-        );
-      }),
+    () => findActiveZaaktypeVersion(versions || []),
     [sortedVersions],
   );
 
@@ -171,6 +161,8 @@ export function ZaaktypePage() {
    * Gets called when the edit button is clicked.
    */
   const handleEdit = useCallback<React.MouseEventHandler>(() => {
+    invariant(conceptVersion, "concept version (uuid) must be set");
+
     submitAction({
       type: "EDIT_VERSION",
       payload: {
@@ -183,6 +175,7 @@ export function ZaaktypePage() {
    * Gets called when the cancel button is clicked.
    */
   const handleCancel = useCallback<React.MouseEventHandler>(() => {
+    invariant(conceptVersion, "concept version (uuid) must be set");
     relatedRendererRef.current?.cancel();
 
     submitAction({
@@ -191,7 +184,7 @@ export function ZaaktypePage() {
         uuid: currentVersion?.uuid || conceptVersion.uuid,
       },
     });
-  }, [currentVersion?.uuid, conceptVersion?.uuid]);
+  }, [relatedRendererRef.current, currentVersion?.uuid, conceptVersion?.uuid]);
 
   /**
    * Gets called when the relatedObject is changed.
@@ -221,6 +214,8 @@ export function ZaaktypePage() {
    * Gets called when the edit button is clicked.
    */
   const handleSave = useCallback<React.MouseEventHandler>(async () => {
+    invariant(conceptVersion, "concept version (uuid) must be set");
+
     const saveActions = relatedRendererRef.current?.getSaveActions() || [];
 
     const zaaktype = result;
@@ -241,7 +236,7 @@ export function ZaaktypePage() {
     await submitAction({
       type: "BATCH",
       payload: {
-        zaaktype,
+        zaaktype: { ...(pendingUpdatesState || {}), uuid: conceptVersion.uuid },
         actions: deletions,
       },
     });
@@ -256,15 +251,24 @@ export function ZaaktypePage() {
             type: "UPDATE_VERSION",
             payload: {
               serviceSlug: serviceSlug as string,
-              zaaktype: pendingUpdatesState,
+              zaaktype: {
+                ...(pendingUpdatesState || {}),
+                uuid: conceptVersion?.uuid,
+              },
             },
           },
           ...updates,
         ],
       },
     });
-    setPendingUpdatesState({ url: result.url });
-  }, [serviceSlug, pendingUpdatesState]);
+    setPendingUpdatesState(null);
+  }, [
+    relatedRendererRef.current,
+    result,
+    pendingUpdatesState,
+    conceptVersion?.uuid,
+    serviceSlug,
+  ]);
 
   /**
    * Gets called when the edit button is clicked.
@@ -292,20 +296,23 @@ export function ZaaktypePage() {
       "Annuleren",
       handle,
     );
-  }, [serviceSlug, pendingUpdatesState]);
+  }, [result, serviceSlug, zaaktype, fields, pendingUpdatesState]);
 
   /**
    * Gets called when the edit button is clicked.
    */
   const handlePublish = useCallback<React.MouseEventHandler>(() => {
+    invariant(conceptVersion, "concept version (uuid) must be set");
+
     submitAction({
       type: "PUBLISH_VERSION",
       payload: {
         serviceSlug: serviceSlug as string,
-        zaaktype: pendingUpdatesState,
+        zaaktype: { ...(pendingUpdatesState || {}), uuid: conceptVersion.uuid },
+        versions: sortedVersions,
       },
     });
-  }, [serviceSlug, pendingUpdatesState]);
+  }, [serviceSlug, pendingUpdatesState, conceptVersion?.uuid, sortedVersions]);
 
   return (
     <CardBaseTemplate
