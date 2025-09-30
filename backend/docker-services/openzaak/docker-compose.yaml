@@ -44,19 +44,23 @@ services:
       - CELERY_BROKER_URL=redis://openzaak-redis:6379/1
       - CELERY_RESULT_BACKEND=redis://openzaak-redis:6379/1
       - NOTIFICATIONS_DISABLED=true
-      - JWT_EXPIRY=99999999999  # Roughly 3170 years. This is required for tests with time frozen to work
+      - JWT_EXPIRY=99999999999 # Roughly 3170 years. This is required for tests with time frozen to work
       - CELERY_WORKER_CONCURRENCY=${CELERY_WORKER_CONCURRENCY:-2}
       - DISABLE_2FA=yes
-    volumes: &openzaak_web_volumes
-      # mount fixtures dir to automatically populate the DB
+    volumes:
+      &openzaak_web_volumes # mount fixtures dir to automatically populate the DB
       - ./fixtures/:/app/fixtures
-      - media:/app/media  # Shared media volume to get access to saved OAS files
+      - media:/app/media # Shared media volume to get access to saved OAS files
       - private-media:/app/private-media
     depends_on:
       - openzaak-db
       - openzaak-redis
     networks:
       - openzaak-dev
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
 
   celery:
     image: openzaak/open-zaak:${OPENZAAK_VERSION:-1.21.0}
