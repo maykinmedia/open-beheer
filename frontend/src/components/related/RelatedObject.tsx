@@ -69,6 +69,8 @@ export const RelatedObjectRenderer = forwardRef(
     props: RelatedObjectRendererProps<T>,
     ref: Ref<RelatedObjectRendererHandle>,
   ) => {
+    const { expandFields, field, fields, object, relatedObject, view } = props;
+
     useImperativeHandle<
       RelatedObjectRendererHandle,
       RelatedObjectRendererHandle
@@ -87,7 +89,6 @@ export const RelatedObjectRenderer = forwardRef(
       },
     }));
 
-    const { expandFields, field, fields, object, relatedObject, view } = props;
     const [combinedSearchParams] = useCombinedSearchParams();
     const isEditing = Boolean(combinedSearchParams.get("editing"));
     invariant("url" in object, "object should have url!");
@@ -120,29 +121,33 @@ export const RelatedObjectRenderer = forwardRef(
       }
     });
 
-    const typedFields = fields
-      .filter((backendField) => expandFieldsNames.includes(backendField.name))
-      .map((backendField) => {
-        // The expandFields can be either strings (just the name of the field to show) or objects, with
-        // more configurations for the field.
-        const frontendExtras = expandFields.find(
-          (expandField) =>
-            typeof expandField !== "string" &&
-            expandField.name === backendField.name,
-        ) as TypedField<RelatedObject<T>> | undefined;
+    const expandTypedFields = fields.filter((backendField) => {
+      if (!backendField.name.includes(".")) return; // Not a related path.
+      const backendFieldNameLeaf = backendField.name.split(".").pop();
+      return expandFieldsNames.includes(backendFieldNameLeaf as string);
+    });
 
-        const fieldPrefix = `_expand.${field}.`;
-        return {
-          ...frontendExtras,
-          ...backendField,
-          // Only editable when isEditing.
-          editable: isEditing ? backendField.editable : false,
-          // We removed the prefix, so now the keys are fields of the expanded object.
-          name: backendField.name.replace(fieldPrefix, "") as ExpandItemKeys<T>,
-          // Show inputs instead of text area's.
-          type: backendField.type === "text" ? "string" : backendField.type,
-        };
-      });
+    const typedFields = expandTypedFields.map((backendField) => {
+      // The expandFields can be either strings (just the name of the field to show) or objects, with
+      // more configurations for the field.
+      const frontendExtras = expandFields.find(
+        (expandField) =>
+          typeof expandField !== "string" &&
+          expandField.name === backendField.name,
+      ) as TypedField<RelatedObject<T>> | undefined;
+
+      const fieldPrefix = `_expand.${field}.`;
+      return {
+        ...frontendExtras,
+        ...backendField,
+        // Only editable when isEditing.
+        editable: isEditing ? backendField.editable : false,
+        // We removed the prefix, so now the keys are fields of the expanded object.
+        name: backendField.name.replace(fieldPrefix, "") as ExpandItemKeys<T>,
+        // Show inputs instead of text area's.
+        type: backendField.type === "text" ? "string" : backendField.type,
+      };
+    });
 
     const fieldNames = typedFields.map((t) => t.name);
 
@@ -395,7 +400,7 @@ export const RelatedObjectRenderer = forwardRef(
       );
     }
 
-    // Assume for attribute grid.
+    // items within an AttributeGrid.
     return relatedObject.map((relatedObject, index) => (
       <RelatedObjectBadge
         key={typeof relatedObject.url === "string" ? relatedObject.url : index}
