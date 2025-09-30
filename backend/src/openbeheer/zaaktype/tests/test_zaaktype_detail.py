@@ -400,6 +400,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             # yet the foreign key on the zaaktype *is* editable
             assert "selectielijstProcestype" in fields_by_name
             assert "selectielijstProcestype" in editable_fields
+            # but statustypen has a tab
+            assert "statustypen" not in editable_fields
 
         with self.subTest("All fields in the fieldsets should exist"):
             fields_in_fieldsets = set(

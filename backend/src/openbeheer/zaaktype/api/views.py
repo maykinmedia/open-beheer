@@ -515,7 +515,8 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             },
             base_editable=(
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
-                lambda name: name != "selectielijstProcestype" or name not in expansions
+                lambda name: name != "selectielijstProcestype"
+                and name not in expansions
             ),
         )
 
