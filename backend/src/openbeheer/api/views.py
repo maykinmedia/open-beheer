@@ -51,7 +51,7 @@ from openbeheer.types import (
     ZGWError,
     ZGWResponse,
 )
-from openbeheer.types._open_beheer import ob_fields_of_type
+from openbeheer.types._open_beheer import CamelCaseFieldName, ob_fields_of_type
 from openbeheer.utils.decorators import handle_service_errors
 
 if TYPE_CHECKING:
@@ -426,19 +426,20 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
     def parse_ob_fields(
         self,
         params: P,
-        option_overrides: Mapping[str, list[OBOption]] = {},
+        option_overrides: Mapping[CamelCaseFieldName, list[OBOption]] = {},
         *,
         sort_key: Callable[[OBField], Comparable] = lambda f: f.name,
-        base_editable: Callable[[str], bool] = bool,
+        base_editable: Callable[[CamelCaseFieldName], bool] = bool,
     ) -> list[OBField]:
         """Create OBFields for the attributes on `self.data_type`
 
         :param params: Incoming query params, so we can echo values back
-        :param option_overrides: Mapping[field name, list[OBOption[field type]]]
-                                 Options are inferred from the type annotation of
-                                 `self.data_type`, but that may be set more general.
-        :param base_editable: A function that takes a field name and returns wheter
-                              that field should be editable.
+        :param option_overrides: Normally options are inferred from type annotations
+            of `self.return_data_type`, but they may be overridden here.
+        :param base_editable: Predicate that takes a field name and returns whether
+            that field should be editable. This acts as a baseline condition and is
+            logically ANDed with the editability inferred from type annotations and
+            other rules.
         """
         return sorted(
             ob_fields_of_type(
@@ -630,13 +631,14 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
         *,
         base_editable: Callable[[str], bool] = bool,
     ) -> Iterable[OBField]:
-        """Create OBFields for the attributes on `data`
+        """Create OBFields for attributes on `data`.
 
-        :param option_overrides: Mapping[field name, list[OBOption[field type]]]
-                                 Options are inferred from the type annotation of
-                                 `self.data_type`, but that may be set more general.
-        :param base_editable: A function that takes a field name and returns whether
-                              that field should be editable.
+        :param option_overrides: Normally options are inferred from type annotations
+            of `self.return_data_type`, but they may be overridden here.
+        :param base_editable: Predicate that takes a field name and returns whether
+            that field should be editable. This acts as a baseline condition and is
+            logically ANDed with the editability inferred from type annotations and
+            other rules.
         """
         return ob_fields_of_type(
             self.data_type,
