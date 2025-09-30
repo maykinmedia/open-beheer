@@ -17,6 +17,7 @@ from typing import (
     Self,
     Sequence,
     Type,
+    TypeAlias,
     get_args,
     get_type_hints,
 )
@@ -50,6 +51,9 @@ from .ztc import (
     ZaakType,
     ZaakTypeRequest,
 )
+
+CamelCaseFieldName: TypeAlias = str
+"e.g.: _expand.roltype.omschrijvingGeneriek"
 
 
 class OBPagedQueryParams(Struct):
@@ -210,7 +214,7 @@ def options(t: type | UnionType | Annotated) -> list[OBOption] | UnsetType:
         case _ if t is ResultaatTypeOmschrijvingURL:
             return fetch_resultaattypeomschrijving_options()
         case _ if t is ResultaatURL:
-            return fetch_resultaat_options()
+            return fetch_selectielijst_resultaat_options()
         case _ if t is ObjectTypeURL:
             return fetch_objecttype_options()
         case _:
@@ -264,28 +268,26 @@ def _core_type(annotation) -> type:
 def ob_fields_of_type(
     data_type: type,
     query_params: OBPagedQueryParams | None = None,
-    option_overrides: Mapping[str, list[OBOption]] = {},
+    option_overrides: Mapping[CamelCaseFieldName, list[OBOption]] = {},
     *,
     prefix: str = "",
-    base_editable: Callable[[str], bool] = bool,
+    base_editable: Callable[[CamelCaseFieldName], bool] = bool,
 ) -> Iterable[OBField]:
     """
     Return the :class:`OBField` instances for the given `data_type`.
 
     :param data_type: The type whose annotated attributes should be converted
-                      into :class:`OBField` definitions.
+        into :class:`OBField` definitions.
     :param query_params: Optional query parameters used to determine
-                         `filter_lookup` and `filter_value`.
-    :param option_overrides: A mapping from field name to a list of options
-                             (:class:`OBOption`) for that field. Normally
-                             options are inferred from type annotations of
-                             `data_type`, but they may be overridden here.
+        `filter_lookup` and `filter_value`.
+    :param option_overrides: Normally options are inferred from type annotations
+        of `data_type`, but they may be overridden here.
     :param prefix: String prefix to prepend to the field `name` when recursing
-                   into nested structures (e.g. "_expand").
+        into nested structures (e.g. "_expand").
     :param base_editable: Predicate that takes a field name and returns whether
-                          that field should be editable. This acts as a baseline
-                          condition and is logically ANDed with the editability
-                          inferred from type annotations and other rules.
+        that field should be editable. This acts as a baseline condition and is
+        logically ANDed with the editability inferred from type annotations and
+        other rules.
     """
 
     def to_ob_fields(name: str, annotation: type) -> list[OBField]:
@@ -304,15 +306,16 @@ def ob_fields_of_type(
         # closure over option_overrides
         not_applicable = object()
 
+        prefixed_name: CamelCaseFieldName = prefix + name
+
         ob_field = OBField(
-            name=name,
+            name=prefixed_name,
             type=as_ob_fieldtype(annotation),
-            options=option_overrides.get(name, options(annotation)),
+            options=option_overrides.get(prefixed_name, options(annotation)),
             # only editable if neither the whole type nor the attribute type is READ_ONLY
-            editable=base_editable(name)
+            editable=base_editable(prefixed_name)
             and not (set(map(_core_type, (data_type, annotation))) & READ_ONLY_TYPES),
         )
-        ob_field.name = prefix + ob_field.name
 
         if query_params:
             for filter_name in [name, f"{name}__in"]:
@@ -569,7 +572,7 @@ def _resultaat_as_option(resultaat: LAXResultaat, **kwargs) -> OBOption[Resultaa
     )
 
 
-def fetch_resultaat_options(
+def fetch_selectielijst_resultaat_options(
     procestype_url: str | None = None,
 ) -> list[OBOption[LAXResultaat]]:
     resultaten = fetch_resultaten()

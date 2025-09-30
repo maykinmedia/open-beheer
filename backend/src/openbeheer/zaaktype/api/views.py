@@ -2,7 +2,14 @@ from __future__ import annotations
 
 import datetime  # noqa: TC003
 from functools import partial
-from typing import TYPE_CHECKING, Annotated, Callable, Iterable, Mapping, override
+from typing import (
+    TYPE_CHECKING,
+    Annotated,
+    Callable,
+    Iterable,
+    Mapping,
+    override,
+)
 
 from django.utils.translation import gettext as _
 
@@ -49,13 +56,14 @@ from openbeheer.types import (
     ZGWResponse,
 )
 from openbeheer.types._open_beheer import (
+    CamelCaseFieldName,
     ExpandableZaakObjectTypeWithUUID,
     ExpandableZaakType,
     ExpandableZaakTypeRequest,
     LAXProcesType,
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
-    fetch_resultaat_options,
+    fetch_selectielijst_resultaat_options,
 )
 from openbeheer.types.ztc import (
     BesluitType,
@@ -486,12 +494,14 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     def get_fields(
         self,
         data: ExpandableZaakType,
-        option_overrides: Mapping[str, list[OBOption]] = {},
+        option_overrides: Mapping[CamelCaseFieldName, list[OBOption]] = {},
         *,
-        base_editable: Callable[[str], bool] = bool,
+        base_editable: Callable[[CamelCaseFieldName], bool] = bool,
     ) -> Iterable[OBField]:
         selectielijst_options = (
-            fetch_resultaat_options(procestype_url=data.selectielijst_procestype)
+            fetch_selectielijst_resultaat_options(
+                procestype_url=data.selectielijst_procestype
+            )
             if data.selectielijst_procestype
             else []
         )
@@ -500,7 +510,9 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
 
         return super().get_fields(
             data,
-            option_overrides={"selectielijstklasse": selectielijst_options},
+            option_overrides={
+                "_expand.resultaattypen.selectielijstklasse": selectielijst_options
+            },
             base_editable=(
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
                 lambda name: name != "selectielijstProcestype" or name not in expansions
