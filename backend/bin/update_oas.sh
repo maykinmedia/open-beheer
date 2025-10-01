@@ -21,5 +21,3 @@ src/manage.py spectacular \
 cd $FRONTEND_ROOT
 npm ci
 npm run update-types
-
-go_back
