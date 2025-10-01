@@ -731,5 +731,5 @@ READ_ONLY_TYPES = {
     for module in [selectielijst, objecttypen]
     for name in dir(module)
     if (t := getattr(module, name))
-    if isinstance(t, type)
+    if isinstance(t, type) and issubclass(t, Struct)
 } | {LAXProcesType, UUID}
