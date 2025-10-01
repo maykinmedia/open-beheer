@@ -536,6 +536,14 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
                     data
                 ),
                 "_expand.resultaattypen.selectielijstklasse": selectielijst_options,
+                "_expand.eigenschappen.statustype": [
+                    OBOption(label=statustype.omschrijving, value=statustype.url)
+                    for statustype in (
+                        data._expand.statustypen
+                        if data._expand.statustypen is not UNSET
+                        else []
+                    )
+                ],
             },
             base_editable=(
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
