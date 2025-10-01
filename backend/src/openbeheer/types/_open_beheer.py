@@ -307,7 +307,7 @@ def ob_fields_of_type(
         # closure over option_overrides
         not_applicable = object()
 
-        prefixed_name: CamelCaseFieldName = prefix + name
+        prefixed_name: CamelCaseFieldName = camelize(prefix + name)
 
         ob_field = OBField(
             name=prefixed_name,
