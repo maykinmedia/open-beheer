@@ -1,3 +1,4 @@
+import { Errors, useAlert } from "@maykin-ui/admin-ui";
 import { cacheGet, cacheSet } from "@maykin-ui/client-common";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -19,6 +20,7 @@ export function useCatalogi(
   const [catalogiChoices, setCatalogiChoices] = useState<
     components["schemas"]["OBOption_str_"][]
   >([]);
+  const alert = useAlert();
 
   const handleCatalogusChange = (newCatalogusId: string) => {
     if (newCatalogusId) {
@@ -57,7 +59,15 @@ export function useCatalogi(
           }
         }
       } catch (error) {
-        console.error("Failed to fetch catalogi choices:", error);
+        const messages: string[] = ["Failed to fetch catalogi choices."];
+        if (error instanceof Response) {
+          messages.push(`Status: ${error.status}, ${error.statusText}`);
+        }
+        alert(
+          "Foutmelding",
+          (<Errors errors={messages} />) as unknown as string, // TODO: Fix in admin-ui
+          "Ok",
+        );
       }
     };
 
