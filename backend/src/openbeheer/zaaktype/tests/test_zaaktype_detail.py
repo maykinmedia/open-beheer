@@ -404,6 +404,22 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             # but statustypen has a tab
             assert "statustypen" not in editable_fields
 
+            assert (
+                fields_by_name["_expand.eigenschappen.beginGeldigheid"]["type"]
+                == "date"
+            )
+            assert "_expand.eigenschappen.naam" in editable_fields
+            assert "_expand.eigenschappen.beginGeldigheid" in editable_fields
+            assert (
+                fields_by_name["_expand.eigenschappen.eindeGeldigheid"]["type"]
+                == "date"
+            )
+            assert "_expand.eigenschappen.eindeGeldigheid" in editable_fields
+
+            assert fields_by_name["_expand.eigenschappen.statustype"]["options"] == [
+                {"label": statustype.omschrijving, "value": statustype.url}
+            ]
+
         with self.subTest("All fields in the fieldsets should exist"):
             fields_in_fieldsets = set(
                 sum((fieldset["fields"] for _, fieldset in data["fieldsets"]), [])
