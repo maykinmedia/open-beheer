@@ -70,7 +70,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
             fields=[
                 "_expand.statustypen.volgnummer",
                 "_expand.statustypen.omschrijving",
-                "_expand.statustypen.omschrijving_generiek",
+                # "_expand.statustypen.omschrijving_generiek",
                 # "_expand.statustypen.uuid",
             ]
         ),

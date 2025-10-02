@@ -189,7 +189,7 @@ export const RelatedObjectRenderer = forwardRef(
                   break;
                 }
                 if (name === "omschrijvingGeneriek") {
-                  value = "behandelaar";
+                  value = "";
                   break;
                 }
                 if (name === "selectielijstklasse") {
