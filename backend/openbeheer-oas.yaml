@@ -4,6 +4,17 @@ info:
   version: 0.1.0
   description: Open Beheer
 paths:
+  /api/v1/auth/ensure-csrf/:
+    get:
+      operationId: auth_ensure_csrf_retrieve
+      summary: Get CSRF cookie
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/v1/auth/login/:
     post:
       operationId: auth_login_create

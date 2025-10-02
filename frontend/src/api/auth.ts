@@ -4,6 +4,10 @@ import { components } from "~/types";
 
 import { OidcInfoType } from "./types";
 
+export function ensureCSRF() {
+  return request("GET", "/auth/ensure-csrf");
+}
+
 /**
  * API call for login.
  * @param username - username of the user

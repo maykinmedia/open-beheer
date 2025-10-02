@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout
+from django.middleware.csrf import get_token
 from django.utils.translation import gettext_lazy as _
 
 from drf_spectacular.utils import extend_schema
@@ -9,6 +10,18 @@ from rest_framework.views import APIView
 
 from .authentication import AnonCSRFSessionAuthentication
 from .serializers import AuthSerializer
+
+
+@extend_schema(
+    summary=_("Get CSRF cookie"),
+    responses={204: None},
+)
+class EnsureCSRFView(APIView):
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        get_token(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema(
