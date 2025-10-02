@@ -77,8 +77,12 @@ export function useSubmitAction<T extends TypedAction = TypedAction>(
           [name, reason].join(": "),
         );
       } else {
-        messages = collectErrorMessages(actionData);
+        const collectedMessages = collectErrorMessages(actionData);
+        messages = collectedMessages.length
+          ? collectedMessages
+          : "Er is een onbekende fout opgetreden.";
       }
+
       alert(
         "Foutmelding",
         (<Errors errors={messages} />) as unknown as string, // TODO: Fix in admin-ui
