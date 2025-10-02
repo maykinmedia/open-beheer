@@ -178,26 +178,8 @@ export const RelatedObjectRenderer = forwardRef(
               case "boolean":
                 value = false;
                 break;
-              // Default value based on name.
+              // Default behavior based on name.
               default:
-                if (name === "archiefnominatie") {
-                  value = "blijvend_bewaren";
-                  break;
-                }
-                if (name === "brondatumArchiefprocedure") {
-                  value = null;
-                  break;
-                }
-                if (name === "omschrijvingGeneriek") {
-                  value = "";
-                  break;
-                }
-                if (name === "selectielijstklasse") {
-                  break;
-                }
-                if (name === "uuid") {
-                  break;
-                }
                 value = `${string2Title(name as string)} ${nextIndex}`;
             }
           }
