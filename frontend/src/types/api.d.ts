@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/auth/ensure-csrf/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get CSRF cookie */
+        get: operations["auth_ensure_csrf_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login/": {
         parameters: {
             query?: never;
@@ -3126,6 +3143,24 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    auth_ensure_csrf_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     auth_login_create: {
         parameters: {
             query?: never;
