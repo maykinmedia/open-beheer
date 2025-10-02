@@ -1,9 +1,11 @@
 import {
   Button,
   DataGrid,
+  Field,
   Outline,
   TypedField,
   field2TypedField,
+  fields2TypedFields,
 } from "@maykin-ui/admin-ui";
 import { string2Title } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
@@ -24,6 +26,18 @@ import { getUUIDFromString } from "~/lib/format/string.ts";
 import { TabConfig, TargetType } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { ExpandItemKeys, RelatedObject, components } from "~/types";
+
+/**
+ * This refers to the fields in an object which are allowed to be rendered for
+ * an related object. If none of those match: an attempt is made to automatically
+ * find candidates.
+ */
+const DEFAULT_ALLOWED_FIELDS = [
+  "procestype",
+  "naam",
+  "omschrijving",
+  "objecttype",
+];
 
 const SYMBOL_STUB_KEY = Symbol(
   "SYMBOL_STUB_KEY, used to identify the position of the stub in `rows`",
@@ -50,12 +64,12 @@ type RelatedObjectRendererProps<T extends TargetType> = {
   relatedObject: RelatedObject<T>;
   /** The type of view to render (e.g., "DataGrid" or "AttributeGrid"). */
   view: TabConfig<T>["view"];
-  /** The set of fields to expand and render. */
-  expandFields: TypedField[];
   /** The specific expanded field key. */
   field: ExpandItemKeys<T>;
   /** Possible fields. */
   fields: components["schemas"]["OBField"][];
+  /** The set of fields to expand and render. */
+  expandFields?: Array<Field<T> | TypedField<T>>;
 };
 
 export type RelatedObjectRendererHandle = {
@@ -75,7 +89,45 @@ export const RelatedObjectRenderer = forwardRef(
     props: RelatedObjectRendererProps<T>,
     ref: Ref<RelatedObjectRendererHandle>,
   ) => {
-    const { expandFields, field, fields, object, relatedObject, view } = props;
+    const {
+      expandFields: _expandFields,
+      field,
+      fields,
+      object,
+      relatedObject,
+      view,
+    } = props;
+
+    // WHen expandFields is not explicitly set, resolve it by finding all text fields
+    // that start with the "_expand." prefix followed by the name of the field.
+    // The value is used to determine:
+    //
+    // - What field names to allow as representation for an related object (after
+    //    stripping "expand." prefix) in "AttributeGrid" presentation.
+    //
+    // - What fields to render in "DataGrid" presentation.
+    const expandFields = _expandFields
+      ? fields2TypedFields(_expandFields)
+      : (fields
+          .filter((f) => f.type === "string" || f.type === "text")
+          .filter((f) => f.name !== "url")
+          .filter((f) =>
+            f.name.startsWith("_expand." + field),
+          ) as TypedField[]);
+
+    // This refers to the fields in an object which are allowed to be rendered for
+    // an related object.
+    // and required stripping "expand." prefix.
+    //
+    // To prevent unwanted results; DEFAULT_ALLOWED_FIELDS are always favored.
+    // and other field names bound to the related object acts as fallback.
+    const fallbackAllowedFields = expandFields.map(
+      (f) => f.name.toString().split(".").pop()!,
+    );
+    const allowedFields = [
+      ...DEFAULT_ALLOWED_FIELDS,
+      ...fallbackAllowedFields,
+    ] as unknown as ExpandItemKeys<T>[];
 
     useImperativeHandle<
       RelatedObjectRendererHandle,
@@ -121,10 +173,9 @@ export const RelatedObjectRenderer = forwardRef(
 
     const expandFieldsNames = expandFields.map(
       (expandField) => expandField.name,
-    );
+    ) as string[]; // FIXME
 
     const typedFields = fields
-      // @ts-expect-error - fixme
       .filter((field) => expandFieldsNames.includes(field.name))
       .map((field) => {
         const name = field.name;
@@ -320,20 +371,18 @@ export const RelatedObjectRenderer = forwardRef(
       return (
         <RelatedObjectBadge
           relatedObject={relatedObject}
-          // @ts-expect-error - fixme
-          allowedFields={expandFields}
+          allowedFields={allowedFields}
         />
       );
     }
 
     // Multiple related items in AttributeList.
     if (view === "AttributeGrid" && Array.isArray(relatedObject)) {
-      console.log(typedFields);
       return relatedObject.map((relatedObject, index) => (
         <RelatedObjectBadge
           key={relatedObject.uuid ?? index}
           relatedObject={relatedObject}
-          allowedFields={expandFields}
+          allowedFields={allowedFields}
         />
       ));
     }

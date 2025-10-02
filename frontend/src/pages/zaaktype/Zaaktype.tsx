@@ -488,18 +488,13 @@ const ZaaktypeTab = ({
         continue;
       }
 
-      const expandFields = activeSectionConfig.expandFields?.length
-        ? activeSectionConfig.expandFields
-        : fields
-            .filter((f) => f.type === "string" || f.type === "text")
-            .filter((f) => f.type === "string" || f.name !== "url")
-            .filter((f) => f.name.startsWith("_expand." + fieldName));
-
       overrides[fieldName] = (
         // TODO: Handle errors for related objects.
         <RelatedObjectRenderer
           ref={relatedRendererRef}
-          expandFields={expandFields as TypedField[]}
+          expandFields={
+            activeSectionConfig.expandFields as TypedField<TargetType>[]
+          }
           object={object}
           relatedObject={relatedObject as RelatedObject<TargetType>}
           view={tabConfig.view}
