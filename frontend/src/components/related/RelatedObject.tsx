@@ -261,16 +261,16 @@ export const RelatedObjectRenderer = forwardRef(
       const relatedRowUuid = getUUIDFromString(
         relatedRow.uuid || relatedRow.url || "",
       );
-      invariant(
-        relatedRowUuid,
-        "either relatedRow.uuid or relatedRow.url must be set",
-      );
 
       const isStub = SYMBOL_STUB_KEY in relatedRow;
       setRows(rows.filter((r) => r !== relatedRow));
 
       // If `relatedObject` is not a stub, create delete action.
       if (!isStub) {
+        invariant(
+          relatedRowUuid,
+          "either relatedRow.uuid or relatedRow.url must be set",
+        );
         const action = {
           type: "DELETE_RELATED_OBJECT",
           payload: {
