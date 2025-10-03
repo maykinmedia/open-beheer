@@ -184,6 +184,7 @@ export const RelatedObjectRenderer = forwardRef(
           : name;
 
         const typedField = field2TypedField(field as TypedField<T>, undefined);
+        typedField.editable = isEditing ? typedField.editable : false;
         typedField.name = shortName as keyof T;
         return typedField;
       });
