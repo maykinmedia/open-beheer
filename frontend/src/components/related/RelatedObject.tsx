@@ -184,6 +184,9 @@ export const RelatedObjectRenderer = forwardRef(
           : name;
 
         const typedField = field2TypedField(field as TypedField<T>, undefined);
+        typedField.type =
+          typedField.type === "text" ? "string" : typedField.type;
+        typedField.editable = isEditing ? typedField.editable : false;
         typedField.name = shortName as keyof T;
         return typedField;
       });
@@ -343,20 +346,40 @@ export const RelatedObjectRenderer = forwardRef(
       () =>
         Array.isArray(rows)
           ? rows
-              .map((row) => ({
-                ...row,
-                "": (
-                  <Button
-                    disabled={isLoading || !isEditing}
-                    size="xs"
-                    variant="danger"
-                    title="Verwijderen"
-                    onClick={() => handleDelete(row)}
-                  >
-                    <Outline.TrashIcon />
-                  </Button>
-                ),
-              }))
+              .map((row) => {
+                if (!isEditing) {
+                  for (const key in row) {
+                    const value = row[key];
+                    const canonicalKey = `_expand.${field}.${key}`;
+                    const typedField = fields.find(
+                      (f) => f.name === canonicalKey,
+                    );
+
+                    if (typedField && typedField.options) {
+                      const label = typedField.options.find(
+                        (o) => o.value === value,
+                      )?.label;
+
+                      row[key] = label ?? null;
+                    }
+                  }
+                }
+
+                return {
+                  ...row,
+                  "": (
+                    <Button
+                      disabled={isLoading || !isEditing}
+                      size="xs"
+                      variant="danger"
+                      title="Verwijderen"
+                      onClick={() => handleDelete(row)}
+                    >
+                      <Outline.TrashIcon />
+                    </Button>
+                  ),
+                };
+              })
               .filter(
                 (r) => r[SYMBOL_ROW_ACTION]?.type !== "DELETE_RELATED_OBJECT",
               )
