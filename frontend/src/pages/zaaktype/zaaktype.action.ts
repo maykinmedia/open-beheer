@@ -394,7 +394,7 @@ export async function editRelatedObjectAction(
   try {
     await request(
       "PUT",
-      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${relatedObjectUuid}/`,
+      `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${relatedObjectUuid}`,
       {},
       payload.relatedObject,
     );
