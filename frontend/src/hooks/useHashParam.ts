@@ -1,67 +1,84 @@
-import { invariant } from "@maykin-ui/client-common/assert";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
- * Custom hook to manage a hash parameter in the URL.
- * @param key - The key of the hash parameter to manage.
- * @param defaultValue - The default value if the parameter doesn't exist.
- * @param replace - If true, use history.replaceState instead of setting window.location.hash
+ * Hook for managing a specific hash parameter in the URL.
+ * Initializes with a default value if missing.
+ *
+ * @param key - Hash parameter key to manage.
+ * @param defaultValue - Default value if the key is not present.
+ * @returns A tuple of [current value, setValue function].
  */
 export function useHashParam(
   key: string,
   defaultValue: string,
-  replace: boolean = false,
-): [string, (newValue: string) => void] {
-  const initialKeyRef = useRef(key);
+): [string | null, (value: string, replace?: boolean) => void] {
+  const [hash, setHash] = useState<string>(); // Only for renders.
 
-  invariant(
-    key === initialKeyRef.current,
-    "The key for useHashParam should never change",
-  );
+  /** Gets current hash params as URLSearchParams. */
+  const _getParams = useCallback(() => {
+    const hash = window.location.hash.slice(1);
+    return new URLSearchParams(hash);
+  }, []);
 
-  const getHashValue = useCallback(() => {
-    const params = new URLSearchParams(window.location.hash.slice(1));
-    return params.get(key) || defaultValue;
-  }, [key, defaultValue]);
+  /**
+   * Updates the URL hash from given params.
+   * @param params - Parameters to encode into the hash.
+   * @param replace - If true, replaces current history entry.
+   */
+  const _setHashParams = useCallback(
+    (params: URLSearchParams, replace: boolean) => {
+      const url = new URL(window.location.href);
+      const paramString = params.toString();
+      const newHash = paramString ? `#${paramString}` : "";
 
-  const [value, setValue] = useState<string>(() => getHashValue());
+      setHash(url.hash.slice(0));
+      if (newHash == url.hash) return;
 
-  // Sync value when defaultValue changes (if param not set)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.hash.slice(1));
-    if (!params.has(key)) {
-      setValue(defaultValue);
-    }
-  }, [defaultValue, key]);
-
-  const updateHash = useCallback(
-    (newValue: string) => {
-      const params = new URLSearchParams(window.location.hash.slice(1));
-      params.set(key, newValue);
-      const newHash = params.toString();
-
+      url.hash = newHash;
       if (replace) {
-        const url = new URL(window.location.href);
-        url.hash = newHash ? `#${newHash}` : "";
         window.history.replaceState(null, "", url.toString());
       } else {
-        window.location.hash = newHash;
+        window.history.pushState(null, "", url.toString());
       }
-
-      setValue(newValue);
     },
-    [key, replace],
+    [hash, window.location.href],
   );
 
-  useEffect(() => {
-    const onHashChange = () => {
-      setValue(getHashValue());
-    };
-    window.addEventListener("hashchange", onHashChange);
-    return () => {
-      window.removeEventListener("hashchange", onHashChange);
-    };
-  }, [getHashValue]);
+  /** Gets the current value of the specified hash key. */
+  const getValue = useCallback(() => _getParams().get(key), [key]);
 
-  return [value, updateHash] as const;
+  /**
+   * Sets the value for the specified hash key.
+   * @param value - Value to set.
+   * @param replace - If true, replaces current history entry.
+   */
+  const setValue = useCallback(
+    (value: string, replace = false) => {
+      const params = _getParams();
+      params.set(key, value);
+      _setHashParams(params, replace);
+    },
+    [_getParams, _setHashParams],
+  );
+
+  // Set the default value.
+  useEffect(() => {
+    const value = getValue();
+    if (value === null) {
+      setValue(defaultValue, true);
+    }
+  }, [key, getValue, setValue]);
+
+  // Sync with external changes.
+  useEffect(() => {
+    const listener = () => {
+      const params = _getParams();
+      setHash(params.toString().slice(0));
+    };
+    window.addEventListener("popstate", listener);
+    return () => window.removeEventListener("popstate", listener);
+  }, []);
+
+  const value = getValue();
+  return [value, setValue];
 }

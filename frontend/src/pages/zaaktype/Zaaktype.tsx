@@ -412,7 +412,7 @@ function ZaaktypeTabs({
 }: ZaaktypeTabsProps) {
   // (Horizontal) tab data.
   const [tabHash, setTabHash] = useHashParam("tab", "0");
-  const activeTabIndex = parseInt(tabHash);
+  const activeTabIndex = parseInt(tabHash || "0");
 
   // (Vertical) section data.
   const [, setSectionHash] = useHashParam("section", "0");
@@ -473,7 +473,7 @@ const ZaaktypeTab = ({
 
   // (Vertical) section data.
   const [sectionHash, setSectionHash] = useHashParam("section", "0");
-  const activeSectionIndex = parseInt(sectionHash);
+  const activeSectionIndex = parseInt(sectionHash || "0");
 
   // The active (vertical) section.
   const activeSectionConfig = useMemo(() => {
