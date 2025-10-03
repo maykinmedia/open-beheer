@@ -14,7 +14,12 @@ import {
   zaaktypeLoader,
   zaaktypenLoader,
 } from "~/pages";
+import { InformatieObjectTypeCreatePage } from "~/pages/informatieobjecttypecreate/InformatieObjectTypeCreatePage";
+import { InformatieObjectTypenPage } from "~/pages/informatieobjecttypen";
+import { informatieobjecttypenLoader } from "~/pages/informatieobjecttypen/informatieobjecttype.loader";
 import { zaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
+
+import { informatieobjecttypeCreateAction } from "./pages/informatieobjecttypecreate/informatieobjecttype.action";
 
 /**
  * Available routes.
@@ -81,6 +86,20 @@ export const routes: RouteObject[] = [
                       // Otherwise, revalidate
                       return true;
                     },
+                  },
+                ],
+              },
+              {
+                id: "informatieobjecttypen",
+                path: "informatieobjecttypen",
+                element: <InformatieObjectTypenPage />,
+                loader: informatieobjecttypenLoader,
+                children: [
+                  {
+                    id: "create-informatieobjecttype",
+                    path: "create",
+                    element: <InformatieObjectTypeCreatePage />,
+                    action: informatieobjecttypeCreateAction,
                   },
                 ],
               },
