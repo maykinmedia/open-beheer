@@ -19,25 +19,16 @@ import {
 } from "react";
 import { useNavigation, useParams } from "react-router";
 import { SERVICE_PARAM } from "~/App.tsx";
-import { RelatedObjectBadge } from "~/components/related/RelatedObjectBadge.tsx";
+import {
+  DEFAULT_ALLOWED_FIELDS,
+  RelatedObjectBadge,
+} from "~/components/related/RelatedObjectBadge.tsx";
 import { useCombinedSearchParams } from "~/hooks";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { getUUIDFromString } from "~/lib/format/string.ts";
 import { TabConfig, TargetType } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { ExpandItemKeys, RelatedObject, components } from "~/types";
-
-/**
- * This refers to the fields in an object which are allowed to be rendered for
- * an related object. If none of those match: an attempt is made to automatically
- * find candidates.
- */
-const DEFAULT_ALLOWED_FIELDS = [
-  "procestype",
-  "naam",
-  "omschrijving",
-  "objecttype",
-];
 
 const SYMBOL_STUB_KEY = Symbol(
   "SYMBOL_STUB_KEY, used to identify the position of the stub in `rows`",

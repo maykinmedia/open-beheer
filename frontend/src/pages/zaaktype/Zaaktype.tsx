@@ -14,6 +14,7 @@ import {
   Toolbar,
   TypedField,
   fields2TypedFields,
+  isPrimitive,
   useFormDialog,
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
@@ -29,8 +30,11 @@ import React, {
 import { useLoaderData, useParams } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
 import {
+  RelatedObjectBadge,
   RelatedObjectRenderer,
   RelatedObjectRendererHandle,
+  getObjectKey,
+  getObjectValue,
 } from "~/components/related";
 import zaaktype from "~/fixtures/zaaktype.ts";
 import {
@@ -194,12 +198,40 @@ export function ZaaktypePage() {
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   > = useCallback(
     (e) => {
-      const key = e.target.name;
+      const key = e.target.name as keyof TargetType;
+      const originalValue = result[key];
+
+      // Whether originalValue is an object.
+      const isObject =
+        originalValue &&
+        typeof originalValue === "object" &&
+        !Array.isArray(result[key]);
+
+      // The new value.
       const value =
         e.target instanceof HTMLInputElement &&
         Object.hasOwn(e.target, "checked")
           ? e.target.checked
           : e.target.value;
+
+      // When rendering an object, it's value is converted to string using an
+      // override (see `ZaaktypeTab`. When changing its value (and creating a
+      // pending update), the original shape needs to be restored.
+      //
+      // @see `ZaaktypeTab.complexOverrides`
+      if (isObject) {
+        const objectKey = getObjectKey(originalValue) as string;
+        const objectValue = { ...originalValue, [objectKey]: value };
+
+        // Update pending changes, but restore object shape.
+        setPendingUpdatesState({
+          ...pendingUpdatesState,
+          [key]: objectValue,
+          url: result.url, // Required for API communication.
+        });
+
+        return;
+      }
 
       // Update pending changes.
       setPendingUpdatesState({
@@ -454,6 +486,38 @@ const ZaaktypeTab = ({
   }, [tabConfig]);
 
   /**
+   * Memoizes a version of the result relatedObject where complex fields
+   * are replaced by React nodes rendering their data.
+   *
+   * @see `ZaaktypePage.handleChange`: this converts an object to string for
+   *  presentation/editing. This operation is inverted by the change handler.
+   * @returns A shallow copy of `result` with expanded fields replaced
+   */
+  const complexOverrides = useMemo(() => {
+    const overrides: Partial<Record<keyof TargetType, ReactNode>> = {};
+
+    for (const field of fields) {
+      const fieldName = field.name.split(".").pop() as keyof TargetType;
+      const originalValue = object[fieldName];
+
+      // Show object values.
+      if (
+        originalValue &&
+        !isPrimitive(originalValue) &&
+        !Array.isArray(originalValue)
+      ) {
+        overrides[fieldName] = isEditing ? (
+          getObjectValue(originalValue)
+        ) : (
+          <RelatedObjectBadge relatedObject={originalValue} />
+        );
+      }
+    }
+
+    return overrides;
+  }, [fields, object]);
+
+  /**
    * Memoizes a version of the result relatedObject where expandable fields
    * are replaced by React nodes rendering related data.
    *
@@ -539,7 +603,13 @@ const ZaaktypeTab = ({
 
       return (
         <AttributeGrid
-          object={{ ...object, ...expandedOverrides } as TargetType}
+          object={
+            {
+              ...object,
+              ...complexOverrides,
+              ...expandedOverrides,
+            } as TargetType
+          }
           editable={isEditing ? undefined : false} // When in edit mode, allow fields to defined editable state, prevent editing otherwise.
           editing={isEditing}
           errors={errors}
