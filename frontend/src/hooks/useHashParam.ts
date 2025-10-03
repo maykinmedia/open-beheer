@@ -5,12 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * Custom hook to manage a hash parameter in the URL.
  * @param key - The key of the hash parameter to manage.
  * @param defaultValue - The default value if the parameter doesn't exist.
- * @param replace - If true, use history.replaceState instead of setting window.location.hash
  */
 export function useHashParam(
   key: string,
   defaultValue: string,
-  replace: boolean = false,
 ): [string, (newValue: string) => void] {
   const initialKeyRef = useRef(key);
 
@@ -24,7 +22,7 @@ export function useHashParam(
     return params.get(key) || defaultValue;
   }, [key, defaultValue]);
 
-  const [value, setValue] = useState<string>(() => getHashValue());
+  const [value, setValue] = useState<string>();
 
   // Sync value when defaultValue changes (if param not set)
   useEffect(() => {
@@ -34,8 +32,13 @@ export function useHashParam(
     }
   }, [defaultValue, key]);
 
+  /**
+   * Updates the hash value.
+   * @param newValue - Value to replace hash with.
+   * @param replace - If true, use history.replaceState instead of setting window.location.hash
+   */
   const updateHash = useCallback(
-    (newValue: string) => {
+    (newValue: string, replace: boolean = false) => {
       const params = new URLSearchParams(window.location.hash.slice(1));
       params.set(key, newValue);
       const newHash = params.toString();
@@ -50,10 +53,14 @@ export function useHashParam(
 
       setValue(newValue);
     },
-    [key, replace],
+    [key],
   );
 
   useEffect(() => {
+    if (typeof value === "undefined") {
+      updateHash(defaultValue, true);
+    }
+
     const onHashChange = () => {
       setValue(getHashValue());
     };
@@ -63,5 +70,8 @@ export function useHashParam(
     };
   }, [getHashValue]);
 
-  return [value, updateHash] as const;
+  return [
+    typeof value === "undefined" ? defaultValue : value,
+    updateHash,
+  ] as const;
 }
