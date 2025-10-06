@@ -333,10 +333,12 @@ export type EditZaaktypeVersionPayload = {
  * Allow the user to edit a zaaktype version.
  */
 export async function editZaaktypeVersionAction(
-  action: TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _action: TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>,
 ) {
-  const payload = action.payload;
-  return redirect(`../${payload.uuid}?editing=true`);
+  const url = new URL(window.location.href);
+  url.searchParams.set("editing", "true");
+  return redirect(url.toString());
 }
 
 export type AddRelatedObjectPayload = {
@@ -440,8 +442,10 @@ export type EditCancelZaaktypeVersionPayload = {
  * Allow the user to cancel editting a zaaktype version.
  */
 export async function editCancelZaaktypeVersionAction(
-  action: TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _action: TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>,
 ) {
-  const payload = action.payload;
-  return redirect(`../${payload.uuid}`);
+  const url = new URL(window.location.href);
+  url.searchParams.delete("editing");
+  return redirect(url.toString());
 }
