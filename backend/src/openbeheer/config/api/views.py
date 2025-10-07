@@ -25,10 +25,24 @@ class OIDCInfoView(APIView):
         },
     )
     def get(self, request: Request, *args, **kwargs):
-        config = OIDCClient.objects.get(identifier=OIDC_ADMIN_CONFIG_IDENTIFIER)
+        client = OIDCClient.objects.filter(
+            identifier=OIDC_ADMIN_CONFIG_IDENTIFIER
+        ).first()
+
+        # FIXME: I think that pytest reverts the transactions between tests and the data created
+        # in the post migrate signals is also deleted. So then there are no OIDCClients.
+        # This is a workaround...
+        if not client:
+            return Response(
+                to_builtins(
+                    OIDCInfo(
+                        enabled=False,
+                    )
+                )
+            )
 
         oidc_info = OIDCInfo(
-            enabled=config.enabled,
+            enabled=client.enabled,
             login_url=reverse("oidc_authentication_init", request=request),
         )
 

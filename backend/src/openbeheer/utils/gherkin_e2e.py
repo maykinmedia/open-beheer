@@ -1,5 +1,8 @@
+from furl import furl
 from playwright.sync_api import Locator, Page, expect
 from pytest_django.live_server_helper import LiveServer
+
+from openbeheer.types.ztc import Catalogus
 
 
 class GherkinScenario:
@@ -72,6 +75,36 @@ class GherkinRunner:
 
         def go_to_root_page(self, page: Page) -> None:
             page.goto(f"{self.runner.live_server.url}/")
+
+        def user_logs_in(self, page: Page, username: str, password: str) -> None:
+            page.goto(f"{self.runner.live_server.url}/")
+            expect(page).to_have_url(self.runner.live_server.url + "/login?next=/")
+
+            page.get_by_label("Gebruikersnaam").fill(username)
+            page.get_by_label("Wachtwoord").fill(password)
+            page.get_by_role("button", name="Inloggen").click()
+
+        def select_catalogus(self, page: Page, catalogus: Catalogus) -> None:
+            select = page.get_by_text("Selecteer catalogus")
+            select.click()
+            option = page.get_by_text(f"{catalogus.naam} ({catalogus.domein})")
+            option.click()
+            assert catalogus.url
+            expect(page).to_have_url(
+                self.runner.live_server.url
+                + f"/OZ/{furl(catalogus.url).path.segments[-1]}/zaaktypen"
+            )
+
+        def go_to_informatieobjecttype_list_page(
+            self, page: Page, catalogus: Catalogus
+        ) -> None:
+            button = page.get_by_role(role="button", name="Informatieobjecttypen")
+            button.click()
+            assert catalogus.url
+            expect(page).to_have_url(
+                self.runner.live_server.url
+                + f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen"
+            )
 
     class Then(GherkinScenario):
         """
