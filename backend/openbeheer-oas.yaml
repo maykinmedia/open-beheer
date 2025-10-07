@@ -239,7 +239,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExternalServiceError'
           description: ''
-  /api/v1/service/{slug}/informatieobjecttypen/{uuid}:
+  /api/v1/service/{slug}/informatieobjecttypen/{uuid}/:
     get:
       operationId: service_informatieobjecttypen_retrieve_one
       description: Retrive an informatieobjecttype from Open Zaak.
@@ -673,7 +673,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
-  /api/v1/service/{slug}/zaaktypen/{uuid}/publish:
+  /api/v1/service/{slug}/zaaktypen/{uuid}/publish/:
     post:
       operationId: service_zaaktypen_publish
       description: Publish a zaaktype
@@ -838,7 +838,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExternalServiceError'
           description: ''
-  /api/v1/service/{slug}/zaaktypen/{zaaktype}/besluittypen/{uuid}:
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/besluittypen/{uuid}/:
     get:
       operationId: service_besluittypen_retrieve_one
       description: Retrieve an Besluittype from Open Zaak.
@@ -1139,7 +1139,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExternalServiceError'
           description: ''
-  /api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/{uuid}:
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/{uuid}/:
     get:
       operationId: service_eigenschappen_retrieve_one
       description: Retrieve an eigenschappe from Open Zaak.
@@ -1440,7 +1440,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExternalServiceError'
           description: ''
-  /api/v1/service/{slug}/zaaktypen/{zaaktype}/resultaattypen/{uuid}:
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/resultaattypen/{uuid}/:
     get:
       operationId: service_resultaattypen_retrieve_one
       description: Retrieve an resultaattype from Open Zaak.
@@ -1752,7 +1752,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExternalServiceError'
           description: ''
-  /api/v1/service/{slug}/zaaktypen/{zaaktype}/roltypen/{uuid}:
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/roltypen/{uuid}/:
     get:
       operationId: service_roltypen_retrieve_one
       description: Retrieve an roltype from Open Zaak.
@@ -2053,7 +2053,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExternalServiceError'
           description: ''
-  /api/v1/service/{slug}/zaaktypen/{zaaktype}/statustypen/{uuid}:
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/statustypen/{uuid}/:
     get:
       operationId: service_statustypen_retrieve_one
       description: Retrieve an statustype from Open Zaak.
@@ -2375,7 +2375,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExternalServiceError'
           description: ''
-  /api/v1/service/{slug}/zaaktypen/{zaaktype}/zaakobjecttypen/{uuid}:
+  /api/v1/service/{slug}/zaaktypen/{zaaktype}/zaakobjecttypen/{uuid}/:
     get:
       operationId: service_zaakobjecttypen_retrieve_one
       description: Retrieve an zaakobjecttype from Open Zaak.
@@ -2888,7 +2888,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWResponse_Sjabloon_OptionalExpandableZaakTypeRequest_'
           description: ''
-  /api/v1/template/zaaktype/{uuid}:
+  /api/v1/template/zaaktype/{uuid}/:
     get:
       operationId: template_zaaktype_retrieve
       summary: Get ZaakTypeSjabloon

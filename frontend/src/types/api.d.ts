@@ -139,7 +139,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/informatieobjecttypen/{uuid}": {
+    "/api/v1/service/{slug}/informatieobjecttypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -227,7 +227,7 @@ export interface paths {
         patch: operations["service_zaaktypen_partial_update"];
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{uuid}/publish": {
+    "/api/v1/service/{slug}/zaaktypen/{uuid}/publish/": {
         parameters: {
             query?: never;
             header?: never;
@@ -271,7 +271,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/besluittypen/{uuid}": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/besluittypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -327,7 +327,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/{uuid}": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -383,7 +383,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/resultaattypen/{uuid}": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/resultaattypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -439,7 +439,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/roltypen/{uuid}": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/roltypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -495,7 +495,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/statustypen/{uuid}": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/statustypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -551,7 +551,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaakobjecttypen/{uuid}": {
+    "/api/v1/service/{slug}/zaaktypen/{zaaktype}/zaakobjecttypen/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -676,7 +676,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/template/zaaktype/{uuid}": {
+    "/api/v1/template/zaaktype/{uuid}/": {
         parameters: {
             query?: never;
             header?: never;
