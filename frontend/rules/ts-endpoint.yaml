@@ -1,0 +1,26 @@
+id: ts-force-endpoint-trailing-slash
+language: TypeScript
+rule:
+  pattern: $ENDPOINT
+  any:
+    - kind: template_string
+    - kind: string
+  regex: '[^/]["`]'
+  follows:
+    kind: string
+    regex: (DELETE|GET|PATCH|POST|PUT)
+    stopBy: end
+  inside:
+    any:
+      - kind: array
+        inside:
+          kind: arguments
+      - kind: arguments
+severity: error
+transform:
+  NEW_ENDPOINT:
+    replace:
+      source: $ENDPOINT
+      replace: '(["`])$'
+      by: "/$1"
+fix: $NEW_ENDPOINT
