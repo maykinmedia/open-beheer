@@ -160,21 +160,21 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
     #         ]
     #     ),
     # ),
-    (
-        "Archivering",
-        FrontendFieldSet(
-            fields=[
-                # TODO bewaartermijn etc?
-                "_expand.selectielijstProcestype.naam",
-                "_expand.selectielijstProcestype.nummer",
-                "_expand.selectielijstProcestype.jaar",
-                "_expand.selectielijstProcestype.omschrijving",
-                "_expand.selectielijstProcestype.toelichting",
-                "_expand.selectielijstProcestype.procesobject",
-                "_expand.selectielijstProcestype.url",
-            ]
-        ),
-    ),
+    # ( # TODO: reason: (gh-267)
+    #     "Archivering",
+    #     FrontendFieldSet(
+    #         fields=[
+    #             # TODO bewaartermijn etc?
+    #             "_expand.selectielijstProcestype.naam",
+    #             "_expand.selectielijstProcestype.nummer",
+    #             "_expand.selectielijstProcestype.jaar",
+    #             "_expand.selectielijstProcestype.omschrijving",
+    #             "_expand.selectielijstProcestype.toelichting",
+    #             "_expand.selectielijstProcestype.procesobject",
+    #             "_expand.selectielijstProcestype.url",
+    #         ]
+    #     ),
+    # ),
     # TODO??: This probably needs some careful UX design, there's a
     # Many to Many (zaaktypen, besluittypen, resultaattypen, informatieobjecttypen)
     # naive editing in a grid on a tab under a zaaktype may be disorienting
