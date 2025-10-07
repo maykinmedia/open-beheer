@@ -11,7 +11,7 @@ urlpatterns = [
         name="statustypen-list",
     ),
     path(
-        "<uuid:uuid>",
+        "<uuid:uuid>/",
         StatusTypeDetailView.as_view(),
         name="statustypen-detail",
     ),

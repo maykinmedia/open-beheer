@@ -11,7 +11,7 @@ urlpatterns = [
         name="eigenschappen-list",
     ),
     path(
-        "<uuid:uuid>",
+        "<uuid:uuid>/",
         EigenschappenDetailView.as_view(),
         name="eigenschappen-detail",
     ),

@@ -11,7 +11,7 @@ urlpatterns = [
         name="roltypen-list",
     ),
     path(
-        "<uuid:uuid>",
+        "<uuid:uuid>/",
         RoltypeDetailView.as_view(),
         name="roltypen-detail",
     ),

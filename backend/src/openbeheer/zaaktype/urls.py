@@ -16,7 +16,7 @@ urlpatterns = [
         name="zaaktype-detail",
     ),
     path(
-        "<uuid:uuid>/publish",
+        "<uuid:uuid>/publish/",
         ZaakTypePublishView.as_view(),
         name="zaaktype-publish",
     ),

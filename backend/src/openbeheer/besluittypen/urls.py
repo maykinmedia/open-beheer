@@ -11,7 +11,7 @@ urlpatterns = [
         name="besluittypen-list",
     ),
     path(
-        "<uuid:uuid>",
+        "<uuid:uuid>/",
         BesluittypeDetailView.as_view(),
         name="besluittypen-detail",
     ),
