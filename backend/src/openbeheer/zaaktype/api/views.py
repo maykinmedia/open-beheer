@@ -11,6 +11,7 @@ from typing import (
     override,
 )
 
+from django.core.cache import cache
 from django.utils.translation import gettext as _
 
 import structlog
@@ -547,22 +548,31 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
     def get_fieldsets(self) -> FrontendFieldsets:
         return ZAAKTYPE_FIELDSETS
 
+    # FIXME: (gh-270) Needs to be picked up carefully.
     def get_informatieobjecttype_options(self, zaaktype: ZaakType) -> list[OBOption]:
-        with ztc_client() as client:
-            informatieobjecttypen = fetch_all(
-                client,
-                "informatieobjecttypen",
-                # You can only relate a Zaaktype and an Informatieobjecttype if they belong to the same catalogus.
-                params={"catalogus": zaaktype.catalogus, "status": "alles"},
-                result_type=InformatieObjectType,
-            )
+        cache_key = f"informatieobjecttype_options:{zaaktype.catalogus}"
+        options = cache.get(cache_key)
 
-        return [
-            OBOption(
-                label=informatieobjecttype.omschrijving, value=informatieobjecttype.url
-            )
-            for informatieobjecttype in informatieobjecttypen
-        ]
+        if options is None:
+            with ztc_client() as client:
+                informatieobjecttypen = fetch_all(
+                    client,
+                    "informatieobjecttypen",
+                    # You can only relate a Zaaktype and an Informatieobjecttype if they belong to the same catalogus.
+                    params={"catalogus": zaaktype.catalogus, "status": "alles"},
+                    result_type=InformatieObjectType,
+                )
+
+            options = [
+                OBOption(
+                    label=iot.omschrijving,
+                    value=iot.url,
+                )
+                for iot in informatieobjecttypen
+            ]
+            cache.set(cache_key, options, timeout=60 * 60)
+
+        return options
 
 
 class ZaakTypePublishView(MsgspecAPIView):
