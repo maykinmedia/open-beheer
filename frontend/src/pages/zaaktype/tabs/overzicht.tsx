@@ -42,29 +42,9 @@ export const TAB_CONFIG_OVERVIEW: TabConfig<TargetType> = {
   view: "AttributeGrid",
   sections: [
     {
-      expandFields: ["procestype", "naam", "omschrijving", "objecttype"],
+      expandFields: ["naam", "omschrijving", "objecttype"],
       label: "Overzicht",
       fieldsets: FIELDSETS_OVERVIEW,
-      valueTransform: {
-        // FIXME FIX OVERRIDES
-        //
-        // selectielijstProcestype: (record) => {
-        //   return {
-        //     ...record,
-        //     procestype: record ? `${record?.naam} - ${record?.jaar}` : "-",
-        //   };
-        // },
-        // zaakobjecttypen: (zaakobjecttypen) => {
-        //   return (zaakobjecttypen || []).map((zaakobjecttype) => {
-        //     return {
-        //       ...zaakobjecttype,
-        //       objecttype: zaakobjecttype
-        //         ? `${zaakobjecttype._expand?.objecttype?.name}`
-        //         : "-",
-        //     };
-        //   });
-        // },
-      },
     },
   ],
 };

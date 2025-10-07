@@ -25,7 +25,6 @@ export type TabConfig<T extends object> =
 
 type BaseTabConfig = {
   label: string;
-  fieldset: FieldSet;
 };
 
 export type AttributeGridTabConfig<T extends object> = BaseTabConfig & {
@@ -37,6 +36,7 @@ export type AttributeGridTabConfig<T extends object> = BaseTabConfig & {
 export type DataGridTabConfig<T extends object> = BaseTabConfig & {
   key: keyof Expand<Expanded<T>>;
   view: "DataGrid";
+  fieldset: FieldSet;
   sections: DataGridSection<Expanded<T>>[];
 };
 
