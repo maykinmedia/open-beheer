@@ -32,7 +32,7 @@ urlpatterns = [
                     SpectacularJSONAPIView.as_view(schema=None),
                     name="api-schema-json",
                 ),
-                path("schema", SpectacularAPIView.as_view(schema=None), name="schema"),
+                path("schema/", SpectacularAPIView.as_view(schema=None), name="schema"),
             ]
         ),
     ),
@@ -48,7 +48,7 @@ urlpatterns = [
         name="zaaktypetemplate-list",
     ),
     path(
-        "v1/template/zaaktype/<uuid:uuid>",
+        "v1/template/zaaktype/<uuid:uuid>/",
         ZaakTypeTemplateView.as_view(),
         name="zaaktypetemplate-detail",
     ),

@@ -11,7 +11,7 @@ urlpatterns = [
         name="zaakobjecttypen-list",
     ),
     path(
-        "<uuid:uuid>",
+        "<uuid:uuid>/",
         ZaakObjectTypeDetailView.as_view(),
         name="zaakobjecttypen-detail",
     ),
