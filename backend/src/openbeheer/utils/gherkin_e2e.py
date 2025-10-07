@@ -85,6 +85,8 @@ class GherkinRunner:
             page.get_by_role("button", name="Inloggen").click()
 
         def select_catalogus(self, page: Page, catalogus: Catalogus) -> None:
+            page.wait_for_load_state("networkidle")
+
             select = page.get_by_text("Selecteer catalogus")
             select.click()
             option = page.get_by_text(f"{catalogus.naam} ({catalogus.domein})")
@@ -98,6 +100,8 @@ class GherkinRunner:
         def go_to_informatieobjecttype_list_page(
             self, page: Page, catalogus: Catalogus
         ) -> None:
+            page.wait_for_load_state("networkidle")
+
             button = page.get_by_role(role="button", name="Informatieobjecttypen")
             button.click()
             assert catalogus.url
