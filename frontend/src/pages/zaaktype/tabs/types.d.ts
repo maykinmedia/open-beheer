@@ -1,4 +1,4 @@
-import { FieldSet, TypedField } from "@maykin-ui/admin-ui";
+import { Field, FieldSet, TypedField } from "@maykin-ui/admin-ui";
 import { ReactNode } from "react";
 import { ZaaktypeLoaderData } from "~/pages";
 import {
@@ -24,16 +24,18 @@ export type TabConfig<T extends object> =
   | DataGridTabConfig<T>;
 
 type BaseTabConfig = {
-  key: string;
   label: string;
+  fieldset: FieldSet;
 };
 
 export type AttributeGridTabConfig<T extends object> = BaseTabConfig & {
+  key: string;
   view: "AttributeGrid";
   sections: AttributeGridSection<T>[];
 };
 
 export type DataGridTabConfig<T extends object> = BaseTabConfig & {
+  key: keyof Expand<Expanded<T>>;
   view: "DataGrid";
   sections: DataGridSection<Expanded<T>>[];
 };
@@ -44,11 +46,7 @@ type BaseTabSection<
   T extends object,
   R extends RelatedObject<T> = RelatedObject<T>,
 > = {
-  expandFields: (
-    | ExpandItemKeysWithString<T>
-    | TypedField<R>
-    | components["schemas"]["OBField"]
-  )[];
+  expandFields: (Field<R> | TypedField<R> | components["schemas"]["OBField"])[];
   icon?: ReactNode;
   label: string;
   valueTransform?: Partial<{
