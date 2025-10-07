@@ -324,7 +324,10 @@ export async function selectZaaktypeVersionAction(
   action: TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>,
 ) {
   const payload = action.payload;
-  return redirect(`../${payload.uuid}`);
+
+  const url = new URL(window.location.href);
+  url.searchParams.delete("editing");
+  return redirect(`../${payload.uuid}${url.search}${url.hash}`);
 }
 
 /**
