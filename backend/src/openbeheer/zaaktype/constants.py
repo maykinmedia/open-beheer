@@ -141,25 +141,25 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
             ]
         ),
     ),
-    (
-        "Relaties",
-        FrontendFieldSet(
-            fields=[
-                # TODO needs design
-                # Assumed "Relaties" meant deelzaaktypen, went with roughly the
-                # same fields as the zaaktype listview.
-                # But there's a Droste-effect here we should be leveraging, maybe?
-                "_expand.deelzaaktypen.url",
-                "_expand.deelzaaktypen.identificatie",
-                "_expand.deelzaaktypen.omschrijving",
-                "_expand.deelzaaktypen.vertrouwelijkheidaanduiding",
-                "_expand.deelzaaktypen.versiedatum",
-                "_expand.deelzaaktypen.beginGeldigheid",
-                "_expand.deelzaaktypen.eindeGeldigheid",
-                "_expand.deelzaaktypen.concept",
-            ]
-        ),
-    ),
+    # ( # TODO: reason: (gh-266)
+    #     "Relaties",
+    #     FrontendFieldSet(
+    #         fields=[
+    #             # TODO needs design
+    #             # Assumed "Relaties" meant deelzaaktypen, went with roughly the
+    #             # same fields as the zaaktype listview.
+    #             # But there's a Droste-effect here we should be leveraging, maybe?
+    #             "_expand.deelzaaktypen.url",
+    #             "_expand.deelzaaktypen.identificatie",
+    #             "_expand.deelzaaktypen.omschrijving",
+    #             "_expand.deelzaaktypen.vertrouwelijkheidaanduiding",
+    #             "_expand.deelzaaktypen.versiedatum",
+    #             "_expand.deelzaaktypen.beginGeldigheid",
+    #             "_expand.deelzaaktypen.eindeGeldigheid",
+    #             "_expand.deelzaaktypen.concept",
+    #         ]
+    #     ),
+    # ),
     (
         "Archivering",
         FrontendFieldSet(
