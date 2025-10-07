@@ -87,6 +87,8 @@ export function ZaaktypePage() {
     Record<TabConfig<TargetType>["key"], ZaaktypeAction[]>
   >({});
   useEffect(() => {
+    setPendingUpdatesState(null);
+    setActionsState({});
     setActionsState({});
   }, [result]);
 
@@ -320,10 +322,6 @@ export function ZaaktypePage() {
         ],
       },
     });
-
-    // Reset pending changes.
-    setPendingUpdatesState(null);
-    setActionsState({});
   }, [
     result,
     actionsState,

@@ -92,7 +92,10 @@ export async function batchAction(
     if (errors?.length) {
       return errors;
     }
-    return redirect(`../${uuid}`);
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("editing");
+    return redirect(url.toString());
   } catch (e) {
     return e;
   }
@@ -151,7 +154,10 @@ export async function updateZaaktypeVersionAction(
 
   try {
     await _saveZaaktypeVersion(payload.zaaktype, payload.serviceSlug);
-    return redirect(`../${uuid}`);
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("editing");
+    return redirect(url.toString());
   } catch (e) {
     return await (e as Response).json();
   }
@@ -284,7 +290,6 @@ export async function publishZaaktypeVersionAction(
       "POST",
       `/service/${payload.serviceSlug}/zaaktypen/${uuid}/publish/`,
     );
-    return redirect(`../${uuid}`);
   } catch (e) {
     return await (e as Response).json();
   }
@@ -333,12 +338,13 @@ export type EditZaaktypeVersionPayload = {
  * Allow the user to edit a zaaktype version.
  */
 export async function editZaaktypeVersionAction(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _action: TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>,
+  action: TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>,
 ) {
+  const payload = action.payload;
+
   const url = new URL(window.location.href);
   url.searchParams.set("editing", "true");
-  return redirect(url.toString());
+  return redirect(`../${payload.uuid}${url.search}${url.hash}`);
 }
 
 export type AddRelatedObjectPayload = {
@@ -439,7 +445,7 @@ export type EditCancelZaaktypeVersionPayload = {
 };
 
 /**
- * Allow the user to cancel editting a zaaktype version.
+ * Allow the user to cancel editing a zaaktype version.
  */
 export async function editCancelZaaktypeVersionAction(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
