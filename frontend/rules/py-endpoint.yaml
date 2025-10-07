@@ -1,0 +1,18 @@
+id: force-py-endpoint-trailing-slash
+language: python
+rule:
+  pattern: $PATH
+  kind: string
+  regex: '".+[^/]"'
+  inside:
+    kind: argument_list
+    inside:
+      kind: call
+      pattern: path($$$)
+transform:
+  NEW_PATH:
+    replace:
+      source: $PATH
+      replace: "[^/]$"
+      by: '$1/"'
+fix: $NEW_PATH
