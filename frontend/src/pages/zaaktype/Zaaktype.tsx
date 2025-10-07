@@ -3,6 +3,7 @@ import {
   Body,
   CardBaseTemplate,
   Column,
+  Field,
   FieldSet,
   Grid,
   H2,
@@ -21,18 +22,17 @@ import { slugify, ucFirst } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
 import React, {
   ReactNode,
-  Ref,
   useCallback,
+  useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { useLoaderData, useParams } from "react-router";
 import { VersionSelector } from "~/components/VersionSelector";
 import {
   RelatedObjectBadge,
+  RelatedObjectDataGrid,
   RelatedObjectRenderer,
-  RelatedObjectRendererHandle,
   getObjectKey,
   getObjectValue,
 } from "~/components/related";
@@ -43,7 +43,7 @@ import {
   useErrors,
 } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
-import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
+import { TypedAction, useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { findConceptZaaktypeVersion, getZaaktypeUUID } from "~/lib";
 import {
   findActiveZaaktypeVersion,
@@ -74,14 +74,21 @@ const TAB_CONFIG_OVERRIDES: TabConfig<TargetType>[] = [
  * Renders the detail view for a single zaaktype, with tabs for attributes and related data.
  */
 export function ZaaktypePage() {
-  const relatedRendererRef = useRef<RelatedObjectRendererHandle>(null);
-
   const { fields, fieldsets, result, versions } =
     useLoaderData() as ZaaktypeLoaderData;
 
   const [pendingUpdatesState, setPendingUpdatesState] =
     useState<Partial<TargetType> | null>(null);
   const possiblyUpdatedResult = { ...result, ...pendingUpdatesState };
+
+  // Related objects (array) changes are recorded as actions instead of mutations
+  // directly to the object.
+  const [actionsState, setActionsState] = useState<
+    Record<TabConfig<TargetType>["key"], ZaaktypeAction[]>
+  >({});
+  useEffect(() => {
+    setActionsState({});
+  }, [result]);
 
   const formDialog = useFormDialog();
 
@@ -112,31 +119,37 @@ export function ZaaktypePage() {
   // Convert FieldSet[] to TabConfig[].
   const fieldSetTabConfigs = useMemo<TabConfig<TargetType>[]>(
     () =>
-      fieldsets.map((fieldset) => {
-        const [label, { fields }] = fieldset;
-        const expandFields = fields2TypedFields(
-          fields.filter((field) => field.includes("_expand")),
-        );
-        const view = expandFields.length ? "DataGrid" : "AttributeGrid";
+      fieldsets
+        .map((fieldset) => {
+          const [label, { fields }] = fieldset;
+          const key = slugify(label);
 
-        if (view === "AttributeGrid") {
+          // _expand fields imply DataGrid.
+          const fieldsAreExpanded = fields.find((field) =>
+            field.includes("_expand"),
+          );
+          const view = fieldsAreExpanded ? "DataGrid" : "AttributeGrid";
+
+          if (view === "AttributeGrid") {
+            return {
+              key: slugify(label),
+              label,
+              view,
+              sections: [{ label, fieldsets: [[label, { fields }]] }],
+            } as AttributeGridTabConfig<TargetType>;
+          }
+
           return {
-            key: slugify(label),
+            key: key,
+            fieldset: fieldset as unknown as FieldSet,
             label,
             view,
-            sections: [
-              { expandFields, label, fieldsets: [[label, { fields }]] },
-            ],
-          } as AttributeGridTabConfig<TargetType>;
-        }
-
-        return {
-          key: slugify(label),
-          label,
-          view,
-          sections: [{ expandFields, label, key: slugify(label) }],
-        } as DataGridTabConfig<TargetType>;
-      }),
+            sections: [{ label, key: slugify(label) }],
+          } as DataGridTabConfig<TargetType>;
+        })
+        .filter((tabConfig): tabConfig is TabConfig<TargetType> =>
+          Boolean(tabConfig),
+        ),
     [JSON.stringify([fields, fieldsets])],
   );
 
@@ -149,6 +162,7 @@ export function ZaaktypePage() {
         );
         return override ?? fieldSetTabConfig;
       }),
+    // .filter((_, i) => i === 5),
     [],
   );
 
@@ -181,7 +195,8 @@ export function ZaaktypePage() {
    */
   const handleCancel = useCallback<React.MouseEventHandler>(() => {
     invariant(conceptVersion, "concept version (uuid) must be set");
-    relatedRendererRef.current?.cancel();
+    setPendingUpdatesState(null);
+    setActionsState({});
 
     submitAction({
       type: "EDIT_CANCEL",
@@ -189,7 +204,7 @@ export function ZaaktypePage() {
         uuid: currentVersion?.uuid || conceptVersion.uuid,
       },
     });
-  }, [relatedRendererRef.current, currentVersion?.uuid, conceptVersion?.uuid]);
+  }, [currentVersion?.uuid, conceptVersion?.uuid]);
 
   /**
    * Gets called when the relatedObject is changed.
@@ -244,19 +259,30 @@ export function ZaaktypePage() {
   );
 
   /**
+   * Gets called with a `TabConfig` and a list of `ZaaktypeAction`s to perform
+   * when mutations are made in a `<RelatedObjectDataGrid>`, these actions need
+   * to submitted to the backend in order to be persisted.
+   */
+  const handleTabActionsChange = useCallback(
+    (tabConfig: TabConfig<TargetType>, actions: ZaaktypeAction[]) => {
+      const newActionsState = { ...actionsState, [tabConfig.key]: actions };
+      setActionsState(newActionsState);
+    },
+    [tabConfigs, actionsState, setActionsState],
+  );
+
+  /**
    * Gets called when the edit button is clicked.
    */
   const handleSave = useCallback<React.MouseEventHandler>(async () => {
     invariant(conceptVersion, "concept version (uuid) must be set");
-
-    const saveActions = relatedRendererRef.current?.getSaveActions() || [];
-
     const zaaktype = result;
 
     const deletions: ZaaktypeAction[] = [];
     const updates: ZaaktypeAction[] = [];
 
-    saveActions.forEach((action) => {
+    const actions = Object.values(actionsState).flat().filter(Boolean);
+    actions.forEach((action) => {
       const isDeletion = action.type.toUpperCase().includes("DELETE");
       if (isDeletion) {
         deletions.push(action);
@@ -290,14 +316,17 @@ export function ZaaktypePage() {
               },
             },
           },
-          ...updates,
+          ...updates, // FIXME: Investigate why no work
         ],
       },
     });
+
+    // Reset pending changes.
     setPendingUpdatesState(null);
+    setActionsState({});
   }, [
-    relatedRendererRef.current,
     result,
+    actionsState,
     pendingUpdatesState,
     conceptVersion?.uuid,
     serviceSlug,
@@ -376,9 +405,9 @@ export function ZaaktypePage() {
         )}
         <ZaaktypeTabs
           object={possiblyUpdatedResult}
-          relatedRendererRef={relatedRendererRef}
           tabConfigs={tabConfigs}
           onChange={handleChange}
+          onTabActionsChange={handleTabActionsChange}
         />
       </Body>
 
@@ -396,9 +425,12 @@ export function ZaaktypePage() {
 
 type ZaaktypeTabsProps = {
   object: TargetType;
-  relatedRendererRef: Ref<RelatedObjectRendererHandle>;
   tabConfigs: TabConfig<TargetType>[];
   onChange: React.ChangeEventHandler;
+  onTabActionsChange: (
+    tabConfig: TabConfig<TargetType>,
+    actions: ZaaktypeAction[],
+  ) => void;
 };
 
 /**
@@ -406,9 +438,9 @@ type ZaaktypeTabsProps = {
  */
 function ZaaktypeTabs({
   object,
-  relatedRendererRef,
   tabConfigs,
   onChange,
+  onTabActionsChange,
 }: ZaaktypeTabsProps) {
   // (Horizontal) tab data.
   const [tabHash, setTabHash] = useHashParam("tab", "0");
@@ -434,9 +466,9 @@ function ZaaktypeTabs({
         <Tab key={tabConfig.label} label={tabConfig.label}>
           <ZaaktypeTab
             object={object}
-            relatedRendererRef={relatedRendererRef}
             tabConfig={tabConfig}
             onChange={onChange}
+            onTabActionsChange={onTabActionsChange}
           />
         </Tab>
       )),
@@ -452,9 +484,12 @@ function ZaaktypeTabs({
 
 type ZaaktypeTabProps = {
   object: TargetType;
-  relatedRendererRef: Ref<RelatedObjectRendererHandle>;
   tabConfig: TabConfig<TargetType>;
   onChange: React.ChangeEventHandler;
+  onTabActionsChange: (
+    tabConfig: TabConfig<TargetType>,
+    actions: ZaaktypeAction[],
+  ) => void;
 };
 
 /**
@@ -462,9 +497,9 @@ type ZaaktypeTabProps = {
  */
 const ZaaktypeTab = ({
   object,
-  relatedRendererRef,
   tabConfig,
   onChange,
+  onTabActionsChange,
 }: ZaaktypeTabProps) => {
   const { fields } = useLoaderData() as ZaaktypeLoaderData;
   const [combinedSearchParams] = useCombinedSearchParams();
@@ -518,6 +553,8 @@ const ZaaktypeTab = ({
   }, [fields, object]);
 
   /**
+   * FIXME: Only used for AttributeGrid, refactor.
+   *
    * Memoizes a version of the result relatedObject where expandable fields
    * are replaced by React nodes rendering related data.
    *
@@ -553,17 +590,14 @@ const ZaaktypeTab = ({
       }
 
       overrides[fieldName] = (
-        // TODO: Handle errors for related objects.
         <RelatedObjectRenderer
-          ref={relatedRendererRef}
-          expandFields={
-            activeSectionConfig.expandFields as TypedField<TargetType>[]
-          }
+          expandFields={fields2TypedFields(
+            (activeSectionConfig.expandFields || []) as Field[],
+          )}
           object={object}
           relatedObject={relatedObject as RelatedObject<TargetType>}
-          view={tabConfig.view}
-          field={fieldName as ExpandItemKeys<TargetType>}
-          fields={fields}
+          relatedObjectKey={fieldName as ExpandItemKeys<TargetType>}
+          fields={fields2TypedFields(fields as Field[])}
         />
       );
     }
@@ -582,9 +616,41 @@ const ZaaktypeTab = ({
   );
 
   /**
+   * Gets called with a list of actions to perform when mutations are made in
+   * a `<RelatedObjectDataGrid>`, these actions need to submitted to the backend
+   * in order to be persisted.
+   */
+  const handleActionsChange = useCallback(
+    (actions: TypedAction<string, object>[]) => {
+      onTabActionsChange(tabConfig, actions as ZaaktypeAction[]);
+    },
+    [tabConfig, onTabActionsChange],
+  );
+
+  /**
    * The <AttributeGrid/> with the data for the current tab/section.
    */
   const contents = useMemo(() => {
+    if (tabConfig.view === "DataGrid") {
+      const key = tabConfig.key;
+      const relatedObjects = object._expand[key] || [];
+      invariant(
+        Array.isArray(relatedObjects),
+        "relatedObjects must be an Array for RelatedObjectDataGrid!",
+      );
+
+      return (
+        <RelatedObjectDataGrid
+          object={object}
+          relatedObjects={relatedObjects}
+          relatedObjectKey={tabConfig.key}
+          fields={fields as TypedField[]}
+          fieldset={tabConfig.fieldset}
+          onActionsChange={handleActionsChange}
+        />
+      );
+    }
+
     if (isAttributeGridSection(tabConfig.view, activeSectionConfig)) {
       const fieldsets = activeSectionConfig.fieldsets.map((fieldset) => [
         fieldset[0],
