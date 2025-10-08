@@ -3,6 +3,7 @@
 # I think it could be fixed upstream
 # from __future__ import annotations
 
+from dataclasses import dataclass
 import datetime
 import enum
 from functools import singledispatch
@@ -14,6 +15,7 @@ from typing import (
     Iterable,
     Mapping,
     NewType,
+    Optional,
     Self,
     Sequence,
     Type,
@@ -25,6 +27,7 @@ from uuid import UUID
 
 from django.core.cache import cache as django_cache
 
+from git import Optional
 import msgspec
 from ape_pie import APIClient
 from furl import furl
@@ -171,7 +174,9 @@ def _cached[F: Callable[[], object]](f: F) -> F:
         default=f,
         timeout=60 * 60 * 24,
     )
-    function.clear_cache = lambda: django_cache.delete(key)  # pyright: ignore[reportFunctionMemberAccess]
+    function.clear_cache = lambda: django_cache.delete(
+        key
+    )  # pyright: ignore[reportFunctionMemberAccess]
 
     return function
 
@@ -600,6 +605,35 @@ def fetch_resultaten() -> list[LAXResultaat]:
         return list(iter_pages(client, decode(response.content, type=PagedResultaat)))
 
 
+@dataclass
+class Deelzaaktype:
+    naam: str
+    url: str
+
+
+@as_ob_option.register(Deelzaaktype)
+def _deelzaaktype_as_option(
+    dz: Deelzaaktype,
+    /,
+    client: APIClient | None = None,
+) -> OBOption[str]:
+    return OBOption(label=dz.naam, value=dz.url)
+
+
+def fetch_deelzaaktypen_options() -> list[OBOption[str]]:
+    dzs = fetch_deelzaaktypen()
+    return [as_ob_option(dz) for dz in sorted(dzs, key=lambda d: d.naam)]
+
+
+@_cached
+def fetch_deelzaaktypen() -> list[Deelzaaktype]:
+    return [
+        Deelzaaktype(naam="Option A", url="a"),
+        Deelzaaktype(naam="Option B", url="b"),
+        Deelzaaktype(naam="Option C", url="c"),
+    ]
+
+
 class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
     uuid: UUID | UnsetType = UNSET
     resultaattypeomschrijving: Annotated[  # pyright: ignore[reportIncompatibleVariableOverride]
@@ -678,15 +712,13 @@ class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
 
 class ExpandableZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: UUID | UnsetType = UNSET
-    objecttype: (  # pyright: ignore[reportIncompatibleVariableOverride]
-        Annotated[
-            ObjectTypeURL,
-            Meta(
-                description="URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort.",
-                max_length=200,
-            ),
-        ]
-    )
+    objecttype: Annotated[  # pyright: ignore[reportIncompatibleVariableOverride]
+        ObjectTypeURL,
+        Meta(
+            description="URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort.",
+            max_length=200,
+        ),
+    ]
     _expand: ZaakObjectTypeExtension = ZaakObjectTypeExtension()
 
 

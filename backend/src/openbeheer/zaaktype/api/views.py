@@ -64,6 +64,7 @@ from openbeheer.types._open_beheer import (
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
     ZaakTypeInformatieObjectTypeWithUUID,
+    fetch_deelzaaktypen_options,
     fetch_selectielijst_resultaat_options,
 )
 from openbeheer.types.ztc import (
@@ -323,9 +324,11 @@ def expand_selectielijstprocestype(
 
     with selectielijst_client() as client:
         return [
-            fetch_one(client, zaaktype.selectielijst_procestype, LAXProcesType)
-            if zaaktype.selectielijst_procestype
-            else None
+            (
+                fetch_one(client, zaaktype.selectielijst_procestype, LAXProcesType)
+                if zaaktype.selectielijst_procestype
+                else None
+            )
             for zaaktype in zaaktypen
         ]
 
@@ -453,7 +456,10 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             "besluittypen",
             # "zaaktypen" is probably a typo in the VNG spec, it doesn't look like
             # it actually accepts multiple so we can't use a __in
-            lambda zt: {"zaaktypen": zt.url, "status": "alles"},  # pyright: ignore[reportAttributeAccessIssue]
+            lambda zt: {
+                "zaaktypen": zt.url,
+                "status": "alles",
+            },  # pyright: ignore[reportAttributeAccessIssue]
             BesluitTypeWithUUID,
         ),
         "statustypen": make_expansion(
@@ -526,8 +532,10 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             if data.selectielijst_procestype
             else []
         )
+        deelzaaktypen_options = fetch_deelzaaktypen_options()
 
         expansions = set(map(camelize, self.expansions))
+        writable_expansions = {"deelzaaktypen"}
 
         return super().get_fields(
             data,
@@ -536,11 +544,12 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
                     data
                 ),
                 "_expand.resultaattypen.selectielijstklasse": selectielijst_options,
+                "deelzaaktypen": deelzaaktypen_options,
             },
-            base_editable=(
+            base_editable=lambda name: (
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
-                lambda name: name != "selectielijstProcestype"
-                and name not in expansions
+                name != "selectielijstProcestype"
+                and (name not in expansions or name in writable_expansions)
             ),
         )
 

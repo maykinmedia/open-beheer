@@ -660,6 +660,9 @@ const ZaaktypeTab = ({
               field?.name && field.name in expandedOverrides
                 ? false
                 : field?.editable;
+            if (field?.name === "deelzaaktypen") {
+              return {...field, editable: true, multiple: true}
+            }
             return { ...field, editable };
           }),
         },
