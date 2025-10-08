@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"domein": "QYWBT", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
-      "naam": "Test catalogus"}'
+    body: '{"domein": "MXUIQ", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Time stay agree law."}'
     headers:
       Accept:
       - '*/*'
@@ -12,15 +12,15 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '104'
+      - '110'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0","domein":"QYWBT","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Test
-        catalogus","versie":"","begindatumVersie":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07","domein":"MXUIQ","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Time
+        stay agree law.","versie":"","begindatumVersie":null}'
     headers:
       API-version:
       - 1.3.1
@@ -29,13 +29,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '365'
+      - '371'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0
+      - http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07
       Referrer-Policy:
       - same-origin
       Vary:
@@ -48,14 +48,14 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"omschrijving": "Another test zaaktype", "vertrouwelijkheidaanduiding":
+    body: '{"omschrijving": "Hair door produce run.", "vertrouwelijkheidaanduiding":
       "openbaar", "doel": "New Zaaktype 001", "aanleiding": "New Zaaktype 001", "indicatieInternOfExtern":
       "intern", "handelingInitiator": "aanvragen", "onderwerp": "New Zaaktype 001",
       "handelingBehandelaar": "handelin", "doorlooptijd": "P40D", "opschortingEnAanhoudingMogelijk":
       false, "verlengingMogelijk": true, "verlengingstermijn": "P40D", "publicatieIndicatie":
       false, "productenOfDiensten": ["https://example.com/product/321"], "referentieproces":
       {"naam": "ReferentieProces 1"}, "verantwoordelijke": "200000000", "beginGeldigheid":
-      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0",
+      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07",
       "besluittypen": [], "gerelateerdeZaaktypen": [], "selectielijstProcestype":
       "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"}'
     headers:
@@ -68,18 +68,18 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '922'
+      - '923'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316","identificatie":"ZAAKTYPE-2025-0000000001","omschrijving":"Another
-        test zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/4f0a8e80-e9f5-48e0-995e-b22390418176","identificatie":"ZAAKTYPE-2025-0000000022","omschrijving":"Hair
+        door produce run.","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -88,13 +88,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1373'
+      - '1374'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/4f0a8e80-e9f5-48e0-995e-b22390418176
       Referrer-Policy:
       - same-origin
       Vary:
@@ -107,8 +107,8 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0",
-      "publicatie_indicatie": true, "informatieobjecttypen": [], "begin_geldigheid":
+    body: '{"catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07",
+      "publicatieIndicatie": true, "informatieobjecttypen": [], "beginGeldigheid":
       "2025-06-19", "omschrijving": "Tja"}'
     headers:
       Accept:
@@ -120,14 +120,14 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '220'
+      - '218'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/besluittypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/besluittypen/61c2be8f-7bc4-4427-81e1-f3127f15c251","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0","zaaktypen":[],"omschrijving":"Tja","omschrijvingGeneriek":"","besluitcategorie":"","reactietermijn":null,"publicatieIndicatie":true,"publicatietekst":"","publicatietermijn":null,"toelichting":"","informatieobjecttypen":[],"beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"concept":true,"resultaattypen":[],"resultaattypenOmschrijving":[],"vastgelegdIn":[],"beginObject":"2025-06-19","eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/besluittypen/d3c208b2-4f6a-4106-afec-7153ef531e82","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07","zaaktypen":[],"omschrijving":"Tja","omschrijvingGeneriek":"","besluitcategorie":"","reactietermijn":null,"publicatieIndicatie":true,"publicatietekst":"","publicatietermijn":null,"toelichting":"","informatieobjecttypen":[],"beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"concept":true,"resultaattypen":[],"resultaattypenOmschrijving":[],"vastgelegdIn":[],"beginObject":"2025-06-19","eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -142,7 +142,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/besluittypen/61c2be8f-7bc4-4427-81e1-f3127f15c251
+      - http://localhost:8003/catalogi/api/v1/besluittypen/d3c208b2-4f6a-4106-afec-7153ef531e82
       Referrer-Policy:
       - same-origin
       Vary:
@@ -166,14 +166,14 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/4f0a8e80-e9f5-48e0-995e-b22390418176
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316","identificatie":"ZAAKTYPE-2025-0000000001","omschrijving":"Another
-        test zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/4f0a8e80-e9f5-48e0-995e-b22390418176","identificatie":"ZAAKTYPE-2025-0000000022","omschrijving":"Hair
+        door produce run.","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -182,13 +182,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1373'
+      - '1374'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       ETag:
-      - '"6272072f5218982f508b03840e13da4f"'
+      - '"38d7e2eafb46521bbc4c31ad5b46294c"'
       Referrer-Policy:
       - same-origin
       Vary:
@@ -201,7 +201,7 @@ interactions:
       code: 200
       message: OK
 - request:
-    body: '{"besluittypen": ["http://localhost:8003/catalogi/api/v1/besluittypen/61c2be8f-7bc4-4427-81e1-f3127f15c251"]}'
+    body: '{"besluittypen": ["http://localhost:8003/catalogi/api/v1/besluittypen/d3c208b2-4f6a-4106-afec-7153ef531e82"]}'
     headers:
       Accept:
       - '*/*'
@@ -216,14 +216,14 @@ interactions:
       Content-Type:
       - application/json
     method: PATCH
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/4f0a8e80-e9f5-48e0-995e-b22390418176
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316","identificatie":"ZAAKTYPE-2025-0000000001","omschrijving":"Another
-        test zaaktype","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/4f0a8e80-e9f5-48e0-995e-b22390418176","identificatie":"ZAAKTYPE-2025-0000000022","omschrijving":"Hair
+        door produce run.","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
         Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
         Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
-        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/61c2be8f-7bc4-4427-81e1-f3127f15c251"],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":["http://localhost:8003/catalogi/api/v1/besluittypen/d3c208b2-4f6a-4106-afec-7153ef531e82"],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
     headers:
       API-version:
       - 1.3.1
@@ -232,7 +232,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1462'
+      - '1463'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
@@ -260,10 +260,10 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/besluittypen/61c2be8f-7bc4-4427-81e1-f3127f15c251
+    uri: http://localhost:8003/catalogi/api/v1/besluittypen/d3c208b2-4f6a-4106-afec-7153ef531e82
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/besluittypen/61c2be8f-7bc4-4427-81e1-f3127f15c251","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/e72ef872-efb6-48b1-9b6c-63c23259dad0","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/82bffef9-2fd7-4b0f-8904-154aa76f1316"],"omschrijving":"Tja","omschrijvingGeneriek":"","besluitcategorie":"","reactietermijn":null,"publicatieIndicatie":true,"publicatietekst":"","publicatietermijn":null,"toelichting":"","informatieobjecttypen":[],"beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"concept":true,"resultaattypen":[],"resultaattypenOmschrijving":[],"vastgelegdIn":[],"beginObject":"2025-06-19","eindeObject":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/besluittypen/d3c208b2-4f6a-4106-afec-7153ef531e82","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/6f882079-47fb-47b4-bfcd-6b2c37015c07","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/4f0a8e80-e9f5-48e0-995e-b22390418176"],"omschrijving":"Tja","omschrijvingGeneriek":"","besluitcategorie":"","reactietermijn":null,"publicatieIndicatie":true,"publicatietekst":"","publicatietermijn":null,"toelichting":"","informatieobjecttypen":[],"beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"concept":true,"resultaattypen":[],"resultaattypenOmschrijving":[],"vastgelegdIn":[],"beginObject":"2025-06-19","eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
@@ -278,7 +278,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       ETag:
-      - '"6e79b99da9b5502b0468612e7286e335"'
+      - '"7e0aa869ebe1440c06b9e689322022bd"'
       Referrer-Policy:
       - same-origin
       Vary:

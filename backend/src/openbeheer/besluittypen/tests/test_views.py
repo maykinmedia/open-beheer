@@ -95,6 +95,24 @@ class BesluitTypeListViewTests(VCRAPITestCase):
         refreshed = ztc_client("OZ").get(data["url"]).json()
         self.assertIn(self.zaaktype.url, refreshed["zaaktypen"])
 
+        assert self.cassette
+        # we shouldn't have sent snake_case to the service
+        # OZ might work, but other implementations may not
+        requests_to_service = (
+            r for r in self.cassette.requests if r.uri.startswith(self.service.api_root)
+        )
+        requests_with_snake_case = [
+            (r, r.body)
+            for r in requests_to_service
+            if r.body
+            and any(
+                snake_case in r.body
+                for snake_case in [b"begin_geldigheid", b"publicatie_indicatie"]
+            )
+        ]
+
+        assert requests_with_snake_case == []
+
 
 class BesluitTypeDetailViewTest(VCRAPITestCase):
     @classmethod

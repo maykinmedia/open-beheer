@@ -11,6 +11,7 @@ from typing import (
     Protocol,
     Sequence,
     get_origin,
+    override,
     runtime_checkable,
 )
 from uuid import UUID
@@ -31,6 +32,7 @@ from msgspec import (
 )
 from msgspec.json import Encoder, decode
 from rest_framework import status
+from rest_framework.parsers import BaseParser, JSONParser
 from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView as _APIView
@@ -119,9 +121,16 @@ def _add_mixin(render_class: type[BaseRenderer]) -> type[BaseRenderer]:
 class MsgspecAPIView(_APIView):
     serializer_class = None
 
+    @override
     def get_renderers(self) -> list[BaseRenderer]:
         render_classes = (_add_mixin(_class) for _class in self.renderer_classes)
         return [MsgspecJSONRenderer()] + [r() for r in render_classes]
+
+    @override
+    def get_parsers(self) -> list[BaseParser]:
+        # Because we, pass-through PATCH, POST and PUT data as-is to the service
+        # we shouldn't snake_case the incoming json.
+        return [JSONParser()] + super().get_parsers()
 
 
 type Expansion[T: Struct, R] = Callable[[APIClient, Iterable[T]], Iterable[R]]
