@@ -639,11 +639,12 @@ const ZaaktypeTab = ({
 
       return (
         <RelatedObjectDataGrid
+          fields={fields as TypedField[]}
+          fieldset={tabConfig.fieldset}
+          isEditing={isEditing}
           object={object}
           relatedObjects={relatedObjects}
           relatedObjectKey={tabConfig.key}
-          fields={fields as TypedField[]}
-          fieldset={tabConfig.fieldset}
           onActionsChange={handleActionsChange}
         />
       );
@@ -689,6 +690,7 @@ const ZaaktypeTab = ({
     activeSectionConfig,
     object,
     expandedOverrides,
+    isEditing,
     onChange,
   ]);
 
