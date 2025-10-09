@@ -35,6 +35,6 @@ export async function informatieobjecttypeCreateAction({
   // const iotUrl = responseData.url!; // We know that Open Zaak always returns a URL
   // const nextPath = `/${params.serviceSlug}/${params.catalogusId}/informatieobjecttypen/${getUUIDFromString(iotUrl)}`;
   return redirect(
-    `/${params.serviceSlug}/${params.catalogusId}/informatieobjecttypen/`,
+    `/${params.serviceSlug}/${params.catalogusId}/informatieobjecttypen`,
   );
 }
