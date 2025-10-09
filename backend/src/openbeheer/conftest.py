@@ -4,7 +4,9 @@ import pathlib
 from typing import ContextManager, Generator
 
 import pytest
-from pytest_django import live_server_helper
+from mozilla_django_oidc_db.constants import OIDC_ADMIN_CONFIG_IDENTIFIER
+from mozilla_django_oidc_db.tests.factories import OIDCClientFactory
+from pytest_django import DjangoDbBlocker, live_server_helper
 from pytest_django.lazy_django import skip_if_no_django
 
 from openbeheer.utils.gherkin_e2e import GherkinRunner
@@ -14,6 +16,17 @@ from openbeheer.utils.tests import VCRMixin
 @pytest.fixture
 def runner(live_server_vcr) -> GherkinRunner:
     return GherkinRunner(live_server_vcr)
+
+
+@pytest.fixture(scope="function")
+def django_db_setup(
+    django_db_setup: Generator[None, None, None],
+    django_db_blocker: DjangoDbBlocker | None,
+):
+    assert django_db_blocker
+
+    with django_db_blocker.unblock():
+        OIDCClientFactory.create(identifier=OIDC_ADMIN_CONFIG_IDENTIFIER)
 
 
 class VCRPyTestHelper(VCRMixin):
