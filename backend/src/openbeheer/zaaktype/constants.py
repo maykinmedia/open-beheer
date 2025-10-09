@@ -57,6 +57,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "referentieproces",
                 # TODO: Zaaktype UUID
                 "identificatie",
+                "deelzaaktypen",
                 # TODO: expand with some sort of label
                 "gerelateerde_zaaktypen",
                 # TODO: expand catalogus

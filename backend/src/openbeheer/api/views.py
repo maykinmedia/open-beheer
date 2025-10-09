@@ -420,9 +420,11 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
             if errors:
                 return Response(
                     errors,
-                    status.HTTP_400_BAD_REQUEST
-                    if all(400 <= e.status < 500 for e in errors)
-                    else status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    (
+                        status.HTTP_400_BAD_REQUEST
+                        if all(400 <= e.status < 500 for e in errors)
+                        else status.HTTP_500_INTERNAL_SERVER_ERROR
+                    ),
                 )
 
         return Response(data, status.HTTP_201_CREATED)
@@ -523,14 +525,17 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
                 return data, response.status_code
             except ValidationError as e:
                 logger.debug("invalid service response", validation_error=e)
-                return ZGWError(
-                    code="Bad response",
-                    title="Server returned out of spec response",
-                    detail=str(e),
-                    instance="",
-                    status=500,
-                    invalid_params=[],
-                ), 500
+                return (
+                    ZGWError(
+                        code="Bad response",
+                        title="Server returned out of spec response",
+                        detail=str(e),
+                        instance="",
+                        status=500,
+                        invalid_params=[],
+                    ),
+                    500,
+                )
 
     @staticmethod
     def paginate(
@@ -601,34 +606,43 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
 
             if not response.ok:
                 # error = decode(response.content, type=ValidatieFout) # TODO: the OZ 404 response gives invalid JSON back
-                return ZGWError(
-                    code="",
-                    title="",
-                    detail="",
-                    instance="",
-                    status=response.status_code,
-                    invalid_params=[],
-                ), response.status_code
+                return (
+                    ZGWError(
+                        code="",
+                        title="",
+                        detail="",
+                        instance="",
+                        status=response.status_code,
+                        invalid_params=[],
+                    ),
+                    response.status_code,
+                )
 
             content = response.content
             try:
-                return self._expand(
-                    client,
-                    decode(
-                        content,
-                        type=self.data_type,
-                        strict=False,
+                return (
+                    self._expand(
+                        client,
+                        decode(
+                            content,
+                            type=self.data_type,
+                            strict=False,
+                        ),
                     ),
-                ), response.status_code
+                    response.status_code,
+                )
             except ValidationError as e:
-                return ZGWError(
-                    code="Bad response",
-                    title="Server returned out of spec response",
-                    detail=str(e),
-                    instance="",
-                    status=500,
-                    invalid_params=[],
-                ), 500
+                return (
+                    ZGWError(
+                        code="Bad response",
+                        title="Server returned out of spec response",
+                        detail=str(e),
+                        instance="",
+                        status=500,
+                        invalid_params=[],
+                    ),
+                    500,
+                )
 
     def _expand(self, client, object: T):
         return expand_one(client, self.expansions, object)
