@@ -10,12 +10,12 @@ import {
 import { string2Title } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
 import { JSX, useCallback, useEffect, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 import { useNavigation, useParams } from "react-router";
 import { SERVICE_PARAM } from "~/App.tsx";
-import { useCombinedSearchParams } from "~/hooks";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { getUUIDFromString } from "~/lib/format/string.ts";
-import { ExpandItemKeys, RelatedObject } from "~/types";
+import { Expand, Expanded, RelatedObject } from "~/types";
 
 export type RelatedObjectDataGridProps<
   T extends { url: string },
@@ -25,14 +25,36 @@ export type RelatedObjectDataGridProps<
   fields: TypedField[];
   /** FieldSet specifying which fields to include and their order. */
   fieldset: FieldSet<R>;
+  /** Whether edit mode is active. */
+  isEditing: boolean;
   /** The parent object for which related objects are displayed. */
   object: T;
   /** Key in the parent object representing the relationship. */
-  relatedObjectKey: ExpandItemKeys<T>[number];
+  relatedObjectKey: keyof Expand<Expanded<T>>;
   /** Initial array of related objects to display in the grid. */
   relatedObjects: R[];
   /** Called when list of actions (dispatch to persist) is changed. */
   onActionsChange: (actions: TypedAction<string, object>[]) => void;
+  /**
+   * Hook that allows modifying the `relatedObject` before committing changes.
+   *
+   * This function is called right before a change is committed, giving you a chance
+   * to adjust or validate the `relatedObject`.
+   *
+   * @param relatedObject - The object related to the pending change.
+   * @param actionType - The type of action describing the change.
+   * @returns A promise resolving to either:
+   * - The modified `relatedObject`, which will be committed.
+   * - `false`, to cancel (skip) committing the change.
+   *
+   * If `false` is returned, the change will be discarded and not persisted.
+   * If an updated object is returned, it will replace the original during commit.
+   */
+  hook?: (
+    relatedObject: R,
+    relatedObjectKey: keyof Expand<Expanded<T>>,
+    actionType: TypedAction<string, object>["type"],
+  ) => Promise<R | false>;
 };
 
 /**
@@ -52,10 +74,12 @@ export function RelatedObjectDataGrid<
 >({
   fields,
   fieldset,
+  isEditing: _isEditing,
   object,
   relatedObjectKey,
   relatedObjects,
   onActionsChange,
+  hook = (row) => Promise.resolve(row),
 }: RelatedObjectDataGridProps<T, R>) {
   // Loading state.
   const { state } = useNavigation();
@@ -66,9 +90,11 @@ export function RelatedObjectDataGrid<
   const serviceSlug = params[SERVICE_PARAM];
   invariant(serviceSlug, "serviceSlug must be provided!");
 
-  // Query params.
-  const [combinedSearchParams] = useCombinedSearchParams();
-  const isEditing = Boolean(combinedSearchParams.get("editing"));
+  // Whether edit mode is active.
+  const [isEditing, setIsEditing] = useState(_isEditing);
+  useEffect(() => {
+    setIsEditing(_isEditing);
+  }, [_isEditing]);
 
   // The fields included in the fieldset.
   const fieldSetFields = useMemo(
@@ -94,7 +120,7 @@ export function RelatedObjectDataGrid<
       })),
       { name: "actions", type: "jsx", editable: false },
     ],
-    [fieldSetFields],
+    [fieldSetFields, isEditing],
   );
 
   // Delete actions state.
@@ -192,6 +218,33 @@ export function RelatedObjectDataGrid<
   }, [objectList]);
 
   /**
+   * Rejects a change after update is made within the DataGrid.
+   *
+   * This may be called when `hook()` returned falsy result and the change needs
+   * to be discarded.
+   *
+   * We re-render the DataGrid with the old objectList after unsetting it
+   * triggering internal side effects to accommodate input values.
+   *
+   * TODO: Investigate a better approach.
+   */
+  const rejectChange = useCallback(() => {
+    const oldObjectList = [...objectList];
+    const oldMutationActions = [...mutationActions];
+
+    // flushSync explicitly prevents batched state updates here.
+    flushSync(() => {
+      setObjectList([]);
+      setMutationActions([]);
+    });
+
+    flushSync(() => {
+      setObjectList(() => oldObjectList);
+      setMutationActions(() => oldMutationActions);
+    });
+  }, [objectList, setObjectList, mutationActions, setMutationActions]);
+
+  /**
    * Adds a new row to the `objectList` and creates a corresponding action.
    *
    * Generates the next index using `findNextIndex()` and creates a new row
@@ -207,31 +260,46 @@ export function RelatedObjectDataGrid<
    * - TypeScript expects a loosely typed new row; `@ts-expect-error` is used
    *   for `volgnummer` assignment.
    */
-  const handleAdd = useCallback(() => {
+  const handleAdd = useCallback(async () => {
     const nextIndex = findNextIndex();
     const newRow = createRow(nextIndex);
+
+    // Run hook.
+    const rowWithHookResult = await hook(
+      newRow,
+      relatedObjectKey,
+      "ADD_RELATED_OBJECT",
+    );
+
+    // Hook returned falsy result, reject change.,
+    if (!rowWithHookResult) return;
+
+    // Get field names.
     const fieldNames = fieldSetFields.map((field) =>
       String(field.name).split(".").pop(),
     );
 
+    // Set index based volgnummer.
     if (fieldNames.includes("volgnummer")) {
       // @ts-expect-error - volgnummer assumed to be set on `R` when in `fieldSetFields`.
-      newRow["volgnummer"] = String(nextIndex);
+      rowWithHookResult["volgnummer"] = String(nextIndex);
     }
 
+    // Create action.
     const addAction: TypedAction<string, object> = {
       type: "ADD_RELATED_OBJECT",
       payload: {
         serviceSlug: serviceSlug,
         zaaktypeUuid: getUUIDFromString(object.url as string) as string,
         relatedObjectKey: relatedObjectKey,
-        relatedObject: newRow,
+        relatedObject: rowWithHookResult,
       },
     };
 
+    // Update State.
+    const newObjectList = [...objectList, rowWithHookResult];
     const newMutationActions = [...mutationActions, addAction];
-
-    setObjectList([...objectList, newRow]);
+    setObjectList(newObjectList);
     setMutationActions(newMutationActions);
 
     const actions = [...deleteActions, ...newMutationActions].filter(
@@ -242,6 +310,8 @@ export function RelatedObjectDataGrid<
   }, [
     findNextIndex,
     createRow,
+    hook,
+    relatedObjectKey,
     fieldSetFields,
     setObjectList,
     objectList,
@@ -268,13 +338,30 @@ export function RelatedObjectDataGrid<
    * objects and strict equality (`===`) is used for comparison.
    */
   const handleEdit = useCallback(
-    (row: SerializedFormData) => {
+    async (row: SerializedFormData) => {
+      // Find row index.
       const index = displayedObjectList.findIndex((object) => object === row);
-      const relatedObject = { ...row };
-      delete relatedObject.actions;
+
+      // Clean object.
+      const _relatedObject = { ...row };
+      delete _relatedObject.actions;
+      const relatedObject = _relatedObject as R;
+
+      // Run hook.
+      const rowWithHookResult = await hook(
+        relatedObject,
+        relatedObjectKey,
+        "EDIT_RELATED_OBJECT",
+      );
+
+      // Hook returned falsy result, reject change.,
+      if (!rowWithHookResult) {
+        rejectChange();
+        return;
+      }
 
       const newObjectList = objectList.map((row, i) =>
-        index === i ? (relatedObject as R) : row,
+        index === i ? (rowWithHookResult as R) : row,
       );
 
       const newMutationActions = mutationActions.map((action, i) => {
@@ -282,7 +369,7 @@ export function RelatedObjectDataGrid<
           return action
             ? {
                 ...action,
-                payload: { ...action.payload, relatedObject },
+                payload: { ...action.payload, rowWithHookResult },
               }
             : {
                 type: "EDIT_RELATED_OBJECT",
@@ -292,7 +379,7 @@ export function RelatedObjectDataGrid<
                     object.url as string,
                   ) as string,
                   relatedObjectKey,
-                  relatedObject,
+                  rowWithHookResult,
                 },
               };
         }
@@ -310,6 +397,9 @@ export function RelatedObjectDataGrid<
     },
     [
       objectList,
+      hook,
+      relatedObjectKey,
+      rejectChange,
       mutationActions,
       setObjectList,
       setMutationActions,
@@ -332,10 +422,23 @@ export function RelatedObjectDataGrid<
    *   an object in `objectList`, no deletion occurs.
    */
   const handleDelete = useCallback(
-    (row: (typeof objectList)[number]) => {
+    async (row: R) => {
       const index = objectList.findIndex(
         (object: (typeof objectList)[number]) => object === row,
       );
+
+      // Run hook.
+      const rowWithHookResult = await hook(
+        row,
+        relatedObjectKey,
+        "DELETE_RELATED_OBJECT",
+      );
+
+      // Hook returned falsy result, reject change.,
+      if (!rowWithHookResult) {
+        rejectChange();
+        return;
+      }
 
       setObjectList(objectList.filter((_, i) => i !== index));
       setMutationActions(mutationActions.filter((_, i) => i !== index));
@@ -346,14 +449,17 @@ export function RelatedObjectDataGrid<
 
       // If the removed item is not a stub, create a separate action for the removal.
       if (!isStub) {
-        invariant("uuid" in row, "row does not contain uuid field!");
+        invariant(
+          "uuid" in rowWithHookResult,
+          "rowWithHookResult does not contain uuid field!",
+        );
         const deleteAction: TypedAction<string, object> = {
           type: "DELETE_RELATED_OBJECT",
           payload: {
             serviceSlug: serviceSlug,
             zaaktypeUuid: getUUIDFromString(object.url as string) as string,
             relatedObjectKey: relatedObjectKey,
-            relatedObjectUuid: row.uuid,
+            relatedObjectUuid: rowWithHookResult.uuid,
           },
         };
 
@@ -421,7 +527,7 @@ export function RelatedObjectDataGrid<
   // either a `TypedAction` or `null`.
   invariant(
     objectList.length === mutationActions.length,
-    "objectList and actions should be in sync!",
+    "objectList and mutationActions should be in sync!",
   );
 
   return (
