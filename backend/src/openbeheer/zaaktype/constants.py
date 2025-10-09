@@ -133,10 +133,6 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "_expand.eigenschappen.naam",
                 "_expand.eigenschappen.definitie",
                 "_expand.eigenschappen.specificatie",
-                "_expand.eigenschappen.toelichting",
-                "_expand.eigenschappen.statustype",
-                "_expand.eigenschappen.beginGeldigheid",
-                "_expand.eigenschappen.eindeGeldigheid",
                 # "_expand.eigenschappen.uuid",
             ]
         ),
