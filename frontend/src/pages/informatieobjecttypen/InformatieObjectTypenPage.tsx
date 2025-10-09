@@ -1,6 +1,6 @@
-import { ButtonLink, Outline } from "@maykin-ui/admin-ui";
+import { Button, Outline } from "@maykin-ui/admin-ui";
 import { useCallback } from "react";
-import { useLoaderData, useLocation } from "react-router";
+import { NavLink, useLoaderData, useLocation } from "react-router";
 import { getUUIDFromString } from "~/lib/format/string.ts";
 import { components } from "~/types";
 import { ListView } from "~/views";
@@ -24,14 +24,15 @@ export function InformatieObjectTypenPage() {
       {...loaderData}
       getHref={getAbsolutePath}
       toolbarItems={[
-        // TODO: filters
-        <ButtonLink
-          href="informatieobjecttypen/create"
+        <Button
           key="create-informatieobjecttype"
-          variant="primary"
+          // TODO: Fix styling
+          // variant="primary"
         >
-          <Outline.PlusIcon /> Nieuw informatieobjecttype
-        </ButtonLink>,
+          <NavLink to="create">
+            <Outline.PlusIcon /> Nieuw informatieobjecttype
+          </NavLink>
+        </Button>,
       ]}
     />
   );
