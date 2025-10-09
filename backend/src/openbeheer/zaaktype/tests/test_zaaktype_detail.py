@@ -420,6 +420,11 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 {"label": statustype.omschrijving, "value": statustype.url}
             ]
 
+            assert (
+                fields_by_name["_expand.besluittypen.reactietermijn"]["type"]
+                == "duration"
+            )
+
         with self.subTest("All fields in the fieldsets should exist"):
             fields_in_fieldsets = set(
                 sum((fieldset["fields"] for _, fieldset in data["fieldsets"]), [])
