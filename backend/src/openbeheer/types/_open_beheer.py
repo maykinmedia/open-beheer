@@ -121,6 +121,12 @@ class OBFieldType(enum.StrEnum):
     boolean = enum.auto()
     date = enum.auto()
     # daterange = enum.auto()
+    duration = enum.auto()
+    """ISO 8601 duration:
+    PnYnMnDTnHnMnS
+    PnW
+    P<date>T<time>
+    """
     # null = enum.auto()
     number = enum.auto()
     string = enum.auto()
@@ -129,12 +135,24 @@ class OBFieldType(enum.StrEnum):
 
 
 def as_ob_fieldtype(
-    t: type | UnionType | Annotated, meta: Meta | None = None
+    t: type | UnionType | Annotated, field_name: str, meta: Meta | None = None
 ) -> OBFieldType:
-    "Return the `OBFieldType` for some annotation `t`"
+    """Return the `OBFieldType` for some annotation `t`
+
+    :param field_name: snake case field name without _expand... prefix
+    """
 
     args = get_args(t)
     meta = meta or next((arg for arg in args if isinstance(arg, Meta)), None)
+
+    if field_name in [
+        "reactietermijn",
+        "publicatietermijn",
+        "archiefactietermijn",
+        "procestermijn",
+        "verlengingstermijn",
+    ]:
+        return OBFieldType.duration
 
     match (t, meta):
         case type(), _ if t is bool:
@@ -152,7 +170,9 @@ def as_ob_fieldtype(
         case _ if args:
             # unpack Unions, Annotated etc.
             return as_ob_fieldtype(
-                next(ut for ut in args if ut not in (NoneType, UnsetType)), meta
+                next(ut for ut in args if ut not in (NoneType, UnsetType)),
+                field_name,
+                meta,
             )
         case _:
             # fallback to input widget
@@ -311,7 +331,7 @@ def ob_fields_of_type(
 
         ob_field = OBField(
             name=prefixed_name,
-            type=as_ob_fieldtype(annotation),
+            type=as_ob_fieldtype(annotation, name),
             options=option_overrides.get(prefixed_name, options(annotation)),
             # only editable if neither the whole type nor the attribute type is READ_ONLY
             editable=base_editable(prefixed_name)
