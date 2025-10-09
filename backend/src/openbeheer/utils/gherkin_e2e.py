@@ -110,6 +110,26 @@ class GherkinRunner:
                 + f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen"
             )
 
+        def go_to_informatieobjecttype_create_page(
+            self, page: Page, catalogus: Catalogus
+        ) -> None:
+            page.wait_for_load_state("networkidle")
+
+            link_button = page.get_by_text("Nieuw informatieobjecttype")
+            link_button.click()
+            assert catalogus.url
+            expect(page).to_have_url(
+                self.runner.live_server.url
+                + f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/create"
+            )
+
+        def click_on_button(self, page: Page, name: str = "") -> None:
+            kwargs = {}
+            if name:
+                kwargs.update({"name": name})
+            button = page.get_by_role("button", **kwargs)
+            button.click()
+
     class Then(GherkinScenario):
         """
         The "Then" steps specify the expected outcomes or results.
