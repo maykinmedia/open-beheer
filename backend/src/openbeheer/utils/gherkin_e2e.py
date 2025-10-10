@@ -130,6 +130,15 @@ class GherkinRunner:
             button = page.get_by_role("button", **kwargs)
             button.click()
 
+        def click_on_link(self, page: Page, name: str = "") -> None:
+            kwargs = {}
+            if name:
+                kwargs.update({"name": name})
+            iot_link = page.get_by_role("link", **kwargs)
+            iot_link.click()
+
+            page.wait_for_load_state("networkidle")
+
     class Then(GherkinScenario):
         """
         The "Then" steps specify the expected outcomes or results.
