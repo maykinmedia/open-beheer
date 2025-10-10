@@ -19,6 +19,10 @@ import { InformatieObjectTypenPage } from "~/pages/informatieobjecttypen";
 import { informatieobjecttypenLoader } from "~/pages/informatieobjecttypen/informatieobjecttype.loader";
 import { zaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 
+import {
+  InformatieObjectTypePage,
+  informatieobjecttypeLoader,
+} from "./pages/informatieobjecttype";
 import { informatieobjecttypeCreateAction } from "./pages/informatieobjecttypecreate/informatieobjecttype.action";
 
 /**
@@ -100,6 +104,32 @@ export const routes: RouteObject[] = [
                     path: "create",
                     element: <InformatieObjectTypeCreatePage />,
                     action: informatieobjecttypeCreateAction,
+                  },
+                  {
+                    id: "informatieobjecttype",
+                    path: ":informatieobjecttypeUUID",
+                    element: <InformatieObjectTypePage />,
+                    // action: informatieobjecttypeAction,
+                    loader: informatieobjecttypeLoader,
+                    // shouldRevalidate: ({ currentUrl, nextUrl }) => {
+                    //   const baseCurrent =
+                    //     currentUrl.origin +
+                    //     currentUrl.pathname +
+                    //     currentUrl.search;
+                    //   const baseNext =
+                    //     nextUrl.origin + nextUrl.pathname + nextUrl.search;
+
+                    //   // If base is the same but hash differs, do NOT revalidate
+                    //   if (
+                    //     baseCurrent === baseNext &&
+                    //     currentUrl.hash !== nextUrl.hash
+                    //   ) {
+                    //     return false;
+                    //   }
+
+                    //   // Otherwise, revalidate
+                    //   return true;
+                    // },
                   },
                 ],
               },
