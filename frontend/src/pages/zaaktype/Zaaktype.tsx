@@ -48,7 +48,11 @@ import {
 } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { TypedAction, useSubmitAction } from "~/hooks/useSubmitAction.tsx";
-import { findConceptZaaktypeVersion, getZaaktypeUUID } from "~/lib";
+import {
+  convertFieldsetsToTabConfig,
+  findConceptZaaktypeVersion,
+  getZaaktypeUUID,
+} from "~/lib";
 import {
   findActiveZaaktypeVersion,
   sortZaaktypeVersions,
@@ -56,9 +60,7 @@ import {
 import { getZaaktypeCreateFields } from "~/lib/zaaktype/zaaktypeCreate.ts";
 import {
   AttributeGridSection,
-  AttributeGridTabConfig,
   DataGridSection,
-  DataGridTabConfig,
   TAB_CONFIG_ALGEMEEN,
   TAB_CONFIG_OVERVIEW,
   TabConfig,
@@ -132,38 +134,7 @@ export function ZaaktypePage() {
 
   // Convert FieldSet[] to TabConfig[].
   const fieldSetTabConfigs = useMemo<TabConfig<TargetType>[]>(
-    () =>
-      fieldsets
-        .map((fieldset) => {
-          const [label, { fields }] = fieldset;
-          const key = slugify(label);
-
-          // _expand fields imply DataGrid.
-          const fieldsAreExpanded = fields.find((field) =>
-            field.includes("_expand"),
-          );
-          const view = fieldsAreExpanded ? "DataGrid" : "AttributeGrid";
-
-          if (view === "AttributeGrid") {
-            return {
-              key: slugify(label),
-              label,
-              view,
-              sections: [{ label, fieldsets: [[label, { fields }]] }],
-            } as AttributeGridTabConfig<TargetType>;
-          }
-
-          return {
-            key: key,
-            fieldset: fieldset as unknown as FieldSet,
-            label,
-            view,
-            sections: [{ label, key: slugify(label) }],
-          } as DataGridTabConfig<TargetType>;
-        })
-        .filter((tabConfig): tabConfig is TabConfig<TargetType> =>
-          Boolean(tabConfig),
-        ),
+    convertFieldsetsToTabConfig<TargetType>(fieldsets),
     [JSON.stringify([fields, fieldsets])],
   );
 
