@@ -14,7 +14,17 @@ import {
   zaaktypeLoader,
   zaaktypenLoader,
 } from "~/pages";
+import { InformatieObjectTypeCreatePage } from "~/pages/informatieobjecttypecreate/InformatieObjectTypeCreatePage";
+import { InformatieObjectTypenPage } from "~/pages/informatieobjecttypen";
+import { informatieobjecttypenLoader } from "~/pages/informatieobjecttypen/informatieobjecttype.loader";
 import { zaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
+
+import {
+  InformatieObjectTypePage,
+  informatieobjecttypeLoader,
+} from "./pages/informatieobjecttype";
+import { informatieobjecttypeAction } from "./pages/informatieobjecttype/informatieobjecttype.action";
+import { informatieobjecttypeCreateAction } from "./pages/informatieobjecttypecreate/informatieobjecttype.action";
 
 /**
  * Available routes.
@@ -81,6 +91,46 @@ export const routes: RouteObject[] = [
                       // Otherwise, revalidate
                       return true;
                     },
+                  },
+                ],
+              },
+              {
+                id: "informatieobjecttypen",
+                path: "informatieobjecttypen",
+                element: <InformatieObjectTypenPage />,
+                loader: informatieobjecttypenLoader,
+                children: [
+                  {
+                    id: "create-informatieobjecttype",
+                    path: "create",
+                    element: <InformatieObjectTypeCreatePage />,
+                    action: informatieobjecttypeCreateAction,
+                  },
+                  {
+                    id: "informatieobjecttype",
+                    path: ":informatieobjecttypeUUID",
+                    element: <InformatieObjectTypePage />,
+                    action: informatieobjecttypeAction,
+                    loader: informatieobjecttypeLoader,
+                    // shouldRevalidate: ({ currentUrl, nextUrl }) => {
+                    //   const baseCurrent =
+                    //     currentUrl.origin +
+                    //     currentUrl.pathname +
+                    //     currentUrl.search;
+                    //   const baseNext =
+                    //     nextUrl.origin + nextUrl.pathname + nextUrl.search;
+
+                    //   // If base is the same but hash differs, do NOT revalidate
+                    //   if (
+                    //     baseCurrent === baseNext &&
+                    //     currentUrl.hash !== nextUrl.hash
+                    //   ) {
+                    //     return false;
+                    //   }
+
+                    //   // Otherwise, revalidate
+                    //   return true;
+                    // },
                   },
                 ],
               },
