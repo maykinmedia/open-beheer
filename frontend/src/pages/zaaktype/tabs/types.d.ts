@@ -56,7 +56,7 @@ type BaseTabSection<
   }>;
 };
 export type AttributeGridSection<T extends object> = BaseTabSection<T> & {
-  fieldsets: FieldSet<Expanded<T>>[];
+  fieldsets: FieldSet<T>[];
 };
 
 export type DataGridSection<T extends object> = BaseTabSection<T> & {
