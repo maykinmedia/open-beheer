@@ -23,6 +23,7 @@ import {
   InformatieObjectTypePage,
   informatieobjecttypeLoader,
 } from "./pages/informatieobjecttype";
+import { informatieobjecttypeAction } from "./pages/informatieobjecttype/informatieobjecttype.action";
 import { informatieobjecttypeCreateAction } from "./pages/informatieobjecttypecreate/informatieobjecttype.action";
 
 /**
@@ -109,7 +110,7 @@ export const routes: RouteObject[] = [
                     id: "informatieobjecttype",
                     path: ":informatieobjecttypeUUID",
                     element: <InformatieObjectTypePage />,
-                    // action: informatieobjecttypeAction,
+                    action: informatieobjecttypeAction,
                     loader: informatieobjecttypeLoader,
                     // shouldRevalidate: ({ currentUrl, nextUrl }) => {
                     //   const baseCurrent =
