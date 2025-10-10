@@ -52,8 +52,8 @@ export type RelatedObjectDataGridProps<
    */
   hook?: (
     relatedObject: R,
-    relatedObjectKey: keyof Expand<Expanded<T>>,
     actionType: TypedAction<string, object>["type"],
+    relatedObjectKey: keyof Expand<Expanded<T>>,
   ) => Promise<R | false>;
 };
 
@@ -118,7 +118,7 @@ export function RelatedObjectDataGrid<
         name: String(field.name).split(".").pop() as keyof R,
         type: field.type === "text" ? "string" : field.type,
       })),
-      { name: "actions", type: "jsx", editable: false },
+      { name: "actions", type: "jsx", editable: false, sortable: false },
     ],
     [fieldSetFields, isEditing],
   );
@@ -158,8 +158,9 @@ export function RelatedObjectDataGrid<
     (nextIndex: number): R => {
       return typedFields.reduce<R>((acc, { name, type, options }) => {
         // Auto-pick option based on the next index, fallback to first option
-        if (options?.length) {
-          const value = options[nextIndex - 1]?.value ?? options[0].value;
+        if (options) {
+          const optionIndex = options[nextIndex - 1] ? nextIndex - 1 : 0;
+          const value = options[optionIndex]?.value;
           return { ...acc, [name]: value };
         }
 
@@ -267,8 +268,8 @@ export function RelatedObjectDataGrid<
     // Run hook.
     const rowWithHookResult = await hook(
       newRow,
-      relatedObjectKey,
       "ADD_RELATED_OBJECT",
+      relatedObjectKey,
     );
 
     // Hook returned falsy result, reject change.,
@@ -350,8 +351,8 @@ export function RelatedObjectDataGrid<
       // Run hook.
       const rowWithHookResult = await hook(
         relatedObject,
-        relatedObjectKey,
         "EDIT_RELATED_OBJECT",
+        relatedObjectKey,
       );
 
       // Hook returned falsy result, reject change.,
@@ -369,7 +370,10 @@ export function RelatedObjectDataGrid<
           return action
             ? {
                 ...action,
-                payload: { ...action.payload, rowWithHookResult },
+                payload: {
+                  ...action.payload,
+                  relatedObject: rowWithHookResult,
+                },
               }
             : {
                 type: "EDIT_RELATED_OBJECT",
@@ -379,7 +383,7 @@ export function RelatedObjectDataGrid<
                     object.url as string,
                   ) as string,
                   relatedObjectKey,
-                  rowWithHookResult,
+                  relatedObject: rowWithHookResult,
                 },
               };
         }
@@ -430,8 +434,8 @@ export function RelatedObjectDataGrid<
       // Run hook.
       const rowWithHookResult = await hook(
         row,
-        relatedObjectKey,
         "DELETE_RELATED_OBJECT",
+        relatedObjectKey,
       );
 
       // Hook returned falsy result, reject change.,
@@ -537,6 +541,7 @@ export function RelatedObjectDataGrid<
         editing={isEditing}
         decorate
         fields={typedFields}
+        urlFields={[]}
         objectList={displayedObjectList}
         sort
         onEdit={handleEdit}

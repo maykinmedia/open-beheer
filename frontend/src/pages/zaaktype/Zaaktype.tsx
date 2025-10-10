@@ -7,6 +7,7 @@ import {
   FieldSet,
   Grid,
   H2,
+  Option,
   Outline,
   Sidebar,
   Solid,
@@ -16,11 +17,13 @@ import {
   TypedField,
   fields2TypedFields,
   isPrimitive,
+  useDialog,
   useFormDialog,
 } from "@maykin-ui/admin-ui";
-import { slugify, ucFirst } from "@maykin-ui/client-common";
+import { slugify, string2Title, ucFirst } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
 import React, {
+  JSX,
   ReactNode,
   useCallback,
   useEffect,
@@ -28,6 +31,7 @@ import React, {
   useState,
 } from "react";
 import { useLoaderData, useParams } from "react-router";
+import { ArchiveForm } from "~/components";
 import { VersionSelector } from "~/components/VersionSelector";
 import {
   RelatedObjectBadge,
@@ -62,7 +66,15 @@ import {
   ZaaktypeLoaderData,
 } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
-import { Expand, ExpandItemKeys, RelatedObject } from "~/types";
+import {
+  Expand,
+  ExpandItemKeys,
+  Expanded,
+  RelatedObject,
+  components,
+} from "~/types";
+
+type ResultaatType = components["schemas"]["ResultaatTypeWithUUID"];
 
 /** Explicit tab configs specified ./tabs, overrides tab config resolved from fieldset. */
 const TAB_CONFIG_OVERRIDES: TabConfig<TargetType>[] = [
@@ -518,6 +530,21 @@ const ZaaktypeTab = ({
     return tabConfig.sections.length > 1;
   }, [tabConfig]);
 
+  // Related object dialog.
+  const hookDialog = useDialog();
+  const [hookDialogState, setHookDialogState] = useState<{
+    open: boolean;
+    title?: string;
+    body?: JSX.Element;
+  }>();
+
+  useEffect(() => {
+    if (!hookDialogState) return;
+    hookDialog(hookDialogState.title || "", hookDialogState.body, undefined, {
+      open: hookDialogState.open,
+    });
+  }, [hookDialogState]);
+
   /**
    * Memoizes a version of the result relatedObject where complex fields
    * are replaced by React nodes rendering their data.
@@ -626,6 +653,135 @@ const ZaaktypeTab = ({
   );
 
   /**
+   * Hook that allows modifying the `relatedObject` before committing changes.
+   *
+   * This function is called right before a change is committed, giving you a chance
+   * to adjust or validate the `relatedObject`.
+   *
+   * @param relatedObject - The object related to the pending change.
+   * @param actionType - The type of action describing the change.
+   * @returns A promise resolving to either:
+   * - The modified `relatedObject`, which will be committed.
+   * - `false`, to cancel (skip) committing the change.
+   *
+   * If `false` is returned, the change will be discarded and not persisted.
+   * If an updated object is returned, it will replace the original during commit.
+   */
+  const relatedObjectHook = async (
+    relatedObject: RelatedObject<TargetType>,
+    actionType: TypedAction["type"],
+    relatedObjectKey: keyof Expand<Expanded<TargetType>>,
+  ): Promise<false | RelatedObject<TargetType>> => {
+    switch (relatedObjectKey) {
+      case "resultaattypen":
+        return await resultaatTypeHook(
+          relatedObject as components["schemas"]["ResultaatTypeWithUUID"],
+          actionType,
+          relatedObjectKey,
+        );
+    }
+    return relatedObject;
+  };
+
+  /**
+   * Hook that handles pre-commit validation or enrichment for a `ResultaatType` object.
+   *
+   * This function is triggered before committing a change related to a `ResultaatType`,
+   * allowing user interaction or automated adjustment of the object.
+   *
+   * If the action type indicates a delete operation, no additional processing is required,
+   * and the original `ResultaatType` is returned immediately.
+   *
+   * For other action types, this hook opens a dialog (via `setHookDialogState`) presenting
+   * an `ArchiveForm`. The user can complete the form to provide or modify
+   * the `brondatumArchiefProcedure` field before the object is committed.
+   *
+   * @param resultaatType - The `ResultaatType` object to modify or validate.
+   * @param actionType - The action type describing the pending operation (e.g., "CREATE", "UPDATE", "DELETE").
+   * @param relatedObjectKey - The key in the expanded target object corresponding to this related object.
+   * @returns A promise resolving to one of:
+   * - The updated `ResultaatType` (if the user completes the form).
+   * - The original `ResultaatType` (for delete actions).
+   * - `false`, if the user cancels the dialog or an error occurs, indicating that the change should be skipped.
+   */
+  const resultaatTypeHook = useCallback(
+    async (
+      resultaatType: ResultaatType,
+      actionType: TypedAction["type"],
+      relatedObjectKey: keyof Expand<Expanded<TargetType>>,
+    ): Promise<ResultaatType | false> => {
+      // Delete requires no further actions.
+      if (actionType.toUpperCase().includes("DELETE")) return resultaatType;
+      return new Promise((resolve, reject) => {
+        // Locate selectielijstklasse (resultaat) options
+        const selectielijstklasseOptions = fields.find(
+          (field) =>
+            field.name === "_expand.resultaattypen.selectielijstklasse",
+        )?.options as Option[] | undefined;
+
+        // Throw if options can't be found.
+        invariant(
+          selectielijstklasseOptions,
+          "Failed to locate selectielijstklasse field!",
+        );
+
+        // Update dialog state in order to render form
+        setHookDialogState({
+          open: true,
+          title: string2Title(relatedObjectKey),
+          body: (
+            <ArchiveForm
+              resultaatType={resultaatType}
+              selectielijstklasseOptions={selectielijstklasseOptions}
+              // User completes resultaattype.
+              onSubmit={({
+                selectielijstklasse,
+                brondatumArchiefProcedure,
+              }) => {
+                setHookDialogState({ open: false });
+
+                // Resolve the resultaattype omschrijving field.
+                const resultaatTypeOmschrijvingField = fields.find(
+                  (f) =>
+                    f.name ===
+                    "_expand.resultaattypen.resultaattypeomschrijving",
+                );
+
+                // A default `resultaattypeomschrijving` value based on `brondatumArchiefProcedure.afleidingswijze`.
+                // Use only when adding resultaattype.
+                const defaultResultaatTypeOmschrijving =
+                  actionType === "ADD_RELATED_OBJECT"
+                    ? (resultaatTypeOmschrijvingField?.options?.find(
+                        ({ label }) =>
+                          label.toLowerCase() ===
+                          brondatumArchiefProcedure.afleidingswijze.toLowerCase(),
+                      )?.value as string | undefined)
+                    : undefined;
+
+                // Resolve with provided additions.
+                resolve({
+                  ...resultaatType,
+                  selectielijstklasse,
+                  resultaattypeomschrijving:
+                    defaultResultaatTypeOmschrijving ||
+                    resultaatType.resultaattypeomschrijving,
+                  brondatum_archiefprocedure: brondatumArchiefProcedure, // FIXME: camelCase not accepted by BFF/OZ.
+                } as ResultaatType);
+              }}
+              // User or system closes the modal, possibly due to an error
+              onCancel={() => {
+                setHookDialogState({ open: false });
+                reject(false);
+              }}
+            />
+          ),
+        });
+      });
+    },
+    [fields, hookDialogState],
+  );
+
+  /**
    * The <AttributeGrid/> with the data for the current tab/section.
    */
   const contents = useMemo(() => {
@@ -646,6 +802,7 @@ const ZaaktypeTab = ({
           relatedObjects={relatedObjects}
           relatedObjectKey={tabConfig.key}
           onActionsChange={handleActionsChange}
+          hook={relatedObjectHook}
         />
       );
     }
@@ -691,6 +848,8 @@ const ZaaktypeTab = ({
     object,
     expandedOverrides,
     isEditing,
+    handleActionsChange,
+    relatedObjectHook,
     onChange,
   ]);
 
