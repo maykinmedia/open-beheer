@@ -7,7 +7,7 @@ from vcr.cassette import Cassette
 
 @tag("vcr")
 class VCRMixin(_VCRMixin):
-    def _get_vcr_kwargs(self, **kwargs):
+    def _get_vcr_kwargs(self, **kwargs) -> dict[str, object]:
         """In order to keep diffs small and easily scanable, this filters some headers
         that aren't particularly interesting for our behaviours.
 

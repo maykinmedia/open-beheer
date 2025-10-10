@@ -32,7 +32,7 @@ class InformatieObjectTypeSummary(
     omschrijving: str
     # str, because VertrouwelijkheidaanduidingEnum does not contain "" but OZ does
     vertrouwelijkheidaanduiding: str
-    # Actief true/false: calculated for ja/nee in the frontend
     actief: bool | UnsetType = UNSET
+    # Actief true/false: calculated for ja/nee in the frontend
     einde_geldigheid: datetime.date | None = None
     concept: bool | UnsetType = UNSET

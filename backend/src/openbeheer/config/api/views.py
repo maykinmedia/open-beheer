@@ -25,10 +25,10 @@ class OIDCInfoView(APIView):
         },
     )
     def get(self, request: Request, *args, **kwargs):
-        config = OIDCClient.objects.get(identifier=OIDC_ADMIN_CONFIG_IDENTIFIER)
+        client = OIDCClient.objects.get(identifier=OIDC_ADMIN_CONFIG_IDENTIFIER)
 
         oidc_info = OIDCInfo(
-            enabled=config.enabled,
+            enabled=client.enabled,
             login_url=reverse("oidc_authentication_init", request=request),
         )
 
