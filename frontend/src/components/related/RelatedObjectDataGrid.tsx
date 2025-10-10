@@ -52,8 +52,8 @@ export type RelatedObjectDataGridProps<
    */
   hook?: (
     relatedObject: R,
-    relatedObjectKey: keyof Expand<Expanded<T>>,
     actionType: TypedAction<string, object>["type"],
+    relatedObjectKey: keyof Expand<Expanded<T>>,
   ) => Promise<R | false>;
 };
 
@@ -267,8 +267,8 @@ export function RelatedObjectDataGrid<
     // Run hook.
     const rowWithHookResult = await hook(
       newRow,
-      relatedObjectKey,
       "ADD_RELATED_OBJECT",
+      relatedObjectKey,
     );
 
     // Hook returned falsy result, reject change.,
@@ -350,8 +350,8 @@ export function RelatedObjectDataGrid<
       // Run hook.
       const rowWithHookResult = await hook(
         relatedObject,
-        relatedObjectKey,
         "EDIT_RELATED_OBJECT",
+        relatedObjectKey,
       );
 
       // Hook returned falsy result, reject change.,
@@ -430,8 +430,8 @@ export function RelatedObjectDataGrid<
       // Run hook.
       const rowWithHookResult = await hook(
         row,
-        relatedObjectKey,
         "DELETE_RELATED_OBJECT",
+        relatedObjectKey,
       );
 
       // Hook returned falsy result, reject change.,
