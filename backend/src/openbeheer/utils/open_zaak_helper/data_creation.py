@@ -19,6 +19,7 @@ from openbeheer.types import (
     ZaakTypeWithUUID,
 )
 from openbeheer.types._open_beheer import (
+    InformatieObjectTypeWithUUID,
     ZaakObjectTypeWithUUID,
     ZaakTypeInformatieObjectTypeWithUUID,
 )
@@ -27,7 +28,6 @@ from openbeheer.types.ztc import (
     Catalogus,
     EigenschapSpecificatieRequest,
     FormaatEnum,
-    InformatieObjectType,
     ZaakObjectTypeRequest,
 )
 
@@ -85,7 +85,7 @@ class OpenZaakDataCreationHelper:
     # values are filled with the default values  when converting to the dict type
     def create_informatieobjecttype(
         self, catalogus: str = "", **overrides: _JSONEncodable
-    ) -> InformatieObjectType:
+    ) -> InformatieObjectTypeWithUUID:
         data: dict[str, _JSONEncodable] = {
             "catalogus": self._get_catalogus(catalogus),
             "omschrijving": "Omschrijving A",
@@ -95,7 +95,7 @@ class OpenZaakDataCreationHelper:
         } | overrides
 
         return self._create_resource(
-            data, "informatieobjecttypen", InformatieObjectType
+            data, "informatieobjecttypen", InformatieObjectTypeWithUUID
         )
 
     def create_catalogus(self, **overrides: _JSONEncodable) -> Catalogus:
