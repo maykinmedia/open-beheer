@@ -1,5 +1,3 @@
-from typing import Any
-
 from django.test import TestCase as _TestCase, tag
 
 from maykin_common.vcr import VCRMixin as _VCRMixin
@@ -9,7 +7,7 @@ from vcr.cassette import Cassette
 
 @tag("vcr")
 class VCRMixin(_VCRMixin):
-    def _get_vcr_kwargs(self, **kwargs) -> dict[str, Any]:
+    def _get_vcr_kwargs(self, **kwargs) -> dict[str, object]:
         """In order to keep diffs small and easily scanable, this filters some headers
         that aren't particularly interesting for our behaviours.
 
