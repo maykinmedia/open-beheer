@@ -119,7 +119,7 @@ export function InformatieObjectTypeCreatePage() {
             className="zaaktypecreate__card"
             border={true}
             titleAs={H2}
-            title="Default"
+            title="Basis"
           >
             <Body fullHeight={true} className="zaaktypecreate__card-body">
               <P>Een default informatieobjecttype</P>

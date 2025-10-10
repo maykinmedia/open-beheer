@@ -137,7 +137,7 @@ export function ZaaktypeCreatePage() {
     <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
       <Modal
         size="m"
-        title={`Sjabloon ${valuesState.naam}`}
+        title="Basis"
         open={isFillingForm}
         onClose={() => setIsFillingForm(false)}
       >
