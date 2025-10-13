@@ -24,15 +24,11 @@ export function InformatieObjectTypenPage() {
       {...loaderData}
       getHref={getAbsolutePath}
       toolbarItems={[
-        <Button
-          key="create-informatieobjecttype"
-          // TODO: Fix styling
-          // variant="primary"
-        >
-          <NavLink to="create">
+        <NavLink key="create-informatieobjecttype" to="create">
+          <Button variant="primary">
             <Outline.PlusIcon /> Nieuw informatieobjecttype
-          </NavLink>
-        </Button>,
+          </Button>
+        </NavLink>,
       ]}
     />
   );
