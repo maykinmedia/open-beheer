@@ -5460,6 +5460,7 @@ components:
       enum:
       - boolean
       - date
+      - duration
       - number
       - string
       - text
