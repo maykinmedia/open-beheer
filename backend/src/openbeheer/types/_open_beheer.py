@@ -43,6 +43,7 @@ from .selectielijst import (
 from .ztc import (
     BesluitType,
     Eigenschap,
+    FormaatEnum,
     InformatieObjectType,
     ResultaatType,
     RolType,
@@ -640,6 +641,13 @@ class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
 
 class EigenschapWithUUID(UUIDMixin, Eigenschap):
     uuid: UUID | UnsetType = UNSET
+    # format is actually a property from specificatie
+    # set here because front end doesn't support nested structures.
+    formaat: FormaatEnum | UnsetType = UNSET
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.formaat = self.specificatie.formaat
 
 
 class InformatieObjectTypeWithUUID(UUIDMixin, InformatieObjectType):
