@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"domein": "PYAZY", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
-      "naam": "Few memory store hot."}'
+    body: '{"domein": "HHQMB", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Compare although include fact stuff south his."}'
     headers:
       Accept:
       - '*/*'
@@ -12,15 +12,15 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '111'
+      - '136'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","domein":"PYAZY","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Few
-        memory store hot.","versie":"","begindatumVersie":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","domein":"HHQMB","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Compare
+        although include fact stuff south his.","versie":"","begindatumVersie":null}'
     headers:
       API-version:
       - 1.3.1
@@ -29,13 +29,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '372'
+      - '397'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1
+      - http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53
       Referrer-Policy:
       - same-origin
       Vary:
@@ -48,7 +48,7 @@ interactions:
       code: 201
       message: Created
 - request:
-    body: '{"catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1",
+    body: '{"catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53",
       "omschrijving": "Omschrijving A", "vertrouwelijkheidaanduiding": "openbaar",
       "beginGeldigheid": "2025-07-01", "informatieobjectcategorie": "Blue"}'
     headers:
@@ -68,7 +68,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","omschrijving":"Omschrijving
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","omschrijving":"Omschrijving
         A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}'
     headers:
       API-version:
@@ -84,7 +84,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593
+      - http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324
       Referrer-Policy:
       - same-origin
       Vary:
@@ -111,7 +111,13 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"count":94,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","domein":"PYAZY","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593"],"naam":"Few
+      string: '{"count":100,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","domein":"HHQMB","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324"],"naam":"Compare
+        although include fact stuff south his.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/bad68c7f-98bf-4622-8a24-eb91e079dba4","domein":"KNGXA","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/e04e9f5d-edc6-4797-a485-74f1e270ff64"],"naam":"Listen
+        lay set until decade represent.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/66f9364f-bbe7-458d-af30-81995d9d5046","domein":"ULWJQ","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a3d1787c-5900-4795-be23-350429e48d29"],"naam":"Right
+        market enter base box include.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/389594bb-8a30-4658-81e7-dfce3bdfd579","domein":"FLIQQ","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/a8ba95ba-e600-441d-b806-76ce13449eb0"],"naam":"Day
+        will sea nation education.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/70cf8bcd-018f-4c4e-b2a1-fd670260b564","domein":"IWRLF","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/e2979ce8-3b9e-4388-b9ff-2b6ee07819b1"],"naam":"Draw
+        activity shoulder minute.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/d042c973-b531-45ef-b888-858e56b15688","domein":"OCQQD","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/088589ea-8807-4182-b1f1-8d2da132933a"],"naam":"Work
+        maintain sure.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","domein":"PYAZY","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593"],"naam":"Few
         memory store hot.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/94851f74-c5b7-42a4-819e-da5276d375ac","domein":"GOKIH","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/f45d2f2b-46df-4dcd-a9f4-3dfebb3f38fe"],"naam":"Amount
         forward hair international.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/f698d16b-8ac2-4dd3-ab0a-554d195a80c3","domein":"HWHKS","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/133b1b7b-d03d-47dc-94bd-c50aac17bc6a"],"naam":"Record
         rock out court stay benefit.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/d5ab30fe-2035-4779-8fbc-dd75039b6c0f","domein":"XTJCL","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":["http://localhost:8003/catalogi/api/v1/informatieobjecttypen/44521e98-703e-4967-a614-bb41720f9c62"],"naam":"Course
@@ -215,7 +221,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '48950'
+      - '51850'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
@@ -243,7 +249,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fb4bef263-683e-40cb-b302-fd67f8d3a5d1&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fb345d491-6eea-456f-9f90-0cfc64a8ef53&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -283,10 +289,10 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fb4bef263-683e-40cb-b302-fd67f8d3a5d1&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fb345d491-6eea-456f-9f90-0cfc64a8ef53&status=alles
   response:
     body:
-      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","omschrijving":"Omschrijving
+      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","omschrijving":"Omschrijving
         A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}]}'
     headers:
       API-version:
@@ -324,10 +330,10 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","omschrijving":"Omschrijving
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","omschrijving":"Omschrijving
         A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}'
     headers:
       API-version:
@@ -343,7 +349,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       ETag:
-      - '"d0a172c3dd49ecc72eba075562da24e7"'
+      - '"31574c396977fc86e5db5408f883d0a2"'
       Referrer-Policy:
       - same-origin
       Vary:
@@ -367,24 +373,26 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fb4bef263-683e-40cb-b302-fd67f8d3a5d1&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324
   response:
     body:
-      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","omschrijving":"Omschrijving
-        A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}]}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","omschrijving":"Omschrijving
+        A","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
       Allow:
-      - GET, POST, HEAD, OPTIONS
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       Connection:
       - keep-alive
       Content-Length:
-      - '822'
+      - '770'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      ETag:
+      - '"31574c396977fc86e5db5408f883d0a2"'
       Referrer-Policy:
       - same-origin
       Vary:
@@ -413,10 +421,10 @@ interactions:
       Content-Type:
       - application/json
     method: PATCH
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","omschrijving":"Updated
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","omschrijving":"Updated
         Omschrijving","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}'
     headers:
       API-version:
@@ -454,24 +462,26 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fb4bef263-683e-40cb-b302-fd67f8d3a5d1&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324
   response:
     body:
-      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/bbcf6942-69a7-4e16-b7ca-5dbdbb3d9593","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b4bef263-683e-40cb-b302-fd67f8d3a5d1","omschrijving":"Updated
-        Omschrijving","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}]}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/informatieobjecttypen/d60ff5f4-6fce-4528-8975-4f0e201d3324","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b345d491-6eea-456f-9f90-0cfc64a8ef53","omschrijving":"Updated
+        Omschrijving","vertrouwelijkheidaanduiding":"openbaar","beginGeldigheid":"2025-07-01","eindeGeldigheid":null,"concept":true,"besluittypen":[],"informatieobjectcategorie":"Blue","trefwoord":[],"omschrijvingGeneriek":{"informatieobjecttypeOmschrijvingGeneriek":"","definitieInformatieobjecttypeOmschrijvingGeneriek":"","herkomstInformatieobjecttypeOmschrijvingGeneriek":"","hierarchieInformatieobjecttypeOmschrijvingGeneriek":"","opmerkingInformatieobjecttypeOmschrijvingGeneriek":""},"zaaktypen":[],"beginObject":"2025-07-01","eindeObject":null}'
     headers:
       API-version:
       - 1.3.1
       Allow:
-      - GET, POST, HEAD, OPTIONS
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       Connection:
       - keep-alive
       Content-Length:
-      - '828'
+      - '776'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
+      ETag:
+      - '"491adb97c69484c83a79692d893647ec"'
       Referrer-Policy:
       - same-origin
       Vary:
