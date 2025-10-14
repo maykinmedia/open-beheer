@@ -1,6 +1,4 @@
-from openbeheer.types import FrontendFieldSet
-from openbeheer.types import FrontendFieldsets
-
+from openbeheer.types import FrontendFieldSet, FrontendFieldsets
 
 # TODO: No design yet
 INFORMATIEOBJECTTYPE_FIELDSETS: FrontendFieldsets = [
