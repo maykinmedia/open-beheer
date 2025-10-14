@@ -1,0 +1,305 @@
+interactions:
+- request:
+    body: '{"domein": "OIXZE", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Measure stage set defense pick wonder."}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '128'
+      Content-Type:
+      - application/json
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/catalogussen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6","domein":"OIXZE","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Measure
+        stage set defense pick wonder.","versie":"","begindatumVersie":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '389'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"omschrijving": "Letter she make blue arm.", "vertrouwelijkheidaanduiding":
+      "openbaar", "doel": "New Zaaktype 001", "aanleiding": "New Zaaktype 001", "indicatieInternOfExtern":
+      "intern", "handelingInitiator": "aanvragen", "onderwerp": "New Zaaktype 001",
+      "handelingBehandelaar": "handelin", "doorlooptijd": "P40D", "opschortingEnAanhoudingMogelijk":
+      false, "verlengingMogelijk": true, "verlengingstermijn": "P40D", "publicatieIndicatie":
+      false, "productenOfDiensten": ["https://example.com/product/321"], "referentieproces":
+      {"naam": "ReferentieProces 1"}, "verantwoordelijke": "200000000", "beginGeldigheid":
+      "2025-06-19", "versiedatum": "2025-06-19", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6",
+      "besluittypen": [], "gerelateerdeZaaktypen": [], "selectielijstProcestype":
+      "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '926'
+      Content-Type:
+      - application/json
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61","identificatie":"ZAAKTYPE-2025-0000000061","omschrijving":"Letter
+        she make blue arm.","omschrijvingGeneriek":"","vertrouwelijkheidaanduiding":"openbaar","doel":"New
+        Zaaktype 001","aanleiding":"New Zaaktype 001","toelichting":"","indicatieInternOfExtern":"intern","handelingInitiator":"aanvragen","onderwerp":"New
+        Zaaktype 001","handelingBehandelaar":"handelin","doorlooptijd":"P40D","servicenorm":null,"opschortingEnAanhoudingMogelijk":false,"verlengingMogelijk":true,"verlengingstermijn":"P40D","trefwoorden":[],"publicatieIndicatie":false,"publicatietekst":"","verantwoordingsrelatie":[],"productenOfDiensten":["https://example.com/product/321"],"selectielijstProcestype":"https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0","referentieproces":{"naam":"ReferentieProces
+        1","link":""},"concept":true,"verantwoordelijke":"200000000","beginGeldigheid":"2025-06-19","eindeGeldigheid":null,"versiedatum":"2025-06-19","beginObject":"2025-06-19","eindeObject":null,"catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6","statustypen":[],"resultaattypen":[],"eigenschappen":[],"informatieobjecttypen":[],"roltypen":[],"besluittypen":[],"deelzaaktypen":[],"gerelateerdeZaaktypen":[],"zaakobjecttypen":[]}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1377'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"naam": "Piet 0", "definitie": "Ook niet de broer van Henk de Vries",
+      "specificatie": {"formaat": "tekst", "lengte": "255", "kardinaliteit": "1"},
+      "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '247'
+      Content-Type:
+      - application/json
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/eigenschappen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/eigenschappen/c1951875-d143-4ddf-8260-6a661cb1570c","naam":"Piet
+        0","definitie":"Ook niet de broer van Henk de Vries","specificatie":{"groep":"","formaat":"tekst","lengte":"255","kardinaliteit":"1","waardenverzameling":[]},"toelichting":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000061","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6","statustype":null,"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '639'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8003/catalogi/api/v1/eigenschappen/c1951875-d143-4ddf-8260-6a661cb1570c
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"naam": "Piet 1", "definitie": "Ook niet de broer van Henk de Vries",
+      "specificatie": {"formaat": "getal", "lengte": "255", "kardinaliteit": "1"},
+      "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '247'
+      Content-Type:
+      - application/json
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/eigenschappen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/eigenschappen/93dfba66-0f6f-4444-b2a5-233ed93f080c","naam":"Piet
+        1","definitie":"Ook niet de broer van Henk de Vries","specificatie":{"groep":"","formaat":"getal","lengte":"255","kardinaliteit":"1","waardenverzameling":[]},"toelichting":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000061","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6","statustype":null,"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '639'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8003/catalogi/api/v1/eigenschappen/93dfba66-0f6f-4444-b2a5-233ed93f080c
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"naam": "Piet 2", "definitie": "Ook niet de broer van Henk de Vries",
+      "specificatie": {"formaat": "datum", "lengte": "8", "kardinaliteit": "1"}, "zaaktype":
+      "http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '245'
+      Content-Type:
+      - application/json
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/eigenschappen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/eigenschappen/5ced37f3-5e9e-4ed5-9ce5-c3f14be35fa0","naam":"Piet
+        2","definitie":"Ook niet de broer van Henk de Vries","specificatie":{"groep":"","formaat":"datum","lengte":"8","kardinaliteit":"1","waardenverzameling":[]},"toelichting":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000061","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6","statustype":null,"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '637'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8003/catalogi/api/v1/eigenschappen/5ced37f3-5e9e-4ed5-9ce5-c3f14be35fa0
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+- request:
+    body: '{"naam": "Piet 3", "definitie": "Ook niet de broer van Henk de Vries",
+      "specificatie": {"formaat": "datum_tijd", "lengte": "14", "kardinaliteit": "1"},
+      "zaaktype": "http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '251'
+      Content-Type:
+      - application/json
+    method: POST
+    uri: http://localhost:8003/catalogi/api/v1/eigenschappen
+  response:
+    body:
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/eigenschappen/a4a3ff91-ce35-4316-8766-ba4434f1fc9b","naam":"Piet
+        3","definitie":"Ook niet de broer van Henk de Vries","specificatie":{"groep":"","formaat":"datum_tijd","lengte":"14","kardinaliteit":"1","waardenverzameling":[]},"toelichting":"","zaaktype":"http://localhost:8003/catalogi/api/v1/zaaktypen/45604a17-e6b0-4941-a7a0-0faff3725f61","zaaktypeIdentificatie":"ZAAKTYPE-2025-0000000061","catalogus":"http://localhost:8003/catalogi/api/v1/catalogussen/b9c87057-4f63-4f19-a716-5a5a4df75fb6","statustype":null,"beginGeldigheid":null,"eindeGeldigheid":null,"beginObject":null,"eindeObject":null}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '643'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Location:
+      - http://localhost:8003/catalogi/api/v1/eigenschappen/a4a3ff91-ce35-4316-8766-ba4434f1fc9b
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 201
+      message: Created
+version: 1
