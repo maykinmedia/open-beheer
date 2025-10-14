@@ -141,16 +141,22 @@ class OpenZaakDataCreationHelper:
         )
 
     def create_zaaktype(
-        self, catalogus: str = "", **overrides: _JSONEncodable
+        self, catalogus: str = "", sequence_number=None, **overrides: _JSONEncodable
     ) -> ZaakTypeWithUUID:
+        if sequence_number is None:
+            padded_sequence_number = "001"
+        else:
+            padded_sequence_number = str(sequence_number).zfill(3)
+
         data: dict[str, _JSONEncodable] = {
+            "identificatie": f"ZAAKTYPE-2025-{padded_sequence_number}",
             "omschrijving": faker.sentence(),
             "vertrouwelijkheidaanduiding": "geheim",
-            "doel": "New Zaaktype 001",
-            "aanleiding": "New Zaaktype 001",
+            "doel": f"New Zaaktype {padded_sequence_number}",
+            "aanleiding": f"New Zaaktype {padded_sequence_number}",
             "indicatieInternOfExtern": "intern",
             "handelingInitiator": "aanvragen",
-            "onderwerp": "New Zaaktype 001",
+            "onderwerp": f"New Zaaktype {padded_sequence_number}",
             "handelingBehandelaar": "handelin",
             "doorlooptijd": "P40D",
             "opschortingEnAanhoudingMogelijk": False,
@@ -158,7 +164,7 @@ class OpenZaakDataCreationHelper:
             "verlengingstermijn": "P40D",
             "publicatieIndicatie": False,
             "productenOfDiensten": ["https://example.com/product/321"],
-            "referentieproces": {"naam": "ReferentieProces 1"},
+            "referentieproces": {"naam": f"ReferentieProces {padded_sequence_number}"},
             "verantwoordelijke": "200000000",
             "beginGeldigheid": "2025-06-19",
             "versiedatum": "2025-06-19",

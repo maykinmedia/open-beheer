@@ -1,8 +1,19 @@
 from furl import furl
 from playwright.sync_api import Locator, Page, expect
 from pytest_django.live_server_helper import LiveServer
+from zgw_consumers.constants import APITypes
+from zgw_consumers.models import Service
+from zgw_consumers.test.factories import ServiceFactory
 
+from openbeheer.accounts.models import User
+from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.config.models import APIConfig
+from openbeheer.types import ZaakTypeWithUUID
 from openbeheer.types.ztc import Catalogus
+from openbeheer.utils.open_zaak_helper.data_creation import (
+    OpenZaakDataCreationHelper,
+    _JSONEncodable,
+)
 
 
 class GherkinScenario:
@@ -65,7 +76,89 @@ class GherkinRunner:
         These steps are used to describe the initial situation before an action is taken.
         """
 
-        pass
+        def user_exists(self) -> User:
+            """
+            Creates a user for testing.
+            """
+
+            return UserFactory.create(username="johndoe", password="secret")
+
+        def objecttypen_service_exists(self) -> Service:
+            """
+            Creates a (fake) objecttypen service for testing and registers it in
+            API_CONFIG.
+            """
+
+            fake_service = ServiceFactory.create(
+                api_type=APITypes.orc,
+                api_root="http://localhost:8003/besluiten/api/v1",
+            )
+            api_config = APIConfig.get_solo()
+            api_config.objecttypen_api_service = fake_service
+            api_config.save()
+
+            return fake_service
+
+        def selectielijst_service_exists(self) -> Service:
+            """
+            Creates a selectielijst service for testing and registers it in API_CONFIG.
+            """
+
+            selectielijst_service = ServiceFactory.create(
+                api_type=APITypes.orc,
+                api_root="https://selectielijst.openzaak.nl/api/v1/",
+            )
+            api_config = APIConfig.get_solo()
+            api_config.selectielijst_api_service = selectielijst_service
+            api_config.save()
+
+            return selectielijst_service
+
+        def ztc_service_exists(self) -> Service:
+            """
+            Creates ztc Service for testing.
+            """
+
+            return ServiceFactory.create(
+                slug="OZ",
+                api_type=APITypes.ztc,
+                api_root="http://localhost:8003/catalogi/api/v1",
+                client_id="test-vcr",
+                secret="test-vcr",
+            )
+
+        def catalogus_exists(self) -> Catalogus:
+            """
+            Creates catalogus in Open Zaak for testing, depends on existence of
+            ztc Service.
+
+            :return: The created catalogus
+            """
+
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            catalogus = helper.create_catalogus()
+            assert catalogus.url
+            return catalogus
+
+        def zaaktypen_exist(
+            self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
+        ) -> list[ZaakTypeWithUUID]:
+            """
+            Creates zaaktypen in Open Zaak for testing, depends on existence of
+            ztc Service.
+
+            :return: The created zaaktypen
+            """
+
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+
+            zaaktypen = []
+            for i in range(1, amount + 1):
+                zaaktype = helper.create_zaaktype(catalogus.url, i, **overrides)
+                assert zaaktype.url
+                zaaktypen.append(zaaktype)
+
+            return zaaktypen
 
     class When(GherkinScenario):
         """
@@ -73,8 +166,7 @@ class GherkinRunner:
         These steps are used to specify the actions taken by the user or the system.
         """
 
-        def go_to_root_page(self, page: Page) -> None:
-            page.goto(f"{self.runner.live_server.url}/")
+        # Authentication
 
         def user_logs_in(self, page: Page, username: str, password: str) -> None:
             page.goto(f"{self.runner.live_server.url}/")
@@ -84,7 +176,16 @@ class GherkinRunner:
             page.get_by_label("Wachtwoord").fill(password)
             page.get_by_role("button", name="Inloggen").click()
 
-        def select_catalogus(self, page: Page, catalogus: Catalogus) -> None:
+        # Navigation
+
+        def user_open_application(self, page: Page) -> None:
+            """
+            Navigate to the home page (by URL).
+            """
+
+            page.goto(f"{self.runner.live_server.url}/")
+
+        def user_selects_catalogus(self, page: Page, catalogus: Catalogus) -> None:
             page.wait_for_load_state("networkidle")
 
             select = page.get_by_text("Selecteer catalogus")
@@ -97,9 +198,22 @@ class GherkinRunner:
                 + f"/OZ/{furl(catalogus.url).path.segments[-1]}/zaaktypen"
             )
 
-        def go_to_informatieobjecttype_list_page(
+        def user_navigates_to_zaaktype_list_page(self, page: Page) -> None:
+            """
+            Navigates to the zaaktype list page (by navigation)
+            """
+
+            page.wait_for_load_state("networkidle")
+            button = page.get_by_role(role="button", name="Zaaktypen")
+            button.click()
+
+        def user_navigates_to_informatieobjecttype_list_page(
             self, page: Page, catalogus: Catalogus
         ) -> None:
+            """
+            Navigates to the informatieobjecttype list page (by navigation)
+            """
+
             page.wait_for_load_state("networkidle")
 
             button = page.get_by_role(role="button", name="Informatieobjecttypen")
@@ -110,7 +224,7 @@ class GherkinRunner:
                 + f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen"
             )
 
-        def go_to_informatieobjecttype_create_page(
+        def user_navigates_to_informatieobjecttype_create_page(
             self, page: Page, catalogus: Catalogus
         ) -> None:
             page.wait_for_load_state("networkidle")
@@ -123,14 +237,16 @@ class GherkinRunner:
                 + f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/create"
             )
 
-        def click_on_button(self, page: Page, name: str = "") -> None:
+        # Actions
+
+        def user_clicks_on_button(self, page: Page, name: str = "") -> None:
             kwargs = {}
             if name:
                 kwargs.update({"name": name})
             button = page.get_by_role("button", **kwargs)
             button.click()
 
-        def click_on_link(self, page: Page, name: str = "") -> None:
+        def user_clicks_on_link(self, page: Page, name: str = "") -> None:
             kwargs = {}
             if name:
                 kwargs.update({"name": name})
@@ -138,6 +254,9 @@ class GherkinRunner:
             iot_link.click()
 
             page.wait_for_load_state("networkidle")
+
+        def user_clicks_on_checkbox(self, page: Page, label: str = "") -> None:
+            page.get_by_label(label).click()
 
     class Then(GherkinScenario):
         """
