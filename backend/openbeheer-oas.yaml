@@ -1142,7 +1142,7 @@ paths:
   /api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/{uuid}/:
     get:
       operationId: service_eigenschappen_retrieve_one
-      description: Retrieve an eigenschappe from Open Zaak.
+      description: Retrieve an eigenschap from Open Zaak.
       summary: Get an eigenschappe
       parameters:
       - in: path
@@ -1181,7 +1181,7 @@ paths:
           description: ''
     put:
       operationId: service_zaaktypen_eigenschappen_update
-      description: Fully update a eigenschappe from Open Zaak.
+      description: Fully update a eigenschap from Open Zaak.
       summary: Put an eigenschappe
       parameters:
       - in: path
@@ -1232,7 +1232,7 @@ paths:
           description: ''
     patch:
       operationId: service_zaaktypen_eigenschappen_partial_update
-      description: Partially update a eigenschappe from Open Zaak.
+      description: Partially update a eigenschap from Open Zaak.
       summary: Patch an eigenschappe
       parameters:
       - in: path
@@ -1282,7 +1282,7 @@ paths:
           description: ''
     delete:
       operationId: service_zaaktypen_eigenschappen_destroy
-      description: Remove permanently a eigenschappe from Open Zaak.
+      description: Remove permanently a eigenschap from Open Zaak.
       summary: Delete an eigenschappe
       parameters:
       - in: path
@@ -3931,13 +3931,10 @@ components:
           maxLength: 1000
           minLength: 1
         toelichting:
-          anyOf:
-          - description: Een toelichting op deze EIGENSCHAP en het belang hiervan
-              voor zaken van dit ZAAKTYPE.
-            type: string
-            maxLength: 1000
-          - type: 'null'
-          default: null
+          description: Een toelichting op deze EIGENSCHAP en het belang hiervan voor
+            zaken van dit ZAAKTYPE.
+          type: string
+          maxLength: 1000
         statustype:
           anyOf:
           - description: Status type moet (onder andere) deze EIGENSCHAP hebben, voordat
@@ -3946,21 +3943,18 @@ components:
             maxLength: 1000
             minLength: 1
           - type: 'null'
-          default: null
         beginGeldigheid:
           anyOf:
           - description: De datum waarop het is ontstaan.
             type: string
             format: date
           - type: 'null'
-          default: null
         eindeGeldigheid:
           anyOf:
           - description: De datum waarop het is opgeheven.
             type: string
             format: date
           - type: 'null'
-          default: null
       required:
       - naam
       - definitie
@@ -4068,6 +4062,8 @@ components:
         uuid:
           type: string
           format: uuid
+        formaat:
+          $ref: '#/components/schemas/FormaatEnum'
         naam:
           description: De naam van de EIGENSCHAP
           type: string
@@ -5460,6 +5456,7 @@ components:
       enum:
       - boolean
       - date
+      - duration
       - number
       - string
       - text
@@ -6362,66 +6359,42 @@ components:
       type: object
       properties:
         naam:
-          anyOf:
-          - description: De naam van de EIGENSCHAP
-            type: string
-            maxLength: 20
-            minLength: 1
-          - type: 'null'
-          default: null
+          description: De naam van de EIGENSCHAP
+          type: string
+          maxLength: 20
+          minLength: 1
         definitie:
-          anyOf:
-          - description: De beschrijving van de betekenis van deze EIGENSCHAP
-            type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          default: null
+          description: De beschrijving van de betekenis van deze EIGENSCHAP
+          type: string
+          maxLength: 255
+          minLength: 1
         specificatie:
-          anyOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/EigenschapSpecificatieRequest'
-          default: null
+          $ref: '#/components/schemas/EigenschapSpecificatieRequest'
         toelichting:
-          anyOf:
-          - description: Een toelichting op deze EIGENSCHAP en het belang hiervan
-              voor zaken van dit ZAAKTYPE.
-            type: string
-            maxLength: 1000
-          - type: 'null'
-          default: null
+          description: Een toelichting op deze EIGENSCHAP en het belang hiervan voor
+            zaken van dit ZAAKTYPE.
+          type: string
+          maxLength: 1000
         zaaktype:
-          anyOf:
-          - description: URL-referentie naar het ZAAKTYPE van de ZAAKen waarvoor deze
-              EIGENSCHAP van belang is.
-            type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          default: null
+          description: URL-referentie naar het ZAAKTYPE van de ZAAKen waarvoor deze
+            EIGENSCHAP van belang is.
+          type: string
+          maxLength: 1000
+          minLength: 1
         statustype:
-          anyOf:
-          - description: Status type moet (onder andere) deze EIGENSCHAP hebben, voordat
-              een STATUS van het STATUSTYPE kan worden gezet.
-            type: string
-            maxLength: 1000
-            minLength: 1
-          - type: 'null'
-          default: null
+          description: Status type moet (onder andere) deze EIGENSCHAP hebben, voordat
+            een STATUS van het STATUSTYPE kan worden gezet.
+          type: string
+          maxLength: 1000
+          minLength: 1
         beginGeldigheid:
-          anyOf:
-          - description: De datum waarop het is ontstaan.
-            type: string
-            format: date
-          - type: 'null'
-          default: null
+          description: De datum waarop het is ontstaan.
+          type: string
+          format: date
         eindeGeldigheid:
-          anyOf:
-          - description: De datum waarop het is opgeheven.
-            type: string
-            format: date
-          - type: 'null'
-          default: null
+          description: De datum waarop het is opgeheven.
+          type: string
+          format: date
       required: []
     PatchedPatchedInformatieObjectTypeRequest:
       title: PatchedInformatieObjectTypeRequest

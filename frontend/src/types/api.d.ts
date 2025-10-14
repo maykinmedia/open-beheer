@@ -336,25 +336,25 @@ export interface paths {
         };
         /**
          * Get an eigenschappe
-         * @description Retrieve an eigenschappe from Open Zaak.
+         * @description Retrieve an eigenschap from Open Zaak.
          */
         get: operations["service_eigenschappen_retrieve_one"];
         /**
          * Put an eigenschappe
-         * @description Fully update a eigenschappe from Open Zaak.
+         * @description Fully update a eigenschap from Open Zaak.
          */
         put: operations["service_zaaktypen_eigenschappen_update"];
         post?: never;
         /**
          * Delete an eigenschappe
-         * @description Remove permanently a eigenschappe from Open Zaak.
+         * @description Remove permanently a eigenschap from Open Zaak.
          */
         delete: operations["service_zaaktypen_eigenschappen_destroy"];
         options?: never;
         head?: never;
         /**
          * Patch an eigenschappe
-         * @description Partially update a eigenschappe from Open Zaak.
+         * @description Partially update a eigenschap from Open Zaak.
          */
         patch: operations["service_zaaktypen_eigenschappen_partial_update"];
         trace?: never;
@@ -1041,14 +1041,11 @@ export interface components {
             specificatie: components["schemas"]["EigenschapSpecificatieRequest"];
             /** @description URL-referentie naar het ZAAKTYPE van de ZAAKen waarvoor deze EIGENSCHAP van belang is. */
             zaaktype: string;
-            /** @default null */
-            toelichting: string | null;
-            /** @default null */
-            statustype: string | null;
-            /** @default null */
-            beginGeldigheid: string | null;
-            /** @default null */
-            eindeGeldigheid: string | null;
+            /** @description Een toelichting op deze EIGENSCHAP en het belang hiervan voor zaken van dit ZAAKTYPE. */
+            toelichting?: string;
+            statustype?: string | null;
+            beginGeldigheid?: string | null;
+            eindeGeldigheid?: string | null;
         };
         /** EigenschapSpecificatie */
         EigenschapSpecificatie: {
@@ -1094,6 +1091,7 @@ export interface components {
         EigenschapWithUUID: {
             /** Format: uuid */
             uuid?: string;
+            formaat?: components["schemas"]["FormaatEnum"];
             /** @description De naam van de EIGENSCHAP */
             naam: string;
             /** @description De beschrijving van de betekenis van deze EIGENSCHAP */
@@ -1652,7 +1650,7 @@ export interface components {
          * @description Used by frontend to decide widget etc.
          * @enum {unknown}
          */
-        OBFieldType: "boolean" | "date" | "number" | "string" | "text";
+        OBFieldType: "boolean" | "date" | "duration" | "number" | "string" | "text";
         /**
          * OBList[BesluitTypeWithUUID]
          * @description Used to draw list views on the frontend.
@@ -2008,22 +2006,27 @@ export interface components {
         };
         /** PatchedEigenschapRequest */
         PatchedPatchedEigenschapRequest: {
-            /** @default null */
-            naam: string | null;
-            /** @default null */
-            definitie: string | null;
-            /** @default null */
-            specificatie: null | components["schemas"]["EigenschapSpecificatieRequest"];
-            /** @default null */
-            toelichting: string | null;
-            /** @default null */
-            zaaktype: string | null;
-            /** @default null */
-            statustype: string | null;
-            /** @default null */
-            beginGeldigheid: string | null;
-            /** @default null */
-            eindeGeldigheid: string | null;
+            /** @description De naam van de EIGENSCHAP */
+            naam?: string;
+            /** @description De beschrijving van de betekenis van deze EIGENSCHAP */
+            definitie?: string;
+            specificatie?: components["schemas"]["EigenschapSpecificatieRequest"];
+            /** @description Een toelichting op deze EIGENSCHAP en het belang hiervan voor zaken van dit ZAAKTYPE. */
+            toelichting?: string;
+            /** @description URL-referentie naar het ZAAKTYPE van de ZAAKen waarvoor deze EIGENSCHAP van belang is. */
+            zaaktype?: string;
+            /** @description Status type moet (onder andere) deze EIGENSCHAP hebben, voordat een STATUS van het STATUSTYPE kan worden gezet. */
+            statustype?: string;
+            /**
+             * Format: date
+             * @description De datum waarop het is ontstaan.
+             */
+            beginGeldigheid?: string;
+            /**
+             * Format: date
+             * @description De datum waarop het is opgeheven.
+             */
+            eindeGeldigheid?: string;
         };
         /** PatchedInformatieObjectTypeRequest */
         PatchedPatchedInformatieObjectTypeRequest: {
