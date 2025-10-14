@@ -23,12 +23,12 @@ def test_retrieve_informatieobjecttypen(page: Page, runner: GherkinRunner):
     iot = helper.create_informatieobjecttype(catalogus=catalogus.url)
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.go_to_root_page(page)
+    runner.when.user_open_application(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")
 
-    runner.when.select_catalogus(page, catalogus)
-    runner.when.go_to_informatieobjecttype_list_page(page, catalogus)
+    runner.when.user_selects_catalogus(page, catalogus)
+    runner.when.user_navigates_to_informatieobjecttype_list_page(page, catalogus)
 
     expect(page.get_by_text(iot.omschrijving)).to_be_visible()

@@ -24,22 +24,22 @@ def test_create_informatieobjecttype(page: Page, runner: GherkinRunner):
 
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.go_to_root_page(page)
+    runner.when.user_open_application(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")
 
-    runner.when.select_catalogus(page, catalogus)
-    runner.when.go_to_informatieobjecttype_list_page(page, catalogus)
-    runner.when.go_to_informatieobjecttype_create_page(page, catalogus)
-    runner.when.click_on_button(page, name="Gebruik dit sjabloon")
+    runner.when.user_selects_catalogus(page, catalogus)
+    runner.when.user_navigates_to_informatieobjecttype_list_page(page, catalogus)
+    runner.when.user_navigates_to_informatieobjecttype_create_page(page, catalogus)
+    runner.when.user_clicks_on_button(page, name="Gebruik dit sjabloon")
 
     runner.then.page_should_contain_text(
         page, text="Je staat op het punt een nieuw informatieobjecttype te starten."
     )
     page.get_by_label("Omschrijving").fill("A beautiful IOT")
 
-    runner.when.click_on_button(page, name="Verzenden")
+    runner.when.user_clicks_on_button(page, name="Verzenden")
 
     runner.then.path_should_be(
         page, f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen"
