@@ -5,7 +5,7 @@ from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
-from openbeheer.types.ztc import VertrouwelijkheidaanduidingEnum
+from openbeheer.types.ztc import FormaatEnum, VertrouwelijkheidaanduidingEnum
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
 from openbeheer.utils.tests import VCRAPITestCase
 
@@ -67,6 +67,7 @@ class EigenschappenListViewTests(VCRAPITestCase):
 
     def test_create(self):
         "Create a new eigenschappen for a zaaktype"
+        self.skipTest("API diverged")
         self.client.force_login(self.user)
         response = self.client.post(
             self.endpoint,
@@ -85,6 +86,42 @@ class EigenschappenListViewTests(VCRAPITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+
+    def test_patched_create(self):
+        "Create a new eigenschappen for a zaaktype"
+        self.client.force_login(self.user)
+
+        for n, formaat in enumerate(FormaatEnum):
+            with self.subTest(f"Creating {formaat}"):
+                response = self.client.post(
+                    self.endpoint,
+                    data={
+                        "naam": f"Piet {n}",
+                        "definitie": "Ook niet de broer van Henk de Vries",
+                        "formaat": formaat.value,
+                    },
+                    format="json",
+                )
+            self.assertEqual(
+                response.status_code, status.HTTP_201_CREATED, response.json()
+            )
+
+    def test_oversized_definitie(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            self.endpoint,
+            data={
+                "naam": "Zeg 'ns",
+                "definitie": "A" * 256,
+                "formaat": "datum",
+            },
+            format="json",
+        )
+        json = response.json()
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, json)
+
+        self.assertEqual(json["invalidParams"][0]["name"], "definitie")
 
 
 class EigenschappenDetailViewTest(VCRAPITestCase):
@@ -169,6 +206,7 @@ class EigenschappenDetailViewTest(VCRAPITestCase):
         expected = to_builtins(self.eigenschappen) | changes
 
         del expected["uuid"]
+        del expected["formaat"]
 
         self.assertEqual(data, expected)
 
@@ -181,13 +219,7 @@ class EigenschappenDetailViewTest(VCRAPITestCase):
                 "zaaktype": self.zaaktype.url,
                 "naam": "PUTjeschepper",
                 "definitie": "Ook niet de broer van Henk de Vries",
-                "specificatie": {
-                    "formaat": "getal",
-                    "lengte": "64",
-                    "kardinaliteit": "1",
-                    "groep": "",
-                    "waardenverzameling": [],
-                },
+                "formaat": "getal",
             },
             format="json",
         )
@@ -209,3 +241,20 @@ class EigenschappenDetailViewTest(VCRAPITestCase):
         response = self.client.get(self.endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_oversized_definitie(self):
+        self.client.force_login(self.user)
+
+        response = self.client.put(
+            self.endpoint,
+            data={
+                "naam": "Zeg 'ns",
+                "definitie": "A" * 256,
+                "formaat": "datum",
+            },
+            format="json",
+        )
+        json = response.json()
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, json)
+
+        self.assertEqual(json["invalidParams"][0]["name"], "definitie")
