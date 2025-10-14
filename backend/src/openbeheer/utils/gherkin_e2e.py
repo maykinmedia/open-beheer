@@ -164,3 +164,8 @@ class GherkinRunner:
             element = page.locator(f"text={text}").nth(0)
             expect(element).to_be_visible(timeout=timeout)
             return element
+        
+        def page_should_not_contain_text(
+            self, page: Page, text: str
+        ) -> None:
+            expect(page.locator(f"text={text}")).to_have_count(0)
