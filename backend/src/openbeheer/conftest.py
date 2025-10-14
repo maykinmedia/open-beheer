@@ -19,9 +19,10 @@ def runner(live_server_vcr) -> GherkinRunner:
 
 
 @pytest.fixture(scope="function")
-def django_db_setup(
+def live_django_db_setup(
     django_db_setup: Generator[None, None, None],
     django_db_blocker: DjangoDbBlocker | None,
+    request: pytest.FixtureRequest,
 ):
     assert django_db_blocker
 
@@ -54,7 +55,7 @@ class VCRPyTestHelper(VCRMixin):
 @pytest.fixture
 def live_server_vcr(
     request: pytest.FixtureRequest,
-    django_db_setup: Generator[None, None, None],
+    live_django_db_setup: Generator[None, None, None],
     transactional_db: None,
 ) -> Generator[live_server_helper.LiveServer, None, None]:
     """Run a Django live server with VCRpy cassettes
