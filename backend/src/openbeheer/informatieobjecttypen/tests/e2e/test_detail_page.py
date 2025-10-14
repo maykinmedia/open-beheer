@@ -50,6 +50,7 @@ def test_view_informatieobjecttype(page: Page, runner: GherkinRunner):
     runner.then.page_should_contain_text(page, "Begin Geldigheid")
     runner.then.page_should_contain_text(page, "Concept")
 
+
 @pytest.mark.e2e
 def test_edit_and_save_informatieobjecttype(page: Page, runner: GherkinRunner):
     ServiceFactory.create(
@@ -99,6 +100,7 @@ def test_edit_and_save_informatieobjecttype(page: Page, runner: GherkinRunner):
     )
 
     runner.then.page_should_contain_text(page, "Updated Omschrijving")
+
 
 @pytest.mark.e2e
 def test_edit_and_cancel_informatieobjecttype(page: Page, runner: GherkinRunner):
