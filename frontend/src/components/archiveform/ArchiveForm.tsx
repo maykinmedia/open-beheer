@@ -56,13 +56,23 @@ export function ArchiveForm({
 }: ArchiveFormProps) {
   const alert = useAlert();
 
-  /** Archive metadata from selectielijstklasse (waardering + afleidingswijzen). */
+  /** Archive metadata from selectielijst klasse (waardering + afleidingswijzen). */
   const [archiveMeta, setArchiveMeta] = useState<ArchiveMeta | null>(null);
 
   /** Form field values. */
-  const [formState, setFormState] = useState<ArchiveFormData>({
-    selectielijstklasse: resultaatType.selectielijstklasse,
-    ...(resultaatType.brondatumArchiefprocedure as BrondatumFieldValues),
+  const [formState, setFormState] = useState<ArchiveFormData>(() => {
+    const resultaatTypeBrondDatumValues =
+      resultaatType.brondatumArchiefprocedure || {};
+    return {
+      selectielijstklasse: resultaatType.selectielijstklasse,
+      afleidingswijze: "afgehandeld",
+      datumkenmerk: "",
+      einddatumBekend: false,
+      objecttype: "",
+      registratie: "",
+      procestermijn: "",
+      ...resultaatTypeBrondDatumValues,
+    };
   });
 
   // Fetch archive metadata on mount or when selectielijstklasse changes.
