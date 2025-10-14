@@ -2,40 +2,28 @@ import {
   AttributeGrid,
   Body,
   CardBaseTemplate,
-  Form,
-  FormField,
+  FieldSet,
+  FormValidator,
   H2,
   Outline,
   Solid,
   Toolbar,
+  ToolbarItem,
 } from "@maykin-ui/admin-ui";
 import { ucFirst } from "@maykin-ui/client-common";
-import { FormEvent, useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useLoaderData } from "react-router";
 import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 import { useSubmitAction } from "~/hooks/useSubmitAction";
+import { convertFieldsetsToTabConfig } from "~/lib";
 
+import { AttributeGridSection, TabConfig } from "../zaaktype";
 import {
   BackendIOT,
   InformatieObjectTypeAction,
+  PatchedBackendIOT,
 } from "./informatieobjecttype.action";
 import { InformatieObjectTypeLoaderData } from "./informatieobjecttype.loader";
-
-export const INFORMATIEOBJECTTYPE_UPDATE_FIELDS: FormField[] = [
-  { name: "omschrijving", type: "text", label: "Omschrijving", required: true },
-  {
-    name: "vertrouwelijkheidaanduiding",
-    type: "string",
-    label: "Vertrouwelijkheidaanduiding",
-    required: true,
-  },
-  {
-    name: "beginGeldigheid",
-    type: "datepicker",
-    label: "Begin geldigheid",
-    required: true,
-  },
-];
 
 export function InformatieObjectTypePage() {
   const { fields, fieldsets, result } =
@@ -44,56 +32,105 @@ export function InformatieObjectTypePage() {
   const submitAction = useSubmitAction<InformatieObjectTypeAction>();
   const [combinedSearchParams] = useCombinedSearchParams();
   const isEditing = Boolean(combinedSearchParams.get("editing"));
+  const [newIOTData, setNewIOTData] = useState<PatchedBackendIOT>(result);
 
-  const formFields = useMemo((): FormField[] => {
-    return fields
-      .map((field) => {
-        if (
-          !INFORMATIEOBJECTTYPE_UPDATE_FIELDS.map((f) => f.name).includes(
-            field.name,
-          )
-        )
-          return;
+  const fieldSetConfigs = useMemo<TabConfig<PatchedBackendIOT>[]>(
+    convertFieldsetsToTabConfig<PatchedBackendIOT>(fieldsets),
+    [JSON.stringify([fields, fieldsets])],
+  );
 
-        const overrides = INFORMATIEOBJECTTYPE_UPDATE_FIELDS.find(
-          (iotFieldOverride) => iotFieldOverride.name === field.name,
-        );
-
-        return {
-          ...field,
-          ...overrides,
-        };
-      })
-      .filter((f) => f !== undefined);
-  }, [fields, fieldsets]);
-
-  const onEdit = useCallback<React.MouseEventHandler>(() => {
+  const onToggleEditOn = useCallback<React.MouseEventHandler>(() => {
     submitAction({
       type: "SET_EDIT_MODE_ON",
       payload: {},
     });
   }, []);
 
-  const onCancel = useCallback<React.MouseEventHandler>((event) => {
-    event.preventDefault();
-
+  const onCancel = useCallback<React.MouseEventHandler>(() => {
     submitAction({
       type: "SET_EDIT_MODE_OFF",
       payload: {},
     });
   }, []);
 
-  const onSubmit = async (
-    event: FormEvent<HTMLFormElement>,
-    data: Partial<BackendIOT>,
-  ) => {
-    event.preventDefault();
-
-    await submitAction({
+  const onSave = useCallback<React.MouseEventHandler>(() => {
+    submitAction({
       type: "UPDATE",
-      payload: data,
+      payload: newIOTData,
     });
-  };
+  }, [newIOTData]);
+
+  const onValidate = useCallback<FormValidator>((values: object) => {
+    const errors = {};
+    // This is a hack, we are using the validate method to update
+    // the state of the informatieobjecttype used in the form
+    setNewIOTData(values as PatchedBackendIOT);
+    return errors;
+  }, []);
+
+  const getButtons = useCallback(
+    (result: BackendIOT, isEditing: boolean): ToolbarItem[] => {
+      if (result.concept && !isEditing)
+        return [
+          {
+            children: (
+              <>
+                <Solid.PencilSquareIcon />
+                Bewerken
+              </>
+            ),
+            variant: "primary",
+            onClick: onToggleEditOn,
+          },
+        ];
+
+      if (isEditing)
+        return [
+          {
+            children: (
+              <>
+                <Outline.NoSymbolIcon />
+                Annuleren
+              </>
+            ),
+            variant: "danger",
+            onClick: onCancel,
+          },
+          "spacer",
+          {
+            children: (
+              <>
+                <Outline.ArrowDownTrayIcon />
+                Opslaan
+              </>
+            ),
+            variant: "primary",
+            onClick: onSave,
+          },
+        ];
+
+      return [];
+    },
+    [newIOTData],
+  );
+
+  // We know that the IOT does not have expansions,
+  // so we can narrow the type further
+  const section = fieldSetConfigs[0]
+    .sections[0] as AttributeGridSection<PatchedBackendIOT>;
+
+  const fieldsetsWithFieldInfo = section.fieldsets.map(
+    (fieldset) =>
+      [
+        fieldset[0],
+        {
+          ...fieldset[1],
+          fields: fieldset[1].fields.map((fieldsetField) =>
+            fields.find((field) => field.name === fieldsetField),
+          ),
+        },
+      ] as FieldSet<PatchedBackendIOT>,
+  );
 
   return (
     <CardBaseTemplate
@@ -105,42 +142,13 @@ export function InformatieObjectTypePage() {
       <Body fullHeight>
         <H2>{ucFirst(result.omschrijving)}</H2>
 
-        {isEditing ? (
-          <Form
-            key={`informatieobjecttype-edit-form`}
-            aria-label="Informatieobjecttype aanpassen"
-            fields={formFields}
-            justify="stretch"
-            validateOnChange
-            showActions={true}
-            onSubmit={onSubmit}
-            initialValues={{
-              omschrijving: result.omschrijving,
-              vertrouwelijkheidaanduiding: result.vertrouwelijkheidaanduiding,
-              beginGeldigheid: result.beginGeldigheid,
-            }}
-            labelSubmit="Opslaan"
-            secondaryActions={[
-              {
-                children: (
-                  <>
-                    <Outline.NoSymbolIcon />
-                    Annuleren
-                  </>
-                ),
-                variant: "danger",
-                onClick: onCancel,
-              },
-            ]}
-          />
-        ) : (
-          <AttributeGrid
-            object={result}
-            editable={false}
-            editing={false}
-            fieldsets={fieldsets}
-          />
-        )}
+        <AttributeGrid
+          object={isEditing ? { ...result, ...newIOTData } : result}
+          editable={isEditing ? undefined : false}
+          editing={isEditing}
+          fieldsets={fieldsetsWithFieldInfo}
+          validate={onValidate}
+        />
       </Body>
 
       <Toolbar
@@ -148,22 +156,7 @@ export function InformatieObjectTypePage() {
         pad
         variant="transparent"
         sticky={"bottom"}
-        items={
-          result.concept && !isEditing
-            ? [
-                {
-                  children: (
-                    <>
-                      <Solid.PencilSquareIcon />
-                      Bewerken
-                    </>
-                  ),
-                  variant: "primary",
-                  onClick: onEdit,
-                },
-              ]
-            : []
-        }
+        items={getButtons(result, isEditing)}
       ></Toolbar>
     </CardBaseTemplate>
   );
