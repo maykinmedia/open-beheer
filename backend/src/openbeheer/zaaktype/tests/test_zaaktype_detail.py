@@ -416,6 +416,18 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             )
             assert "_expand.eigenschappen.eindeGeldigheid" in editable_fields
 
+            assert fields_by_name["_expand.eigenschappen.specificatie.formaat"] == {
+                "name": "_expand.eigenschappen.specificatie.formaat",
+                "type": "string",
+                "options": [
+                    {"label": "tekst", "value": "tekst"},
+                    {"label": "getal", "value": "getal"},
+                    {"label": "datum", "value": "datum"},
+                    {"label": "datum_tijd", "value": "datum_tijd"},
+                ],
+                "editable": True,
+            }
+
             assert fields_by_name["_expand.eigenschappen.statustype"]["options"] == [
                 {"label": statustype.omschrijving, "value": statustype.url}
             ]

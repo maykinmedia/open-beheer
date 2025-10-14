@@ -65,10 +65,12 @@ from openbeheer.types._open_beheer import (
     ZaakObjectTypeExtension,
     ZaakTypeInformatieObjectTypeWithUUID,
     fetch_selectielijst_resultaat_options,
+    ob_fields_of_type,
 )
 from openbeheer.types.ztc import (
     BesluitType,
     Eigenschap,
+    EigenschapSpecificatie,
     InformatieObjectType,
     PaginatedZaakTypeList,
     PatchedZaakTypeRequest,
@@ -529,7 +531,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
 
         expansions = set(map(camelize, self.expansions))
 
-        return super().get_fields(
+        yield from super().get_fields(
             data,
             option_overrides={
                 "_expand.zaaktypeinformatieobjecttypen.informatieobjecttype": self.get_informatieobjecttype_options(
@@ -549,6 +551,9 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
                 lambda name: name == "selectielijstProcestype" or name not in expansions
             ),
+        )
+        yield from ob_fields_of_type(
+            EigenschapSpecificatie, prefix="_expand.eigenschappen.specificatie."
         )
 
     def get_fieldsets(self) -> FrontendFieldsets:
