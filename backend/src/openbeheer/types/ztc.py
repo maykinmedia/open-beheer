@@ -8,7 +8,7 @@ from datetime import date
 from enum import Enum
 from typing import Annotated, List
 
-from msgspec import Meta, Struct, field
+from msgspec import UNSET, Meta, Struct, UnsetType, field
 
 
 class AardRelatieEnum(Enum):
@@ -2517,8 +2517,8 @@ class PatchedEigenschapRequest(Struct, kw_only=True):
             str,
             Meta(description="De naam van de EIGENSCHAP", max_length=20, min_length=1),
         ]
-        | None
-    ) = None
+        | UnsetType
+    ) = UNSET
     definitie: (
         Annotated[
             str,
@@ -2528,9 +2528,9 @@ class PatchedEigenschapRequest(Struct, kw_only=True):
                 min_length=1,
             ),
         ]
-        | None
-    ) = None
-    specificatie: EigenschapSpecificatieRequest | None = None
+        | UnsetType
+    ) = UNSET
+    specificatie: EigenschapSpecificatieRequest | UnsetType = UNSET
     toelichting: (
         Annotated[
             str,
@@ -2539,8 +2539,8 @@ class PatchedEigenschapRequest(Struct, kw_only=True):
                 max_length=1000,
             ),
         ]
-        | None
-    ) = None
+        | UnsetType
+    ) = UNSET
     zaaktype: (
         Annotated[
             str,
@@ -2550,8 +2550,8 @@ class PatchedEigenschapRequest(Struct, kw_only=True):
                 min_length=1,
             ),
         ]
-        | None
-    ) = None
+        | UnsetType
+    ) = UNSET
     statustype: (
         Annotated[
             str,
@@ -2561,14 +2561,16 @@ class PatchedEigenschapRequest(Struct, kw_only=True):
                 min_length=1,
             ),
         ]
-        | None
-    ) = None
+        | UnsetType
+    ) = UNSET
     begin_geldigheid: (
-        Annotated[date, Meta(description="De datum waarop het is ontstaan.")] | None
-    ) = field(name="beginGeldigheid", default=None)
+        Annotated[date, Meta(description="De datum waarop het is ontstaan.")]
+        | UnsetType
+    ) = field(name="beginGeldigheid", default=UNSET)
     einde_geldigheid: (
-        Annotated[date, Meta(description="De datum waarop het is opgeheven.")] | None
-    ) = field(name="eindeGeldigheid", default=None)
+        Annotated[date, Meta(description="De datum waarop het is opgeheven.")]
+        | UnsetType
+    ) = field(name="eindeGeldigheid", default=UNSET)
 
 
 class PatchedInformatieObjectTypeRequest(Struct, kw_only=True):
@@ -4157,8 +4159,8 @@ class EigenschapRequest(Struct, kw_only=True):
                 max_length=1000,
             ),
         ]
-        | None
-    ) = None
+        | UnsetType
+    ) = UNSET
     statustype: (
         Annotated[
             str,
@@ -4169,13 +4171,18 @@ class EigenschapRequest(Struct, kw_only=True):
             ),
         ]
         | None
-    ) = None
+        | UnsetType
+    ) = UNSET
     begin_geldigheid: (
-        Annotated[date, Meta(description="De datum waarop het is ontstaan.")] | None
-    ) = field(name="beginGeldigheid", default=None)
+        Annotated[date, Meta(description="De datum waarop het is ontstaan.")]
+        | None
+        | UnsetType
+    ) = field(name="beginGeldigheid", default=UNSET)
     einde_geldigheid: (
-        Annotated[date, Meta(description="De datum waarop het is opgeheven.")] | None
-    ) = field(name="eindeGeldigheid", default=None)
+        Annotated[date, Meta(description="De datum waarop het is opgeheven.")]
+        | None
+        | UnsetType
+    ) = field(name="eindeGeldigheid", default=UNSET)
 
 
 class PaginatedEigenschapList(Struct, kw_only=True):
