@@ -100,15 +100,12 @@ export function getArchiveMetaBySelectielijstResultaatURL(
   return [promise, abortController];
 }
 
-/**
- * Form values for BrondatumFieldName fields
- * FIXME: Can't use here as the schema seems to be incorrect and `null` values
- *  are not accepted (https://github.com/open-zaak/open-zaak/issues/2206)
- */
-export type BrondatumFieldValues = Omit<
-  Record<BrondatumFieldName, string>,
-  "einddatumBekend"
-> & { einddatumBekend: boolean };
+export type BrondatumFieldValues = {
+  [K in BrondatumFieldName]: Exclude<
+    components["schemas"]["BrondatumArchiefprocedure"][K],
+    null
+  >;
+};
 
 /**
  * Returns the required {@link FormField}s for computing the brondatum
