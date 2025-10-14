@@ -129,10 +129,12 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
         "Eigenschappen",
         FrontendFieldSet(
             fields=[
-                # TODO needs design
                 "_expand.eigenschappen.naam",
                 "_expand.eigenschappen.definitie",
-                "_expand.eigenschappen.specificatie",
+                # "_expand.eigenschappen.specificatie",  # frontend has no widget
+                "_expand.eigenschappen.specificatie.formaat",
+                # "_expand.eigenschappen.specificatie.lengte",  # for now we set it on BFF
+                # "_expand.eigenschappen.specificatie.kardinaliteit",  # for now we set it on BFF
                 # "_expand.eigenschappen.uuid",
             ]
         ),
