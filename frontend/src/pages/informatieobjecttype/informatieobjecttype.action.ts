@@ -4,9 +4,11 @@ import { TypedAction } from "~/hooks/useSubmitAction";
 import { components } from "~/types";
 
 export type BackendIOT = components["schemas"]["InformatieObjectType"];
+export type PatchedBackendIOT =
+  components["schemas"]["PatchedPatchedInformatieObjectTypeRequest"];
 
 export type InformatieObjectTypeAction =
-  | TypedAction<"UPDATE", Partial<BackendIOT>>
+  | TypedAction<"UPDATE", PatchedBackendIOT>
   | TypedAction<"SET_EDIT_MODE_ON">
   | TypedAction<"SET_EDIT_MODE_OFF">;
 
@@ -32,22 +34,24 @@ export async function updateInformatieObjectTypeVersion(
   action: InformatieObjectTypeAction,
   params: Params,
 ): Promise<Response> {
-  const informatieobjecttype = action.payload;
+  const informatieobjecttype = action.payload as PatchedBackendIOT;
 
-  try {
-    await request(
-      "PATCH",
-      `/service/${params.serviceSlug}/informatieobjecttypen/${params.informatieobjecttypeUUID}/`,
-      {},
-      informatieobjecttype,
-    );
-
-    const url = new URL(window.location.href);
-    url.searchParams.delete("editing");
-    return redirect(url.toString());
-  } catch (e) {
-    return await (e as Response).json();
+  if (informatieobjecttype) {
+    try {
+      await request<PatchedBackendIOT>(
+        "PATCH",
+        `/service/${params.serviceSlug}/informatieobjecttypen/${params.informatieobjecttypeUUID}/`,
+        {},
+        informatieobjecttype,
+      );
+    } catch (e) {
+      return await (e as Response).json();
+    }
   }
+
+  const url = new URL(window.location.href);
+  url.searchParams.delete("editing");
+  return redirect(url.toString());
 }
 
 export async function setEditModeOn(): Promise<Response> {
