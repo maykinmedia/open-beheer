@@ -17,7 +17,7 @@ import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 import { useSubmitAction } from "~/hooks/useSubmitAction";
 import { convertFieldsetsToTabConfig } from "~/lib";
 
-import { AttributeGridSection, TabConfig } from "../zaaktype";
+import { TabConfig } from "../zaaktype";
 import {
   BackendIOT,
   InformatieObjectTypeAction,
@@ -61,11 +61,10 @@ export function InformatieObjectTypePage() {
   }, [newIOTData]);
 
   const onValidate = useCallback<FormValidator>((values: object) => {
-    const errors = {};
     // This is a hack, we are using the validate method to update
     // the state of the informatieobjecttype used in the form
     setNewIOTData(values as PatchedBackendIOT);
-    return errors;
+    return {};
   }, []);
 
   const getButtons = useCallback(
@@ -116,10 +115,12 @@ export function InformatieObjectTypePage() {
 
   // We know that the IOT does not have expansions,
   // so we can narrow the type further
-  const section = fieldSetConfigs[0]
-    .sections[0] as AttributeGridSection<PatchedBackendIOT>;
+  if (fieldSetConfigs[0].view !== "AttributeGrid") {
+    // This should not happen.
+    throw new Error("Something went wrong while rendering the data.");
+  }
 
-  const fieldsetsWithFieldInfo = section.fieldsets.map(
+  const fieldsetsWithFieldInfo = fieldSetConfigs[0].sections[0].fieldsets.map(
     (fieldset) =>
       [
         fieldset[0],

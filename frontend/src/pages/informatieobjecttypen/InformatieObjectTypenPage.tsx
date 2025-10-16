@@ -1,15 +1,11 @@
 import { Button, Outline } from "@maykin-ui/admin-ui";
 import { useCallback } from "react";
-import { NavLink, Outlet, useLoaderData, useLocation } from "react-router";
+import { NavLink, useLoaderData, useLocation } from "react-router";
 import { getUUIDFromString } from "~/lib/format/string.ts";
 import { components } from "~/types";
 import { ListView } from "~/views";
 
 import { InformatieObjectTypenLoaderData } from "./informatieobjecttype.loader";
-
-export function InformatieObjectTypeParentPage() {
-  return <Outlet />;
-}
 
 export function InformatieObjectTypenPage() {
   const loaderData = useLoaderData<InformatieObjectTypenLoaderData>();
