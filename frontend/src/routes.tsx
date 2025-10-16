@@ -56,9 +56,13 @@ export const routes: RouteObject[] = [
               {
                 id: "zaaktypen",
                 path: "zaaktypen",
-                element: <ZaaktypenPage />,
-                loader: zaaktypenLoader,
+                element: <Outlet />,
                 children: [
+                  {
+                    index: true,
+                    element: <ZaaktypenPage />,
+                    loader: zaaktypenLoader,
+                  },
                   {
                     id: "create-zaaktype",
                     path: "create",

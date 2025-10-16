@@ -24,14 +24,14 @@ def test_list_zaaktypen(page: Page, runner: GherkinRunner):
     # Open list view
     _.when.user_selects_catalogus(page, catalogus)
     _.when.user_navigates_to_zaaktype_list_page(page)
-    _.then.page_should_contain_text(page, "ZAAKTYPE-2025-020")
-    _.then.page_should_contain_text(page, "ZAAKTYPE-2025-019")
-    _.then.page_should_contain_text(page, "ZAAKTYPE-2025-018")
+    _.then.page_should_contain_text(page, "ZAAKTYPE-2025-0000000020")
+    _.then.page_should_contain_text(page, "ZAAKTYPE-2025-0000000019")
+    _.then.page_should_contain_text(page, "ZAAKTYPE-2025-0000000018")
 
     # Navigate to next page.
     _.when.user_clicks_on_button(page, "volgende")
-    _.when.user_clicks_on_link(page, "ZAAKTYPE-2025-001")
+    _.when.user_clicks_on_link(page, "ZAAKTYPE-2025-0000000001")
 
     # Navigate to detail view
-    _.then.page_should_contain_text(page, "Overzicht", timeout=10000)
+    _.then.page_should_contain_text(page, "Overzicht")
     _.then.page_should_contain_text(page, zaaktypen[0].omschrijving)
