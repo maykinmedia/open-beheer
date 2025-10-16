@@ -3,9 +3,18 @@ from typing import Iterable, Mapping, override
 
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from msgspec.json import decode
+from rest_framework import status
 from rest_framework.request import Request
+from rest_framework.response import Response
 
-from openbeheer.api.views import DetailView, DetailViewWithoutVersions, ListView
+from openbeheer.api.views import (
+    DetailView,
+    DetailViewWithoutVersions,
+    ListView,
+    MsgspecAPIView,
+)
+from openbeheer.clients import ztc_client
 from openbeheer.types import (
     DetailResponseWithoutVersions,
     ExternalServiceError,
@@ -170,3 +179,32 @@ class InformatieObjectTypeDetailView(
         yield from super().get_fields(
             data, option_overrides, base_editable=lambda name: name != "concept"
         )
+
+
+class InformatieObjectTypePublishView(MsgspecAPIView):
+    endpoint_path = "informatieobjecttypen/{uuid}/publish"
+
+    @extend_schema(
+        operation_id="informatieobjecttype_publish",
+        summary="Publish an informatieobjecttype",
+        tags=["Informatieobjecttypen"],
+        responses={
+            204: None,
+            400: ZGWError,
+        },
+    )
+    def post(self, request: Request, slug: str = "", uuid: str = "") -> Response:
+        "Publish an informatieobjecttype"
+        with ztc_client(slug) as client:
+            response = client.post(
+                self.endpoint_path.format(uuid=uuid),
+            )
+
+            if not response.ok:
+                error = decode(response.content)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
