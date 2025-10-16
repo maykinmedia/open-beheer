@@ -171,6 +171,26 @@ export interface paths {
         patch: operations["service_informatieobjecttypen_partial_update"];
         trace?: never;
     };
+    "/api/v1/service/{slug}/informatieobjecttypen/{uuid}/publish/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Publish an informatieobjecttype
+         * @description Publish an informatieobjecttype
+         */
+        post: operations["informatieobjecttype_publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/service/{slug}/zaaktypen/": {
         parameters: {
             query?: never;
@@ -3497,6 +3517,35 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["DetailResponseWithoutVersions_InformatieObjectType_"];
                 };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+        };
+    };
+    informatieobjecttype_publish: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                uuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             400: {
                 headers: {
