@@ -153,6 +153,7 @@ export function ZaaktypeCreatePage() {
             nonFieldErrors={nonFieldErrors}
             fields={fields}
             justify="stretch"
+            labelSubmit="Zaaktype aanmaken"
             validateOnChange
             showActions={true}
             validate={handleValidate}
@@ -222,6 +223,7 @@ export const ZaaktypeCreateCard: React.FC<ZaaktypeCreateCardProps> = ({
       title={result.naam}
       actions={[
         {
+          ["aria-label"]: result.naam,
           type: "radio",
           name: `zaaktypecreate-${result.naam}`,
           value: result.uuid,
@@ -233,7 +235,7 @@ export const ZaaktypeCreateCard: React.FC<ZaaktypeCreateCardProps> = ({
         <P>{result.omschrijving}</P>
         {result.voorbeelden.length > 0 && (
           <Ul>
-            {result.voorbeelden.map((voorbeeld) => (
+            {result.voorbeelden.map((voorbeeld: string) => (
               <li key={voorbeeld}>{voorbeeld}</li>
             ))}
           </Ul>
