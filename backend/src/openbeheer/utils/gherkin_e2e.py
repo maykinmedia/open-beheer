@@ -1,7 +1,10 @@
+import re
+from urllib.parse import urlparse
+
 from furl import furl
 from playwright.sync_api import Locator, Page, expect
 from pytest_django.live_server_helper import LiveServer
-from zgw_consumers.constants import APITypes
+from zgw_consumers.constants import APITypes, AuthTypes
 from zgw_consumers.models import Service
 from zgw_consumers.test.factories import ServiceFactory
 
@@ -89,15 +92,18 @@ class GherkinRunner:
             API_CONFIG.
             """
 
-            fake_service = ServiceFactory.create(
+            objecttypen_service = ServiceFactory.create(
                 api_type=APITypes.orc,
-                api_root="http://localhost:8003/besluiten/api/v1",
+                api_root="http://localhost:8004/api/v2/",
+                auth_type=AuthTypes.api_key,
+                header_key="Authorization",
+                header_value="Token 18b2b74ef994314b84021d47b9422e82b685d82f",
             )
             api_config = APIConfig.get_solo()
-            api_config.objecttypen_api_service = fake_service
+            api_config.objecttypen_api_service = objecttypen_service
             api_config.save()
 
-            return fake_service
+            return objecttypen_service
 
         def selectielijst_service_exists(self) -> Service:
             """
@@ -141,7 +147,7 @@ class GherkinRunner:
             return catalogus
 
         def zaaktypen_exist(
-            self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
+                self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
         ) -> list[ZaakTypeWithUUID]:
             """
             Creates zaaktypen in Open Zaak for testing, depends on existence of
@@ -154,7 +160,15 @@ class GherkinRunner:
 
             zaaktypen = []
             for i in range(1, amount + 1):
-                zaaktype = helper.create_zaaktype(catalogus.url, i, **overrides)
+                padded_sequence_number = str(i).zfill(3)
+
+                overrides = {
+                    "aanleiding": f"New Zaaktype {padded_sequence_number}",
+                    "doel": f"New Zaaktype {padded_sequence_number}",
+                    "onderwerp": f"New Zaaktype {padded_sequence_number}",
+                    "referentieproces": {"naam": f"ReferentieProces {padded_sequence_number}"},
+                }
+                zaaktype = helper.create_zaaktype(catalogus.url, **overrides)
                 assert zaaktype.url
                 zaaktypen.append(zaaktype)
 
@@ -208,7 +222,7 @@ class GherkinRunner:
             button.click()
 
         def user_navigates_to_informatieobjecttype_list_page(
-            self, page: Page, catalogus: Catalogus
+                self, page: Page, catalogus: Catalogus
         ) -> None:
             """
             Navigates to the informatieobjecttype list page (by navigation)
@@ -225,7 +239,7 @@ class GherkinRunner:
             )
 
         def user_navigates_to_informatieobjecttype_create_page(
-            self, page: Page, catalogus: Catalogus
+                self, page: Page, catalogus: Catalogus
         ) -> None:
             page.wait_for_load_state("networkidle")
 
@@ -254,6 +268,8 @@ class GherkinRunner:
             iot_link.click()
 
             page.wait_for_load_state("networkidle")
+            href = iot_link.first.get_attribute("href")
+            self.runner.then.url_should_match(page, href)
 
         def user_clicks_on_checkbox(self, page: Page, label: str = "") -> None:
             page.get_by_label(label).click()
@@ -267,11 +283,15 @@ class GherkinRunner:
         def url_should_be(self, page: Page, url: str) -> None:
             expect(page).to_have_url(url)
 
+        def url_should_match(self, page: Page, url: str) -> None:
+            pattern = re.compile(fr".*{re.escape(url)}.*")
+            expect(page).to_have_url(pattern)
+
         def path_should_be(self, page: Page, path: str) -> None:
             self.url_should_be(page, self.runner.live_server.url + path)
 
         def page_should_contain_text(
-            self, page: Page, text: str, timeout: int | None = None
+                self, page: Page, text: str, timeout: int | None = None
         ) -> Locator:
             if timeout is None:
                 timeout = 500
