@@ -13,7 +13,7 @@ def test_list_zaaktypen(page: Page, runner: GherkinRunner):
     _.given.selectielijst_service_exists()
     _.given.ztc_service_exists()
 
-    catalogus = runner.given.catalogus_exists()
+    catalogus = _.given.catalogus_exists()
     zaaktypen = _.given.zaaktypen_exist(catalogus, 20)
 
     # Login

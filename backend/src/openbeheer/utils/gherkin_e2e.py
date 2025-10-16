@@ -1,7 +1,7 @@
 import re
 
 from furl import furl
-from playwright.sync_api import Locator, Page, expect
+from playwright.sync_api import Locator, Page, expect, Error
 from pytest_django.live_server_helper import LiveServer
 from zgw_consumers.constants import APITypes, AuthTypes
 from zgw_consumers.models import Service
@@ -146,7 +146,7 @@ class GherkinRunner:
             return catalogus
 
         def zaaktypen_exist(
-            self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
+                self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
         ) -> list[ZaakTypeWithUUID]:
             """
             Creates zaaktypen in Open Zaak for testing, depends on existence of
@@ -184,7 +184,7 @@ class GherkinRunner:
 
         # Authentication
 
-        def user_logs_in(self, page: Page, username: str, password: str) -> None:
+        def user_logs_in(self, page: Page, username: str = "johndoe", password: str = "secret") -> None:
             page.goto(f"{self.runner.live_server.url}/")
             expect(page).to_have_url(self.runner.live_server.url + "/login?next=/")
 
@@ -203,16 +203,26 @@ class GherkinRunner:
 
         def user_selects_catalogus(self, page: Page, catalogus: Catalogus) -> None:
             page.wait_for_load_state("networkidle")
+            select: Locator
+            expected_path = f"/OZ/{furl(catalogus.url).path.segments[-1]}/zaaktypen"
 
-            select = page.get_by_text("Selecteer catalogus")
-            select.click()
-            option = page.get_by_text(f"{catalogus.naam} ({catalogus.domein})")
-            option.click()
-            assert catalogus.url
-            expect(page).to_have_url(
-                self.runner.live_server.url
-                + f"/OZ/{furl(catalogus.url).path.segments[-1]}/zaaktypen"
-            )
+            try:
+                expect(page).to_have_url(
+                    self.runner.live_server.url
+                    + expected_path,
+                    timeout=100,
+                )
+            except AssertionError:
+                select = page.get_by_text("Selecteer catalogus")
+                select.click()
+                option = page.get_by_text(f"{catalogus.naam} ({catalogus.domein})")
+                option.click()
+
+                assert catalogus.url
+                expect(page).to_have_url(
+                    self.runner.live_server.url
+                    + expected_path
+                )
 
         def user_navigates_to_zaaktype_list_page(self, page: Page) -> None:
             """
@@ -222,9 +232,10 @@ class GherkinRunner:
             page.wait_for_load_state("networkidle")
             button = page.get_by_role(role="button", name="Zaaktypen")
             button.click()
+            page.wait_for_load_state("networkidle")
 
         def user_navigates_to_informatieobjecttype_list_page(
-            self, page: Page, catalogus: Catalogus
+                self, page: Page, catalogus: Catalogus
         ) -> None:
             """
             Navigates to the informatieobjecttype list page (by navigation)
@@ -241,7 +252,7 @@ class GherkinRunner:
             )
 
         def user_navigates_to_informatieobjecttype_create_page(
-            self, page: Page, catalogus: Catalogus
+                self, page: Page, catalogus: Catalogus
         ) -> None:
             page.wait_for_load_state("networkidle")
 
@@ -253,29 +264,48 @@ class GherkinRunner:
                 + f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/create"
             )
 
+        def user_selects_tab(self, page: Page, name: str = "") -> None:
+            kwargs = {}
+            if name:
+                kwargs.update({"name": name})
+
+            page.wait_for_load_state("networkidle")
+            button = page.get_by_role("tab", **kwargs)
+            button.click()
+            page.wait_for_load_state("networkidle")
+
         # Actions
 
         def user_clicks_on_button(self, page: Page, name: str = "") -> None:
             kwargs = {}
             if name:
                 kwargs.update({"name": name})
+
+            page.wait_for_load_state("networkidle")
             button = page.get_by_role("button", **kwargs)
             button.click()
+            page.wait_for_load_state("networkidle")
 
         def user_clicks_on_link(self, page: Page, name: str = "") -> None:
             kwargs = {}
             if name:
                 kwargs.update({"name": name})
-            iot_link = page.get_by_role("link", **kwargs)
-            iot_link.click()
 
             page.wait_for_load_state("networkidle")
+
+            iot_link = page.get_by_role("link", **kwargs)
             href = iot_link.first.get_attribute("href")
+            iot_link.click()
+
             if href:
                 self.runner.then.url_should_match(page, href)
+            page.wait_for_load_state("networkidle")
 
-        def user_clicks_on_checkbox(self, page: Page, label: str = "") -> None:
+        def user_clicks_on_checkbox(self, page: Page, label: str) -> None:
             page.get_by_label(label).click()
+
+        def user_fills_form_field(self, page: Page, label: str, value: str) -> None:
+            page.get_by_label(label).fill(value)
 
     class Then(GherkinScenario):
         """
@@ -294,7 +324,7 @@ class GherkinRunner:
             self.url_should_be(page, self.runner.live_server.url + path)
 
         def page_should_contain_text(
-            self, page: Page, text: str, timeout: int | None = None
+                self, page: Page, text: str, timeout: int | None = None
         ) -> Locator:
             if timeout is None:
                 timeout = 500
