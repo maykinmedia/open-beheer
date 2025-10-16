@@ -15,10 +15,7 @@ import {
   zaaktypenLoader,
 } from "~/pages";
 import { InformatieObjectTypeCreatePage } from "~/pages/informatieobjecttypecreate/InformatieObjectTypeCreatePage";
-import {
-  InformatieObjectTypeParentPage,
-  InformatieObjectTypenPage,
-} from "~/pages/informatieobjecttypen";
+import { InformatieObjectTypenPage } from "~/pages/informatieobjecttypen";
 import { informatieobjecttypenLoader } from "~/pages/informatieobjecttypen/informatieobjecttype.loader";
 import { zaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 
@@ -100,7 +97,7 @@ export const routes: RouteObject[] = [
               {
                 id: "informatieobjecttypen",
                 path: "informatieobjecttypen",
-                element: <InformatieObjectTypeParentPage />,
+                element: <Outlet />,
                 children: [
                   {
                     index: true,
@@ -119,25 +116,6 @@ export const routes: RouteObject[] = [
                     element: <InformatieObjectTypePage />,
                     action: informatieobjecttypeAction,
                     loader: informatieobjecttypeLoader,
-                    // shouldRevalidate: ({ currentUrl, nextUrl }) => {
-                    //   const baseCurrent =
-                    //     currentUrl.origin +
-                    //     currentUrl.pathname +
-                    //     currentUrl.search;
-                    //   const baseNext =
-                    //     nextUrl.origin + nextUrl.pathname + nextUrl.search;
-
-                    //   // If base is the same but hash differs, do NOT revalidate
-                    //   if (
-                    //     baseCurrent === baseNext &&
-                    //     currentUrl.hash !== nextUrl.hash
-                    //   ) {
-                    //     return false;
-                    //   }
-
-                    //   // Otherwise, revalidate
-                    //   return true;
-                    // },
                   },
                 ],
               },
