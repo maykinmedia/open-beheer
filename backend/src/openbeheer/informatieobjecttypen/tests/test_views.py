@@ -228,6 +228,11 @@ class InformatieObjectTypeDetailViewTest(VCRAPITestCase):
             self.assertEqual(data["fields"][2]["name"], "vertrouwelijkheidaanduiding")
             self.assertEqual(len(data["fields"][2]["options"]), 8)
 
+            concept_field = [
+                field for field in data["fields"] if field["name"] == "concept"
+            ][0]
+            self.assertNotIn("editable", concept_field)
+
     def test_patch_informatieobjecttype(self):
         iot = self.helper.create_informatieobjecttype()
 
