@@ -1,5 +1,4 @@
 import re
-from urllib.parse import urlparse
 
 from furl import furl
 from playwright.sync_api import Locator, Page, expect
@@ -34,7 +33,7 @@ class GherkinRunner:
     Example:
 
         def test_not_logged_in(page: Page, runner: GherkinRunner):
-            runner.when.go_to_root_page(page)
+            runner.when.user_open_application(page)
 
             runner.then.page_should_contain_text(page, "403")
 
