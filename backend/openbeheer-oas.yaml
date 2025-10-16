@@ -397,6 +397,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+  /api/v1/service/{slug}/informatieobjecttypen/{uuid}/publish/:
+    post:
+      operationId: informatieobjecttype_publish
+      description: Publish an informatieobjecttype
+      summary: Publish an informatieobjecttype
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Informatieobjecttypen
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZGWError'
+          description: ''
   /api/v1/service/{slug}/zaaktypen/:
     get:
       operationId: service_zaaktypen_retrieve
