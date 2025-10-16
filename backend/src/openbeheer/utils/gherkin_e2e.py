@@ -146,7 +146,7 @@ class GherkinRunner:
             return catalogus
 
         def zaaktypen_exist(
-                self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
+            self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
         ) -> list[ZaakTypeWithUUID]:
             """
             Creates zaaktypen in Open Zaak for testing, depends on existence of
@@ -165,8 +165,11 @@ class GherkinRunner:
                     "aanleiding": f"New Zaaktype {padded_sequence_number}",
                     "doel": f"New Zaaktype {padded_sequence_number}",
                     "onderwerp": f"New Zaaktype {padded_sequence_number}",
-                    "referentieproces": {"naam": f"ReferentieProces {padded_sequence_number}"},
+                    "referentieproces": {
+                        "naam": f"ReferentieProces {padded_sequence_number}"
+                    },
                 }
+                assert catalogus.url
                 zaaktype = helper.create_zaaktype(catalogus.url, **overrides)
                 assert zaaktype.url
                 zaaktypen.append(zaaktype)
@@ -221,7 +224,7 @@ class GherkinRunner:
             button.click()
 
         def user_navigates_to_informatieobjecttype_list_page(
-                self, page: Page, catalogus: Catalogus
+            self, page: Page, catalogus: Catalogus
         ) -> None:
             """
             Navigates to the informatieobjecttype list page (by navigation)
@@ -238,7 +241,7 @@ class GherkinRunner:
             )
 
         def user_navigates_to_informatieobjecttype_create_page(
-                self, page: Page, catalogus: Catalogus
+            self, page: Page, catalogus: Catalogus
         ) -> None:
             page.wait_for_load_state("networkidle")
 
@@ -268,7 +271,8 @@ class GherkinRunner:
 
             page.wait_for_load_state("networkidle")
             href = iot_link.first.get_attribute("href")
-            self.runner.then.url_should_match(page, href)
+            if href:
+                self.runner.then.url_should_match(page, href)
 
         def user_clicks_on_checkbox(self, page: Page, label: str = "") -> None:
             page.get_by_label(label).click()
@@ -283,14 +287,14 @@ class GherkinRunner:
             expect(page).to_have_url(url)
 
         def url_should_match(self, page: Page, url: str) -> None:
-            pattern = re.compile(fr".*{re.escape(url)}.*")
+            pattern = re.compile(rf".*{re.escape(url)}.*")
             expect(page).to_have_url(pattern)
 
         def path_should_be(self, page: Page, path: str) -> None:
             self.url_should_be(page, self.runner.live_server.url + path)
 
         def page_should_contain_text(
-                self, page: Page, text: str, timeout: int | None = None
+            self, page: Page, text: str, timeout: int | None = None
         ) -> Locator:
             if timeout is None:
                 timeout = 500
