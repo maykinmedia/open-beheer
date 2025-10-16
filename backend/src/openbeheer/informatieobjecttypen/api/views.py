@@ -1,4 +1,5 @@
-from typing import Mapping, override
+from collections.abc import Callable
+from typing import Iterable, Mapping, override
 
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -153,10 +154,19 @@ class InformatieObjectTypeDetailView(
     return_data_type = DetailResponseWithoutVersions[InformatieObjectType]
     endpoint_path = "informatieobjecttypen/{uuid}"
 
-    # TODO: not sure if we should expand the zaaktypen, since the IOT will be
-    # shown under a specific zaaktype. But maybe all the other zaaktypen should be
-    # expanded?
     expansions = {}
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return INFORMATIEOBJECTTYPE_FIELDSETS
+
+    def get_fields(
+        self,
+        data: InformatieObjectType,
+        option_overrides: Mapping[str, list[OBOption]] = {},
+        *,
+        base_editable: Callable[[str], bool] = bool,
+    ) -> Iterable[OBField]:
+        # We don't want to edit concept directly, because we use the "publish" action to change it.
+        yield from super().get_fields(
+            data, option_overrides, base_editable=lambda name: name != "concept"
+        )
