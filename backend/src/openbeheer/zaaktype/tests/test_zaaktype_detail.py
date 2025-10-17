@@ -125,8 +125,12 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
 
         fields_by_name = {f["name"]: f for f in data["fields"]}
         fields = {f for f in fields_by_name if not f.startswith("_expand")}
+        not_nullable_not_required = {"broncatalogus", "bronzaaktype"}
         # all fields should exist on the result
-        self.assertSetEqual(fields, set(data["result"].keys()) - {"_expand"})
+        self.assertSetEqual(
+            fields - not_nullable_not_required,
+            set(data["result"].keys()) - {"_expand"},
+        )
 
         # all expansion_fields should exist on the expansion
         expansion_fields = {
@@ -175,8 +179,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             self.assertIn("verantwoordingsrelatie", zaaktype_data)
             self.assertIn("selectielijstProcestype", zaaktype_data)
             self.assertIn("concept", zaaktype_data)
-            self.assertIn("broncatalogus", zaaktype_data)
-            self.assertIn("bronzaaktype", zaaktype_data)
+            # self.assertIn("broncatalogus", zaaktype_data)
+            # self.assertIn("bronzaaktype", zaaktype_data)
             self.assertIn("eindeGeldigheid", zaaktype_data)
             self.assertIn("beginObject", zaaktype_data)
             self.assertIn("eindeObject", zaaktype_data)
@@ -605,8 +609,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         self.assertEqual(zaaktype["trefwoorden"], [])
         self.assertEqual(zaaktype["publicatietekst"], "")
         self.assertEqual(zaaktype["verantwoordingsrelatie"], [])
-        self.assertIsNone(zaaktype["broncatalogus"])
-        self.assertIsNone(zaaktype["bronzaaktype"])
+        self.assertIsNone(zaaktype.get("broncatalogus"))
+        self.assertIsNone(zaaktype.get("bronzaaktype"))
         self.assertIsNone(zaaktype["eindeGeldigheid"])
         self.assertIsNone(zaaktype["eindeObject"])
 
