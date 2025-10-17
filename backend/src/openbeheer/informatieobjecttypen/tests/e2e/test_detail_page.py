@@ -93,7 +93,7 @@ def test_edit_and_save_informatieobjecttype(page: Page, runner: GherkinRunner):
     )
     page.get_by_label("Omschrijving").fill("Updated Omschrijving")
 
-    runner.when.user_clicks_on_button(page, name="Opslaan")
+    runner.when.user_clicks_on_button(page, name="Opslaan", exact=True)
     runner.then.path_should_be(
         page,
         f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/{iot.uuid}",
@@ -171,24 +171,23 @@ def test_publish_informatieobjecttype(page: Page, runner: GherkinRunner):
 
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.go_to_root_page(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")
 
-    runner.when.select_catalogus(page, catalogus)
-    runner.when.go_to_informatieobjecttype_list_page(page, catalogus)
+    runner.when.user_selects_catalogus(page, catalogus)
+    runner.when.user_navigates_to_informatieobjecttype_list_page(page, catalogus)
 
     runner.then.page_should_contain_text(page, text=iot.omschrijving)
 
-    runner.when.click_on_link(page, name=iot.omschrijving)
+    runner.when.user_clicks_on_link(page, name=iot.omschrijving)
 
     runner.then.path_should_be(
         page,
         f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/{iot.uuid}",
     )
 
-    runner.when.click_on_button(page, name="Publiceren")
+    runner.when.user_clicks_on_button(page, name="Publiceren")
 
     runner.then.table_entry_should_contain_aria_label(
         page, table_header="Concept", attribue_key="aria-label", attribute_value="Nee"
@@ -212,24 +211,23 @@ def test_update_and_publish_informatieobjecttype(page: Page, runner: GherkinRunn
 
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.go_to_root_page(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")
 
-    runner.when.select_catalogus(page, catalogus)
-    runner.when.go_to_informatieobjecttype_list_page(page, catalogus)
+    runner.when.user_selects_catalogus(page, catalogus)
+    runner.when.user_navigates_to_informatieobjecttype_list_page(page, catalogus)
 
     runner.then.page_should_contain_text(page, text=iot.omschrijving)
 
-    runner.when.click_on_link(page, name=iot.omschrijving)
+    runner.when.user_clicks_on_link(page, name=iot.omschrijving)
 
     runner.then.path_should_be(
         page,
         f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/{iot.uuid}",
     )
 
-    runner.when.click_on_button(page, name="Bewerken")
+    runner.when.user_clicks_on_button(page, name="Bewerken")
 
     runner.then.path_should_be(
         page,
@@ -237,7 +235,7 @@ def test_update_and_publish_informatieobjecttype(page: Page, runner: GherkinRunn
     )
     page.get_by_label("Omschrijving").fill("Updated Omschrijving")
 
-    runner.when.click_on_button(page, name="Opslaan en publiceren")
+    runner.when.user_clicks_on_button(page, name="Opslaan en publiceren")
 
     runner.then.page_should_contain_text(page, "Updated Omschrijving")
     runner.then.table_entry_should_contain_aria_label(
