@@ -42,7 +42,6 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "handeling_initiator",
                 "handeling_behandelaar",
                 "verantwoordelijke",
-                "producten_of_diensten",
                 "doorlooptijd",
                 "servicenorm",
                 "omschrijving",
@@ -279,7 +278,6 @@ waarden_dict = {
     "trefwoorden": ["Zaaktype", "Basis"],
     "publicatie_indicatie": True,
     "publicatietekst": "De generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.",
-    "producten_of_diensten": [],
     "referentieproces": make_fields_optional(ReferentieProces)(
         naam="De naam van het Referentieproces.",
         link="",
