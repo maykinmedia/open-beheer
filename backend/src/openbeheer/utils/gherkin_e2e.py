@@ -256,11 +256,7 @@ class GherkinRunner:
 
         # Actions
 
-        def user_clicks_on_button(self, page: Page, name: str = "") -> None:
-            kwargs = {}
-            if name:
-                kwargs.update({"name": name})
-
+        def user_clicks_on_button(self, page: Page, **kwargs) -> None:
             page.wait_for_load_state("networkidle")
             button = page.get_by_role("button", **kwargs)
             button.click()
