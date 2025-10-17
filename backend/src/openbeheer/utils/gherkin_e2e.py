@@ -1,15 +1,16 @@
 import re
 
 from furl import furl
-from playwright.sync_api import Locator, Page, expect, Error
+from playwright.sync_api import Locator, Page, expect
 from pytest_django.live_server_helper import LiveServer
-from zgw_consumers.constants import APITypes, AuthTypes
+from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.models import User
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.config.models import APIConfig
+from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.types import ZaakTypeWithUUID
 from openbeheer.types.ztc import Catalogus
 from openbeheer.utils.open_zaak_helper.data_creation import (
@@ -85,39 +86,12 @@ class GherkinRunner:
 
             return UserFactory.create(username="johndoe", password="secret")
 
-        def objecttypen_service_exists(self) -> Service:
+        def api_config_exists(self) -> APIConfig:
             """
-            Creates a (fake) objecttypen service for testing and registers it in
-            API_CONFIG.
+            Creates an APIConfig for testing.
             """
-
-            objecttypen_service = ServiceFactory.create(
-                api_type=APITypes.orc,
-                api_root="http://localhost:8004/api/v2/",
-                auth_type=AuthTypes.api_key,
-                header_key="Authorization",
-                header_value="Token 18b2b74ef994314b84021d47b9422e82b685d82f",
-            )
-            api_config = APIConfig.get_solo()
-            api_config.objecttypen_api_service = objecttypen_service
-            api_config.save()
-
-            return objecttypen_service
-
-        def selectielijst_service_exists(self) -> Service:
-            """
-            Creates a selectielijst service for testing and registers it in API_CONFIG.
-            """
-
-            selectielijst_service = ServiceFactory.create(
-                api_type=APITypes.orc,
-                api_root="https://selectielijst.openzaak.nl/api/v1/",
-            )
-            api_config = APIConfig.get_solo()
-            api_config.selectielijst_api_service = selectielijst_service
-            api_config.save()
-
-            return selectielijst_service
+            api_config = APIConfigFactory.create()
+            return api_config
 
         def ztc_service_exists(self) -> Service:
             """
@@ -146,7 +120,7 @@ class GherkinRunner:
             return catalogus
 
         def zaaktypen_exist(
-                self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
+            self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
         ) -> list[ZaakTypeWithUUID]:
             """
             Creates zaaktypen in Open Zaak for testing, depends on existence of
@@ -184,7 +158,9 @@ class GherkinRunner:
 
         # Authentication
 
-        def user_logs_in(self, page: Page, username: str = "johndoe", password: str = "secret") -> None:
+        def user_logs_in(
+            self, page: Page, username: str = "johndoe", password: str = "secret"
+        ) -> None:
             page.goto(f"{self.runner.live_server.url}/")
             expect(page).to_have_url(self.runner.live_server.url + "/login?next=/")
 
@@ -203,13 +179,18 @@ class GherkinRunner:
 
         def user_selects_catalogus(self, page: Page, catalogus: Catalogus) -> None:
             page.wait_for_load_state("networkidle")
-            select: Locator
+
+            assert catalogus.url
             expected_path = f"/OZ/{furl(catalogus.url).path.segments[-1]}/zaaktypen"
 
+            # FIXME: get rid of try/except.
+            #
+            # There are two scenario's for this:
+            # - Catalogus already selected (only catalogus)
+            # - Multiple catalogi exists "Selecteer catalogus" is shown
             try:
                 expect(page).to_have_url(
-                    self.runner.live_server.url
-                    + expected_path,
+                    self.runner.live_server.url + expected_path,
                     timeout=100,
                 )
             except AssertionError:
@@ -219,10 +200,7 @@ class GherkinRunner:
                 option.click()
 
                 assert catalogus.url
-                expect(page).to_have_url(
-                    self.runner.live_server.url
-                    + expected_path
-                )
+                expect(page).to_have_url(self.runner.live_server.url + expected_path)
 
         def user_navigates_to_zaaktype_list_page(self, page: Page) -> None:
             """
@@ -235,7 +213,7 @@ class GherkinRunner:
             page.wait_for_load_state("networkidle")
 
         def user_navigates_to_informatieobjecttype_list_page(
-                self, page: Page, catalogus: Catalogus
+            self, page: Page, catalogus: Catalogus
         ) -> None:
             """
             Navigates to the informatieobjecttype list page (by navigation)
@@ -252,7 +230,7 @@ class GherkinRunner:
             )
 
         def user_navigates_to_informatieobjecttype_create_page(
-                self, page: Page, catalogus: Catalogus
+            self, page: Page, catalogus: Catalogus
         ) -> None:
             page.wait_for_load_state("networkidle")
 
@@ -324,7 +302,7 @@ class GherkinRunner:
             self.url_should_be(page, self.runner.live_server.url + path)
 
         def page_should_contain_text(
-                self, page: Page, text: str, timeout: int | None = None
+            self, page: Page, text: str, timeout: int | None = None
         ) -> Locator:
             if timeout is None:
                 timeout = 500

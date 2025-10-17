@@ -1,6 +1,6 @@
-import { ButtonLink, Outline } from "@maykin-ui/admin-ui";
+import { Button, Outline } from "@maykin-ui/admin-ui";
 import { useCallback, useState } from "react";
-import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { NavLink, useLoaderData, useLocation } from "react-router";
 import {
   ZaaktypeFilter,
   ZaaktypeFilterValues,
@@ -17,7 +17,6 @@ import { ListView } from "~/views";
 export function ZaaktypenPage() {
   const loaderData = useLoaderData<ZaaktypenLoaderData>();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [searchParams, setCombinedSearchParams] = useCombinedSearchParams(0);
   const [filterState, setFilterState] = useState<Record<string, string | null>>(
     Object.fromEntries(searchParams),
@@ -54,17 +53,11 @@ export function ZaaktypenPage() {
           trefwoorden={filterState.trefwoorden}
           onSubmit={handleSubmit}
         />,
-        <ButtonLink
-          href="zaaktypen/create"
-          key="create-zaaktype"
-          variant="primary"
-          onClick={(e) => {
-            e.preventDefault();
-            return navigate((e.target as HTMLAnchorElement).pathname);
-          }}
-        >
-          <Outline.PlusIcon /> Nieuw zaaktype
-        </ButtonLink>,
+        <NavLink key="create-zaaktype" to="create">
+          <Button variant="primary">
+            <Outline.PlusIcon /> Nieuw zaaktype
+          </Button>
+        </NavLink>,
       ]}
     />
   );

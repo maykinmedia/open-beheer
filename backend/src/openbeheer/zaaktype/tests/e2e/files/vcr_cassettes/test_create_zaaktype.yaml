@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"domein": "EBIGI", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
-      "naam": "Prepare natural receive."}'
+    body: '{"domein": "MFUVW", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Other ever similar throughout father population."}'
     headers:
       Accept:
       - '*/*'
@@ -12,15 +12,15 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '114'
+      - '138'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/db7ee80b-3c4f-4357-b281-f777362dbec0","domein":"EBIGI","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Prepare
-        natural receive.","versie":"","begindatumVersie":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6","domein":"MFUVW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Other
+        ever similar throughout father population.","versie":"","begindatumVersie":null}'
     headers:
       API-version:
       - 1.3.1
@@ -29,13 +29,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '375'
+      - '399'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/db7ee80b-3c4f-4357-b281-f777362dbec0
+      - http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6
       Referrer-Policy:
       - same-origin
       Vary:
@@ -62,8 +62,9 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/db7ee80b-3c4f-4357-b281-f777362dbec0","domein":"EBIGI","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Prepare
-        natural receive.","versie":"","begindatumVersie":null}]}'
+      string: '{"count":2,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6","domein":"MFUVW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Other
+        ever similar throughout father population.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/d286f2f7-0e10-41c4-9613-f915ed8e0116","domein":"GEOGZ","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Bank
+        common rich write treatment debate son.","versie":"","begindatumVersie":null}]}'
     headers:
       API-version:
       - 1.3.1
@@ -72,7 +73,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '427'
+      - '847'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
@@ -100,7 +101,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fdb7ee80b-3c4f-4357-b281-f777362dbec0&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fe57cae2f-5155-4c26-81d2-ac53ef4f2ed6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -140,7 +141,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fdb7ee80b-3c4f-4357-b281-f777362dbec0&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fe57cae2f-5155-4c26-81d2-ac53ef4f2ed6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -178,8 +179,8 @@ interactions:
       "P6W", "opschortingEnAanhoudingMogelijk": true, "verlengingMogelijk": true,
       "publicatieIndicatie": true, "productenOfDiensten": [], "referentieproces":
       {"naam": "De naam van het Referentieproces.", "link": ""}, "verantwoordelijke":
-      "De verantwoordelijke (soort) organisatie.", "beginGeldigheid": "2025-10-16",
-      "versiedatum": "2025-10-16", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/db7ee80b-3c4f-4357-b281-f777362dbec0",
+      "De verantwoordelijke (soort) organisatie.", "beginGeldigheid": "2025-10-17",
+      "versiedatum": "2025-10-17", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6",
       "besluittypen": [], "gerelateerdeZaaktypen": [], "identificatie": "gh-305",
       "omschrijvingGeneriek": "created zaaktype", "toelichting": "Een eventuele toelichting
       op dit zaaktype", "servicenorm": null, "verlengingstermijn": "P2W", "trefwoorden":
@@ -211,7 +212,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/05578ec4-b0be-4005-9da1-5e7fc924b041\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
+      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
         Zaaktype-omschrijving\",\"omschrijvingGeneriek\":\"created zaaktype\",\"vertrouwelijkheidaanduiding\":\"openbaar\",\"doel\":\"Een
         omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.\",\"aanleiding\":\"Een
         omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van
@@ -219,7 +220,7 @@ interactions:
         onderwerp van ZAAKen van dit ZAAKTYPE.\",\"handelingBehandelaar\":\"Behandelen\",\"doorlooptijd\":\"P42D\",\"servicenorm\":null,\"opschortingEnAanhoudingMogelijk\":true,\"verlengingMogelijk\":true,\"verlengingstermijn\":\"P14D\",\"trefwoorden\":[\"Zaaktype\",\"Basis\"],\"publicatieIndicatie\":true,\"publicatietekst\":\"De
         generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.\",\"verantwoordingsrelatie\":[],\"productenOfDiensten\":[],\"selectielijstProcestype\":\"\",\"referentieproces\":{\"naam\":\"De
         naam van het Referentieproces.\",\"link\":\"\"},\"concept\":true,\"verantwoordelijke\":\"De
-        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-16\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-16\",\"beginObject\":\"2025-10-16\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/db7ee80b-3c4f-4357-b281-f777362dbec0\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
+        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-17\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-17\",\"beginObject\":\"2025-10-17\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
     headers:
       API-version:
       - 1.3.1
@@ -234,7 +235,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/05578ec4-b0be-4005-9da1-5e7fc924b041
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6
       Referrer-Policy:
       - same-origin
       Vary:
@@ -258,10 +259,10 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/05578ec4-b0be-4005-9da1-5e7fc924b041
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6
   response:
     body:
-      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/05578ec4-b0be-4005-9da1-5e7fc924b041\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
+      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
         Zaaktype-omschrijving\",\"omschrijvingGeneriek\":\"created zaaktype\",\"vertrouwelijkheidaanduiding\":\"openbaar\",\"doel\":\"Een
         omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.\",\"aanleiding\":\"Een
         omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van
@@ -269,7 +270,7 @@ interactions:
         onderwerp van ZAAKen van dit ZAAKTYPE.\",\"handelingBehandelaar\":\"Behandelen\",\"doorlooptijd\":\"P42D\",\"servicenorm\":null,\"opschortingEnAanhoudingMogelijk\":true,\"verlengingMogelijk\":true,\"verlengingstermijn\":\"P14D\",\"trefwoorden\":[\"Zaaktype\",\"Basis\"],\"publicatieIndicatie\":true,\"publicatietekst\":\"De
         generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.\",\"verantwoordingsrelatie\":[],\"productenOfDiensten\":[],\"selectielijstProcestype\":\"\",\"referentieproces\":{\"naam\":\"De
         naam van het Referentieproces.\",\"link\":\"\"},\"concept\":true,\"verantwoordelijke\":\"De
-        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-16\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-16\",\"beginObject\":\"2025-10-16\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/db7ee80b-3c4f-4357-b281-f777362dbec0\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
+        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-17\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-17\",\"beginObject\":\"2025-10-17\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
     headers:
       API-version:
       - 1.3.1
@@ -284,7 +285,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       ETag:
-      - '"d29b82ecc26f5a40af80a23453dc846e"'
+      - '"9778b6fbd2d91cbd85e34a90c1355329"'
       Referrer-Policy:
       - same-origin
       Vary:
@@ -308,7 +309,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktype-informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F05578ec4-b0be-4005-9da1-5e7fc924b041&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktype-informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -348,7 +349,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/besluittypen?zaaktypen=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F05578ec4-b0be-4005-9da1-5e7fc924b041&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/besluittypen?zaaktypen=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -388,7 +389,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/statustypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F05578ec4-b0be-4005-9da1-5e7fc924b041&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/statustypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -428,7 +429,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/resultaattypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F05578ec4-b0be-4005-9da1-5e7fc924b041&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/resultaattypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -468,7 +469,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/eigenschappen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F05578ec4-b0be-4005-9da1-5e7fc924b041&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/eigenschappen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -508,7 +509,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F05578ec4-b0be-4005-9da1-5e7fc924b041&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -548,7 +549,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/roltypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F05578ec4-b0be-4005-9da1-5e7fc924b041&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/roltypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -591,7 +592,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=gh-305&status=alles
   response:
     body:
-      string: "{\"count\":1,\"next\":null,\"previous\":null,\"results\":[{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/05578ec4-b0be-4005-9da1-5e7fc924b041\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
+      string: "{\"count\":1,\"next\":null,\"previous\":null,\"results\":[{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
         Zaaktype-omschrijving\",\"omschrijvingGeneriek\":\"created zaaktype\",\"vertrouwelijkheidaanduiding\":\"openbaar\",\"doel\":\"Een
         omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.\",\"aanleiding\":\"Een
         omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van
@@ -599,7 +600,7 @@ interactions:
         onderwerp van ZAAKen van dit ZAAKTYPE.\",\"handelingBehandelaar\":\"Behandelen\",\"doorlooptijd\":\"P42D\",\"servicenorm\":null,\"opschortingEnAanhoudingMogelijk\":true,\"verlengingMogelijk\":true,\"verlengingstermijn\":\"P14D\",\"trefwoorden\":[\"Zaaktype\",\"Basis\"],\"publicatieIndicatie\":true,\"publicatietekst\":\"De
         generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.\",\"verantwoordingsrelatie\":[],\"productenOfDiensten\":[],\"selectielijstProcestype\":\"\",\"referentieproces\":{\"naam\":\"De
         naam van het Referentieproces.\",\"link\":\"\"},\"concept\":true,\"verantwoordelijke\":\"De
-        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-16\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-16\",\"beginObject\":\"2025-10-16\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/db7ee80b-3c4f-4357-b281-f777362dbec0\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}]}"
+        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-17\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-17\",\"beginObject\":\"2025-10-17\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}]}"
     headers:
       API-version:
       - 1.3.1
@@ -636,7 +637,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fdb7ee80b-3c4f-4357-b281-f777362dbec0&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fe57cae2f-5155-4c26-81d2-ac53ef4f2ed6&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'

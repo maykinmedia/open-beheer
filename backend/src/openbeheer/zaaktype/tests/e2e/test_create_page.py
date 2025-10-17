@@ -9,8 +9,7 @@ def test_create_zaaktype(page: Page, runner: GherkinRunner):
     _ = runner
 
     _.given.user_exists()
-    _.given.objecttypen_service_exists()
-    _.given.selectielijst_service_exists()
+    _.given.api_config_exists()
     _.given.ztc_service_exists()
 
     catalogus = _.given.catalogus_exists()
