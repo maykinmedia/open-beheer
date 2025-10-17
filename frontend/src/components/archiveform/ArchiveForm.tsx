@@ -26,6 +26,9 @@ export type ArchiveFormProps = {
   /** The resultaattype to set archiving options for. */
   resultaatType: components["schemas"]["ResultaatTypeWithUUID"];
 
+  /** `Option[]` for the resultaattypeomschrijving options. */
+  resultaattypeomschrijvingOptions: Option[];
+
   /** `Option[]` for the selectielijstklasse (resultaat) options. */
   selectielijstklasseOptions: Option[];
 
@@ -34,12 +37,14 @@ export type ArchiveFormProps = {
 
   /** Gets called when the form is submitted. */
   onSubmit: (data: {
+    resultaattypeomschrijving: ArchiveFormData["resultaattypeomschrijving"];
     selectielijstklasse: ArchiveFormData["selectielijstklasse"];
     brondatumArchiefProcedure: BrondatumFieldValues;
   }) => void;
 };
 
 export type ArchiveFormData = BrondatumFieldValues & {
+  resultaattypeomschrijving: string;
   selectielijstklasse: string;
 };
 
@@ -54,6 +59,7 @@ export type ArchiveFormData = BrondatumFieldValues & {
 export function ArchiveForm({
   zaaktype,
   resultaatType,
+  resultaattypeomschrijvingOptions,
   selectielijstklasseOptions,
   onCancel,
   onSubmit,
@@ -68,7 +74,9 @@ export function ArchiveForm({
     const resultaatTypeBrondDatumValues =
       resultaatType.brondatumArchiefprocedure || {};
     return {
+      resultaattypeomschrijving: resultaatType.resultaattypeomschrijving,
       selectielijstklasse: resultaatType.selectielijstklasse,
+
       afleidingswijze: "afgehandeld",
       datumkenmerk: "",
       einddatumBekend: false,
@@ -114,6 +122,15 @@ export function ArchiveForm({
 
     return [
       {
+        label: "Resultaattypeomschrijving",
+        name: "resultaattypeomschrijving",
+        type: "text",
+        options: resultaattypeomschrijvingOptions,
+        value:
+          formState?.resultaattypeomschrijving ||
+          resultaatType.resultaattypeomschrijving,
+      },
+      {
         label: "Selectielijstklasse",
         name: "selectielijstklasse",
         type: "text",
@@ -156,6 +173,7 @@ export function ArchiveForm({
       validateOnChange
       onSubmit={(_, data) =>
         onSubmit({
+          resultaattypeomschrijving: data.resultaattypeomschrijving,
           selectielijstklasse: data.selectielijstklasse,
           brondatumArchiefProcedure: {
             afleidingswijze: data.afleidingswijze || "",
