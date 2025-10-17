@@ -28,7 +28,7 @@ def test_list_zaaktypen(page: Page, runner: GherkinRunner):
     _.then.page_should_contain_text(page, "ZAAKTYPE-2025-0000000018")
 
     # Navigate to next page.
-    _.when.user_clicks_on_button(page, "volgende")
+    _.when.user_clicks_on_button(page, name="volgende")
     _.when.user_clicks_on_link(page, "ZAAKTYPE-2025-0000000001")
 
     # Navigate to detail view

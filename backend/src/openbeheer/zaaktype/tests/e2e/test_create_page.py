@@ -25,10 +25,10 @@ def test_create_zaaktype(page: Page, runner: GherkinRunner):
 
     # Create zaaktype
     _.when.user_clicks_on_checkbox(page, "Basis")
-    _.when.user_clicks_on_button(page, "Gebruik dit sjabloon")
+    _.when.user_clicks_on_button(page, name="Gebruik dit sjabloon")
     _.when.user_fills_form_field(page, "Identificatienummer", "gh-305")
     _.when.user_fills_form_field(page, "Omschrijving", "created zaaktype")
-    _.when.user_clicks_on_button(page, "Zaaktype aanmaken")
+    _.when.user_clicks_on_button(page, name="Zaaktype aanmaken")
     _.then.page_should_contain_text(page, "gh-305", timeout=10000)
 
     # Navigate to algemeen tab
