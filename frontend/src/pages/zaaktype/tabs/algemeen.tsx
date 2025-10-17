@@ -91,16 +91,6 @@ export const FIELDSETS_BEHANDELING_EN_PROCES: FieldSet<TargetType>[] = [
 
 export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
   [
-    "Brongegevens",
-    {
-      titleSpan: 12,
-      fields: ["bronzaaktype"],
-      span: 12,
-      colSpan: 4,
-    },
-  ],
-
-  [
     "Relaties",
     {
       titleSpan: 12,
