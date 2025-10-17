@@ -149,6 +149,7 @@ def as_ob_fieldtype(
     if field_name in [
         "archiefactietermijn",
         "doorlooptijd",
+        "servicenorm",
         "procestermijn",
         "publicatietermijn",
         "reactietermijn",
