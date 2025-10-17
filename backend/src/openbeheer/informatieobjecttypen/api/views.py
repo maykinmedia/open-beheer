@@ -1,10 +1,20 @@
-from typing import Mapping, override
+from collections.abc import Callable
+from typing import Iterable, Mapping, override
 
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from msgspec.json import decode
+from rest_framework import status
 from rest_framework.request import Request
+from rest_framework.response import Response
 
-from openbeheer.api.views import DetailView, DetailViewWithoutVersions, ListView
+from openbeheer.api.views import (
+    DetailView,
+    DetailViewWithoutVersions,
+    ListView,
+    MsgspecAPIView,
+)
+from openbeheer.clients import ztc_client
 from openbeheer.types import (
     DetailResponseWithoutVersions,
     ExternalServiceError,
@@ -153,10 +163,48 @@ class InformatieObjectTypeDetailView(
     return_data_type = DetailResponseWithoutVersions[InformatieObjectType]
     endpoint_path = "informatieobjecttypen/{uuid}"
 
-    # TODO: not sure if we should expand the zaaktypen, since the IOT will be
-    # shown under a specific zaaktype. But maybe all the other zaaktypen should be
-    # expanded?
     expansions = {}
 
     def get_fieldsets(self) -> FrontendFieldsets:
         return INFORMATIEOBJECTTYPE_FIELDSETS
+
+    def get_fields(
+        self,
+        data: InformatieObjectType,
+        option_overrides: Mapping[str, list[OBOption]] = {},
+        *,
+        base_editable: Callable[[str], bool] = bool,
+    ) -> Iterable[OBField]:
+        # We don't want to edit concept directly, because we use the "publish" action to change it.
+        yield from super().get_fields(
+            data, option_overrides, base_editable=lambda name: name != "concept"
+        )
+
+
+class InformatieObjectTypePublishView(MsgspecAPIView):
+    endpoint_path = "informatieobjecttypen/{uuid}/publish"
+
+    @extend_schema(
+        operation_id="informatieobjecttype_publish",
+        summary="Publish an informatieobjecttype",
+        tags=["Informatieobjecttypen"],
+        responses={
+            204: None,
+            400: ZGWError,
+        },
+    )
+    def post(self, request: Request, slug: str = "", uuid: str = "") -> Response:
+        "Publish an informatieobjecttype"
+        with ztc_client(slug) as client:
+            response = client.post(
+                self.endpoint_path.format(uuid=uuid),
+            )
+
+            if not response.ok:
+                error = decode(response.content)
+                return Response(
+                    error,
+                    status=response.status_code,
+                )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

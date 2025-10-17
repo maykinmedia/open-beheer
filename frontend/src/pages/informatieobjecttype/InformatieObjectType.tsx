@@ -60,6 +60,20 @@ export function InformatieObjectTypePage() {
     });
   }, [newIOTData]);
 
+  const onSaveAndPublish = useCallback<React.MouseEventHandler>(() => {
+    submitAction({
+      type: "UPDATE_AND_PUBLISH",
+      payload: newIOTData,
+    });
+  }, [newIOTData]);
+
+  const onPublish = useCallback<React.MouseEventHandler>(() => {
+    submitAction({
+      type: "PUBLISH",
+      payload: {},
+    });
+  }, []);
+
   const onValidate = useCallback<FormValidator>((values: object) => {
     // This is a hack, we are using the validate method to update
     // the state of the informatieobjecttype used in the form
@@ -78,8 +92,18 @@ export function InformatieObjectTypePage() {
                 Bewerken
               </>
             ),
-            variant: "primary",
+            variant: "secondary",
             onClick: onToggleEditOn,
+          },
+          {
+            children: (
+              <>
+                <Outline.CloudArrowUpIcon />
+                Publiceren
+              </>
+            ),
+            variant: "primary",
+            onClick: onPublish,
           },
         ];
 
@@ -96,6 +120,16 @@ export function InformatieObjectTypePage() {
             onClick: onCancel,
           },
           "spacer",
+          {
+            children: (
+              <>
+                <Outline.CloudArrowUpIcon />
+                Opslaan en publiceren
+              </>
+            ),
+            variant: "secondary",
+            onClick: onSaveAndPublish,
+          },
           {
             children: (
               <>

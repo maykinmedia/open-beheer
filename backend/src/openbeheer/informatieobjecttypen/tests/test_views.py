@@ -228,6 +228,11 @@ class InformatieObjectTypeDetailViewTest(VCRAPITestCase):
             self.assertEqual(data["fields"][2]["name"], "vertrouwelijkheidaanduiding")
             self.assertEqual(len(data["fields"][2]["options"]), 8)
 
+            concept_field = [
+                field for field in data["fields"] if field["name"] == "concept"
+            ][0]
+            self.assertNotIn("editable", concept_field)
+
     def test_patch_informatieobjecttype(self):
         iot = self.helper.create_informatieobjecttype()
 
@@ -336,3 +341,31 @@ class InformatieObjectTypeDetailViewTest(VCRAPITestCase):
         response = self.client.get(endpoint)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_publish_informatieobjecttype(self):
+        iot = self.helper.create_informatieobjecttype()
+
+        assert iot.url
+        iot_uuid = furl(iot.url).path.segments[-1]
+        self.client.force_login(self.user)
+
+        endpoint = reverse(
+            "api:informatieobjecttypen:informatieobjecttype-publish",
+            kwargs={"slug": "OZ", "uuid": iot_uuid},
+        )
+        response = self.client.post(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Retrieve de IOT to confirm that it's published
+        endpoint = reverse(
+            "api:informatieobjecttypen:informatieobjecttypen-detail",
+            kwargs={"slug": "OZ", "uuid": iot_uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.json()
+
+        self.assertFalse(data["result"]["concept"])

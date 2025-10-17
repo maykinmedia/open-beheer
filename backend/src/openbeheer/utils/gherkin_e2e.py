@@ -251,14 +251,12 @@ class GherkinRunner:
             button = page.get_by_role("tab", **kwargs)
             button.click()
             page.wait_for_load_state("networkidle")
+            button = page.get_by_role("button", exact=True, **kwargs)
+            button.click()
 
         # Actions
 
-        def user_clicks_on_button(self, page: Page, name: str = "") -> None:
-            kwargs = {}
-            if name:
-                kwargs.update({"name": name})
-
+        def user_clicks_on_button(self, page: Page, **kwargs) -> None:
             page.wait_for_load_state("networkidle")
             button = page.get_by_role("button", **kwargs)
             button.click()
@@ -317,3 +315,16 @@ class GherkinRunner:
 
         def page_should_not_contain_text(self, page: Page, text: str) -> None:
             expect(page.locator(f"text={text}")).to_have_count(0)
+
+        def table_entry_should_contain_aria_label(
+            self, page: Page, table_header: str, attribue_key: str, attribute_value: str
+        ) -> None:
+            dt = page.locator("dt.mykn-attributelist__key", has_text=table_header)
+
+            # Locate the following <dd> sibling
+            dd = dt.locator("xpath=following-sibling::dd[1]")
+
+            # Get the <p> inside <dd>
+            paragraph = dd.locator("p.mykn-p")
+
+            expect(paragraph).to_have_attribute(attribue_key, attribute_value)
