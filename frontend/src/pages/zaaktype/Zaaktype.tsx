@@ -728,10 +728,22 @@ const ZaaktypeTab = ({
               }) => {
                 setHookDialogState({ open: false });
 
+                // Resolve omschrijvingGeneriek (resultaattypeOmschrijving text, gh-301)
+                const resultaattypeomschrijvingOption =
+                  resultaattypeomschrijvingOptions.find(
+                    (option) => option.value === resultaattypeomschrijving,
+                  );
+
+                invariant(
+                  resultaattypeomschrijvingOption,
+                  "Failed to locate selected resultaattypeomschrijvingOption!",
+                );
+
                 // Resolve with provided additions.
                 resolve({
                   ...resultaatType,
                   resultaattypeomschrijving,
+                  omschrijvingGeneriek: resultaattypeomschrijvingOption.label,
                   selectielijstklasse,
                   brondatum_archiefprocedure: brondatumArchiefProcedure, // FIXME: camelCase not accepted by BFF/OZ.
                 } as ResultaatType);
