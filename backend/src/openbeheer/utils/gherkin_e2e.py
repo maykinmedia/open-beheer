@@ -247,11 +247,12 @@ class GherkinRunner:
                 kwargs.update({"name": name})
 
             page.wait_for_load_state("networkidle")
-            button = page.get_by_role("tab", **kwargs)
-            button.click()
-            page.wait_for_load_state("networkidle")
-            button = page.get_by_role("button", exact=True, **kwargs)
-            button.click()
+            buttons = page.get_by_role("tab").all()
+            for index, button in enumerate(buttons):
+                if button.text_content() == name:
+                    button.click()
+                    self.runner.then.url_should_match(page, f"tab={index}")
+                    page.wait_for_load_state("networkidle")
 
         # Actions
 
@@ -259,6 +260,7 @@ class GherkinRunner:
             page.wait_for_load_state("networkidle")
             button = page.get_by_role("button", **kwargs)
             button.click()
+            page.wait_for_timeout(10)  # Allow fetch to be called
             page.wait_for_load_state("networkidle")
 
         def user_clicks_on_link(self, page: Page, name: str = "") -> None:
@@ -279,14 +281,38 @@ class GherkinRunner:
         def user_clicks_on_checkbox(self, page: Page, label: str) -> None:
             page.get_by_label(label).click()
 
-        def user_fills_form_field(self, page: Page, label: str, value: str) -> None:
-            page.get_by_label(label).fill(value)
+        def user_fills_form_field(
+            self, page: Page, label: str, value: str, index: int = -1
+        ) -> None:
+            """
+            Fills the form field with the given value.
+            If multiple form fields are found, the field at the given index is filled.
+            If no index is provided: the the last field is used to accommodate modal forms.
+            """
+
+            # Certain form fields may be shown in a modal that needs some time to load
+            # We add a tiny delay here to prevent API complication and allow the modal to render
+            page.wait_for_timeout(10)
+
+            # Try a (custom) select
+            selects = page.get_by_role("combobox", name=label)
+            if selects.count():
+                select = selects.nth(index)
+                select.click()
+                option = select.get_by_text(value)
+                option.click()
+                return
+
+            # Fill (native) input
+            page.get_by_label(label).nth(index).fill(value)
 
     class Then(GherkinScenario):
         """
         The "Then" steps specify the expected outcomes or results.
         These steps are used to verify the results of the actions taken in the "When" steps.
         """
+
+        # Location
 
         def url_should_be(self, page: Page, url: str) -> None:
             expect(page).to_have_url(url)
@@ -297,6 +323,8 @@ class GherkinRunner:
 
         def path_should_be(self, page: Page, path: str) -> None:
             self.url_should_be(page, self.runner.live_server.url + path)
+
+        # Content
 
         def page_should_contain_text(
             self, page: Page, text: str, timeout: int | None = None
