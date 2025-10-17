@@ -94,7 +94,7 @@ export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
     "Brongegevens",
     {
       titleSpan: 12,
-      fields: ["broncatalogus", "bronzaaktype"], // TODO: Missing broncatalogus domein, rsin, omschrijving, url, bronzaaktype omschijrving, bronzaaktype url
+      fields: ["bronzaaktype"],
       span: 12,
       colSpan: 4,
     },
