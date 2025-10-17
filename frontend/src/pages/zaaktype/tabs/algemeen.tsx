@@ -99,15 +99,6 @@ export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
       colSpan: 4,
     },
   ],
-  [
-    "Gemeentelijke selectielijst",
-    {
-      titleSpan: 12,
-      fields: [], // TODO: Missing "selectielijstconfiguratie resetten", "selectielijst procestype jaar", "selectielijst procestype"
-      span: 12,
-      colSpan: 4,
-    },
-  ],
 ];
 
 export const FIELDSETS_PUBLICATIE: FieldSet<TargetType>[] = [
