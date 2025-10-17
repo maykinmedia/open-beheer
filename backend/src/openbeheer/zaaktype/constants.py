@@ -58,8 +58,6 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "identificatie",
                 # TODO: expand with some sort of label
                 "gerelateerde_zaaktypen",
-                # TODO: expand catalogus
-                "broncatalogus",
             ],
         ),
     ),
