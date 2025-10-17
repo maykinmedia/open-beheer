@@ -94,7 +94,7 @@ export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
     "Relaties",
     {
       titleSpan: 12,
-      fields: ["catalogus", "deelzaaktypen", "gerelateerdeZaaktypen"],
+      fields: ["catalogus", "deelzaaktypen"],
       span: 12,
       colSpan: 4,
     },

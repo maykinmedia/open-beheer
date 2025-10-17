@@ -56,8 +56,6 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "referentieproces",
                 # TODO: Zaaktype UUID
                 "identificatie",
-                # TODO: expand with some sort of label
-                "gerelateerde_zaaktypen",
             ],
         ),
     ),
@@ -289,7 +287,6 @@ waarden_dict = {
     "catalogus": "",
     "besluittypen": [],
     "deelzaaktypen": [],
-    "gerelateerde_zaaktypen": [],
 }
 
 TEMPLATE_BASE: Sjabloon = Sjabloon(
