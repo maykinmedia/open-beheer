@@ -83,7 +83,7 @@ export function ArchiveForm({
   useEffect(() => {
     const [promise, abortController] =
       getArchiveMetaBySelectielijstResultaatURL(
-        resultaatType.selectielijstklasse,
+        formState?.selectielijstklasse || resultaatType.selectielijstklasse,
       );
 
     promise
