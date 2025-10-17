@@ -20,8 +20,14 @@ import { components } from "~/types";
  * Props for the ArchiveForm component.
  */
 export type ArchiveFormProps = {
+  /** The ZaakType. */
+  zaaktype: components["schemas"]["ExpandableZaakType"];
+
   /** The resultaattype to set archiving options for. */
   resultaatType: components["schemas"]["ResultaatTypeWithUUID"];
+
+  /** `Option[]` for the resultaattypeomschrijving options. */
+  resultaattypeomschrijvingOptions: Option[];
 
   /** `Option[]` for the selectielijstklasse (resultaat) options. */
   selectielijstklasseOptions: Option[];
@@ -31,12 +37,14 @@ export type ArchiveFormProps = {
 
   /** Gets called when the form is submitted. */
   onSubmit: (data: {
+    resultaattypeomschrijving: ArchiveFormData["resultaattypeomschrijving"];
     selectielijstklasse: ArchiveFormData["selectielijstklasse"];
     brondatumArchiefProcedure: BrondatumFieldValues;
   }) => void;
 };
 
 export type ArchiveFormData = BrondatumFieldValues & {
+  resultaattypeomschrijving: string;
   selectielijstklasse: string;
 };
 
@@ -49,7 +57,9 @@ export type ArchiveFormData = BrondatumFieldValues & {
  * - Validates inputs using the `validateForm` helper from `@maykin-ui/admin-ui`.
  */
 export function ArchiveForm({
+  zaaktype,
   resultaatType,
+  resultaattypeomschrijvingOptions,
   selectielijstklasseOptions,
   onCancel,
   onSubmit,
@@ -64,7 +74,9 @@ export function ArchiveForm({
     const resultaatTypeBrondDatumValues =
       resultaatType.brondatumArchiefprocedure || {};
     return {
+      resultaattypeomschrijving: resultaatType.resultaattypeomschrijving,
       selectielijstklasse: resultaatType.selectielijstklasse,
+
       afleidingswijze: "afgehandeld",
       datumkenmerk: "",
       einddatumBekend: false,
@@ -79,7 +91,7 @@ export function ArchiveForm({
   useEffect(() => {
     const [promise, abortController] =
       getArchiveMetaBySelectielijstResultaatURL(
-        resultaatType.selectielijstklasse,
+        formState?.selectielijstklasse || resultaatType.selectielijstklasse,
       );
 
     promise
@@ -104,10 +116,20 @@ export function ArchiveForm({
       ? getBrondatumFieldsByAfleidingsWijze(
           formState.afleidingswijze as Afleidingswijze,
           { ...formState, einddatumBekend: true },
+          zaaktype,
         )
       : [];
 
     return [
+      {
+        label: "Resultaattypeomschrijving",
+        name: "resultaattypeomschrijving",
+        type: "text",
+        options: resultaattypeomschrijvingOptions,
+        value:
+          formState?.resultaattypeomschrijving ||
+          resultaatType.resultaattypeomschrijving,
+      },
       {
         label: "Selectielijstklasse",
         name: "selectielijstklasse",
@@ -151,6 +173,7 @@ export function ArchiveForm({
       validateOnChange
       onSubmit={(_, data) =>
         onSubmit({
+          resultaattypeomschrijving: data.resultaattypeomschrijving,
           selectielijstklasse: data.selectielijstklasse,
           brondatumArchiefProcedure: {
             afleidingswijze: data.afleidingswijze || "",

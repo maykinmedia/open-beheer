@@ -684,6 +684,18 @@ const ZaaktypeTab = ({
       // Delete requires no further actions.
       if (actionType.toUpperCase().includes("DELETE")) return resultaatType;
       return new Promise((resolve, reject) => {
+        // Locate resultaattypeomschrijvingOptions (resultaat) options
+        const resultaattypeomschrijvingOptions = fields.find(
+          (field) =>
+            field.name === "_expand.resultaattypen.resultaattypeomschrijving",
+        )?.options as Option[] | undefined;
+
+        // Throw if options can't be found.
+        invariant(
+          resultaattypeomschrijvingOptions,
+          "Failed to locate resultaattypeomschrijvingOptions field!",
+        );
+
         // Locate selectielijstklasse (resultaat) options
         const selectielijstklasseOptions = fields.find(
           (field) =>
@@ -702,40 +714,37 @@ const ZaaktypeTab = ({
           title: string2Title(relatedObjectKey),
           body: (
             <ArchiveForm
+              zaaktype={object}
               resultaatType={resultaatType}
+              resultaattypeomschrijvingOptions={
+                resultaattypeomschrijvingOptions
+              }
               selectielijstklasseOptions={selectielijstklasseOptions}
               // User completes resultaattype.
               onSubmit={({
+                resultaattypeomschrijving,
                 selectielijstklasse,
                 brondatumArchiefProcedure,
               }) => {
                 setHookDialogState({ open: false });
 
-                // Resolve the resultaattype omschrijving field.
-                const resultaatTypeOmschrijvingField = fields.find(
-                  (f) =>
-                    f.name ===
-                    "_expand.resultaattypen.resultaattypeomschrijving",
-                );
+                // Resolve omschrijvingGeneriek (resultaattypeOmschrijving text, gh-301)
+                const resultaattypeomschrijvingOption =
+                  resultaattypeomschrijvingOptions.find(
+                    (option) => option.value === resultaattypeomschrijving,
+                  );
 
-                // A default `resultaattypeomschrijving` value based on `brondatumArchiefProcedure.afleidingswijze`.
-                // Use only when adding resultaattype.
-                const defaultResultaatTypeOmschrijving =
-                  actionType === "ADD_RELATED_OBJECT"
-                    ? (resultaatTypeOmschrijvingField?.options?.find(
-                        ({ label }) =>
-                          label.toLowerCase() ===
-                          brondatumArchiefProcedure.afleidingswijze.toLowerCase(),
-                      )?.value as string | undefined)
-                    : undefined;
+                invariant(
+                  resultaattypeomschrijvingOption,
+                  "Failed to locate selected resultaattypeomschrijvingOption!",
+                );
 
                 // Resolve with provided additions.
                 resolve({
                   ...resultaatType,
+                  resultaattypeomschrijving,
+                  omschrijvingGeneriek: resultaattypeomschrijvingOption.label,
                   selectielijstklasse,
-                  resultaattypeomschrijving:
-                    defaultResultaatTypeOmschrijving ||
-                    resultaatType.resultaattypeomschrijving,
                   brondatum_archiefprocedure: brondatumArchiefProcedure, // FIXME: camelCase not accepted by BFF/OZ.
                 } as ResultaatType);
               }}

@@ -117,7 +117,6 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
             fields=[
                 "_expand.resultaattypen.resultaattypeomschrijving",
                 "_expand.resultaattypen.omschrijving",
-                "_expand.resultaattypen.omschrijvingGeneriek",
                 "_expand.resultaattypen.selectielijstklasse",
                 # "_expand.resultaattypen.archiefnominatie",
                 # "_expand.resultaattypen.brondatumArchiefprocedure",  # FIXME
