@@ -23,11 +23,7 @@ export const FIELDSETS_ALGEMENE_INFORMATIE: FieldSet<TargetType>[] = [
   [
     "",
     {
-      fields: [
-        "vertrouwelijkheidaanduiding",
-        "productenOfDiensten",
-        "verantwoordingsrelatie",
-      ],
+      fields: ["vertrouwelijkheidaanduiding", "verantwoordingsrelatie"],
       span: 12,
       colSpan: 4,
     },
