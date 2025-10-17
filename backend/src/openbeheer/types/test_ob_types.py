@@ -72,8 +72,13 @@ class OBFieldsTest(TestCase):
 
         instance_dict = as_seen_by_frontend(instance)
         expected_struct_attributes = set(map(camelize, instance_dict))
+        unrequired_unset_values = {
+            camelize(field)
+            for field in instance.__struct_fields__
+            if getattr(instance, field) is UNSET
+        }
 
-        assert field_names == expected_struct_attributes
+        assert field_names == expected_struct_attributes | unrequired_unset_values
 
 
 class OBOptionsTest(TestCase):

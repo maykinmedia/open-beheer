@@ -15,7 +15,7 @@ from openbeheer.types.ztc import (
     Catalogus,
     IndicatieInternOfExternEnum,
     ReferentieProces,
-    StatusType,
+    StatusTypeRequest,
     VertrouwelijkheidaanduidingEnum,
 )
 from openbeheer.zaaktype.api.views import ExpandableZaakTypeRequest
@@ -321,7 +321,7 @@ TEMPLATE_STATUSES = Sjabloon(
             **waarden_dict,
             "_expand": {
                 "statustypen": [
-                    StatusType(
+                    StatusTypeRequest(
                         volgnummer=1,
                         omschrijving="Ingediend",
                         omschrijving_generiek="Ingediend",
@@ -330,7 +330,7 @@ TEMPLATE_STATUSES = Sjabloon(
                         checklistitem_statustype=[],
                         zaaktype="",
                     ),
-                    StatusType(
+                    StatusTypeRequest(
                         volgnummer=2,
                         omschrijving="In behandeling",
                         omschrijving_generiek="In behandeling",
@@ -339,7 +339,7 @@ TEMPLATE_STATUSES = Sjabloon(
                         checklistitem_statustype=[],
                         zaaktype="",
                     ),
-                    StatusType(
+                    StatusTypeRequest(
                         volgnummer=3,
                         omschrijving="Afgehandeld",
                         omschrijving_generiek="Afgehandeld",
