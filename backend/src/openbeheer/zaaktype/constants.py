@@ -282,7 +282,6 @@ waarden_dict = {
         naam="De naam van het Referentieproces.",
         link="",
     ),
-    "verantwoordingsrelatie": [],
     "selectielijst_procestype": "",
     "verantwoordelijke": "De verantwoordelijke (soort) organisatie.",
     "broncatalogus": make_fields_optional(Catalogus)(url="", domein="", rsin=""),
