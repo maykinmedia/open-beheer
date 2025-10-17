@@ -23,11 +23,7 @@ export const FIELDSETS_ALGEMENE_INFORMATIE: FieldSet<TargetType>[] = [
   [
     "",
     {
-      fields: [
-        "vertrouwelijkheidaanduiding",
-        "productenOfDiensten",
-        "verantwoordingsrelatie",
-      ],
+      fields: ["vertrouwelijkheidaanduiding", "indicatieInternOfExtern"],
       span: 12,
       colSpan: 4,
     },
@@ -95,29 +91,10 @@ export const FIELDSETS_BEHANDELING_EN_PROCES: FieldSet<TargetType>[] = [
 
 export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
   [
-    "Brongegevens",
-    {
-      titleSpan: 12,
-      fields: ["broncatalogus", "bronzaaktype"], // TODO: Missing broncatalogus domein, rsin, omschrijving, url, bronzaaktype omschijrving, bronzaaktype url
-      span: 12,
-      colSpan: 4,
-    },
-  ],
-
-  [
     "Relaties",
     {
       titleSpan: 12,
-      fields: ["catalogus", "deelzaaktypen", "gerelateerdeZaaktypen"],
-      span: 12,
-      colSpan: 4,
-    },
-  ],
-  [
-    "Gemeentelijke selectielijst",
-    {
-      titleSpan: 12,
-      fields: [], // TODO: Missing "selectielijstconfiguratie resetten", "selectielijst procestype jaar", "selectielijst procestype"
+      fields: ["catalogus", "deelzaaktypen"],
       span: 12,
       colSpan: 4,
     },

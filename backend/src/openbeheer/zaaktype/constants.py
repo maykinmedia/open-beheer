@@ -42,13 +42,13 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "handeling_initiator",
                 "handeling_behandelaar",
                 "verantwoordelijke",
-                "producten_of_diensten",
                 "doorlooptijd",
                 "servicenorm",
                 "omschrijving",
                 "omschrijving_generiek",
                 "indicatie_intern_of_extern",
                 "vertrouwelijkheidaanduiding",
+                "indicatie_intern_of_extern",
                 "publicatie_indicatie",
                 "publicatietekst",
                 # TODO: fields about selectielijst_procestype that need to be expanded.
@@ -57,10 +57,6 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "referentieproces",
                 # TODO: Zaaktype UUID
                 "identificatie",
-                # TODO: expand with some sort of label
-                "gerelateerde_zaaktypen",
-                # TODO: expand catalogus
-                "broncatalogus",
             ],
         ),
     ),
@@ -279,12 +275,10 @@ waarden_dict = {
     "trefwoorden": ["Zaaktype", "Basis"],
     "publicatie_indicatie": True,
     "publicatietekst": "De generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.",
-    "producten_of_diensten": [],
     "referentieproces": make_fields_optional(ReferentieProces)(
         naam="De naam van het Referentieproces.",
         link="",
     ),
-    "verantwoordingsrelatie": [],
     "selectielijst_procestype": "",
     "verantwoordelijke": "De verantwoordelijke (soort) organisatie.",
     "broncatalogus": make_fields_optional(Catalogus)(url="", domein="", rsin=""),
@@ -294,7 +288,6 @@ waarden_dict = {
     "catalogus": "",
     "besluittypen": [],
     "deelzaaktypen": [],
-    "gerelateerde_zaaktypen": [],
 }
 
 TEMPLATE_BASE: Sjabloon = Sjabloon(
