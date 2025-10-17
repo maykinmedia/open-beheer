@@ -1,4 +1,4 @@
-import { FormField } from "@maykin-ui/admin-ui";
+import { ChoiceFieldProps, FormField } from "@maykin-ui/admin-ui";
 import { string2Title } from "@maykin-ui/client-common";
 import { components } from "~/types";
 import { components as selectielijstComponents } from "~/types/selectielijst";
@@ -113,15 +113,17 @@ export type BrondatumFieldValues = {
  *
  * @param afleidingswijze - The derivation method.
  * @param values - The form values.
+ * @param zaaktype - The ZaakType.
  *
  * @returns An array of {@link FormField}s required to compute the brondatum.
  */
 export function getBrondatumFieldsByAfleidingsWijze(
   afleidingswijze: Afleidingswijze,
   values: BrondatumFieldValues,
+  zaaktype: components["schemas"]["ExpandableZaakType"],
 ): FormField[] {
   return getBrondatumFieldNamesByAfleidingsWijze(afleidingswijze).map(
-    (fieldName) => getBrondatumFieldByName(fieldName, values),
+    (fieldName) => getBrondatumFieldByName(fieldName, values, zaaktype),
   );
 }
 
@@ -244,6 +246,7 @@ function getBrondatumFieldNamesByAfleidingsWijze(
  *
  * @param brondatumFieldName - The name of the brondatum field.
  * @param values - The form values.
+ * @param zaaktype - The ZaakType.
  *
  * @returns A {@link FormField} describing the type and options (if any)
  * required for this brondatum field.
@@ -253,14 +256,33 @@ function getBrondatumFieldNamesByAfleidingsWijze(
 function getBrondatumFieldByName(
   brondatumFieldName: BrondatumFieldName,
   values: BrondatumFieldValues,
+  zaaktype: components["schemas"]["ExpandableZaakType"],
 ): FormField {
+  const stub = _getBrondatumFieldStubByName(brondatumFieldName);
   const value = values[brondatumFieldName];
-  return {
+
+  const field = {
     label: string2Title(brondatumFieldName),
-    ..._getBrondatumFieldStubByName(brondatumFieldName),
+    ...stub,
     value: typeof value === "string" ? value : undefined,
     checked: typeof value === "boolean" ? value : undefined,
   };
+
+  // Find eigenschappen from zaaktype.
+  const options =
+    brondatumFieldName === "datumkenmerk"
+      ? zaaktype._expand.eigenschappen?.map((eigenschap) => ({
+          label: eigenschap.naam,
+          value: eigenschap.naam,
+        }))
+      : "options" in stub
+        ? stub.options
+        : undefined;
+
+  if (options) {
+    (field as ChoiceFieldProps).options = options;
+  }
+  return field;
 }
 
 function _getBrondatumFieldStubByName(

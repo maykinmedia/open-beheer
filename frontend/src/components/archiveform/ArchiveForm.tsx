@@ -20,6 +20,9 @@ import { components } from "~/types";
  * Props for the ArchiveForm component.
  */
 export type ArchiveFormProps = {
+  /** The ZaakType. */
+  zaaktype: components["schemas"]["ExpandableZaakType"];
+
   /** The resultaattype to set archiving options for. */
   resultaatType: components["schemas"]["ResultaatTypeWithUUID"];
 
@@ -49,6 +52,7 @@ export type ArchiveFormData = BrondatumFieldValues & {
  * - Validates inputs using the `validateForm` helper from `@maykin-ui/admin-ui`.
  */
 export function ArchiveForm({
+  zaaktype,
   resultaatType,
   selectielijstklasseOptions,
   onCancel,
@@ -104,6 +108,7 @@ export function ArchiveForm({
       ? getBrondatumFieldsByAfleidingsWijze(
           formState.afleidingswijze as Afleidingswijze,
           { ...formState, einddatumBekend: true },
+          zaaktype,
         )
       : [];
 
