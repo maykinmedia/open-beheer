@@ -48,6 +48,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "omschrijving_generiek",
                 "indicatie_intern_of_extern",
                 "vertrouwelijkheidaanduiding",
+                "indicatie_intern_of_extern",
                 "publicatie_indicatie",
                 "publicatietekst",
                 # TODO: fields about selectielijst_procestype that need to be expanded.
