@@ -702,6 +702,7 @@ const ZaaktypeTab = ({
           title: string2Title(relatedObjectKey),
           body: (
             <ArchiveForm
+              zaaktype={object}
               resultaatType={resultaatType}
               selectielijstklasseOptions={selectielijstklasseOptions}
               // User completes resultaattype.
