@@ -560,12 +560,17 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         return ZAAKTYPE_FIELDSETS
 
     def get_informatieobjecttype_options(self, zaaktype: ZaakType) -> list[OBOption]:
+        today = datetime.date.today().isoformat()
         with ztc_client() as client:
             informatieobjecttypen = fetch_all(
                 client,
                 "informatieobjecttypen",
                 # You can only relate a Zaaktype and an Informatieobjecttype if they belong to the same catalogus.
-                params={"catalogus": zaaktype.catalogus, "status": "alles"},
+                params={
+                    "catalogus": zaaktype.catalogus,
+                    "status": "definitief",
+                    "datumGeldigheid": today,
+                },
                 result_type=InformatieObjectType,
             )
 
