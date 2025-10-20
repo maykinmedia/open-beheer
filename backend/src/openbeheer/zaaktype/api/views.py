@@ -589,7 +589,7 @@ class ZaakTypePublishView(MsgspecAPIView):
             400: ZGWError,
         },
     )
-    def post(self, request: Request, slug: str = "", uuid: str = "") -> Response:
+    def post(self, request: Request, slug: str, uuid: UUID) -> Response:
         "Publish a zaaktype"
         with ztc_client(slug) as client:
             response = client.post(

@@ -319,12 +319,14 @@ class GherkinRunner:
         def table_entry_should_contain_aria_label(
             self, page: Page, table_header: str, attribue_key: str, attribute_value: str
         ) -> None:
-            dt = page.locator("dt.mykn-attributelist__key", has_text=table_header)
+            table_pair = page.locator(
+                ".mykn-attributelist__pair", has_text=table_header
+            )
 
-            # Locate the following <dd> sibling
-            dd = dt.locator("xpath=following-sibling::dd[1]")
+            # Locate the <dd> inside the div with the key (dt) and value (dd) pair
+            dd = table_pair.locator(".mykn-attributelist__value")
 
             # Get the <p> inside <dd>
-            paragraph = dd.locator("p.mykn-p")
+            paragraph = dd.locator("p")
 
             expect(paragraph).to_have_attribute(attribue_key, attribute_value)

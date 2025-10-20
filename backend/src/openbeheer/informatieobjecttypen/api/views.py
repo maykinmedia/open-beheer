@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from typing import Iterable, Mapping, override
+from uuid import UUID
 
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -175,7 +176,7 @@ class InformatieObjectTypeDetailView(
         *,
         base_editable: Callable[[str], bool] = bool,
     ) -> Iterable[OBField]:
-        # We don't want to edit concept directly, because we use the "publish" action to change it.
+        # We can't to edit concept directly, we use the "publish" action to change it.
         yield from super().get_fields(
             data, option_overrides, base_editable=lambda name: name != "concept"
         )
@@ -193,7 +194,7 @@ class InformatieObjectTypePublishView(MsgspecAPIView):
             400: ZGWError,
         },
     )
-    def post(self, request: Request, slug: str = "", uuid: str = "") -> Response:
+    def post(self, request: Request, slug: str, uuid: UUID) -> Response:
         "Publish an informatieobjecttype"
         with ztc_client(slug) as client:
             response = client.post(
