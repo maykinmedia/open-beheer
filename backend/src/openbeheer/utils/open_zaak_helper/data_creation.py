@@ -69,6 +69,14 @@ class OpenZaakDataCreationHelper:
             strict=False,
         )
 
+    def _publish_resource(
+        self,
+        resource_path: str,
+    ) -> None:
+        with ztc_client(self.ztc_service_slug) as client:
+            response = client.post(resource_path)
+            response.raise_for_status()
+
     def delete_resource(self, resource):
         with ztc_client(self.ztc_service_slug) as client:
             client.delete(resource.url)
@@ -96,6 +104,13 @@ class OpenZaakDataCreationHelper:
 
         return self._create_resource(
             data, "informatieobjecttypen", InformatieObjectTypeWithUUID
+        )
+
+    def publish_informatieobjecttype(
+        self, informatieobjecttype: InformatieObjectTypeWithUUID
+    ) -> None:
+        self._publish_resource(
+            f"informatieobjecttypen/{informatieobjecttype.uuid}/publish"
         )
 
     def create_catalogus(self, **overrides: _JSONEncodable) -> Catalogus:

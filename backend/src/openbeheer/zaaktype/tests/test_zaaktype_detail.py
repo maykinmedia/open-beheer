@@ -796,6 +796,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         informatieobjecttype = self.helper.create_informatieobjecttype(
             catalogus=zaaktype.catalogus
         )
+        self.helper.publish_informatieobjecttype(informatieobjecttype)
         # In a different catalogus
         other_informatieobjecttype = self.helper.create_informatieobjecttype()
 
@@ -844,3 +845,63 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         self.assertEqual(
             len(data["result"]["_expand"]["zaaktypeinformatieobjecttypen"]), 1
         )
+
+
+class ZaakTypeDetailInformatieObjecttypenOptionsTest(VCRAPITestCase):
+    def _get_vcr_kwargs(self, **kwargs) -> dict[str, object]:
+        # We are retrieving the informatieobjecttypen that are valid today, so
+        # we ignore this parameter in the cassette since it changes every day
+        return {
+            "filter_query_parameters": ["datumGeldigheid"]
+        } | super()._get_vcr_kwargs(**kwargs)
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        super().setUpTestData()
+        cls.api_config = APIConfigFactory.create()
+        cls.service = ServiceFactory.create(
+            api_type=APITypes.ztc,
+            api_root="http://localhost:8003/catalogi/api/v1",
+            client_id="test-vcr",
+            secret="test-vcr",
+            slug="OZ",
+        )
+        cls.user = UserFactory.create()
+
+        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+
+    def test_informatieobjecttype_multiple_versions(self):
+        zaaktype = self.helper.create_zaaktype()
+        informatieobjecttype1 = self.helper.create_informatieobjecttype(
+            catalogus=zaaktype.catalogus,
+            omschrijving="Test",
+            begin_geldigheid="2020-10-10",
+            einde_geldigheid="2025-10-10",
+        )
+        self.helper.publish_informatieobjecttype(informatieobjecttype1)
+        informatieobjecttype2 = self.helper.create_informatieobjecttype(
+            catalogus=zaaktype.catalogus,
+            omschrijving="Test",
+            begin_geldigheid="2025-10-11",
+        )
+        self.helper.publish_informatieobjecttype(informatieobjecttype2)
+        assert zaaktype.url and informatieobjecttype1.url and informatieobjecttype2.url
+
+        self.client.force_login(self.user)
+        endpoint = reverse(
+            "api:zaaktypen:zaaktype-detail",
+            kwargs={"slug": "OZ", "uuid": zaaktype.uuid},
+        )
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        fields_by_name = {f["name"]: f for f in data["fields"]}
+        informatieobjecttype_option_values = [
+            option["value"]
+            for option in fields_by_name[
+                "_expand.zaaktypeinformatieobjecttypen.informatieobjecttype"
+            ]["options"]
+        ]
+        self.assertIn(informatieobjecttype2.url, informatieobjecttype_option_values)
+        self.assertNotIn(informatieobjecttype1.url, informatieobjecttype_option_values)
