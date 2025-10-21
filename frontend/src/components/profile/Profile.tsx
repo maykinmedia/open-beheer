@@ -1,6 +1,6 @@
 import {
   Body,
-  ButtonLink,
+  Button,
   Card,
   Column,
   Dropdown,
@@ -12,6 +12,7 @@ import {
   Solid,
 } from "@maykin-ui/admin-ui";
 import React from "react";
+import { NavLink } from "react-router";
 import { formatUser } from "~/lib";
 import { components } from "~/types";
 
@@ -57,10 +58,11 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
             <Hr />
             <Column span={6} />
             <Column span={6}>
-              <ButtonLink href={"/logout"} variant="outline" wrap={false}>
-                <Solid.ArrowRightEndOnRectangleIcon />
-                Uitloggen
-              </ButtonLink>
+              <NavLink key="logout" to="logout">
+                <Button variant="outline" aria-label="Logout">
+                  <Solid.ArrowRightEndOnRectangleIcon /> Uitloggen
+                </Button>
+              </NavLink>
             </Column>
           </Grid>
         </Card>

@@ -10,5 +10,10 @@ export type LogoutLoaderData = void;
 export async function logoutLoader(): Promise<LogoutLoaderData> {
   await cacheDelete("", true); // Clears all cache.
   sessionStorage.clear();
-  await logout();
+
+  try {
+    await logout();
+  } catch (e: unknown) {
+    return await (e as Response).json();
+  }
 }
