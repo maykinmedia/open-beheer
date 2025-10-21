@@ -163,15 +163,7 @@ export const ZaaktypeTab = ({
       if (!(fieldName in expand) || originalValue === null) {
         continue;
       }
-      const expandKey = fieldName as keyof Expand<TargetType>;
-      const expandValue = expand[expandKey]!;
-
-      const transform = activeSectionConfig?.valueTransform;
-      const transformFn = transform?.[expandKey];
-      const relatedObject = transformFn
-        ? // @ts-expect-error - TS can't infer expandValue correctly here.
-          transformFn(expandValue)
-        : expandValue;
+      const relatedObject = expand[fieldName as keyof Expand<TargetType>];
 
       // Related fields that are directly editable should not be in overrides.
       if (isEditing && field.options) {
