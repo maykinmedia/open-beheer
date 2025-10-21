@@ -1,10 +1,10 @@
 from datetime import date
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, Optional
 from unittest import TestCase
 
 from hypothesis import assume, given, strategies as st  # noqa: F401
-from msgspec import UNSET, Meta, Struct
+from msgspec import UNSET, Meta, Struct, UnsetType
 from msgspec.json import decode, encode
 
 from . import ztc
@@ -56,6 +56,30 @@ class OBFieldsTest(TestCase):
         assert t.type == "text"
         assert d.name == "date"
         assert d.type == "date"
+
+    def test_required(self):
+        # We don't take into account
+        class Up2U(Struct):
+            absent: bool | UnsetType = UNSET
+            nullable: bool | None = None
+            optional: Optional[bool] = None
+
+            fabsent: bool | UnsetType = False
+            fnullable: bool | None = False
+            foptional: Optional[bool] = False
+
+            yes: bool = True
+
+        not_required = {t.name for t in ob_fields_of_type(Up2U) if t.required is False}
+
+        assert not_required == {
+            "absent",
+            "nullable",
+            "optional",
+            "fabsent",
+            "fnullable",
+            "foptional",
+        }
 
     @given(ztc_struct_instances())
     def test_all_fields_are_present(self, instance: Struct):

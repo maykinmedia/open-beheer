@@ -265,6 +265,11 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
     editable: bool = False
     "fields may be included/excluded from editing"
 
+    required: bool | UnsetType = msgspec.UNSET
+    """May this field be null or undefined?
+    NB: this is not the same as OAS/jsonschema required!"""
+    # Should we take into account whether we know a default value?
+
     def __post_init__(self):
         # camelize value of name
         self.name = camelize(self.name)
@@ -286,6 +291,13 @@ def _core_type(annotation) -> type:
                 ),
                 annotation,
             )
+
+
+def _ob_required(annotation) -> bool | UnsetType:
+    """Infer OBField.required from annotation"""
+    types = set(get_args(annotation))
+    empty_types = {NoneType, msgspec.UnsetType}
+    return not (types & empty_types)
 
 
 def ob_fields_of_type(
@@ -338,6 +350,7 @@ def ob_fields_of_type(
             # only editable if neither the whole type nor the attribute type is READ_ONLY
             editable=base_editable(prefixed_name)
             and not (set(map(_core_type, (data_type, annotation))) & READ_ONLY_TYPES),
+            required=_ob_required(annotation),
         )
 
         if query_params:
