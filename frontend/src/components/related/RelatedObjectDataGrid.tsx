@@ -7,7 +7,6 @@ import {
   TypedField,
   field2TypedField,
 } from "@maykin-ui/admin-ui";
-import { string2Title } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
 import { JSX, useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
@@ -139,45 +138,31 @@ export function RelatedObjectDataGrid<
     setObjectList(relatedObjects);
     setMutationActions(new Array(relatedObjects.length).fill(null));
     setDeleteActions([]);
-  }, [relatedObjects, setObjectList, setMutationActions]);
+  }, [JSON.stringify(relatedObjects)]);
 
   /**
    * Creates a new row object with default values based on the provided index.
-   *
-   * @param nextIndex - The sequential index used to generate default values.
-   *
+   **
    * Behavior:
-   * - If a field defines `options`, the value is chosen based on `nextIndex`
-   *   (fallbacks to the first option if the index is out of range).
    * - Boolean fields default to `false`.
-   * - Other fields get a descriptive string like `"FieldName 3"`.
+   * - Other fields get an empty string.
    *
    * @returns A new object of type `R` representing a default-initialized row.
    */
-  const createRow = useCallback(
-    (nextIndex: number): R => {
-      return typedFields.reduce<R>((acc, { name, type, options }) => {
-        // Auto-pick option based on the next index, fallback to first option
-        if (options) {
-          const optionIndex = options[nextIndex - 1] ? nextIndex - 1 : 0;
-          const value = options[optionIndex]?.value;
-          return { ...acc, [name]: value };
-        }
+  const createRow = useCallback((): R => {
+    return typedFields.reduce<R>((acc, { name, type }) => {
+      // Default for booleans or fallback to descriptive string
+      if (type === "boolean") {
+        return { ...acc, [name]: false };
+      }
 
-        // Default for booleans or fallback to descriptive string
-        if (type === "boolean") {
-          return { ...acc, [name]: false };
-        }
-
-        // Default descriptive string
-        return {
-          ...acc,
-          [name]: `${string2Title(name as string)} ${nextIndex}`,
-        };
-      }, {} as R);
-    },
-    [typedFields],
-  );
+      // Default descriptive string
+      return {
+        ...acc,
+        [name]: ``,
+      };
+    }, {} as R);
+  }, [typedFields]);
 
   /**
    * Finds the next available numeric index based on the current `objectList`.
@@ -243,7 +228,7 @@ export function RelatedObjectDataGrid<
       setObjectList(() => oldObjectList);
       setMutationActions(() => oldMutationActions);
     });
-  }, [objectList, setObjectList, mutationActions, setMutationActions]);
+  }, [objectList, mutationActions]);
 
   /**
    * Adds a new row to the `objectList` and creates a corresponding action.
@@ -263,7 +248,7 @@ export function RelatedObjectDataGrid<
    */
   const handleAdd = useCallback(async () => {
     const nextIndex = findNextIndex();
-    const newRow = createRow(nextIndex);
+    const newRow = createRow();
 
     // Run hook.
     const rowWithHookResult = await hook(
@@ -314,9 +299,7 @@ export function RelatedObjectDataGrid<
     hook,
     relatedObjectKey,
     fieldSetFields,
-    setObjectList,
     objectList,
-    setMutationActions,
     mutationActions,
     deleteActions,
     onActionsChange,
@@ -405,8 +388,6 @@ export function RelatedObjectDataGrid<
       relatedObjectKey,
       rejectChange,
       mutationActions,
-      setObjectList,
-      setMutationActions,
       deleteActions,
       onActionsChange,
     ],
@@ -477,15 +458,7 @@ export function RelatedObjectDataGrid<
         onActionsChange(actions);
       }
     },
-    [
-      objectList,
-      setObjectList,
-      setMutationActions,
-      mutationActions,
-      setDeleteActions,
-      deleteActions,
-      onActionsChange,
-    ],
+    [objectList, mutationActions, deleteActions, onActionsChange],
   );
 
   // The objects to render, may include overrides and actions.
