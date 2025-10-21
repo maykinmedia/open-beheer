@@ -441,6 +441,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                     {"label": "datum_tijd", "value": "datum_tijd"},
                 ],
                 "editable": True,
+                "required": True,
             }
 
             assert fields_by_name["_expand.eigenschappen.statustype"]["options"] == [
