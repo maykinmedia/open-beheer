@@ -8,10 +8,25 @@ from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.clients import ztc_client
 from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.utils.open_zaak_helper.data_creation import OpenZaakDataCreationHelper
-from openbeheer.utils.tests import VCRAPITestCase
+from openbeheer.utils.tests import (
+    VCRAPITestCase,
+    matcher_query_without_datum_geldigheid,
+)
 
 
 class ZaakTypePublishViewTest(VCRAPITestCase):
+    custom_matchers = [
+        ("query_without_datum_geldigheid", matcher_query_without_datum_geldigheid)
+    ]
+    custom_match_on = (
+        "method",
+        "scheme",
+        "host",
+        "port",
+        "path",
+        "query_without_datum_geldigheid",
+    )
+
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
