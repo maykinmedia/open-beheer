@@ -11,7 +11,7 @@ from vcr.request import Request
 def matcher_query_without_datum_geldigheid(
     incoming_request: Request, stored_request: Request
 ) -> None:
-    """Match requests ignoring query param involving dates changing every day"""
+    """Match requests ignoring query param datumGeldigheid when retrieving informatieobjecttypen."""
 
     incoming_query_names = {query_name for query_name, _ in incoming_request.query}
     stored_query_names = {query_name for query_name, _ in stored_request.query}
