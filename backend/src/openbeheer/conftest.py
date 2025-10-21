@@ -1,7 +1,7 @@
 import inspect
 import os
 import pathlib
-from typing import ContextManager, Generator
+from typing import Callable, ContextManager, Generator, Iterable, Protocol
 
 import pytest
 from mozilla_django_oidc_db.constants import OIDC_ADMIN_CONFIG_IDENTIFIER
@@ -9,6 +9,7 @@ from mozilla_django_oidc_db.tests.factories import OIDCClientFactory
 from pytest_django import DjangoDbBlocker, live_server_helper
 from pytest_django.fixtures import SettingsWrapper
 from pytest_django.lazy_django import skip_if_no_django
+from vcr.request import Request
 
 from openbeheer.utils.gherkin_e2e import GherkinRunner
 from openbeheer.utils.tests import VCRMixin
@@ -38,9 +39,27 @@ def session_engine_cache(settings: SettingsWrapper) -> None:
     settings.SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 
+class VCROverridesProtocol(Protocol):
+    def __call__(
+        self,
+        custom_matchers: Iterable[tuple[str, Callable[[Request, Request], None]]]
+        | None = None,
+        custom_match_on: Iterable[str] | None = None,
+    ) -> pytest.MarkDecorator: ...
+
+
+vcr_overrides: VCROverridesProtocol = pytest.mark.vcr_overrides
+
+
 class VCRPyTestHelper(VCRMixin):
     def __init__(self, request: pytest.FixtureRequest) -> None:
         self.request = request
+
+        marker = request.node.get_closest_marker("vcr_overrides")
+        if marker and (custom_matchers := marker.kwargs.get("custom_matchers")):
+            self.custom_matchers = custom_matchers
+        if marker and (match_on := marker.kwargs.get("matches_on")):
+            self.custom_match_on = match_on
 
     def _get_cassette_name(self) -> str:
         return f"{self.request.function.__qualname__}.yaml"
