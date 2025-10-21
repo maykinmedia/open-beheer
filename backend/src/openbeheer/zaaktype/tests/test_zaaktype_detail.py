@@ -14,10 +14,25 @@ from openbeheer.config.tests.factories import APIConfigFactory
 from openbeheer.utils.open_zaak_helper.data_creation import (
     OpenZaakDataCreationHelper,
 )
-from openbeheer.utils.tests import VCRAPITestCase
+from openbeheer.utils.tests import (
+    VCRAPITestCase,
+    matcher_query_without_datum_geldigheid,
+)
 
 
 class ZaakTypeDetailViewTest(VCRAPITestCase):
+    custom_matchers = [
+        ("query_without_datum_geldigheid", matcher_query_without_datum_geldigheid)
+    ]
+    custom_match_on = (
+        "method",
+        "scheme",
+        "host",
+        "port",
+        "path",
+        "query_without_datum_geldigheid",
+    )
+
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -845,30 +860,6 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         self.assertEqual(
             len(data["result"]["_expand"]["zaaktypeinformatieobjecttypen"]), 1
         )
-
-
-class ZaakTypeDetailInformatieObjecttypenOptionsTest(VCRAPITestCase):
-    def _get_vcr_kwargs(self, **kwargs) -> dict[str, object]:
-        # We are retrieving the informatieobjecttypen that are valid today, so
-        # we ignore this parameter in the cassette since it changes every day
-        return {
-            "filter_query_parameters": ["datumGeldigheid"]
-        } | super()._get_vcr_kwargs(**kwargs)
-
-    @classmethod
-    def setUpTestData(cls) -> None:
-        super().setUpTestData()
-        cls.api_config = APIConfigFactory.create()
-        cls.service = ServiceFactory.create(
-            api_type=APITypes.ztc,
-            api_root="http://localhost:8003/catalogi/api/v1",
-            client_id="test-vcr",
-            secret="test-vcr",
-            slug="OZ",
-        )
-        cls.user = UserFactory.create()
-
-        cls.helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
     def test_informatieobjecttype_multiple_versions(self):
         zaaktype = self.helper.create_zaaktype()
