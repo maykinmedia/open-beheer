@@ -8,7 +8,7 @@ from datetime import date
 from typing import Annotated, Mapping
 from uuid import UUID, uuid4, uuid5
 
-from msgspec import Meta, Struct, field
+from msgspec import UNSET, Meta, Struct, field
 
 from openbeheer.types import FrontendFieldSet, FrontendFieldsets, make_fields_optional
 from openbeheer.types.ztc import (
@@ -286,6 +286,9 @@ waarden_dict = {
     "catalogus": "",
     "besluittypen": [],
     "deelzaaktypen": [],
+    "producten_of_diensten": [],
+    "gerelateerde_zaaktypen": [],
+    "verantwoordingsrelatie": UNSET,
 }
 
 TEMPLATE_BASE: Sjabloon = Sjabloon(
