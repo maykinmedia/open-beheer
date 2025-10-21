@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"domein": "MFUVW", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
-      "naam": "Other ever similar throughout father population."}'
+    body: '{"domein": "WNVPN", "rsin": "123456782", "contactpersoonBeheerNaam": "Ubaldo",
+      "naam": "Lot her north grow standard black those same."}'
     headers:
       Accept:
       - '*/*'
@@ -12,15 +12,15 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '138'
+      - '135'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6","domein":"MFUVW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Other
-        ever similar throughout father population.","versie":"","begindatumVersie":null}'
+      string: '{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef","domein":"WNVPN","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Lot
+        her north grow standard black those same.","versie":"","begindatumVersie":null}'
     headers:
       API-version:
       - 1.3.1
@@ -29,13 +29,13 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '399'
+      - '396'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6
+      - http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef
       Referrer-Policy:
       - same-origin
       Vary:
@@ -62,9 +62,8 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/catalogussen
   response:
     body:
-      string: '{"count":2,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6","domein":"MFUVW","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Other
-        ever similar throughout father population.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/d286f2f7-0e10-41c4-9613-f915ed8e0116","domein":"GEOGZ","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Bank
-        common rich write treatment debate son.","versie":"","begindatumVersie":null}]}'
+      string: '{"count":1,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef","domein":"WNVPN","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":[],"besluittypen":[],"informatieobjecttypen":[],"naam":"Lot
+        her north grow standard black those same.","versie":"","begindatumVersie":null}]}'
     headers:
       API-version:
       - 1.3.1
@@ -73,7 +72,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '847'
+      - '448'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
@@ -101,7 +100,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fe57cae2f-5155-4c26-81d2-ac53ef4f2ed6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Feb77d83e-e856-4f5d-8991-269b188d27ef&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -141,7 +140,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fe57cae2f-5155-4c26-81d2-ac53ef4f2ed6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen?pageSize=10&page=1&catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Feb77d83e-e856-4f5d-8991-269b188d27ef&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -179,14 +178,14 @@ interactions:
       "P6W", "opschortingEnAanhoudingMogelijk": true, "verlengingMogelijk": true,
       "publicatieIndicatie": true, "productenOfDiensten": [], "referentieproces":
       {"naam": "De naam van het Referentieproces.", "link": ""}, "verantwoordelijke":
-      "De verantwoordelijke (soort) organisatie.", "beginGeldigheid": "2025-10-17",
-      "versiedatum": "2025-10-17", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6",
+      "De verantwoordelijke (soort) organisatie.", "beginGeldigheid": "2025-10-21",
+      "versiedatum": "2025-10-21", "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef",
       "besluittypen": [], "gerelateerdeZaaktypen": [], "identificatie": "gh-305",
       "omschrijvingGeneriek": "created zaaktype", "toelichting": "Een eventuele toelichting
       op dit zaaktype", "servicenorm": null, "verlengingstermijn": "P2W", "trefwoorden":
       ["Zaaktype", "Basis"], "publicatietekst": "De generieke tekst van de publicatie
-      van ZAAKen van dit ZAAKTYPE.", "verantwoordingsrelatie": [], "selectielijstProcestype":
-      "", "broncatalogus": {"domein": "", "rsin": "", "url": "", "contactpersoonBeheerTelefoonnummer":
+      van ZAAKen van dit ZAAKTYPE.", "selectielijstProcestype": "", "broncatalogus":
+      {"domein": "", "rsin": "", "url": "", "contactpersoonBeheerTelefoonnummer":
       null, "contactpersoonBeheerEmailadres": null, "zaaktypen": null, "besluittypen":
       null, "informatieobjecttypen": null, "naam": null, "versie": null, "begindatumVersie":
       null}, "bronzaaktype": {"_expand": {}, "omschrijving": "", "identificatie":
@@ -205,14 +204,14 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '2047'
+      - '2017'
       Content-Type:
       - application/json
     method: POST
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen
   response:
     body:
-      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
+      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/16673a8d-bdd5-414f-a492-386274a14f7c\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
         Zaaktype-omschrijving\",\"omschrijvingGeneriek\":\"created zaaktype\",\"vertrouwelijkheidaanduiding\":\"openbaar\",\"doel\":\"Een
         omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.\",\"aanleiding\":\"Een
         omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van
@@ -220,7 +219,7 @@ interactions:
         onderwerp van ZAAKen van dit ZAAKTYPE.\",\"handelingBehandelaar\":\"Behandelen\",\"doorlooptijd\":\"P42D\",\"servicenorm\":null,\"opschortingEnAanhoudingMogelijk\":true,\"verlengingMogelijk\":true,\"verlengingstermijn\":\"P14D\",\"trefwoorden\":[\"Zaaktype\",\"Basis\"],\"publicatieIndicatie\":true,\"publicatietekst\":\"De
         generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.\",\"verantwoordingsrelatie\":[],\"productenOfDiensten\":[],\"selectielijstProcestype\":\"\",\"referentieproces\":{\"naam\":\"De
         naam van het Referentieproces.\",\"link\":\"\"},\"concept\":true,\"verantwoordelijke\":\"De
-        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-17\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-17\",\"beginObject\":\"2025-10-17\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
+        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-21\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-21\",\"beginObject\":\"2025-10-21\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
     headers:
       API-version:
       - 1.3.1
@@ -235,7 +234,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       Location:
-      - http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6
+      - http://localhost:8003/catalogi/api/v1/zaaktypen/16673a8d-bdd5-414f-a492-386274a14f7c
       Referrer-Policy:
       - same-origin
       Vary:
@@ -259,10 +258,10 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6
+    uri: http://localhost:8003/catalogi/api/v1/zaaktypen/16673a8d-bdd5-414f-a492-386274a14f7c
   response:
     body:
-      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
+      string: "{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/16673a8d-bdd5-414f-a492-386274a14f7c\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
         Zaaktype-omschrijving\",\"omschrijvingGeneriek\":\"created zaaktype\",\"vertrouwelijkheidaanduiding\":\"openbaar\",\"doel\":\"Een
         omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.\",\"aanleiding\":\"Een
         omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van
@@ -270,7 +269,7 @@ interactions:
         onderwerp van ZAAKen van dit ZAAKTYPE.\",\"handelingBehandelaar\":\"Behandelen\",\"doorlooptijd\":\"P42D\",\"servicenorm\":null,\"opschortingEnAanhoudingMogelijk\":true,\"verlengingMogelijk\":true,\"verlengingstermijn\":\"P14D\",\"trefwoorden\":[\"Zaaktype\",\"Basis\"],\"publicatieIndicatie\":true,\"publicatietekst\":\"De
         generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.\",\"verantwoordingsrelatie\":[],\"productenOfDiensten\":[],\"selectielijstProcestype\":\"\",\"referentieproces\":{\"naam\":\"De
         naam van het Referentieproces.\",\"link\":\"\"},\"concept\":true,\"verantwoordelijke\":\"De
-        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-17\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-17\",\"beginObject\":\"2025-10-17\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
+        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-21\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-21\",\"beginObject\":\"2025-10-21\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}"
     headers:
       API-version:
       - 1.3.1
@@ -285,7 +284,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin
       ETag:
-      - '"9778b6fbd2d91cbd85e34a90c1355329"'
+      - '"8f00adf3cb7a2fbf4e7f3a437a3541ac"'
       Referrer-Policy:
       - same-origin
       Vary:
@@ -309,7 +308,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/zaaktype-informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/zaaktype-informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F16673a8d-bdd5-414f-a492-386274a14f7c&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -349,7 +348,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/besluittypen?zaaktypen=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/besluittypen?zaaktypen=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F16673a8d-bdd5-414f-a492-386274a14f7c&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -389,7 +388,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/statustypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/statustypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F16673a8d-bdd5-414f-a492-386274a14f7c&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -429,7 +428,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/resultaattypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/resultaattypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F16673a8d-bdd5-414f-a492-386274a14f7c&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -469,7 +468,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/eigenschappen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/eigenschappen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F16673a8d-bdd5-414f-a492-386274a14f7c&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -509,7 +508,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F16673a8d-bdd5-414f-a492-386274a14f7c&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -549,7 +548,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/roltypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2Fddd93aa1-5639-4ad8-8f2b-2711d8b770d6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/roltypen?zaaktype=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fzaaktypen%2F16673a8d-bdd5-414f-a492-386274a14f7c&status=alles
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -592,7 +591,7 @@ interactions:
     uri: http://localhost:8003/catalogi/api/v1/zaaktypen?identificatie=gh-305&status=alles
   response:
     body:
-      string: "{\"count\":1,\"next\":null,\"previous\":null,\"results\":[{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/ddd93aa1-5639-4ad8-8f2b-2711d8b770d6\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
+      string: "{\"count\":1,\"next\":null,\"previous\":null,\"results\":[{\"url\":\"http://localhost:8003/catalogi/api/v1/zaaktypen/16673a8d-bdd5-414f-a492-386274a14f7c\",\"identificatie\":\"gh-305\",\"omschrijving\":\"De
         Zaaktype-omschrijving\",\"omschrijvingGeneriek\":\"created zaaktype\",\"vertrouwelijkheidaanduiding\":\"openbaar\",\"doel\":\"Een
         omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype.\",\"aanleiding\":\"Een
         omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van
@@ -600,7 +599,7 @@ interactions:
         onderwerp van ZAAKen van dit ZAAKTYPE.\",\"handelingBehandelaar\":\"Behandelen\",\"doorlooptijd\":\"P42D\",\"servicenorm\":null,\"opschortingEnAanhoudingMogelijk\":true,\"verlengingMogelijk\":true,\"verlengingstermijn\":\"P14D\",\"trefwoorden\":[\"Zaaktype\",\"Basis\"],\"publicatieIndicatie\":true,\"publicatietekst\":\"De
         generieke tekst van de publicatie van ZAAKen van dit ZAAKTYPE.\",\"verantwoordingsrelatie\":[],\"productenOfDiensten\":[],\"selectielijstProcestype\":\"\",\"referentieproces\":{\"naam\":\"De
         naam van het Referentieproces.\",\"link\":\"\"},\"concept\":true,\"verantwoordelijke\":\"De
-        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-17\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-17\",\"beginObject\":\"2025-10-17\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/e57cae2f-5155-4c26-81d2-ac53ef4f2ed6\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}]}"
+        verantwoordelijke (soort) organisatie.\",\"beginGeldigheid\":\"2025-10-21\",\"eindeGeldigheid\":null,\"versiedatum\":\"2025-10-21\",\"beginObject\":\"2025-10-21\",\"eindeObject\":null,\"catalogus\":\"http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef\",\"statustypen\":[],\"resultaattypen\":[],\"eigenschappen\":[],\"informatieobjecttypen\":[],\"roltypen\":[],\"besluittypen\":[],\"deelzaaktypen\":[],\"gerelateerdeZaaktypen\":[],\"zaakobjecttypen\":[]}]}"
     headers:
       API-version:
       - 1.3.1
@@ -637,7 +636,7 @@ interactions:
       Connection:
       - keep-alive
     method: GET
-    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Fe57cae2f-5155-4c26-81d2-ac53ef4f2ed6&status=alles
+    uri: http://localhost:8003/catalogi/api/v1/informatieobjecttypen?catalogus=http%3A%2F%2Flocalhost%3A8003%2Fcatalogi%2Fapi%2Fv1%2Fcatalogussen%2Feb77d83e-e856-4f5d-8991-269b188d27ef&status=definitief&datumGeldigheid=2025-10-21
   response:
     body:
       string: '{"count":0,"next":null,"previous":null,"results":[]}'
@@ -2561,12 +2560,54 @@ interactions:
     uri: http://localhost:8004/api/v2/objecttypes
   response:
     body:
-      string: '{"count":0,"next":null,"previous":null,"results":[]}'
+      string: '{"count":29,"next":null,"previous":null,"results":[{"url":"http://localhost:8004/api/v2/objecttypes/e98db27b-7d14-4417-bbd4-18e0718dad4f","uuid":"e98db27b-7d14-4417-bbd4-18e0718dad4f","name":"Song
+        have power under benefit better pattern.","namePlural":"Song have power under
+        benefit better pattern.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-10-21","modifiedAt":"2025-10-21","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/72b7862e-4077-4b9e-9f2a-905e9e23f5f1","uuid":"72b7862e-4077-4b9e-9f2a-905e9e23f5f1","name":"Alone
+        author turn land from most.","namePlural":"Alone author turn land from most.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-26","modifiedAt":"2025-09-26","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/53fdcdb7-7b16-4750-87ba-1383e57d9e6b","uuid":"53fdcdb7-7b16-4750-87ba-1383e57d9e6b","name":"Technology
+        within space entire fear bad.","namePlural":"Technology within space entire
+        fear bad.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-22","modifiedAt":"2025-09-22","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/820539ea-f78d-4585-aa4a-d7aaae5e64a6","uuid":"820539ea-f78d-4585-aa4a-d7aaae5e64a6","name":"Talk
+        day campaign hear general human reflect.","namePlural":"Talk day campaign
+        hear general human reflect.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/9af65590-a950-408b-aab5-95e3693a208e","uuid":"9af65590-a950-408b-aab5-95e3693a208e","name":"Compare
+        I a fish.","namePlural":"Compare I a fish.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/2831c9d0-c308-41c3-9ff4-858b357d831f","uuid":"2831c9d0-c308-41c3-9ff4-858b357d831f","name":"Responsibility
+        here involve value ground practice mind.","namePlural":"Responsibility here
+        involve value ground practice mind.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/46fd9fd9-0496-46ef-89e5-973622eb6f37","uuid":"46fd9fd9-0496-46ef-89e5-973622eb6f37","name":"Safe
+        also election system medical my.","namePlural":"Safe also election system
+        medical my.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/77854608-abf0-443a-8f5b-6d1de1ba8ce4","uuid":"77854608-abf0-443a-8f5b-6d1de1ba8ce4","name":"Member
+        Republican international high.","namePlural":"Member Republican international
+        high.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/626346af-11ba-4a6b-81cc-881eb9349b34","uuid":"626346af-11ba-4a6b-81cc-881eb9349b34","name":"Produce
+        resource hold why.","namePlural":"Produce resource hold why.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/b88a64af-11e8-422f-aa94-f811eeff0e18","uuid":"b88a64af-11e8-422f-aa94-f811eeff0e18","name":"Behind
+        lay international follow financial since message.","namePlural":"Behind lay
+        international follow financial since message.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/70f71c3e-4351-49ef-8efa-2918c61e2df6","uuid":"70f71c3e-4351-49ef-8efa-2918c61e2df6","name":"Must
+        generation however.","namePlural":"Must generation however.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/6985da21-bb85-4ece-bafe-eb69b5a03c31","uuid":"6985da21-bb85-4ece-bafe-eb69b5a03c31","name":"All
+        country half east chance machine green.","namePlural":"All country half east
+        chance machine green.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/25fe6dfb-6d7a-443c-af67-a50563da4cc5","uuid":"25fe6dfb-6d7a-443c-af67-a50563da4cc5","name":"Government
+        agree reduce low.","namePlural":"Government agree reduce low.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/ba6f0d2f-5bd1-4fea-9ad7-12a705c84977","uuid":"ba6f0d2f-5bd1-4fea-9ad7-12a705c84977","name":"Car
+        want kind could.","namePlural":"Car want kind could.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-19","modifiedAt":"2025-09-19","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/f7fe2d9a-0f03-45c9-b6cc-edcbc9d2860c","uuid":"f7fe2d9a-0f03-45c9-b6cc-edcbc9d2860c","name":"Yourself
+        really camera their carry.","namePlural":"Yourself really camera their carry.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/952890c6-1b40-44ef-a886-4a4deb0bd70f","uuid":"952890c6-1b40-44ef-a886-4a4deb0bd70f","name":"Nice
+        exist deep son never star authority.","namePlural":"Nice exist deep son never
+        star authority.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/1df7d63f-bc18-4495-b77d-823e7cc9295b","uuid":"1df7d63f-bc18-4495-b77d-823e7cc9295b","name":"Run
+        sign view provide make store.","namePlural":"Run sign view provide make store.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/e65cee18-4b0e-42eb-baa4-0361db2a8306","uuid":"e65cee18-4b0e-42eb-baa4-0361db2a8306","name":"Personal
+        give choose.","namePlural":"Personal give choose.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/10d3dc7a-5300-4df6-9a13-8ca1b03c97ac","uuid":"10d3dc7a-5300-4df6-9a13-8ca1b03c97ac","name":"Black
+        hope turn evidence dark two fund.","namePlural":"Black hope turn evidence
+        dark two fund.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/4f0daa55-2f86-44e3-a848-c31cb571a89a","uuid":"4f0daa55-2f86-44e3-a848-c31cb571a89a","name":"Always
+        today cold like bar lay.","namePlural":"Always today cold like bar lay.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/d85fe526-4798-46ce-abb5-297bf7435dfc","uuid":"d85fe526-4798-46ce-abb5-297bf7435dfc","name":"Yes
+        true I garden tough follow sign defense.","namePlural":"Yes true I garden
+        tough follow sign defense.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/a113f5b3-f9a3-4ac1-b09e-af9e8a39972c","uuid":"a113f5b3-f9a3-4ac1-b09e-af9e8a39972c","name":"Line
+        like property rule.","namePlural":"Line like property rule.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/3ef73ef6-ef8c-4988-8dc6-eec217c35b1c","uuid":"3ef73ef6-ef8c-4988-8dc6-eec217c35b1c","name":"Itself
+        seven one order nation.","namePlural":"Itself seven one order nation.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/6bea7ed4-702a-4482-9e16-365ef6b9a8eb","uuid":"6bea7ed4-702a-4482-9e16-365ef6b9a8eb","name":"Tonight
+        until point three meeting training.","namePlural":"Tonight until point three
+        meeting training.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/2f6ba62a-3fb9-46cb-b3f9-f3a3b9437954","uuid":"2f6ba62a-3fb9-46cb-b3f9-f3a3b9437954","name":"Attorney
+        nature middle accept.","namePlural":"Attorney nature middle accept.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/3f6f9e68-b32c-472d-8732-94b8b647f0a4","uuid":"3f6f9e68-b32c-472d-8732-94b8b647f0a4","name":"Issue
+        identify ready read wear.","namePlural":"Issue identify ready read wear.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/32ca4967-a9c3-424b-aea9-8f82b431b57a","uuid":"32ca4967-a9c3-424b-aea9-8f82b431b57a","name":"Must
+        sign ever guess expect customer.","namePlural":"Must sign ever guess expect
+        customer.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-18","modifiedAt":"2025-09-18","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/4a2e6695-16cd-4491-8bdd-b40fe8f27fb1","uuid":"4a2e6695-16cd-4491-8bdd-b40fe8f27fb1","name":"Answer
+        anyone clear child.","namePlural":"Answer anyone clear child.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-16","modifiedAt":"2025-09-16","allowGeometry":true,"versions":[]},{"url":"http://localhost:8004/api/v2/objecttypes/8f1ed789-8bef-4d02-a9ea-106a2eabce56","uuid":"8f1ed789-8bef-4d02-a9ea-106a2eabce56","name":"Myself
+        spend continue will receive.","namePlural":"Myself spend continue will receive.","description":"","dataClassification":"open","maintainerOrganization":"","maintainerDepartment":"","contactPerson":"","contactEmail":"","source":"","updateFrequency":"unknown","providerOrganization":"","documentationUrl":"","labels":{},"createdAt":"2025-09-16","modifiedAt":"2025-09-16","allowGeometry":true,"versions":[]}]}'
     headers:
       Allow:
       - GET, POST, HEAD, OPTIONS
       Content-Length:
-      - '52'
+      - '16042'
       Content-Type:
       - application/json
       Cross-Origin-Opener-Policy:
