@@ -82,7 +82,7 @@ class OBFieldsTest(TestCase):
         }
 
     @given(ztc_struct_instances())
-    def test_all_fields_are_present(self, instance: Struct):
+    def test_all_required_fields_are_present(self, instance: Struct):
         def as_seen_by_frontend(struct) -> dict:
             """Return struct as the dict that is seen by the frontend
             This also asserts that all generated OBFields are serializable
@@ -96,8 +96,13 @@ class OBFieldsTest(TestCase):
 
         instance_dict = as_seen_by_frontend(instance)
         expected_struct_attributes = set(map(camelize, instance_dict))
+        unrequired_unset_values = {
+            camelize(field)
+            for field in instance.__struct_fields__
+            if getattr(instance, field) is UNSET
+        }
 
-        assert field_names == expected_struct_attributes
+        assert field_names == expected_struct_attributes | unrequired_unset_values
 
 
 class OBOptionsTest(TestCase):
