@@ -1,3 +1,4 @@
+import json
 import re
 
 from furl import furl
@@ -168,6 +169,14 @@ class GherkinRunner:
             page.get_by_label("Wachtwoord").fill(password)
             page.get_by_role("button", name="Inloggen").click()
 
+        def user_logs_out(self, page: Page) -> None:
+            page.wait_for_load_state("networkidle")
+            profile_button = page.get_by_role("button", name="Profiel")
+            profile_button.click()
+
+            logout_button = page.get_by_role("button", name="Logout")
+            logout_button.click()
+
         # Navigation
 
         def user_open_application(self, page: Page) -> None:
@@ -330,3 +339,11 @@ class GherkinRunner:
             paragraph = dd.locator("p")
 
             expect(paragraph).to_have_attribute(attribue_key, attribute_value)
+
+        def session_storage_should_be_cleared(self, page: Page) -> None:
+            session_storage = page.evaluate("() => JSON.stringify(sessionStorage)")
+            content = json.loads(session_storage)
+
+            assert len(content.keys()) == 0, (
+                "The session storage is not empty as expected."
+            )
