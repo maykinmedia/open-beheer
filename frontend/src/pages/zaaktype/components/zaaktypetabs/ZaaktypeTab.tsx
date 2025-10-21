@@ -116,7 +116,12 @@ export const ZaaktypeTab = ({
     const overrides: Partial<Record<keyof TargetType, ReactNode>> = {};
 
     for (const field of fields) {
-      const fieldName = field.name.split(".").pop() as keyof TargetType;
+      const _fieldName = field.name.split(".").pop();
+      if (!_fieldName || !(_fieldName in object)) {
+        continue;
+      }
+
+      const fieldName = _fieldName as keyof TargetType;
       const originalValue = object[fieldName];
 
       // Show object values.
@@ -219,6 +224,7 @@ export const ZaaktypeTab = ({
    *
    * @param relatedObject - The object related to the pending change.
    * @param actionType - The type of action describing the change.
+   * @param relatedObjectKey - The key in the expanded target object corresponding to this related object.
    * @returns A promise resolving to either:
    * - The modified `relatedObject`, which will be committed.
    * - `false`, to cancel (skip) committing the change.
