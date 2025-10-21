@@ -46,3 +46,5 @@ class ZaakTypeTemplateListViewTest(VCRAPITestCase):
                 "Vertrouwelijkheidaanduiding: openbaar",
             ],
         )
+        # Not required field, which cannot be null. So it needs to be undefined.
+        self.assertNotIn("verantwoordingsrelatie", basis["waarden"])
