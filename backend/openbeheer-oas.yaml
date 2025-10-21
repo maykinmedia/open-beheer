@@ -5477,6 +5477,8 @@ components:
         editable:
           type: boolean
           default: false
+        required:
+          type: boolean
       required:
       - name
       - type

@@ -1664,6 +1664,7 @@ export interface components {
             options?: components["schemas"]["OBOption"][];
             /** @default false */
             editable: boolean;
+            required?: boolean;
         };
         /**
          * OBFieldType
