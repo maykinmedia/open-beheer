@@ -15,7 +15,6 @@ from openbeheer.types.ztc import (
     Catalogus,
     IndicatieInternOfExternEnum,
     ReferentieProces,
-    StatusType,
     VertrouwelijkheidaanduidingEnum,
 )
 from openbeheer.zaaktype.api.views import ExpandableZaakTypeRequest
@@ -300,53 +299,7 @@ TEMPLATE_BASE: Sjabloon = Sjabloon(
     waarden=OptionalZaakType(**waarden_dict),
 )
 
-TEMPLATE_STATUSES = Sjabloon(
-    naam="Met statustypen",
-    omschrijving="Met statustypen.",
-    voorbeelden=[
-        "Ingediend",
-        "In behandeling",
-        "Afgerond",
-    ],
-    waarden=OptionalZaakType(
-        **{
-            **waarden_dict,
-            "_expand": {
-                "statustypen": [
-                    StatusType(
-                        volgnummer=1,
-                        omschrijving="Ingediend",
-                        omschrijving_generiek="Ingediend",
-                        statustekst="Ingediend",
-                        informeren=False,
-                        checklistitem_statustype=[],
-                        zaaktype="",
-                    ),
-                    StatusType(
-                        volgnummer=2,
-                        omschrijving="In behandeling",
-                        omschrijving_generiek="In behandeling",
-                        statustekst="In behandeling",
-                        informeren=False,
-                        checklistitem_statustype=[],
-                        zaaktype="",
-                    ),
-                    StatusType(
-                        volgnummer=3,
-                        omschrijving="Afgehandeld",
-                        omschrijving_generiek="Afgehandeld",
-                        statustekst="Afgehandeld",
-                        informeren=False,
-                        checklistitem_statustype=[],
-                        zaaktype="",
-                    ),
-                ],
-            },
-        }
-    ),
-)
-
-TEMPLATES: list[Sjabloon] = [TEMPLATE_BASE, TEMPLATE_STATUSES]
+TEMPLATES: list[Sjabloon] = [TEMPLATE_BASE]
 
 # Sjabloon[OptionalZaakType] is not allowed as an annotation OptionalZaakType is a value not a type
 TEMPLATE_MAPPING: Mapping[UUID, Sjabloon] = {
