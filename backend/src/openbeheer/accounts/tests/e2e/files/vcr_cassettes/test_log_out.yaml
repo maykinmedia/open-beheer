@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Crs:
+      - EPSG:4326
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+    method: GET
+    uri: http://localhost:8003/catalogi/api/v1/catalogussen
+  response:
+    body:
+      string: '{"count":3,"next":null,"previous":null,"results":[{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/df3506dd-0fd5-4f16-b7b5-2d2e5fceae1d","domein":"MREVV","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/bff5540f-060e-4121-b9f3-3ed26451fad5"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Beautiful
+        today plant skin college.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/194d5e2b-b175-4505-a5cf-8664454190d1","domein":"WPXTL","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/699bab0c-b3d3-49be-b2a2-f0f916b3bf83","http://localhost:8003/catalogi/api/v1/zaaktypen/401f3ebb-a5e4-4a55-844c-effe44a3c447","http://localhost:8003/catalogi/api/v1/zaaktypen/d354d322-a904-4e01-a443-5ee6b80713bf","http://localhost:8003/catalogi/api/v1/zaaktypen/dd7cd71e-c1ca-4b96-9048-b3e588582be5","http://localhost:8003/catalogi/api/v1/zaaktypen/900335f4-2bb1-4252-9845-da73daf76dba","http://localhost:8003/catalogi/api/v1/zaaktypen/bd80a610-a2cf-4e42-9d9f-4f265257a481","http://localhost:8003/catalogi/api/v1/zaaktypen/7963554a-01b5-473b-8073-accc20927df0","http://localhost:8003/catalogi/api/v1/zaaktypen/3e778de9-9643-480c-99c7-4624e1102295","http://localhost:8003/catalogi/api/v1/zaaktypen/2c2269c4-2c96-4524-9e07-5b48656bba69","http://localhost:8003/catalogi/api/v1/zaaktypen/36eb41c5-6ad6-44e7-8887-caeb268676c5","http://localhost:8003/catalogi/api/v1/zaaktypen/00337c87-c861-48f4-8da5-534546a81a2b","http://localhost:8003/catalogi/api/v1/zaaktypen/f5804827-ba45-4fd1-b092-e310fd690ce4","http://localhost:8003/catalogi/api/v1/zaaktypen/9efb78b8-910e-483b-8418-536e31a0a069","http://localhost:8003/catalogi/api/v1/zaaktypen/64e31ee7-dcbd-43bc-9492-d19bcbefe544","http://localhost:8003/catalogi/api/v1/zaaktypen/08db7586-1017-44d1-ad51-263115a56968","http://localhost:8003/catalogi/api/v1/zaaktypen/3aabc679-c3d4-49f4-a32b-1b4edd34fbf3","http://localhost:8003/catalogi/api/v1/zaaktypen/a427b998-d82e-4a52-8852-f7160fc6392f","http://localhost:8003/catalogi/api/v1/zaaktypen/7ded42d7-ab7a-4543-99d8-378506dbbc98","http://localhost:8003/catalogi/api/v1/zaaktypen/63d77824-a611-43dd-8e98-891623740c8b","http://localhost:8003/catalogi/api/v1/zaaktypen/cbc19ba2-6ba6-4281-bc71-8ab7bbc2fe71"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Wonder
+        course reality perform plant deep describe.","versie":"","begindatumVersie":null},{"url":"http://localhost:8003/catalogi/api/v1/catalogussen/eb77d83e-e856-4f5d-8991-269b188d27ef","domein":"WNVPN","rsin":"123456782","contactpersoonBeheerNaam":"Ubaldo","contactpersoonBeheerTelefoonnummer":"","contactpersoonBeheerEmailadres":"","zaaktypen":["http://localhost:8003/catalogi/api/v1/zaaktypen/16673a8d-bdd5-414f-a492-386274a14f7c"],"besluittypen":[],"informatieobjecttypen":[],"naam":"Lot
+        her north grow standard black those same.","versie":"","begindatumVersie":null}]}'
+    headers:
+      API-version:
+      - 1.3.1
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '3148'
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Referrer-Policy:
+      - same-origin
+      Vary:
+      - Accept, origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+    status:
+      code: 200
+      message: OK
+version: 1
