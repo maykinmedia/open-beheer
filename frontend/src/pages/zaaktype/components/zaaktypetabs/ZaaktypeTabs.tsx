@@ -2,9 +2,11 @@ import { Tab, Tabs } from "@maykin-ui/admin-ui";
 import React, { useCallback, useMemo } from "react";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { TabConfig, TargetType } from "~/pages";
+import {
+  ZaaktypeAttributeGridTab,
+  ZaaktypeDataGridTab,
+} from "~/pages/zaaktype/components";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
-
-import { ZaaktypeTab } from "./ZaaktypeTab.tsx";
 
 type ZaaktypeTabsProps = {
   object: TargetType;
@@ -45,16 +47,28 @@ export function ZaaktypeTabs({
 
   const tabs = useMemo(
     () =>
-      tabConfigs.map((tabConfig) => (
-        <Tab key={tabConfig.label} label={tabConfig.label}>
-          <ZaaktypeTab
-            object={object}
-            tabConfig={tabConfig}
-            onChange={onChange}
-            onTabActionsChange={onTabActionsChange}
-          />
-        </Tab>
-      )),
+      tabConfigs.map((tabConfig) => {
+        const content =
+          tabConfig.view === "DataGrid" ? (
+            <ZaaktypeDataGridTab
+              object={object}
+              tabConfig={tabConfig}
+              onTabActionsChange={onTabActionsChange}
+            />
+          ) : (
+            <ZaaktypeAttributeGridTab
+              object={object}
+              tabConfig={tabConfig}
+              onChange={onChange}
+            />
+          );
+
+        return (
+          <Tab key={tabConfig.label} label={tabConfig.label}>
+            {content}
+          </Tab>
+        );
+      }),
     [tabConfigs, object, onChange],
   );
 
