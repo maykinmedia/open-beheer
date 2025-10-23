@@ -1,2 +1,3 @@
 export * from "./ZaaktypeTabs";
-export * from "./ZaaktypeTab";
+export * from "./ZaaktypeAttributeGridTab";
+export * from "./ZaaktypeDataGridTab";
