@@ -186,29 +186,19 @@ class GherkinRunner:
 
             page.goto(f"{self.runner.live_server.url}/")
 
-        def user_selects_catalogus(self, page: Page, catalogus: Catalogus) -> None:
+        def user_selects_catalogus(
+            self, page: Page, catalogus: Catalogus, check_url: bool = True
+        ) -> None:
             page.wait_for_load_state("networkidle")
 
-            assert catalogus.url
-            expected_path = f"/OZ/{furl(catalogus.url).path.segments[-1]}/zaaktypen"
+            catalog_select = page.get_by_role("combobox")
+            catalog_select.click()
+            option = page.get_by_text(f"{catalogus.naam} ({catalogus.domein})")
+            option.click()
 
-            # FIXME: get rid of try/except.
-            #
-            # There are two scenario's for this:
-            # - Catalogus already selected (only catalogus)
-            # - Multiple catalogi exists "Selecteer catalogus" is shown
-            try:
-                expect(page).to_have_url(
-                    self.runner.live_server.url + expected_path,
-                    timeout=100,
-                )
-            except AssertionError:
-                select = page.get_by_text("Selecteer catalogus")
-                select.click()
-                option = page.get_by_text(f"{catalogus.naam} ({catalogus.domein})")
-                option.click()
-
+            if check_url:
                 assert catalogus.url
+                expected_path = f"/OZ/{furl(catalogus.url).path.segments[-1]}/zaaktypen"
                 expect(page).to_have_url(self.runner.live_server.url + expected_path)
 
         def user_navigates_to_zaaktype_list_page(self, page: Page) -> None:

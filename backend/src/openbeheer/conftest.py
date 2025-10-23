@@ -7,6 +7,7 @@ import pytest
 from mozilla_django_oidc_db.constants import OIDC_ADMIN_CONFIG_IDENTIFIER
 from mozilla_django_oidc_db.tests.factories import OIDCClientFactory
 from pytest_django import DjangoDbBlocker, live_server_helper
+from pytest_django.fixtures import SettingsWrapper
 from pytest_django.lazy_django import skip_if_no_django
 
 from openbeheer.utils.gherkin_e2e import GherkinRunner
@@ -28,6 +29,13 @@ def live_django_db_setup(
 
     with django_db_blocker.unblock():
         OIDCClientFactory.create(identifier=OIDC_ADMIN_CONFIG_IDENTIFIER)
+
+
+@pytest.fixture
+def session_engine_cache(settings: SettingsWrapper) -> None:
+    # With dev django settings module, the session engine is "django.contrib.sessions.backends.db",
+    # while in CI it is "django.contrib.sessions.backends.cache".
+    settings.SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 
 class VCRPyTestHelper(VCRMixin):
