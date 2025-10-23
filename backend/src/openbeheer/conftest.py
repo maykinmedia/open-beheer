@@ -1,7 +1,7 @@
 import inspect
 import os
 import pathlib
-from typing import Callable, ContextManager, Generator, Iterable, Protocol
+from typing import Callable, ContextManager, Generator, Iterable, NoReturn, Protocol
 
 import pytest
 from mozilla_django_oidc_db.constants import OIDC_ADMIN_CONFIG_IDENTIFIER
@@ -39,12 +39,16 @@ def session_engine_cache(settings: SettingsWrapper) -> None:
     settings.SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 
+type VCRMatcher = Callable[[Request, Request], None | NoReturn]
+type MatcherName = str
+
+
 class VCROverridesProtocol(Protocol):
     def __call__(
         self,
-        custom_matchers: Iterable[tuple[str, Callable[[Request, Request], None]]]
-        | None = None,
-        custom_match_on: Iterable[str] | None = None,
+        *,
+        custom_matchers: Iterable[tuple[MatcherName, VCRMatcher]] | None = None,
+        custom_match_on: Iterable[MatcherName] | None = None,
     ) -> pytest.MarkDecorator: ...
 
 

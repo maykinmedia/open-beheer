@@ -15,31 +15,34 @@ def matcher_query_without_datum_geldigheid(
 
     incoming_query_names = {query_name for query_name, _ in incoming_request.query}
     stored_query_names = {query_name for query_name, _ in stored_request.query}
-    assert incoming_query_names == stored_query_names, (
-        "The names of the query params in the incoming request don't match those in the stored request."
-    )
+    if incoming_query_names != stored_query_names:
+        raise AssertionError(
+            "The names of the query params in the incoming request don't match those in the stored request."
+        )
 
     if (
         incoming_request.path == "/catalogi/api/v1/informatieobjecttypen"
         and "datumGeldigheid" in stored_query_names
     ):
-        assert {
+        if {
             query_name: query_value
             for query_name, query_value in incoming_request.query
             if query_name != "datumGeldigheid"
-        } == {
+        } != {
             query_name: query_value
             for query_name, query_value in stored_request.query
             if query_name != "datumGeldigheid"
-        }, (
-            "The values of the query params in the incoming request don't match those "
-            "in the stored request (excluding datumGeldigheid)."
-        )
+        }:
+            raise AssertionError(
+                "The values of the query params in the incoming request don't match those "
+                "in the stored request (excluding datumGeldigheid)."
+            )
     else:
-        assert dict(incoming_request.query) == dict(stored_request.query), (
-            "The values of the query params in the incoming "
-            "request don't match those in the stored request."
-        )
+        if incoming_request.query != stored_request.query:
+            raise AssertionError(
+                "The values of the query params in the incoming "
+                "request don't match those in the stored request."
+            )
 
     return
 
