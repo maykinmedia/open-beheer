@@ -1,7 +1,6 @@
 import { Outline, Solid, Toolbar } from "@maykin-ui/admin-ui";
 import React, { useMemo } from "react";
 import { useLoaderData } from "react-router";
-import { useCombinedSearchParams } from "~/hooks";
 import { ZaaktypeLoaderData } from "~/pages";
 
 type ZaaktypeToolbarProps = {
@@ -25,11 +24,12 @@ export function ZaaktypeToolbar({
   onVersionCreate,
 }: ZaaktypeToolbarProps) {
   const { result, versions } = useLoaderData() as ZaaktypeLoaderData;
-  const [combinedSearchParams] = useCombinedSearchParams();
+  const isEditing =
+    new URLSearchParams(location.search).get("editing") === "true";
 
   const button = useMemo(() => {
     if (versions?.some((v) => v.concept)) {
-      if (!combinedSearchParams.get("editing")) {
+      if (!isEditing) {
         return [
           {
             children: (
@@ -101,7 +101,7 @@ export function ZaaktypeToolbar({
         },
       ];
     }
-  }, [result, combinedSearchParams, onEdit, onSave, onVersionCreate]);
+  }, [result, isEditing, onEdit, onSave, onVersionCreate]);
 
   return (
     <Toolbar
