@@ -11,6 +11,7 @@ def test_list_zaaktypen(page: Page, runner: GherkinRunner):
     _.given.user_exists()
     _.given.api_config_exists()
     _.given.ztc_service_exists()
+    _.given.catalogus_exists()  # Added so that there are 2 catalogi (so the user has to select the one they want)
 
     catalogus = _.given.catalogus_exists()
     zaaktypen = _.given.zaaktypen_exist(catalogus, 20)

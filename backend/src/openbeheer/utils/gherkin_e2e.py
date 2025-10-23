@@ -129,6 +129,7 @@ class GherkinRunner:
 
             :return: The created zaaktypen
             """
+            assert catalogus.url
 
             helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
 
@@ -144,7 +145,6 @@ class GherkinRunner:
                         "naam": f"ReferentieProces {padded_sequence_number}"
                     },
                 }
-                assert catalogus.url
                 zaaktype = helper.create_zaaktype(catalogus.url, **overrides)
                 assert zaaktype.url
                 zaaktypen.append(zaaktype)
