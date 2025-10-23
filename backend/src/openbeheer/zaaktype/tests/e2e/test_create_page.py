@@ -11,14 +11,14 @@ from openbeheer.utils.tests import matcher_query_without_datum_geldigheid
     custom_matchers=[
         ("query_without_datum_geldigheid", matcher_query_without_datum_geldigheid)
     ],
-    custom_match_on=(
+    custom_match_on=[
         "method",
         "scheme",
         "host",
         "port",
         "path",
         "query_without_datum_geldigheid",
-    ),
+    ],
 )
 def test_create_zaaktype(page: Page, runner: GherkinRunner):
     _ = runner
