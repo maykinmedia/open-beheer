@@ -9,6 +9,7 @@ import {
   Toolbar,
   TypedField,
   fields2TypedFields,
+  getFieldName,
   isPrimitive,
   useDialog,
 } from "@maykin-ui/admin-ui";
@@ -22,32 +23,27 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useLocation, useParams } from "react-router";
 import { ArchiveForm } from "~/components";
 import {
   RelatedObjectBadge,
   RelatedObjectDataGrid,
+  RelatedObjectDataGridAction,
   RelatedObjectRenderer,
   getObjectValue,
 } from "~/components/related";
-import { useCombinedSearchParams, useErrors } from "~/hooks";
+import { useErrors } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
-import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import {
   AttributeGridSection,
   DataGridSection,
+  DataGridTabConfig,
   TabConfig,
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
-import {
-  Expand,
-  ExpandItemKeys,
-  Expanded,
-  RelatedObject,
-  components,
-} from "~/types";
+import { Expand, ExpandItemKeys, RelatedObject, components } from "~/types";
 
 type ZaaktypeTabProps = {
   object: TargetType;
@@ -63,6 +59,7 @@ type ResultaatType = components["schemas"]["ResultaatTypeWithUUID"];
 
 /**
  * Renders a single tab, optionally containing different (vertical) section.
+ * FIXME: INITIAL VALUES FOR HOOK MODAL
  */
 export const ZaaktypeTab = ({
   object,
@@ -71,8 +68,12 @@ export const ZaaktypeTab = ({
   onTabActionsChange,
 }: ZaaktypeTabProps) => {
   const { fields } = useLoaderData() as ZaaktypeLoaderData;
-  const [combinedSearchParams] = useCombinedSearchParams();
-  const isEditing = Boolean(combinedSearchParams.get("editing"));
+  const location = useLocation();
+  const { serviceSlug } = useParams();
+  invariant(serviceSlug, "serviceSlug must be provided!");
+
+  const isEditing =
+    new URLSearchParams(location.search).get("editing") === "true";
   const errors = useErrors();
 
   // (Vertical) section data.
@@ -197,15 +198,65 @@ export const ZaaktypeTab = ({
   );
 
   /**
-   * Gets called with a list of actions to perform when mutations are made in
-   * a `<RelatedObjectDataGrid>`, these actions need to submitted to the backend
-   * in order to be persisted.
+   * Handles a list of data grid actions triggered by user mutations
+   * in a `<RelatedObjectDataGrid>`. Each action (create, update, delete)
+   * is transformed into a corresponding `ZaaktypeAction` and passed to
+   * `onTabActionsChange` for submission to the backend.
+   *
+   * @param actions - The list of actions representing changes made in the related object grid.
+   *
+   * Notes:
+   * - The object must have a defined `uuid` (enforced via invariant).
+   * - Each action is mapped to a backend-persistable `ZaaktypeAction` with
+   *   contextual data (`serviceSlug`, `zaaktypeUuid`, `relatedObjectKey`).
+   * - Throws an error if an unknown action type is encountered.
    */
   const handleActionsChange = useCallback(
-    (actions: TypedAction<string, object>[]) => {
-      onTabActionsChange(tabConfig, actions as ZaaktypeAction[]);
+    (actions: RelatedObjectDataGridAction<RelatedObject<TargetType>>[]) => {
+      const _tabConfig = tabConfig as DataGridTabConfig<TargetType>;
+      invariant(object.uuid, "Zaaktype must have uuid set!");
+
+      const zaaktypeActions: ZaaktypeAction[] = actions.map((action) => {
+        const payloadBase = {
+          serviceSlug: serviceSlug,
+          zaaktypeUuid: object.uuid!,
+          relatedObjectKey: _tabConfig.key,
+        };
+
+        switch (action.type) {
+          case "CREATE":
+            return {
+              type: "ADD_RELATED_OBJECT",
+              payload: {
+                ...payloadBase,
+                relatedObject: action.payload,
+              },
+            };
+          case "UPDATE":
+            return {
+              type: "EDIT_RELATED_OBJECT",
+              payload: {
+                ...payloadBase,
+                relatedObject: action.payload,
+              },
+            };
+          case "DELETE":
+            invariant(action.payload.uuid, "action.payload.uuid must be set!");
+            return {
+              type: "DELETE_RELATED_OBJECT",
+              payload: {
+                ...payloadBase,
+                relatedObjectUuid: action.payload.uuid!,
+              },
+            };
+          default:
+            // @ts-expect-error - should not happen.
+            throw new Error("Unknown action type: " + action.type);
+        }
+      });
+      onTabActionsChange(tabConfig, zaaktypeActions);
     },
-    [tabConfig, onTabActionsChange],
+    [tabConfig, object, onTabActionsChange],
   );
 
   /**
@@ -226,15 +277,13 @@ export const ZaaktypeTab = ({
    */
   const relatedObjectHook = async (
     relatedObject: RelatedObject<TargetType>,
-    actionType: TypedAction["type"],
-    relatedObjectKey: keyof Expand<Expanded<TargetType>>,
+    actionType: RelatedObjectDataGridAction<typeof relatedObject>["type"],
   ): Promise<false | RelatedObject<TargetType>> => {
-    switch (relatedObjectKey) {
+    switch (tabConfig.key) {
       case "resultaattypen":
         return await resultaatTypeHook(
           relatedObject as components["schemas"]["ResultaatTypeWithUUID"],
           actionType,
-          relatedObjectKey,
         );
     }
     return relatedObject;
@@ -264,8 +313,7 @@ export const ZaaktypeTab = ({
   const resultaatTypeHook = useCallback(
     async (
       resultaatType: ResultaatType,
-      actionType: TypedAction["type"],
-      relatedObjectKey: keyof Expand<Expanded<TargetType>>,
+      actionType: RelatedObjectDataGridAction<ResultaatType>["type"],
     ): Promise<ResultaatType | false> => {
       // Delete requires no further actions.
       if (actionType.toUpperCase().includes("DELETE")) return resultaatType;
@@ -285,7 +333,7 @@ export const ZaaktypeTab = ({
         // Update dialog state in order to render form
         setHookDialogState({
           open: true,
-          title: string2Title(relatedObjectKey),
+          title: string2Title(tabConfig.label),
           body: (
             <ArchiveForm
               resultaatType={resultaatType}
@@ -307,7 +355,7 @@ export const ZaaktypeTab = ({
                 // A default `resultaattypeomschrijving` value based on `brondatumArchiefProcedure.afleidingswijze`.
                 // Use only when adding resultaattype.
                 const defaultResultaatTypeOmschrijving =
-                  actionType === "ADD_RELATED_OBJECT"
+                  actionType === "CREATE"
                     ? (resultaatTypeOmschrijvingField?.options?.find(
                         ({ label }) =>
                           label.toLowerCase() ===
@@ -350,14 +398,20 @@ export const ZaaktypeTab = ({
         "relatedObjects must be an Array for RelatedObjectDataGrid!",
       );
 
+      // The fields included in the fieldset.
+      const fieldSetFields = tabConfig.fieldset[1].fields.map((fieldName) => {
+        const field = fields.find(
+          (field) => getFieldName(field as Field) === getFieldName(fieldName),
+        );
+        invariant(field, "field not found!");
+        return field as TypedField;
+      });
+
       return (
         <RelatedObjectDataGrid
-          fields={fields as TypedField[]}
-          fieldset={tabConfig.fieldset}
+          fields={fieldSetFields}
           isEditing={isEditing}
-          object={object}
-          relatedObjects={relatedObjects}
-          relatedObjectKey={tabConfig.key}
+          objectList={relatedObjects}
           onActionsChange={handleActionsChange}
           hook={relatedObjectHook}
         />

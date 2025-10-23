@@ -1,59 +1,65 @@
 import {
   Button,
   DataGrid,
-  FieldSet,
+  Field,
   Outline,
   SerializedFormData,
   TypedField,
-  field2TypedField,
 } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
 import { JSX, useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigation, useParams } from "react-router";
 import { SERVICE_PARAM } from "~/App.tsx";
-import { TypedAction } from "~/hooks/useSubmitAction.tsx";
-import { getUUIDFromString } from "~/lib/format/string.ts";
-import { Expand, Expanded, RelatedObject } from "~/types";
 
-export type RelatedObjectDataGridProps<
-  T extends { url: string },
-  R extends object = RelatedObject<T>,
-> = {
-  /** Array of all fields available for `object`. */
-  fields: TypedField[];
-  /** FieldSet specifying which fields to include and their order. */
-  fieldset: FieldSet<R>;
+export type RelatedObjectDataGridAction<T extends object> =
+  | RelatedObjectDataGridCreateAction<T>
+  | RelatedObjectDataGridUpdateAction<T>
+  | RelatedObjectDataGridDeleteAction<T>;
+
+export type RelatedObjectDataGridCreateAction<T extends object> = {
+  type: "CREATE";
+  payload: T;
+};
+
+export type RelatedObjectDataGridUpdateAction<T extends object> = {
+  type: "UPDATE";
+  payload: T;
+};
+
+export type RelatedObjectDataGridDeleteAction<T extends object> = {
+  type: "DELETE";
+  payload: T;
+};
+
+export type RelatedObjectDataGridProps<T extends object> = {
+  /** The fields to show. */
+  fields: (Field | TypedField)[];
   /** Whether edit mode is active. */
   isEditing: boolean;
-  /** The parent object for which related objects are displayed. */
-  object: T;
-  /** Key in the parent object representing the relationship. */
-  relatedObjectKey: keyof Expand<Expanded<T>>;
-  /** Initial array of related objects to display in the grid. */
-  relatedObjects: R[];
+  /** Initial array of objects to display in the grid. */
+  objectList: T[];
   /** Called when list of actions (dispatch to persist) is changed. */
-  onActionsChange: (actions: TypedAction<string, object>[]) => void;
+  onActionsChange: (actions: RelatedObjectDataGridAction<T>[]) => void;
   /**
    * Hook that allows modifying the `relatedObject` before committing changes.
    *
    * This function is called right before a change is committed, giving you a chance
    * to adjust or validate the `relatedObject`.
    *
-   * @param relatedObject - The object related to the pending change.
+   * @param object - The object related to the pending change.
    * @param actionType - The type of action describing the change.
    * @returns A promise resolving to either:
-   * - The modified `relatedObject`, which will be committed.
+   * - The modified `object`, which will be committed.
    * - `false`, to cancel (skip) committing the change.
    *
    * If `false` is returned, the change will be discarded and not persisted.
    * If an updated object is returned, it will replace the original during commit.
    */
   hook?: (
-    relatedObject: R,
-    actionType: TypedAction<string, object>["type"],
-    relatedObjectKey: keyof Expand<Expanded<T>>,
-  ) => Promise<R | false>;
+    object: T,
+    actionType: RelatedObjectDataGridAction<T>["type"],
+  ) => Promise<T | false>;
 };
 
 /**
@@ -67,19 +73,13 @@ export type RelatedObjectDataGridProps<
  * @typeParam T - The type of the parent object, which must include a `url` property.
  * @typeParam R - The type of the related object. Defaults to `RelatedObject<T>`.
  */
-export function RelatedObjectDataGrid<
-  T extends { url: string },
-  R extends object = RelatedObject<T>,
->({
+export function RelatedObjectDataGrid<T extends object = object>({
   fields,
-  fieldset,
-  isEditing: _isEditing,
-  object,
-  relatedObjectKey,
-  relatedObjects,
+  isEditing,
+  objectList,
   onActionsChange,
   hook = (row) => Promise.resolve(row),
-}: RelatedObjectDataGridProps<T, R>) {
+}: RelatedObjectDataGridProps<T>) {
   // Loading state.
   const { state } = useNavigation();
   const isLoading = state !== "idle";
@@ -90,55 +90,49 @@ export function RelatedObjectDataGrid<
   invariant(serviceSlug, "serviceSlug must be provided!");
 
   // Whether edit mode is active.
-  const [isEditing, setIsEditing] = useState(_isEditing);
+  const [isEditingState, setIsEditingState] = useState(isEditing);
   useEffect(() => {
-    setIsEditing(_isEditing);
-  }, [_isEditing]);
-
-  // The fields included in the fieldset.
-  const fieldSetFields = useMemo(
-    () =>
-      fieldset[1].fields.map(
-        (fieldName) =>
-          fields.find(
-            (field) => field2TypedField<R>(field).name === fieldName,
-          )!,
-      ),
-    [fieldset, fields],
-  );
+    setIsEditingState(isEditing);
+  }, [isEditing]);
 
   // Typed fields, may contain overrides based on presentational need.
   // Expand name is normalized.
-  const typedFields = useMemo<TypedField<R & { actions: JSX.Element }>[]>(
+  const typedFields = useMemo<TypedField<T & { actions: JSX.Element }>[]>(
     () => [
-      ...fieldSetFields.map((field) => ({
+      ...fields.map((field) => ({
         ...field,
-        editable: isEditing ? field.editable : false,
-        name: String(field.name).split(".").pop() as keyof R,
+        editable: isEditingState ? field.editable : false,
+        name: String(field.name).split(".").pop() as keyof T,
         type: field.type === "text" ? "string" : field.type,
       })),
       { name: "actions", type: "jsx", editable: false, sortable: false },
     ],
-    [fieldSetFields, isEditing],
+    [fields, isEditingState],
   );
 
-  // Delete actions state.
-  const [deleteActions, setDeleteActions] = useState<
-    TypedAction<string, object>[]
+  // Add actions state.
+  const [createActionsState, setCreateActionsState] = useState<
+    RelatedObjectDataGridCreateAction<T>[]
   >([]);
 
   // Mutation actions state.
-  const [mutationActions, setMutationActions] = useState<
-    (null | TypedAction<string, object>)[]
-  >(new Array(relatedObjects.length).fill(null));
+  const [updateActionsState, setUpdateActionsState] = useState<
+    (null | RelatedObjectDataGridUpdateAction<T>)[]
+  >(new Array(objectList.length).fill(null));
+
+  // Delete actions state.
+  const [deleteActionsState, setDeleteActionsState] = useState<
+    RelatedObjectDataGridDeleteAction<T>[]
+  >([]);
 
   // The object list state.
-  const [objectList, setObjectList] = useState(relatedObjects);
+  const [objectListState, setObjectListState] = useState(objectList);
   useEffect(() => {
-    setObjectList(relatedObjects);
-    setMutationActions(new Array(relatedObjects.length).fill(null));
-    setDeleteActions([]);
-  }, [JSON.stringify(relatedObjects)]);
+    setObjectListState([...objectList]);
+    setCreateActionsState([]);
+    setUpdateActionsState(new Array(objectList.length).fill(null));
+    setDeleteActionsState([]);
+  }, [JSON.stringify(objectList)]);
 
   /**
    * Creates a new row object with default values based on the provided index.
@@ -147,10 +141,10 @@ export function RelatedObjectDataGrid<
    * - Boolean fields default to `false`.
    * - Other fields get an empty string.
    *
-   * @returns A new object of type `R` representing a default-initialized row.
+   * @returns A new object of type `T` representing a default-initialized row.
    */
-  const createRow = useCallback((): R => {
-    return typedFields.reduce<R>((acc, { name, type }) => {
+  const createRow = useCallback((): T => {
+    return typedFields.reduce<T>((acc, { name, type }) => {
       // Default for booleans or fallback to descriptive string
       if (type === "boolean") {
         return { ...acc, [name]: false };
@@ -161,7 +155,7 @@ export function RelatedObjectDataGrid<
         ...acc,
         [name]: ``,
       };
-    }, {} as R);
+    }, {} as T);
   }, [typedFields]);
 
   /**
@@ -174,7 +168,7 @@ export function RelatedObjectDataGrid<
    * @returns The next available numeric index (starting at 1).
    */
   const findNextIndex = useCallback(() => {
-    const usedIndices = objectList.map((row: R, i) => {
+    const usedIndices = objectListState.map((row: T, i) => {
       // Try to extract a trailing number from `omschrijving`, e.g. "Item 3" → 3
       if ("omschrijving" in row) {
         const match = String(row.omschrijving).match(/\d+$/);
@@ -201,7 +195,7 @@ export function RelatedObjectDataGrid<
 
     // Fallback: just append at the end
     return usedIndices.length + 1;
-  }, [objectList]);
+  }, [objectListState]);
 
   /**
    * Rejects a change after update is made within the DataGrid.
@@ -215,20 +209,20 @@ export function RelatedObjectDataGrid<
    * TODO: Investigate a better approach.
    */
   const rejectChange = useCallback(() => {
-    const oldObjectList = [...objectList];
-    const oldMutationActions = [...mutationActions];
+    const oldObjectList = [...objectListState];
+    const oldUpdateActions = [...updateActionsState];
 
     // flushSync explicitly prevents batched state updates here.
     flushSync(() => {
-      setObjectList([]);
-      setMutationActions([]);
+      setObjectListState([]);
+      setUpdateActionsState([]);
     });
 
     flushSync(() => {
-      setObjectList(() => oldObjectList);
-      setMutationActions(() => oldMutationActions);
+      setObjectListState(() => oldObjectList);
+      setUpdateActionsState(() => oldUpdateActions);
     });
-  }, [objectList, mutationActions]);
+  }, [objectListState, updateActionsState]);
 
   /**
    * Adds a new row to the `objectList` and creates a corresponding action.
@@ -237,71 +231,63 @@ export function RelatedObjectDataGrid<
    * with `createRow()`. If the `"volgnummer"` field is included in
    * `fieldSetFields`, it sets the `volgnummer` property on the new row.
    *
-   * Creates a new action of type `"ADD_RELATED_OBJECT"` with a payload
-   * containing `serviceSlug`, `zaaktypeUuid`, `relatedObjectKey`, and
-   * the new row. Updates both `objectList` and `actions` state accordingly.
+   * Creates a new action of type `"CREATE"`, and the new row.
+   * Updates both `objectList` and `actions` state accordingly.
    *
    * @remarks
    * - This function uses `useCallback` to memoize the handler.
    * - TypeScript expects a loosely typed new row; `@ts-expect-error` is used
    *   for `volgnummer` assignment.
    */
-  const handleAdd = useCallback(async () => {
+  const handleCreate = useCallback(async () => {
     const nextIndex = findNextIndex();
     const newRow = createRow();
 
     // Run hook.
-    const rowWithHookResult = await hook(
-      newRow,
-      "ADD_RELATED_OBJECT",
-      relatedObjectKey,
-    );
+    const rowWithHookResult = await hook(newRow, "CREATE");
 
     // Hook returned falsy result, reject change.,
     if (!rowWithHookResult) return;
 
     // Get field names.
-    const fieldNames = fieldSetFields.map((field) =>
+    const fieldNames = fields.map((field) =>
       String(field.name).split(".").pop(),
     );
 
     // Set index based volgnummer.
     if (fieldNames.includes("volgnummer")) {
-      // @ts-expect-error - volgnummer assumed to be set on `R` when in `fieldSetFields`.
+      // @ts-expect-error - volgnummer assumed to be set on `T` when in `fieldSetFields`.
       rowWithHookResult["volgnummer"] = String(nextIndex);
     }
 
     // Create action.
-    const addAction: TypedAction<string, object> = {
-      type: "ADD_RELATED_OBJECT",
-      payload: {
-        serviceSlug: serviceSlug,
-        zaaktypeUuid: getUUIDFromString(object.url as string) as string,
-        relatedObjectKey: relatedObjectKey,
-        relatedObject: rowWithHookResult,
-      },
+    const addAction: RelatedObjectDataGridAction<T> = {
+      type: "CREATE",
+      payload: rowWithHookResult,
     };
 
     // Update State.
-    const newObjectList = [...objectList, rowWithHookResult];
-    const newMutationActions = [...mutationActions, addAction];
-    setObjectList(newObjectList);
-    setMutationActions(newMutationActions);
+    const newObjectList = [...objectListState, rowWithHookResult];
+    const newAddActions = [...createActionsState, addAction];
+    setObjectListState(newObjectList);
+    setCreateActionsState(newAddActions);
 
-    const actions = [...deleteActions, ...newMutationActions].filter(
-      (actionOrNull): actionOrNull is TypedAction<string, object> =>
-        Boolean(actionOrNull),
+    const actions = [
+      ...deleteActionsState,
+      ...updateActionsState,
+      ...newAddActions,
+    ].filter((actionOrNull): actionOrNull is RelatedObjectDataGridAction<T> =>
+      Boolean(actionOrNull),
     );
     onActionsChange(actions);
   }, [
     findNextIndex,
     createRow,
     hook,
-    relatedObjectKey,
-    fieldSetFields,
-    objectList,
-    mutationActions,
-    deleteActions,
+    objectListState,
+    createActionsState,
+    updateActionsState,
+    deleteActionsState,
     onActionsChange,
   ]);
 
@@ -329,14 +315,10 @@ export function RelatedObjectDataGrid<
       // Clean object.
       const _relatedObject = { ...row };
       delete _relatedObject.actions;
-      const relatedObject = _relatedObject as R;
+      const relatedObject = _relatedObject as T;
 
       // Run hook.
-      const rowWithHookResult = await hook(
-        relatedObject,
-        "EDIT_RELATED_OBJECT",
-        relatedObjectKey,
-      );
+      const rowWithHookResult = await hook(relatedObject, "UPDATE");
 
       // Hook returned falsy result, reject change.,
       if (!rowWithHookResult) {
@@ -344,51 +326,59 @@ export function RelatedObjectDataGrid<
         return;
       }
 
-      const newObjectList = objectList.map((row, i) =>
-        index === i ? (rowWithHookResult as R) : row,
+      const newObjectList = objectListState.map((row, i) =>
+        index === i ? (rowWithHookResult as T) : row,
       );
 
-      const newMutationActions = mutationActions.map((action, i) => {
-        if (i === index) {
-          return action
-            ? {
-                ...action,
-                payload: {
-                  ...action.payload,
-                  relatedObject: rowWithHookResult,
-                },
+      // Update `updateActions` for existing object.
+      const newUpdateActions =
+        index <= updateActionsState.length - 1
+          ? updateActionsState.map((action, i) => {
+              if (i === index) {
+                return {
+                  ...action,
+                  type: "UPDATE" as const,
+                  payload: rowWithHookResult,
+                };
               }
-            : {
-                type: "EDIT_RELATED_OBJECT",
-                payload: {
-                  serviceSlug: serviceSlug,
-                  zaaktypeUuid: getUUIDFromString(
-                    object.url as string,
-                  ) as string,
-                  relatedObjectKey,
-                  relatedObject: rowWithHookResult,
-                },
-              };
-        }
-        return action;
-      });
+              return action;
+            })
+          : updateActionsState;
 
-      setObjectList(newObjectList);
-      setMutationActions(newMutationActions);
+      // Update `addActions` for newly created object.
+      const newAddActions =
+        index > updateActionsState.length - 1
+          ? createActionsState.map((action, i) => {
+              if (i + updateActionsState.length === index) {
+                return {
+                  ...action,
+                  payload: rowWithHookResult,
+                };
+              }
+              return action;
+            })
+          : createActionsState;
 
-      const actions = [...deleteActions, ...newMutationActions].filter(
-        (actionOrNull): actionOrNull is TypedAction<string, object> =>
-          Boolean(actionOrNull),
+      setObjectListState(newObjectList);
+      setUpdateActionsState(newUpdateActions);
+      setCreateActionsState(newAddActions);
+
+      const actions = [
+        ...deleteActionsState,
+        ...newUpdateActions,
+        ...newAddActions,
+      ].filter((actionOrNull): actionOrNull is RelatedObjectDataGridAction<T> =>
+        Boolean(actionOrNull),
       );
       onActionsChange(actions);
     },
     [
-      objectList,
+      objectListState,
       hook,
-      relatedObjectKey,
       rejectChange,
-      mutationActions,
-      deleteActions,
+      createActionsState,
+      updateActionsState,
+      deleteActionsState,
       onActionsChange,
     ],
   );
@@ -407,17 +397,13 @@ export function RelatedObjectDataGrid<
    *   an object in `objectList`, no deletion occurs.
    */
   const handleDelete = useCallback(
-    async (row: R) => {
-      const index = objectList.findIndex(
-        (object: (typeof objectList)[number]) => object === row,
+    async (row: T) => {
+      const index = objectListState.findIndex(
+        (object: (typeof objectListState)[number]) => object === row,
       );
 
       // Run hook.
-      const rowWithHookResult = await hook(
-        row,
-        "DELETE_RELATED_OBJECT",
-        relatedObjectKey,
-      );
+      const rowWithHookResult = await hook(row, "DELETE");
 
       // Hook returned falsy result, reject change.,
       if (!rowWithHookResult) {
@@ -425,12 +411,19 @@ export function RelatedObjectDataGrid<
         return;
       }
 
-      setObjectList(objectList.filter((_, i) => i !== index));
-      setMutationActions(mutationActions.filter((_, i) => i !== index));
+      setObjectListState(objectListState.filter((_, i) => i !== index));
+      setUpdateActionsState(updateActionsState.filter((_, i) => i !== index));
+      setCreateActionsState(
+        createActionsState.filter(
+          (_, i) => i + updateActionsState.length !== index,
+        ),
+      );
 
       // Whether the removed item is frontend only (and not yet persisted to the backend).
-      // This is determined based on the (presence) of an action with type "ADD_RELATED_OBJECT").
-      const isStub = mutationActions[index]?.type === "ADD_RELATED_OBJECT";
+      // This is determined based on the (presence) of an action with type "CREATE").
+      const isStub =
+        [...updateActionsState, ...createActionsState][index]?.type ===
+        "CREATE";
 
       // If the removed item is not a stub, create a separate action for the removal.
       if (!isStub) {
@@ -438,34 +431,39 @@ export function RelatedObjectDataGrid<
           "uuid" in rowWithHookResult,
           "rowWithHookResult does not contain uuid field!",
         );
-        const deleteAction: TypedAction<string, object> = {
-          type: "DELETE_RELATED_OBJECT",
-          payload: {
-            serviceSlug: serviceSlug,
-            zaaktypeUuid: getUUIDFromString(object.url as string) as string,
-            relatedObjectKey: relatedObjectKey,
-            relatedObjectUuid: rowWithHookResult.uuid,
-          },
+        const deleteAction: RelatedObjectDataGridAction<T> = {
+          type: "DELETE",
+          payload: rowWithHookResult,
         };
 
-        const newDeleteActions = [...deleteActions, deleteAction];
-        setDeleteActions(newDeleteActions);
+        const newDeleteActions = [...deleteActionsState, deleteAction];
+        setDeleteActionsState(newDeleteActions);
 
-        const actions = [...newDeleteActions, ...mutationActions].filter(
-          (actionOrNull): actionOrNull is TypedAction<string, object> =>
+        const actions = [
+          ...newDeleteActions,
+          ...updateActionsState,
+          ...createActionsState,
+        ].filter(
+          (actionOrNull): actionOrNull is RelatedObjectDataGridAction<T> =>
             Boolean(actionOrNull),
         );
         onActionsChange(actions);
       }
     },
-    [objectList, mutationActions, deleteActions, onActionsChange],
+    [
+      objectListState,
+      createActionsState,
+      updateActionsState,
+      deleteActionsState,
+      onActionsChange,
+    ],
   );
 
   // The objects to render, may include overrides and actions.
-  const displayedObjectList = useMemo<(R & { actions: JSX.Element })[]>(() => {
-    return objectList.map((row) => {
-      const overrides: Partial<R> = {};
-      if (!isEditing) {
+  const displayedObjectList = useMemo<(T & { actions: JSX.Element })[]>(() => {
+    return objectListState.map((row) => {
+      const overrides: Partial<T> = {};
+      if (!isEditingState) {
         for (const key in row) {
           const field = typedFields.find(
             (typedFields) => typedFields.name === key,
@@ -487,7 +485,7 @@ export function RelatedObjectDataGrid<
         ...overrides,
         actions: (
           <Button
-            disabled={isLoading || !isEditing}
+            disabled={isLoading || !isEditingState}
             size="xs"
             variant="danger"
             title="Verwijderen"
@@ -498,20 +496,22 @@ export function RelatedObjectDataGrid<
         ),
       };
     });
-  }, [objectList, isEditing, typedFields]);
+  }, [objectListState, isEditingState, typedFields]);
 
-  // `objectList[index]` action should be resolvable by `actions[index]` an be
-  // either a `TypedAction` or `null`.
+  // Every item in `objectList` should have a record in [...updateActions, ...addActions], in other words:
+  // every row has an actions (or null) attached to it based on it's index.
+  // This makes sure the list does not get out of sync.
   invariant(
-    objectList.length === mutationActions.length,
-    "objectList and mutationActions should be in sync!",
+    objectListState.length ===
+      updateActionsState.length + createActionsState.length,
+    "objectList and updateActions should be in sync!",
   );
 
   return (
     <>
-      <DataGrid<R & { actions: JSX.Element }>
-        editable={isEditing}
-        editing={isEditing}
+      <DataGrid<T & { actions: JSX.Element }>
+        editable={isEditingState}
+        editing={isEditingState}
         decorate
         fields={typedFields}
         urlFields={[]}
@@ -520,8 +520,8 @@ export function RelatedObjectDataGrid<
         onEdit={handleEdit}
       />
 
-      {isEditing && (
-        <Button disabled={isLoading} variant="secondary" onClick={handleAdd}>
+      {isEditingState && (
+        <Button disabled={isLoading} variant="secondary" onClick={handleCreate}>
           <Outline.PlusIcon />
           Voeg toe
         </Button>
