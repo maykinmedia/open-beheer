@@ -81,24 +81,23 @@ export async function batchAction(
   invariant(uuid, "either zaaktype.uuid or zaaktype.url must be set");
 
   const actions = payload.actions;
+  if (!actions.length) return;
+
   const promises = actions.map((action) => performAction(action));
+  const results = await Promise.all<object>(promises);
+  // Failing actions return [action, response] tuple, if one action is found with a  bad response.
+  // Consider the batch to be with errors.
+  const erroredActions = results.filter(
+    (result) =>
+      Array.isArray(result) && "status" in result[1] && result[1].status >= 400,
+  );
 
-  try {
-    const result = await Promise.all<object>(promises);
-    const errors = result.filter(
-      (r: object) =>
-        r && "status" in r && typeof r.status === "number" && r.status >= 400,
-    );
-    if (errors?.length) {
-      return errors;
-    }
+  // Return array of errored actions if any.
+  if (erroredActions.length) return erroredActions;
 
-    const url = new URL(window.location.href);
-    url.searchParams.delete("editing");
-    return redirect(url.toString());
-  } catch (e) {
-    return e;
-  }
+  const url = new URL(window.location.href);
+  url.searchParams.delete("editing");
+  return redirect(url.toString());
 }
 
 /**
@@ -129,7 +128,7 @@ export async function createZaaktypeVersionAction(
     );
     return redirect(`../${getZaaktypeUUID(result)}?editing=true`);
   } catch (e) {
-    return await (e as Response).json();
+    return [action, await (e as Response).json()];
   }
 }
 
@@ -159,7 +158,7 @@ export async function updateZaaktypeVersionAction(
     url.searchParams.delete("editing");
     return redirect(url.toString());
   } catch (e) {
-    return await (e as Response).json();
+    return [action, await (e as Response).json()];
   }
 }
 
@@ -227,7 +226,7 @@ export async function saveAsAction(
     );
     return redirect(`../${uuid}`);
   } catch (e) {
-    return await (e as Response).json();
+    return [action, await (e as Response).json()];
   }
 }
 
@@ -291,7 +290,7 @@ export async function publishZaaktypeVersionAction(
       `/service/${payload.serviceSlug}/zaaktypen/${uuid}/publish/`,
     );
   } catch (e) {
-    return await (e as Response).json();
+    return [action, await (e as Response).json()];
   }
 }
 
@@ -356,6 +355,7 @@ export type AddRelatedObjectPayload = {
 
   relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
   relatedObject: RelatedObject<TargetType>;
+  rowIndex: number;
 };
 
 /**
@@ -374,7 +374,7 @@ export async function addRelatedObjectAction(
       payload.relatedObject,
     );
   } catch (e: unknown) {
-    return await (e as Response).json();
+    return [action, await (e as Response).json()];
   }
 }
 
@@ -384,6 +384,7 @@ export type EditRelatedObjectPayload = {
 
   relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
   relatedObject: RelatedObject<TargetType>;
+  rowIndex: number;
 };
 
 /**
@@ -410,7 +411,7 @@ export async function editRelatedObjectAction(
       payload.relatedObject,
     );
   } catch (e: unknown) {
-    return await (e as Response).json();
+    return [action, await (e as Response).json()];
   }
 }
 
@@ -420,6 +421,7 @@ export type DeleteRelatedObjectPayload = {
 
   relatedObjectKey: keyof ZaaktypeLoaderData["result"]["_expand"];
   relatedObjectUuid: string;
+  rowIndex: number;
 };
 
 /**
@@ -436,7 +438,7 @@ export async function deleteRelatedObjectAction(
       `/service/${payload.serviceSlug}/zaaktypen/${payload.zaaktypeUuid}/${payload.relatedObjectKey}/${payload.relatedObjectUuid}/`,
     );
   } catch (e: unknown) {
-    return await (e as Response).json();
+    return [action, await (e as Response).json()];
   }
 }
 

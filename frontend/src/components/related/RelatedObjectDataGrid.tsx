@@ -11,6 +11,7 @@ import { JSX, useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import { useNavigation, useParams } from "react-router";
 import { SERVICE_PARAM } from "~/App.tsx";
+import { Errors } from "~/hooks";
 
 export type RelatedObjectDataGridAction<T extends object> =
   | RelatedObjectDataGridCreateAction<T>
@@ -19,20 +20,27 @@ export type RelatedObjectDataGridAction<T extends object> =
 
 export type RelatedObjectDataGridCreateAction<T extends object> = {
   type: "CREATE";
-  payload: T;
+  payload: RelatedObjectDataGridDeletePayload<T>;
 };
 
 export type RelatedObjectDataGridUpdateAction<T extends object> = {
   type: "UPDATE";
-  payload: T;
+  payload: RelatedObjectDataGridDeletePayload<T>;
 };
 
 export type RelatedObjectDataGridDeleteAction<T extends object> = {
   type: "DELETE";
-  payload: T;
+  payload: RelatedObjectDataGridDeletePayload<T>;
+};
+
+export type RelatedObjectDataGridDeletePayload<T extends object> = {
+  rowIndex: number;
+  object: T;
 };
 
 export type RelatedObjectDataGridProps<T extends object> = {
+  /** The errors rows to show. */
+  errors: Errors[];
   /** The fields to show. */
   fields: (Field | TypedField)[];
   /** Whether edit mode is active. */
@@ -74,6 +82,7 @@ export type RelatedObjectDataGridProps<T extends object> = {
  * @typeParam R - The type of the related object. Defaults to `RelatedObject<T>`.
  */
 export function RelatedObjectDataGrid<T extends object = object>({
+  errors,
   fields,
   isEditing,
   objectList,
@@ -263,7 +272,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
     // Create action.
     const addAction: RelatedObjectDataGridAction<T> = {
       type: "CREATE",
-      payload: rowWithHookResult,
+      payload: { rowIndex: objectListState.length, object: rowWithHookResult },
     };
 
     // Update State.
@@ -338,7 +347,10 @@ export function RelatedObjectDataGrid<T extends object = object>({
                 return {
                   ...action,
                   type: "UPDATE" as const,
-                  payload: rowWithHookResult,
+                  payload: {
+                    rowIndex: index,
+                    object: rowWithHookResult,
+                  },
                 };
               }
               return action;
@@ -352,7 +364,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
               if (i + updateActionsState.length === index) {
                 return {
                   ...action,
-                  payload: rowWithHookResult,
+                  payload: { rowIndex: index, object: rowWithHookResult },
                 };
               }
               return action;
@@ -433,7 +445,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
         );
         const deleteAction: RelatedObjectDataGridAction<T> = {
           type: "DELETE",
-          payload: rowWithHookResult,
+          payload: { rowIndex: index, object: rowWithHookResult },
         };
 
         const newDeleteActions = [...deleteActionsState, deleteAction];
@@ -499,7 +511,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
   }, [objectListState, isEditingState, typedFields]);
 
   // Every item in `objectList` should have a record in [...updateActions, ...addActions], in other words:
-  // every row has an actions (or null) attached to it based on it's index.
+  // every row has an actions (or null) attached to it based on its index.
   // This makes sure the list does not get out of sync.
   invariant(
     objectListState.length ===
@@ -512,6 +524,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
       <DataGrid<T & { actions: JSX.Element }>
         editable={isEditingState}
         editing={isEditingState}
+        errors={errors}
         decorate
         fields={typedFields}
         urlFields={[]}
