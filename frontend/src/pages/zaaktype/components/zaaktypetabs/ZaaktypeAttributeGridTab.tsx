@@ -24,6 +24,7 @@ import {
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
+import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { Expand, ExpandItemKeys, RelatedObject } from "~/types";
 
 type ZaaktypeAttributeGridTabProps = {
@@ -49,7 +50,11 @@ export const ZaaktypeAttributeGridTab = ({
 
   const isEditing =
     new URLSearchParams(location.search).get("editing") === "true";
-  const errors = useErrors();
+
+  // Extract errors
+  const errors = useErrors<ZaaktypeAction>(
+    (action) => action.type === "UPDATE_VERSION",
+  );
 
   // (Vertical) section state
   const [sectionHash, setSectionHash] = useHashParam("section", "0");
@@ -165,10 +170,14 @@ export const ZaaktypeAttributeGridTab = ({
             ...expandedOverrides,
           } as TargetType
         }
+        decorate
         editable={isEditing ? undefined : false}
         editing={isEditing}
         errors={errors}
         fieldsets={fieldsets}
+        formControlProps={{
+          pad: true,
+        }}
         onChange={onChange}
       />
     );

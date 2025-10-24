@@ -13,6 +13,7 @@ import {
   RelatedObjectDataGrid,
   RelatedObjectDataGridAction,
 } from "~/components/related";
+import { useErrors } from "~/hooks";
 import { DataGridTabConfig, TargetType, ZaaktypeLoaderData } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { RelatedObject, components } from "~/types";
@@ -45,6 +46,15 @@ export function ZaaktypeDataGridTab({
   const isEditing =
     new URLSearchParams(location.search).get("editing") === "true";
 
+  // Extract errors
+  const errorTuples = useErrors<TargetType, ZaaktypeAction>((action) => {
+    return (
+      "relatedObjectKey" in action.payload &&
+      action.payload.relatedObjectKey === tabConfig.key &&
+      "rowIndex" in action.payload
+    );
+  }, false);
+
   const hookDialog = useDialog();
   const [hookDialogState, setHookDialogState] = useState<{
     open: boolean;
@@ -74,26 +84,30 @@ export function ZaaktypeDataGridTab({
           serviceSlug,
           zaaktypeUuid: object.uuid!,
           relatedObjectKey: _tabConfig.key,
+          rowIndex: action.payload.rowIndex,
         };
 
         switch (action.type) {
           case "CREATE":
             return {
               type: "ADD_RELATED_OBJECT",
-              payload: { ...payloadBase, relatedObject: action.payload },
+              payload: { ...payloadBase, relatedObject: action.payload.object },
             };
           case "UPDATE":
             return {
               type: "EDIT_RELATED_OBJECT",
-              payload: { ...payloadBase, relatedObject: action.payload },
+              payload: { ...payloadBase, relatedObject: action.payload.object },
             };
           case "DELETE":
-            invariant(action.payload.uuid, "action.payload.uuid must be set!");
+            invariant(
+              action.payload.object.uuid,
+              "action.payload.object.uuid must be set!",
+            );
             return {
               type: "DELETE_RELATED_OBJECT",
               payload: {
                 ...payloadBase,
-                relatedObjectUuid: action.payload.uuid!,
+                relatedObjectUuid: action.payload.object.uuid!,
               },
             };
           default:
@@ -138,6 +152,18 @@ export function ZaaktypeDataGridTab({
       if (actionType.toUpperCase().includes("DELETE")) return resultaatType;
 
       return new Promise((resolve, reject) => {
+        // Locate resultaattypeomschrijvingOptions (resultaat) options
+        const resultaattypeomschrijvingOptions = fields.find(
+          (field) =>
+            field.name === "_expand.resultaattypen.resultaattypeomschrijving",
+        )?.options as Option[] | undefined;
+
+        // Throw if options can't be found.
+        invariant(
+          resultaattypeomschrijvingOptions,
+          "Failed to locate resultaattypeomschrijvingOptions field!",
+        );
+
         const selectielijstklasseOptions = fields.find(
           (field) =>
             field.name === "_expand.resultaattypen.selectielijstklasse",
@@ -153,36 +179,37 @@ export function ZaaktypeDataGridTab({
           title: string2Title(tabConfig.label),
           body: (
             <ArchiveForm
+              zaaktype={object}
               resultaatType={resultaatType}
+              resultaattypeomschrijvingOptions={
+                resultaattypeomschrijvingOptions
+              }
               selectielijstklasseOptions={selectielijstklasseOptions}
               onSubmit={({
+                resultaattypeomschrijving,
                 selectielijstklasse,
                 brondatumArchiefProcedure,
               }) => {
                 setHookDialogState({ open: false });
 
-                const resultaatTypeOmschrijvingField = fields.find(
-                  (f) =>
-                    f.name ===
-                    "_expand.resultaattypen.resultaattypeomschrijving",
+                // Resolve omschrijvingGeneriek (resultaattypeOmschrijving text, gh-301)
+                const resultaattypeomschrijvingOption =
+                  resultaattypeomschrijvingOptions.find(
+                    (option) => option.value === resultaattypeomschrijving,
+                  );
+
+                invariant(
+                  resultaattypeomschrijvingOption,
+                  "Failed to locate selected resultaattypeomschrijvingOption!",
                 );
 
-                const defaultResultaatTypeOmschrijving =
-                  actionType === "CREATE"
-                    ? (resultaatTypeOmschrijvingField?.options?.find(
-                        ({ label }) =>
-                          label.toLowerCase() ===
-                          brondatumArchiefProcedure.afleidingswijze.toLowerCase(),
-                      )?.value as string | undefined)
-                    : undefined;
-
+                // Resolve with provided additions.
                 resolve({
                   ...resultaatType,
+                  resultaattypeomschrijving,
+                  omschrijvingGeneriek: resultaattypeomschrijvingOption.label,
                   selectielijstklasse,
-                  resultaattypeomschrijving:
-                    defaultResultaatTypeOmschrijving ||
-                    resultaatType.resultaattypeomschrijving,
-                  brondatum_archiefprocedure: brondatumArchiefProcedure,
+                  brondatum_archiefprocedure: brondatumArchiefProcedure, // FIXME: camelCase not accepted by BFF/OZ.
                 } as ResultaatType);
               }}
               onCancel={() => {
@@ -204,6 +231,19 @@ export function ZaaktypeDataGridTab({
   const contents = useMemo(() => {
     const key = tabConfig.key;
     const relatedObjects = object._expand[key] || [];
+    invariant(Array.isArray(relatedObjects), "relatedObject must be an Array!");
+
+    // Map error tuples to errors per row.
+    const errors = errorTuples.reduce(
+      (acc, [action, errors]) => {
+        if (!("rowIndex" in action?.payload)) return acc;
+
+        acc[action.payload.rowIndex] = errors;
+        return acc;
+      },
+      relatedObjects.map(() => ({})),
+    );
+
     invariant(
       Array.isArray(relatedObjects),
       "relatedObjects must be an Array for RelatedObjectDataGrid!",
@@ -219,6 +259,7 @@ export function ZaaktypeDataGridTab({
 
     return (
       <RelatedObjectDataGrid
+        errors={errors}
         fields={fieldSetFields}
         isEditing={isEditing}
         objectList={relatedObjects}
