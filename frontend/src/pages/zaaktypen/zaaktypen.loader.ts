@@ -1,7 +1,6 @@
 import { LoaderFunctionArgs } from "react-router";
 import { request } from "~/api";
 import { ListResponse } from "~/api/types";
-import { loginRequired } from "~/loaders/loginRequired.loader.ts";
 import { components } from "~/types";
 
 export type ZaaktypenLoaderData = ListResponse<
@@ -12,19 +11,18 @@ export type ZaaktypenLoaderData = ListResponse<
  * Zaaktypen loader.
  * Loader data can be obtained using `useLoaderData()` in ZaaktypenPage.
  */
-export const zaaktypenLoader = loginRequired(
-  async (
-    loaderFunctionArgs: LoaderFunctionArgs,
-  ): Promise<ZaaktypenLoaderData> => {
-    const { params } = loaderFunctionArgs;
+export async function zaaktypenLoader(
+  loaderFunctionArgs: LoaderFunctionArgs,
+): Promise<ZaaktypenLoaderData | undefined> {
+  const { params } = loaderFunctionArgs;
 
-    const searchParams = new URL(loaderFunctionArgs.request.url).searchParams;
-    const response = await request<
-      ListResponse<components["schemas"]["ZaakTypeSummary"]>
-    >("GET", `/service/${params.serviceSlug}/zaaktypen/`, {
+  const searchParams = new URL(loaderFunctionArgs.request.url).searchParams;
+  return await request<ListResponse<components["schemas"]["ZaakTypeSummary"]>>(
+    "GET",
+    `/service/${params.serviceSlug}/zaaktypen/`,
+    {
       catalogus: params.catalogusId,
       ...Object.fromEntries(searchParams),
-    });
-    return { ...response };
-  },
-);
+    },
+  );
+}

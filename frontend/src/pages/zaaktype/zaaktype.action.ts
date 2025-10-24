@@ -129,7 +129,7 @@ export async function createZaaktypeVersionAction(
       {},
       zaaktype,
     );
-    return redirect(`../${getZaaktypeUUID(result)}?editing=true`);
+    return redirect(`../${getZaaktypeUUID(result!)}?editing=true`);
   } catch (e) {
     return [action, await (e as Response).json()];
   }
@@ -221,13 +221,13 @@ export async function saveAsAction(
   }
 
   try {
-    const { uuid } = await request<components["schemas"]["ZaakTypeWithUUID"]>(
+    const data = await request<components["schemas"]["ZaakTypeWithUUID"]>(
       "POST",
       `/service/${serviceSlug}/zaaktypen/`,
       {},
       zaaktype,
     );
-    return redirect(`../${uuid}`);
+    return redirect(`../${data!.uuid}`);
   } catch (e) {
     return [action, await (e as Response).json()];
   }
