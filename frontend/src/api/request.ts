@@ -24,7 +24,7 @@ export async function request<T>(
   data?: Record<string, unknown>,
   headers?: Record<string, string>,
   signal?: AbortSignal,
-): Promise<T> {
+): Promise<T | undefined> {
   // Filter undefined params.
   let _params = params;
   if (params && !(params instanceof URLSearchParams)) {
@@ -61,7 +61,6 @@ export async function request<T>(
   if (contentType.includes("application/json")) {
     return (await response.json()) as T;
   } else {
-    // in case isf expected to return nothing, the caller should use `T = void`
-    return undefined as T;
+    return undefined;
   }
 }

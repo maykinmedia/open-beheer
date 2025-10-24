@@ -81,7 +81,7 @@ function App() {
     const fetchUser = async () => {
       try {
         const currentUser = await whoAmI(controller.signal);
-        setUser(currentUser);
+        setUser(currentUser!);
       } catch (error) {
         console.error("Failed to fetch user:", error);
       }

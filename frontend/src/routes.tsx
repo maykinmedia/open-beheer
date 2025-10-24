@@ -1,10 +1,17 @@
-import { Navigate, Outlet, RouteObject } from "react-router";
+import {
+  Navigate,
+  Outlet,
+  RouteObject,
+  isRouteErrorResponse,
+  useRouteError,
+} from "react-router";
 import App, { CATALOGUS_PARAM, SERVICE_PARAM, SIDEBAR_INDEX } from "~/App.tsx";
 import {
   LoginPage,
   ZaaktypeCreatePage,
   ZaaktypePage,
   ZaaktypenPage,
+  cleanUp,
   loginAction,
   loginLoader,
   logoutLoader,
@@ -26,6 +33,26 @@ import {
 import { informatieobjecttypeAction } from "./pages/informatieobjecttype/informatieobjecttype.action";
 import { informatieobjecttypeCreateAction } from "./pages/informatieobjecttypecreate/informatieobjecttype.action";
 
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error) && error.status === 403) {
+    cleanUp();
+    // Redirect user to login on 403,
+    // which are most likely due to session expiration.
+    const url = new URL(window.location.toString());
+    return <Navigate to={`/login?next=${url.pathname}`} />;
+  }
+
+  return (
+    <p>
+      {error instanceof Error
+        ? error.message
+        : `Unknown Error: ${JSON.stringify(error)}`}
+    </p>
+  );
+}
+
 /**
  * Available routes.
  */
@@ -34,6 +61,7 @@ export const routes: RouteObject[] = [
     id: "root",
     path: "/",
     element: <App />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,

@@ -279,8 +279,14 @@ class GherkinRunner:
         def user_clicks_on_checkbox(self, page: Page, label: str) -> None:
             page.get_by_label(label).click()
 
-        def user_fills_form_field(self, page: Page, label: str, value: str) -> None:
-            page.get_by_label(label).fill(value)
+        def user_fills_form_field(
+            self, page: Page, label: str, value: str, tab_label: str = ""
+        ) -> None:
+            if tab_label:
+                locator = page.get_by_label(tab_label).get_by_label(label)
+            else:
+                locator = page.get_by_label(label)
+            locator.fill(value)
 
     class Then(GherkinScenario):
         """

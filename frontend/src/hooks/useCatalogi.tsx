@@ -42,6 +42,8 @@ export function useCatalogi(
 
       try {
         const choices = await getCatalogiChoices(service.value);
+        if (typeof choices === "undefined")
+          throw new Error("The catalogi choices are unexpectedly undefined."); // For typechecker
         setCatalogiChoices(choices);
 
         // Auto-navigate logic

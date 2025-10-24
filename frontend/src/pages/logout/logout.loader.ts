@@ -3,13 +3,17 @@ import { logout } from "~/api";
 
 export type LogoutLoaderData = void;
 
+export async function cleanUp(): Promise<void> {
+  await cacheDelete("", true); // Clears all cache.
+  sessionStorage.clear();
+}
+
 /**
  * Logout loader.
  * Loader data can be obtained using `useLoaderData()` in LogoutPage.
  */
 export async function logoutLoader(): Promise<LogoutLoaderData> {
-  await cacheDelete("", true); // Clears all cache.
-  sessionStorage.clear();
+  await cleanUp();
 
   try {
     await logout();
