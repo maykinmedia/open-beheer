@@ -1,5 +1,6 @@
-from functools import cache
-from typing import Iterator, NoReturn, Protocol, runtime_checkable
+from contextlib import nullcontext
+from functools import cache, wraps
+from typing import Callable, Iterator, NoReturn, Protocol, runtime_checkable
 
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_delete, post_save
@@ -7,6 +8,7 @@ from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as __
 
 import msgspec
+import structlog
 from ape_pie import APIClient
 from msgspec.json import decode
 from zgw_consumers.client import build_client
@@ -14,6 +16,50 @@ from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
 
 from openbeheer.config.models import APIConfig
+
+logger = structlog.get_logger(__name__)
+
+
+request_lock = nullcontext()
+"""e2e tests replace this with a threading.Lock(), to avoid racing vcr.stubs
+https://github.com/kevin1024/vcrpy/issues/849"""
+
+
+def _build_with_logging[**P, C: APIClient](build: Callable[P, C]) -> Callable[P, C]:
+    @wraps(build)
+    def build_client_with_logging(*args: P.args, **kwargs: P.kwargs) -> C:
+        client = build(*args, **kwargs)
+
+        _original_request = client.request
+
+        @wraps(_original_request)
+        def logging_request(method: str | bytes, url: str | bytes, *args, **kwargs):
+            logger.info(
+                f"{method} request",
+                base_url=client.base_url,
+                url=url,
+                **kwargs,
+            )
+            with request_lock:
+                response = _original_request(method, url, *args, **kwargs)
+            logger.info(
+                f"{method} response",
+                base_url=client.base_url,
+                path=url,
+                status=response.status_code,
+                etag=response.headers.get("etag"),
+                body=response.content,
+            )
+            return response
+
+        client.request = logging_request
+
+        return client
+
+    return build_client_with_logging
+
+
+build_client = _build_with_logging(build_client)
 
 
 @cache
