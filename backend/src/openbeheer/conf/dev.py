@@ -52,6 +52,11 @@ LOGGING["loggers"].update(
             "level": "INFO",
             "propagate": True,
         },
+        "vcr": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
         #
         # See: https://code.djangoproject.com/ticket/30554
         # Autoreload logs excessively, turn it down a bit.

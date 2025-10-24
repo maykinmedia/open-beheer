@@ -1,6 +1,7 @@
 import inspect
 import os
 import pathlib
+import threading
 from typing import Callable, ContextManager, Generator, Iterable, NoReturn, Protocol
 
 import pytest
@@ -11,6 +12,7 @@ from pytest_django.fixtures import SettingsWrapper
 from pytest_django.lazy_django import skip_if_no_django
 from vcr.request import Request
 
+from openbeheer import clients
 from openbeheer.utils.gherkin_e2e import GherkinRunner
 from openbeheer.utils.tests import VCRMixin
 
@@ -83,11 +85,16 @@ class VCRPyTestHelper(VCRMixin):
         return myvcr.use_cassette(self._get_cassette_name())
 
 
+# a lock to ensure one client request is done at a time
+_request_lock = threading.Lock()
+
+
 @pytest.fixture
 def live_server_vcr(
     request: pytest.FixtureRequest,
     live_django_db_setup: Generator[None, None, None],
     transactional_db: None,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> Generator[live_server_helper.LiveServer, None, None]:
     """Run a Django live server with VCRpy cassettes
 
@@ -103,6 +110,8 @@ def live_server_vcr(
 
     vcr_helper = VCRPyTestHelper(request)
     cassette_context_manager = vcr_helper.get_context_manager()
+
+    monkeypatch.setattr(clients, "request_lock", _request_lock)
 
     with cassette_context_manager:
         server = live_server_helper.LiveServer(addr)
