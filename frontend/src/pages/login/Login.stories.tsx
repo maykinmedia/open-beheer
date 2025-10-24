@@ -33,6 +33,10 @@ export const LoginPage: Story = {
           `${API_BASE_URL}/oidc-info/`,
           () => HttpResponse.json({ enabled: false }),
         ),
+        http.get<PathParams, DefaultBodyType, undefined>(
+          `${API_BASE_URL}/auth/ensure-csrf/`,
+          () => new HttpResponse<undefined>(undefined, { status: 204 }),
+        ),
       ],
     },
     reactRouter: reactRouterParameters({
@@ -59,6 +63,10 @@ export const LoginPageWithOIDC: Story = {
               enabled: true,
               loginUrl: "http://backend.nl/oidc/authenticate",
             }),
+        ),
+        http.get<PathParams, DefaultBodyType, undefined>(
+          `${API_BASE_URL}/auth/ensure-csrf/`,
+          () => new HttpResponse<undefined>(undefined, { status: 204 }),
         ),
       ],
     },
