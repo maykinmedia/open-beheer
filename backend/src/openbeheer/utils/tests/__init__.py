@@ -5,6 +5,7 @@ from django.test import TestCase as _TestCase, tag
 from maykin_common.vcr import VCRMixin as _VCRMixin
 from rest_framework.test import APITestCase as _APITestCase
 from vcr.cassette import Cassette
+from vcr.matchers import query
 from vcr.request import Request
 
 
@@ -38,13 +39,7 @@ def matcher_query_without_datum_geldigheid(
                 "in the stored request (excluding datumGeldigheid)."
             )
     else:
-        if incoming_request.query != stored_request.query:
-            raise AssertionError(
-                "The values of the query params in the incoming "
-                "request don't match those in the stored request."
-            )
-
-    return
+        return query(incoming_request, stored_request)
 
 
 @tag("vcr")
@@ -54,8 +49,15 @@ class VCRMixin(_VCRMixin):
     )
     """Custom request matchers. These will be registered in addition to the default VCR matchers."""
 
-    custom_match_on: Iterable[str] | None = None
-    """List of names of the matchers to use. These will override the default matchers.By default VCR uses ("method", "scheme", "host", "port", "path", "query")."""
+    custom_match_on: Iterable[str] = [
+        "method",
+        "scheme",
+        "host",
+        "port",
+        "path",
+        "query",
+    ]
+    """List of names of the matchers to use. The defaults are built into VCR."""
 
     def _get_vcr_kwargs(self, **kwargs) -> dict[str, object]:
         """In order to keep diffs small and easily scanable, this filters some headers
@@ -73,17 +75,14 @@ class VCRMixin(_VCRMixin):
                 response["headers"].pop(header, None)
             return response
 
-        custom_kwargs = {
+        return {
             "filter_headers": [
                 "Authorization",  # don't store tokens
                 "User-Agent",  # Don't store requests version
             ],
             "before_record_response": delete_response_headers,
-        }
-        if self.custom_match_on:
-            custom_kwargs["match_on"] = self.custom_match_on
-
-        return custom_kwargs | super()._get_vcr_kwargs(**kwargs)
+            "match_on": self.custom_match_on,
+        } | super()._get_vcr_kwargs(**kwargs)
 
     def _get_vcr(self, **kwargs):
         myvcr = super()._get_vcr(**kwargs)

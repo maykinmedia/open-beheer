@@ -62,7 +62,7 @@ class VCRPyTestHelper(VCRMixin):
         marker = request.node.get_closest_marker("vcr_overrides")
         if marker and (custom_matchers := marker.kwargs.get("custom_matchers")):
             self.custom_matchers = custom_matchers
-        if marker and (match_on := marker.kwargs.get("matches_on")):
+        if marker and (match_on := marker.kwargs.get("custom_match_on")):
             self.custom_match_on = match_on
 
     def _get_cassette_name(self) -> str:
