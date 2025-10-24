@@ -70,29 +70,34 @@ export function ArchiveForm({
   const [archiveMeta, setArchiveMeta] = useState<ArchiveMeta | null>(null);
 
   /** Form field values. */
-  const [formState, setFormState] = useState<ArchiveFormData>(() => {
-    const resultaatTypeBrondDatumValues =
-      resultaatType.brondatumArchiefprocedure || {};
-    return {
-      resultaattypeomschrijving: resultaatType.resultaattypeomschrijving,
-      selectielijstklasse: resultaatType.selectielijstklasse,
+  const [formState, setFormState] = useState<ArchiveFormData>({
+    resultaattypeomschrijving:
+      resultaatType.resultaattypeomschrijving ||
+      resultaattypeomschrijvingOptions?.[0].value,
 
-      afleidingswijze: "afgehandeld",
-      datumkenmerk: "",
-      einddatumBekend: false,
-      objecttype: "",
-      registratie: "",
-      procestermijn: "",
-      ...resultaatTypeBrondDatumValues,
-    };
+    selectielijstklasse:
+      resultaatType.selectielijstklasse ||
+      selectielijstklasseOptions?.[0].value,
+
+    afleidingswijze: resultaatType.brondatumArchiefprocedure?.afleidingswijze,
+    datumkenmerk: "",
+    einddatumBekend: false,
+    objecttype: "",
+    registratie: "",
+    procestermijn: "",
+    ...(resultaatType.brondatumArchiefprocedure ||
+      // @ts-expect-error - FIXME: Backend does not properly apply camelCase.
+      resultaatType.brondatum_archiefprocedure ||
+      {}),
   });
 
   // Fetch archive metadata on mount or when selectielijstklasse changes.
   useEffect(() => {
+    const selectielijstklasse =
+      formState?.selectielijstklasse || resultaatType.selectielijstklasse;
+
     const [promise, abortController] =
-      getArchiveMetaBySelectielijstResultaatURL(
-        formState?.selectielijstklasse || resultaatType.selectielijstklasse,
-      );
+      getArchiveMetaBySelectielijstResultaatURL(selectielijstklasse);
 
     promise
       .then((result) => setArchiveMeta(result))
@@ -105,16 +110,19 @@ export function ArchiveForm({
       });
 
     return () => abortController.abort();
-  }, [formState?.selectielijstklasse || resultaatType.selectielijstklasse]);
+  }, [formState, resultaatType]);
 
   // Deconstruct metadata.
   const [, afleidingswijzen] = archiveMeta || [];
 
   // Dynamically build form fields.
   const fields = useMemo(() => {
-    const bronDatumFields = formState?.afleidingswijze
+    const afleidingswijze: Afleidingswijze =
+      formState.afleidingswijze || afleidingswijzen?.[0];
+
+    const bronDatumFields = afleidingswijze
       ? getBrondatumFieldsByAfleidingsWijze(
-          formState.afleidingswijze as Afleidingswijze,
+          afleidingswijze,
           { ...formState, einddatumBekend: true },
           zaaktype,
         )
@@ -126,17 +134,14 @@ export function ArchiveForm({
         name: "resultaattypeomschrijving",
         type: "text",
         options: resultaattypeomschrijvingOptions,
-        value:
-          formState?.resultaattypeomschrijving ||
-          resultaatType.resultaattypeomschrijving,
+        value: formState?.resultaattypeomschrijving,
       },
       {
         label: "Selectielijstklasse",
         name: "selectielijstklasse",
         type: "text",
         options: selectielijstklasseOptions,
-        value:
-          formState?.selectielijstklasse || resultaatType.selectielijstklasse,
+        value: formState?.selectielijstklasse,
       },
       {
         label: "Afleidingswijze",
@@ -146,12 +151,12 @@ export function ArchiveForm({
         options: afleidingswijzen?.map((afleidingwijze) => ({
           label: string2Title(afleidingwijze),
           value: afleidingwijze,
-          selected: formState?.afleidingswijze === afleidingwijze,
         })),
+        value: formState?.afleidingswijze || afleidingswijzen?.[0],
       },
       ...bronDatumFields,
     ];
-  }, [formState, afleidingswijzen]);
+  }, [formState, afleidingswijzen, resultaatType]);
 
   // Validation handler.
   const handleValidate = useCallback<FormValidator>(
