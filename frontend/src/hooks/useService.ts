@@ -26,6 +26,8 @@ export function useService(user: components["schemas"]["User"] | null) {
     const fetchServices = async () => {
       try {
         const serviceChoices = await getServiceChoices();
+        if (typeof serviceChoices === "undefined")
+          throw new Error("The service choices are unexpectedly undefined."); // For typechecker
         setServices(serviceChoices);
         setService(serviceChoices[0] ?? null);
       } catch (error) {
