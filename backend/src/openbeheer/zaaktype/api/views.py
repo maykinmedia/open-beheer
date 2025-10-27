@@ -69,6 +69,7 @@ from openbeheer.types._open_beheer import (
 )
 from openbeheer.types.ztc import (
     BesluitType,
+    BrondatumArchiefprocedure,
     Eigenschap,
     EigenschapSpecificatie,
     InformatieObjectType,
@@ -554,6 +555,11 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         )
         yield from ob_fields_of_type(
             EigenschapSpecificatie, prefix="_expand.eigenschappen.specificatie."
+        )
+        yield from ob_fields_of_type(
+            BrondatumArchiefprocedure,
+            prefix="_expand.resultaattypen.brondatumArchiefprocedure.",
+            base_editable=lambda _: False,  # read-only
         )
 
     def get_fieldsets(self) -> FrontendFieldsets:
