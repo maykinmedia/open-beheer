@@ -1,6 +1,8 @@
 import { Tab, Tabs } from "@maykin-ui/admin-ui";
+import { invariant } from "@maykin-ui/client-common/assert";
 import React, { useCallback, useMemo } from "react";
 import { useHashParam } from "~/hooks/useHashParam.ts";
+import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { TabConfig, TargetType } from "~/pages";
 import {
   ZaaktypeAttributeGridTab,
@@ -27,22 +29,28 @@ export function ZaaktypeTabs({
   onChange,
   onTabActionsChange,
 }: ZaaktypeTabsProps) {
-  // (Horizontal) tab data.
-  const [tabHash, setTabHash] = useHashParam("tab", "0");
-  const activeTabIndex = parseInt(tabHash || "0");
+  const submitAction = useSubmitAction(false);
 
-  // (Vertical) section data.
-  const [, setSectionHash] = useHashParam("section", "0");
+  // (Horizontal) tab data.
+  const [tabHash] = useHashParam("tab", "0");
+  const activeTabIndex = parseInt(tabHash || "0");
 
   /**
    * Gets called when the (horizontal) tab is changed.
    */
   const handleTabChange = useCallback(
     (index: number) => {
-      setTabHash(index.toString());
-      setSectionHash("0");
+      invariant(object.uuid, "object.uuid must be set");
+
+      submitAction({
+        type: "SET_TAB",
+        payload: {
+          uuid: object.uuid,
+          tabIndex: index,
+        },
+      });
     },
-    [setTabHash, setSectionHash],
+    [object, submitAction],
   );
 
   const tabs = useMemo(

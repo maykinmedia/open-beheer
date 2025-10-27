@@ -236,7 +236,8 @@ export function ZaaktypeDataGridTab({
     // Map error tuples to errors per row.
     const errors = errorTuples.reduce(
       (acc, [action, errors]) => {
-        if (!("rowIndex" in action?.payload)) return acc;
+        if (!action || !action.payload || !("rowIndex" in action.payload))
+          return acc;
 
         acc[action.payload.rowIndex] = errors;
         return acc;

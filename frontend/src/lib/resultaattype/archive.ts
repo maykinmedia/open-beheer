@@ -183,10 +183,10 @@ function getAfleidingsWijzenByProcestermijn(
     case "vast_te_leggen_datum":
     case "samengevoegd_met_bewaartermijn":
       return [
+        "hoofdzaak",
+        "gerelateerde_zaak",
         "ander_datumkenmerk",
         "eigenschap",
-        "gerelateerde_zaak",
-        "hoofdzaak",
         "ingangsdatum_besluit",
         "vervaldatum_besluit",
         "zaakobject",

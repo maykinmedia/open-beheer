@@ -15,10 +15,10 @@ export function useHashParam(
   const [hash, setHash] = useState<string>(); // Only for renders.
 
   /** Gets current hash params as URLSearchParams. */
-  const _getParams = useCallback(() => {
+  const _getParams = () => {
     const hash = window.location.hash.slice(1);
     return new URLSearchParams(hash);
-  }, []);
+  };
 
   /**
    * Updates the URL hash from given params.
