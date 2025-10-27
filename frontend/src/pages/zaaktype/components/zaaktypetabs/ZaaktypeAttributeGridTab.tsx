@@ -152,6 +152,23 @@ export const ZaaktypeAttributeGridTab = ({
         ...fieldset[1],
         fields: fieldset[1].fields.map((fieldsetField) => {
           const field = fields.find((field) => field.name === fieldsetField);
+
+          const nameBits = field ? field.name.split(".") : [];
+          if (nameBits.length > 1) {
+            // For some reason, adding a valueLookup = field.name doesn't work.
+            let objectValue = object;
+            for (const nameBit of nameBits) {
+              if (nameBit in objectValue) {
+                // @ts-expect-error - # TODO: I don't know how to type this :(
+                objectValue = objectValue[nameBit];
+              } else {
+                break;
+              }
+            }
+            // @ts-expect-error - # TODO: I don't know how to type this :(
+            object[field.name] = objectValue;
+          }
+
           const editable =
             field?.name && field.name in expandedOverrides
               ? false

@@ -1671,7 +1671,7 @@ export interface components {
          * @description Used by frontend to decide widget etc.
          * @enum {unknown}
          */
-        OBFieldType: "boolean" | "date" | "duration" | "number" | "string" | "text";
+        OBFieldType: "boolean" | "date" | "duration" | "number" | "object" | "string" | "text";
         /**
          * OBList[BesluitTypeWithUUID]
          * @description Used to draw list views on the frontend.
