@@ -17,6 +17,7 @@ export type ZaaktypeAction =
   | TypedAction<"EDIT_VERSION", EditZaaktypeVersionPayload>
   | TypedAction<"EDIT_CANCEL", EditCancelZaaktypeVersionPayload>
   | TypedAction<"SELECT_VERSION", SelectZaaktypeVersionPayload>
+  | TypedAction<"SET_TAB", SetTabPayload>
   | TypedAction<"EDIT_RELATED_OBJECT", EditRelatedObjectPayload>
   | TypedAction<"ADD_RELATED_OBJECT", AddRelatedObjectPayload>
   | TypedAction<"DELETE_RELATED_OBJECT", DeleteRelatedObjectPayload>;
@@ -50,6 +51,8 @@ export async function performAction(action: ZaaktypeAction): Promise<unknown> {
       return await editCancelZaaktypeVersionAction(action);
     case "SELECT_VERSION":
       return await selectZaaktypeVersionAction(action);
+    case "SET_TAB":
+      return await setTabAction(action);
     case "EDIT_RELATED_OBJECT":
       return await editRelatedObjectAction(action);
     case "ADD_RELATED_OBJECT":
@@ -327,6 +330,26 @@ export async function selectZaaktypeVersionAction(
   const url = new URL(window.location.href);
   url.searchParams.delete("editing");
   return redirect(`../${payload.uuid}${url.search}${url.hash}`);
+}
+
+/**
+ * Payload for `setTabAction`
+ */
+export type SetTabPayload = {
+  uuid: string;
+  tabIndex: number;
+};
+
+/**
+ * Navigates to a tab.
+ */
+export async function setTabAction(
+  action: TypedAction<"SET_TAB", SetTabPayload>,
+) {
+  const payload = action.payload;
+
+  const url = new URL(window.location.href);
+  return redirect(`../${payload.uuid}${url.search}#tab=${payload.tabIndex}`);
 }
 
 /**

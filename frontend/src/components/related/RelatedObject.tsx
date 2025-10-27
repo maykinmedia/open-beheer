@@ -98,7 +98,7 @@ export const RelatedObjectRenderer = <T extends TargetType>(
   if (Array.isArray(relatedObject)) {
     return relatedObject.map((relatedObject, index) => (
       <RelatedObjectBadge
-        key={relatedObject.uuid ?? index}
+        key={relatedObject.uuid + index}
         relatedObject={relatedObject}
         allowedFields={allowedFields}
       />
