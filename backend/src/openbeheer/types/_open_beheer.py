@@ -335,6 +335,7 @@ def ob_fields_of_type(
                     _core_type(attr_type),
                     option_overrides=option_overrides,
                     prefix=f"_expand.{camelize(attr)}.",
+                    base_editable=base_editable,
                 )
             ]
 
