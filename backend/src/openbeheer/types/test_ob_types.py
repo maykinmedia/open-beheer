@@ -8,7 +8,7 @@ from msgspec import UNSET, Meta, Struct, UnsetType
 from msgspec.json import decode, encode
 
 from . import ztc
-from ._open_beheer import camelize, ob_fields_of_type, options
+from ._open_beheer import OBFieldType, camelize, ob_fields_of_type, options
 
 ZTC_DATATYPES = [
     struct
@@ -103,6 +103,20 @@ class OBFieldsTest(TestCase):
         }
 
         assert field_names == expected_struct_attributes | unrequired_unset_values
+
+    @given(ztc_struct_instances())
+    def test_subfields_are_present(self, instance: Struct):
+        ob_fields = ob_fields_of_type(type(instance), include_subfields=True)
+
+        object_ob_fields = [
+            ob_field for ob_field in ob_fields if ob_field.type == OBFieldType.object
+        ]
+
+        for object_ob_field in object_ob_fields:
+            subfield_names = {
+                f.name for f in ob_fields if f.name.startswith(object_ob_field.name)
+            }
+            assert len(subfield_names) > 0
 
 
 class OBOptionsTest(TestCase):
