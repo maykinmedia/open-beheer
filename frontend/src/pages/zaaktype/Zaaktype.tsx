@@ -665,7 +665,7 @@ const ZaaktypeTab = ({
    *
    * For other action types, this hook opens a dialog (via `setHookDialogState`) presenting
    * an `ArchiveForm`. The user can complete the form to provide or modify
-   * the `brondatumArchiefProcedure` field before the object is committed.
+   * the `brondatumArchiefprocedure` field before the object is committed.
    *
    * @param resultaatType - The `ResultaatType` object to modify or validate.
    * @param actionType - The action type describing the pending operation (e.g., "CREATE", "UPDATE", "DELETE").
@@ -724,7 +724,7 @@ const ZaaktypeTab = ({
               onSubmit={({
                 resultaattypeomschrijving,
                 selectielijstklasse,
-                brondatumArchiefProcedure,
+                brondatumArchiefprocedure,
               }) => {
                 setHookDialogState({ open: false });
 
@@ -745,7 +745,7 @@ const ZaaktypeTab = ({
                   resultaattypeomschrijving,
                   omschrijvingGeneriek: resultaattypeomschrijvingOption.label,
                   selectielijstklasse,
-                  brondatum_archiefprocedure: brondatumArchiefProcedure, // FIXME: camelCase not accepted by BFF/OZ.
+                  brondatumArchiefprocedure,
                 } as ResultaatType);
               }}
               // User or system closes the modal, possibly due to an error
