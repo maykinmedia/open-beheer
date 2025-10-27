@@ -242,35 +242,37 @@ class GherkinRunner:
             )
 
         def user_selects_tab(self, page: Page, name: str = "") -> None:
-            kwargs = {}
-            if name:
-                kwargs.update({"name": name})
+            tab = page.get_by_role("tab").get_by_text(name)
+            tab.wait_for()
+            tab.click()
 
-            page.wait_for_load_state("networkidle")
-            buttons = page.get_by_role("tab").all()
-            for index, button in enumerate(buttons):
-                if button.text_content() == name:
-                    button.click()
-                    self.runner.then.url_should_match(page, f"tab={index}")
-                    page.wait_for_load_state("networkidle")
+            # wait for panel to become visible
+            tabpanel_id = tab.get_attribute("aria-controls")
+            tabpanel = page.locator(f"#{tabpanel_id}")
+            tabpanel.wait_for()
+
+            # check url hash
+            index = next(
+                i
+                for i, tab in enumerate(page.get_by_role("tab").all())
+                if tab.text_content() == name
+            )
+            self.runner.then.url_should_match(page, f"tab={index}")
 
         # Actions
 
         def user_clicks_on_button(self, page: Page, **kwargs) -> None:
-            page.wait_for_load_state("networkidle")
             button = page.get_by_role("button", **kwargs)
+            button.wait_for()
             button.click()
-            page.wait_for_timeout(10)  # Allow fetch to be called
-            page.wait_for_load_state("networkidle")
 
         def user_clicks_on_link(self, page: Page, name: str = "") -> None:
             kwargs = {}
             if name:
                 kwargs.update({"name": name})
 
-            page.wait_for_load_state("networkidle")
-
             iot_link = page.get_by_role("link", **kwargs)
+            iot_link.wait_for()
             href = iot_link.first.get_attribute("href")
             iot_link.click()
 
