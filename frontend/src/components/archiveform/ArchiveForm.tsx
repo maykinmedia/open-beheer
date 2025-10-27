@@ -39,7 +39,7 @@ export type ArchiveFormProps = {
   onSubmit: (data: {
     resultaattypeomschrijving: ArchiveFormData["resultaattypeomschrijving"];
     selectielijstklasse: ArchiveFormData["selectielijstklasse"];
-    brondatumArchiefProcedure: BrondatumFieldValues;
+    brondatumArchiefprocedure: BrondatumFieldValues;
   }) => void;
 };
 
@@ -175,7 +175,7 @@ export function ArchiveForm({
         onSubmit({
           resultaattypeomschrijving: data.resultaattypeomschrijving,
           selectielijstklasse: data.selectielijstklasse,
-          brondatumArchiefProcedure: {
+          brondatumArchiefprocedure: {
             afleidingswijze: data.afleidingswijze || "",
             datumkenmerk: data.datumkenmerk || "",
             einddatumBekend: false,
