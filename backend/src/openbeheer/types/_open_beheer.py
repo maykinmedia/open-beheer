@@ -132,6 +132,7 @@ class OBFieldType(enum.StrEnum):
     number = enum.auto()
     string = enum.auto()
     text = enum.auto()
+    object = enum.auto()
     # jsx = enum.auto()
 
 
@@ -177,6 +178,8 @@ def as_ob_fieldtype(
                 field_name,
                 meta,
             )
+        case type(), _ if hasattr(t, "__struct_fields__"):
+            return OBFieldType.object
         case _:
             # fallback to input widget
             return OBFieldType.string
@@ -276,6 +279,47 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
         self.name = camelize(self.name)
 
 
+def get_ob_subfields(
+    t: type | UnionType | Annotated,
+    option_overrides: Mapping[CamelCaseFieldName, list[OBOption]],
+    base_editable: Callable[[CamelCaseFieldName], bool],
+    meta: Meta | None = None,
+    prefix: str = "",
+) -> Iterable[OBField]:
+    args = get_args(t)
+    meta = meta or next((arg for arg in args if isinstance(arg, Meta)), None)
+
+    if args:
+        return get_ob_subfields(
+            next(ut for ut in args if ut not in (NoneType, UnsetType)),
+            option_overrides,
+            base_editable,
+            meta,
+            prefix,
+        )
+
+    assert isinstance(t, type)
+    subfields = []
+    if hasattr(t, "__struct_fields__"):
+        for field_name in t.__struct_fields__:
+            field = getattr(t, field_name)
+            prefixed_name: CamelCaseFieldName = camelize(prefix + field_name)
+
+            subfields.append(
+                OBField(
+                    name=prefixed_name,
+                    type=as_ob_fieldtype(field, field_name),
+                    options=option_overrides.get(prefixed_name, options(field)),
+                    # TODO: we need to find a better way to handle this in the frontend before we enable editing :S
+                    # editable=base_editable(prefixed_name)
+                    # and not (_core_type(field) in READ_ONLY_TYPES),
+                    editable=False,
+                    required=_ob_required(t),
+                )
+            )
+    return subfields
+
+
 def _core_type(annotation) -> type:
     """Drill down into Generics / Annotations and return the main type"""
     # `annotation` has no annotation, because pyright can't follow `get_args` correctly
@@ -308,6 +352,7 @@ def ob_fields_of_type(
     *,
     prefix: str = "",
     base_editable: Callable[[CamelCaseFieldName], bool] = bool,
+    include_subfields: bool = False,
 ) -> Iterable[OBField]:
     """
     Return the :class:`OBField` instances for the given `data_type`.
@@ -345,6 +390,7 @@ def ob_fields_of_type(
 
         prefixed_name: CamelCaseFieldName = camelize(prefix + name)
 
+        ob_fields = []
         ob_field = OBField(
             name=prefixed_name,
             type=as_ob_fieldtype(annotation, name),
@@ -354,6 +400,12 @@ def ob_fields_of_type(
             and not (set(map(_core_type, (data_type, annotation))) & READ_ONLY_TYPES),
             required=_ob_required(annotation),
         )
+        ob_fields.append(ob_field)
+        if include_subfields and ob_field.type == OBFieldType.object:
+            subfields = get_ob_subfields(
+                annotation, option_overrides, base_editable, prefix=prefixed_name + "."
+            )
+            ob_fields += subfields
 
         if query_params:
             for filter_name in [name, f"{name}__in"]:
@@ -363,7 +415,7 @@ def ob_fields_of_type(
                     ob_field.filter_lookup = filter_name
                     ob_field.filter_value = value
 
-        return [ob_field]
+        return ob_fields
 
     attrs = get_type_hints(data_type, include_extras=True)
     return sum(starmap(to_ob_fields, attrs.items()), [])

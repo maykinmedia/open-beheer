@@ -521,6 +521,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         option_overrides: Mapping[CamelCaseFieldName, list[OBOption]] = {},
         *,
         base_editable: Callable[[CamelCaseFieldName], bool] = bool,
+        include_subfields: bool = False,
     ) -> Iterable[OBField]:
         selectielijst_options = (
             fetch_selectielijst_resultaat_options(
@@ -552,6 +553,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
                 lambda name: name == "selectielijstProcestype" or name not in expansions
             ),
+            include_subfields=True,
         )
         yield from ob_fields_of_type(
             EigenschapSpecificatie, prefix="_expand.eigenschappen.specificatie."
