@@ -5490,6 +5490,7 @@ components:
       - date
       - duration
       - number
+      - object
       - string
       - text
     OBList_BesluitTypeWithUUID_:
