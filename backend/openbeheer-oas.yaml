@@ -7604,6 +7604,9 @@ components:
         uuid:
           type: string
           format: uuid
+        afleidingswijze:
+          description: Read-only afleidingswijze, set from bronArchiefProcedure
+          $ref: '#/components/schemas/AfleidingswijzeEnum'
         zaaktype:
           title: is van
           description: URL-referentie naar het ZAAKTYPE van ZAAKen waarin resultaten
