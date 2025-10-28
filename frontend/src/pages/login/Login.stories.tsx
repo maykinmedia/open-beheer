@@ -34,7 +34,7 @@ export const LoginPage: Story = {
           () => HttpResponse.json({ enabled: false }),
         ),
         http.get<PathParams, DefaultBodyType, undefined>(
-          `${API_BASE_URL}/auth/ensure-csrf/`,
+          `${API_BASE_URL}/auth/ensure-csrf-token/`,
           () => new HttpResponse<undefined>(undefined, { status: 204 }),
         ),
       ],
@@ -65,7 +65,7 @@ export const LoginPageWithOIDC: Story = {
             }),
         ),
         http.get<PathParams, DefaultBodyType, undefined>(
-          `${API_BASE_URL}/auth/ensure-csrf/`,
+          `${API_BASE_URL}/auth/ensure-csrf-token/`,
           () => new HttpResponse<undefined>(undefined, { status: 204 }),
         ),
       ],

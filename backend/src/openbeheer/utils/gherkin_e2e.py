@@ -290,7 +290,6 @@ class GherkinRunner:
             label: str,
             value: str,
             index: int = -1,
-            tab_label: str = "",
         ) -> None:
             """
             Fills the form field with the given value.
@@ -312,12 +311,13 @@ class GherkinRunner:
                 return
 
             # Fill (native) input
-            if tab_label:
-                locator = (
-                    page.get_by_role("tab").get_by_label(tab_label).get_by_label(label)
-                )
+            tab = page.get_by_role("tab", selected=True)
+            if tab.count():
+                tab_panel = page.get_by_role("tabpanel", name=tab.inner_text())
+                locator = tab_panel.get_by_role("textbox", name=label)
             else:
-                locator = page.get_by_label(label)
+                locator = page.get_by_role("textbox", name=label)
+
             locator.fill(value)
 
     class Then(GherkinScenario):

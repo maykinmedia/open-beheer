@@ -32,7 +32,7 @@ def test_session_expired_while_editing(
     )
     runner.when.user_clicks_on_button(page, name="Bewerken")
     runner.when.user_fills_form_field(
-        page, label='Bewerk "identificatie"', value="UPDATED", tab_label="Overzicht"
+        page, label='Bewerk "identificatie"', value="UPDATED"
     )
 
     # Clears session in the cache session engine

@@ -54,7 +54,7 @@ LOGGING["loggers"].update(
         },
         "vcr": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "ERROR",
             "propagate": False,
         },
         #
