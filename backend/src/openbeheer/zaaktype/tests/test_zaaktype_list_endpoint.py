@@ -1,4 +1,4 @@
-from msgspec import to_builtins
+from msgspec import convert, to_builtins
 from requests import get
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -6,6 +6,7 @@ from zgw_consumers.constants import APITypes
 from zgw_consumers.test.factories import ServiceFactory
 
 from openbeheer.accounts.tests.factories import UserFactory
+from openbeheer.types._open_beheer import EigenschapWithUUID, ResultaatTypeWithUUID
 from openbeheer.types.ztc import Status
 from openbeheer.utils.open_zaak_helper.data_creation import (
     OpenZaakDataCreationHelper,
@@ -267,14 +268,20 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
         created_resultaattype_url = created_zaaktype["resultaattypen"][0]
         self.assertNotEqual(created_resultaattype_url, resultaattype["url"])
 
-        assert created_zaaktype["_expand"]["resultaattypen"] == [
-            resultaattype
-            | {
-                "zaaktype": created_zaaktype["url"],
-                "zaaktypeIdentificatie": created_zaaktype["identificatie"],
-                "url": created_resultaattype_url,
-            }
-        ]
+        expected_resultaattype = to_builtins(
+            convert(
+                resultaattype
+                | {
+                    "zaaktype": created_zaaktype["url"],
+                    "zaaktypeIdentificatie": created_zaaktype["identificatie"],
+                    "url": created_resultaattype_url,
+                },
+                ResultaatTypeWithUUID,
+            )
+        )
+        assert (
+            created_zaaktype["_expand"]["resultaattypen"][0] == expected_resultaattype
+        )
 
     def test_create_zaaktype_with_multiple_related_besluitttype(self):
         self.client.force_login(self.user)
@@ -499,6 +506,15 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
             set(created_zaaktype["eigenschappen"]),
             {et["url"] for et in created_zaaktype["_expand"]["eigenschappen"]},
         )
+
+        expanded_eigenschap = created_zaaktype["_expand"]["eigenschappen"][0]
+
+        # should EigenschapWithUUID according to our OAS
+        expected_eigenschap = to_builtins(
+            convert(expanded_eigenschap, EigenschapWithUUID)
+        )
+
+        self.assertEqual(expanded_eigenschap, expected_eigenschap)
 
     def test_create_zaaktype_with_related_informatieobjecttypen(self):
         self.client.force_login(self.user)

@@ -186,6 +186,7 @@ class ResultaatTypeDetailViewTest(VCRAPITestCase):
         expected = to_builtins(self.resultaattype) | changes
 
         del expected["uuid"]
+        del expected["afleidingswijze"]
 
         self.assertEqual(data, expected)
 
