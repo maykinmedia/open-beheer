@@ -37,18 +37,20 @@ export function ErrorBoundary() {
   const error = useRouteError();
 
   if (isRouteErrorResponse(error) && error.status === 403) {
-    cleanUp();
-    // Redirect user to login on 403,
-    // which are most likely due to session expiration.
-    const url = new URL(window.location.toString());
-    return <Navigate to={`/login?next=${url.pathname}`} />;
+    if (error.data?.detail === "Authenticatiegegevens zijn niet opgegeven.") {
+      cleanUp();
+      // Redirect user to login as the session probably expired.
+      const url = new URL(window.location.toString());
+      return <Navigate to={`/login?next=${url.pathname}`} />;
+    }
   }
 
+  // TODO: Better errors for other cases
   return (
     <p>
       {error instanceof Error
         ? error.message
-        : `Unknown Error: ${JSON.stringify(error)}`}
+        : `Error: ${JSON.stringify(error)}`}
     </p>
   );
 }
