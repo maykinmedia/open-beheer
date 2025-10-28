@@ -770,12 +770,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             # Value should be a URL
             self.assertIn("https://", value)
 
-            # Within same year, should be sorted alphabetically
-            if year == previous_year:
-                self.assertGreater(label, previous_label)
             # Years should be descending.
-            else:
-                self.assertLess(year, previous_year)
+            self.assertLessEqual(year, previous_year)
 
             previous = option
 

@@ -209,7 +209,7 @@ def fetch_procestype_options():
 
     procestypen = decode(response.content, type=list[LAXProcesType])
     return [
-        as_ob_option(p) for p in sorted(procestypen, key=lambda v: (-v.jaar, v.naam))
+        as_ob_option(p) for p in sorted(procestypen, key=lambda v: (-v.jaar, v.nummer))
     ]
 
 
@@ -783,7 +783,7 @@ class ExpandableZaakType(ZaakTypeWithUUID, Struct):
 
 @as_ob_option.register
 def _lax_procestype_as_option(arg: ProcesType) -> OBOption[str | None]:
-    return OBOption(label=f"{arg.naam} - {arg.jaar}", value=arg.url)
+    return OBOption(label=f"{arg.jaar} - {arg.nummer} - {arg.naam}", value=arg.url)
 
 
 # Types from read only (or not implemented CUD) API's
