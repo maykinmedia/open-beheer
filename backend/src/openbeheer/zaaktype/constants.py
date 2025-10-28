@@ -78,7 +78,7 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "_expand.zaakobjecttypen.anderObjecttype",
                 "_expand.zaakobjecttypen.objecttype",
                 "_expand.zaakobjecttypen.relatieOmschrijving",
-                "_expand.zaakobjecttypen.resultaattypen",
+                # "_expand.zaakobjecttypen.resultaattypen",  #read only
                 "_expand.zaakobjecttypen.statustype",
                 "_expand.zaakobjecttypen.beginGeldigheid",
                 "_expand.zaakobjecttypen.eindeGeldigheid",

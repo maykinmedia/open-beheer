@@ -529,6 +529,14 @@ const ZaaktypeTab = ({
 
     for (const field of fields) {
       const fieldName = field.name.split(".").pop() as keyof TargetType;
+      // This downcast is not true! And it muddies the handling of
+      // undefined, null and other falsey values;
+      // fieldName is not a keyof TargetType, but includes field names of all
+      // of the _expand stuff.
+      // There are 8 _expand.<something>.omnschrijving yet `object` is an ExpandableZaakType?
+      // In the harmless case we just re-set orginalValue of `omschrijving` (et al.)
+      // But how do we distinguish between intended undefined and accidental one?
+      // There exist fields fieldName?: T; !
       const originalValue = object[fieldName];
 
       // Show object values.

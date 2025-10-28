@@ -531,7 +531,14 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         )
 
         expansions = set(map(camelize, self.expansions))
-
+        statustype_options = [
+            OBOption(label=statustype.omschrijving, value=statustype.url)
+            for statustype in (
+                sorted(data._expand.statustypen, key=lambda s: s.volgnummer)
+                if data._expand.statustypen is not UNSET
+                else []
+            )
+        ]
         yield from super().get_fields(
             data,
             option_overrides={
@@ -539,14 +546,9 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
                     data
                 ),
                 "_expand.resultaattypen.selectielijstklasse": selectielijst_options,
-                "_expand.eigenschappen.statustype": [
-                    OBOption(label=statustype.omschrijving, value=statustype.url)
-                    for statustype in (
-                        data._expand.statustypen
-                        if data._expand.statustypen is not UNSET
-                        else []
-                    )
-                ],
+                "_expand.eigenschappen.statustype": statustype_options,
+                # feels a bit off to send the exact same options twice...
+                "_expand.zaakobjecttypen.statustype": statustype_options,
             },
             base_editable=(
                 # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
