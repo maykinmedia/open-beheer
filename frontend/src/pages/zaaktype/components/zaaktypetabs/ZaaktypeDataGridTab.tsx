@@ -188,7 +188,7 @@ export function ZaaktypeDataGridTab({
               onSubmit={({
                 resultaattypeomschrijving,
                 selectielijstklasse,
-                brondatumArchiefProcedure,
+                brondatumArchiefprocedure,
               }) => {
                 setHookDialogState({ open: false });
 
@@ -209,7 +209,7 @@ export function ZaaktypeDataGridTab({
                   resultaattypeomschrijving,
                   omschrijvingGeneriek: resultaattypeomschrijvingOption.label,
                   selectielijstklasse,
-                  brondatum_archiefprocedure: brondatumArchiefProcedure, // FIXME: camelCase not accepted by BFF/OZ.
+                  brondatumArchiefprocedure,
                 } as ResultaatType);
               }}
               onCancel={() => {
