@@ -55,7 +55,9 @@ export function useErrors<
   // Normalize into an array of tuples
   const errorDataTuples = isBatch
     ? actionData
-    : ([actionData] as [A, object][]);
+    : Array.isArray(actionData) && actionData.length
+      ? ([actionData] as [A, object][])
+      : [];
 
   // Map each action tuple to its parsed errors
   const errorTuples = errorDataTuples.map<[A, Errors]>(
@@ -91,7 +93,9 @@ export function useErrors<
 function isErrorTupleArray<A extends TypedAction = TypedAction>(
   errorTupleOrTuples: ErrorDataTuple<A> | ErrorDataTuple<A>[],
 ): errorTupleOrTuples is ErrorDataTuple<A>[] {
-  return Array.isArray(errorTupleOrTuples);
+  return (
+    Array.isArray(errorTupleOrTuples) && Array.isArray(errorTupleOrTuples[0])
+  );
 }
 
 /**
