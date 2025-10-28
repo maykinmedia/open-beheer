@@ -78,7 +78,7 @@ export function ArchiveForm({
 
     selectielijstklasse:
       resultaatType.selectielijstklasse ||
-      selectielijstklasseOptions?.[0].value?.toString() ||
+      selectielijstklasseOptions?.[0]?.value?.toString() ||
       "",
 
     afleidingswijze:
