@@ -11,6 +11,7 @@ import {
 import "@maykin-ui/admin-ui/style";
 import "@maykin-ui/admin-ui/style/themes/blue-suede-shoes.css";
 import { string2Title } from "@maykin-ui/client-common";
+import { invariant } from "@maykin-ui/client-common/assert";
 import { createContext, useEffect, useMemo, useState } from "react";
 import {
   Outlet,
@@ -81,7 +82,8 @@ function App() {
     const fetchUser = async () => {
       try {
         const currentUser = await whoAmI(controller.signal);
-        setUser(currentUser!);
+        invariant(currentUser, "Could not retrieve the current user.");
+        setUser(currentUser);
       } catch (error) {
         console.error("Failed to fetch user:", error);
       }

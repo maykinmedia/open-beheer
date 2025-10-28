@@ -2,6 +2,7 @@
  * Hook to manage the selected service in the application.
  * This hook provides functionality to get the current service and update it.
  */
+import { invariant } from "@maykin-ui/client-common/assert";
 import { useEffect, useState } from "react";
 import { getServiceChoices } from "~/api/service.ts";
 import { components } from "~/types";
@@ -26,8 +27,10 @@ export function useService(user: components["schemas"]["User"] | null) {
     const fetchServices = async () => {
       try {
         const serviceChoices = await getServiceChoices();
-        if (typeof serviceChoices === "undefined")
-          throw new Error("The service choices are unexpectedly undefined."); // For typechecker
+        invariant(
+          serviceChoices,
+          "The service choices are unexpectedly undefined.",
+        );
         setServices(serviceChoices);
         setService(serviceChoices[0] ?? null);
       } catch (error) {

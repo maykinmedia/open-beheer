@@ -1,5 +1,6 @@
 import { Errors, useAlert } from "@maykin-ui/admin-ui";
 import { cacheGet, cacheSet } from "@maykin-ui/client-common";
+import { invariant } from "@maykin-ui/client-common/assert";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { getCatalogiChoices } from "~/api/catalogi.ts";
@@ -42,8 +43,7 @@ export function useCatalogi(
 
       try {
         const choices = await getCatalogiChoices(service.value);
-        if (typeof choices === "undefined")
-          throw new Error("The catalogi choices are unexpectedly undefined."); // For typechecker
+        invariant(choices, "The catalogi choices are unexpectedly undefined.");
         setCatalogiChoices(choices);
 
         // Auto-navigate logic

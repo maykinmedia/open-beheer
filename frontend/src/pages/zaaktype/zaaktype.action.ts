@@ -129,7 +129,8 @@ export async function createZaaktypeVersionAction(
       {},
       zaaktype,
     );
-    return redirect(`../${getZaaktypeUUID(result!)}?editing=true`);
+    invariant(result, "The response did not contain the created zaaktype!.");
+    return redirect(`../${getZaaktypeUUID(result)}?editing=true`);
   } catch (e) {
     return [action, await (e as Response).json()];
   }
@@ -227,7 +228,8 @@ export async function saveAsAction(
       {},
       zaaktype,
     );
-    return redirect(`../${data!.uuid}`);
+    invariant(data, "The response did not contain the expected zaaktype!");
+    return redirect(`../${data.uuid}`);
   } catch (e) {
     return [action, await (e as Response).json()];
   }
