@@ -73,22 +73,26 @@ export function ArchiveForm({
   const [formState, setFormState] = useState<ArchiveFormData>({
     resultaattypeomschrijving:
       resultaatType.resultaattypeomschrijving ||
-      resultaattypeomschrijvingOptions?.[0].value,
+      resultaattypeomschrijvingOptions?.[0].value?.toString() ||
+      "",
 
     selectielijstklasse:
       resultaatType.selectielijstklasse ||
-      selectielijstklasseOptions?.[0].value,
+      selectielijstklasseOptions?.[0].value?.toString() ||
+      "",
 
-    afleidingswijze: resultaatType.brondatumArchiefprocedure?.afleidingswijze,
+    afleidingswijze:
+      resultaatType.brondatumArchiefprocedure?.afleidingswijze ?? "afgehandeld",
     datumkenmerk: "",
     einddatumBekend: false,
     objecttype: "",
     registratie: "",
     procestermijn: "",
-    ...(resultaatType.brondatumArchiefprocedure ||
-      // @ts-expect-error - FIXME: Backend does not properly apply camelCase.
-      resultaatType.brondatum_archiefprocedure ||
-      {}),
+    ...Object.fromEntries(
+      Object.entries(resultaatType.brondatumArchiefprocedure || {}).map(
+        ([key, value]) => [key, value || ""],
+      ),
+    ),
   });
 
   // Fetch archive metadata on mount or when selectielijstklasse changes.
