@@ -175,6 +175,7 @@ class GherkinRunner:
             profile_button.click()
 
             logout_button = page.get_by_role("button", name="Logout")
+            logout_button.wait_for()
             logout_button.click()
 
         # Navigation
