@@ -104,10 +104,12 @@ export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
     "Broncatalogus",
     {
       titleSpan: 12,
-      // @ts-expect-error - These are nested fields, not present on "TargetType"
       fields: [
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
         "broncatalogus.domein",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
         "broncatalogus.rsin",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
         "broncatalogus.url",
       ],
       span: 12,
@@ -118,10 +120,12 @@ export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
     "Bronzaaktype",
     {
       titleSpan: 12,
-      // @ts-expect-error - These are nested fields, not present on "TargetType"
       fields: [
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
         "bronzaaktype.identificatie",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
         "bronzaaktype.omschrijving",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
         "bronzaaktype.url",
       ],
       span: 12,
