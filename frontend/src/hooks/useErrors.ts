@@ -25,7 +25,7 @@ export type ErrorMatcher<
 export function useErrors<
   T extends object = object,
   A extends TypedAction = TypedAction,
->(matcher?: ErrorMatcher<T, A>, flat?: true): Errors;
+>(matcher?: ErrorMatcher<T, A>, flat?: true): Errors<T>;
 export function useErrors<
   T extends object = object,
   A extends TypedAction = TypedAction,
