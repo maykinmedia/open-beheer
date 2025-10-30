@@ -17,17 +17,17 @@ import {
   RelatedObjectRenderer,
   getObjectValue,
 } from "~/components/related";
-import { useErrors } from "~/hooks";
+import { Errors } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import {
   AttributeGridTabConfig,
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
-import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { Expand, ExpandItemKeys, RelatedObject } from "~/types";
 
 type ZaaktypeAttributeGridTabProps = {
+  errors: Errors<TargetType>;
   object: TargetType;
   tabConfig: AttributeGridTabConfig<TargetType>;
   onChange: React.ChangeEventHandler;
@@ -39,6 +39,7 @@ type ZaaktypeAttributeGridTabProps = {
  * complex or expanded fields with related object renderers.
  */
 export const ZaaktypeAttributeGridTab = ({
+  errors,
   object,
   tabConfig,
   onChange,
@@ -50,11 +51,6 @@ export const ZaaktypeAttributeGridTab = ({
 
   const isEditing =
     new URLSearchParams(location.search).get("editing") === "true";
-
-  // Extract errors
-  const errors = useErrors<TargetType, ZaaktypeAction>(
-    (action) => action.type === "UPDATE_VERSION",
-  );
 
   // (Vertical) section state
   const [sectionHash, setSectionHash] = useHashParam("section", "0");

@@ -5,7 +5,10 @@ import { useActionData } from "react-router";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 
 export type ErrorDataTuple<A extends TypedAction = TypedAction> = [A, object];
-export type ErrorTuple<A extends TypedAction = TypedAction> = [A, Errors];
+export type ErrorTuple<
+  A extends TypedAction = TypedAction,
+  T extends object = object,
+> = [A, Errors<T>];
 export type Errors<T extends object = object> = Partial<
   Record<keyof T, string>
 >;
@@ -13,7 +16,7 @@ export type Errors<T extends object = object> = Partial<
 export type ErrorMatcher<
   T extends object = object,
   A extends TypedAction = TypedAction,
-> = (action: ErrorTuple<A>[0], errors: Errors<T>) => boolean;
+> = (action: ErrorTuple<A, T>[0], errors: Errors<T>) => boolean;
 
 /**
  * Custom hook that extracts and normalizes errors from action data.
@@ -29,11 +32,11 @@ export function useErrors<
 export function useErrors<
   T extends object = object,
   A extends TypedAction = TypedAction,
->(matcher?: ErrorMatcher<T, A>, flat?: false): ErrorTuple<A>[];
+>(matcher?: ErrorMatcher<T, A>, flat?: false): ErrorTuple<A, T>[];
 export function useErrors<
   T extends object = object,
   A extends TypedAction = TypedAction,
->(matcher?: ErrorMatcher<T, A>, flat = true): Errors<T> | ErrorTuple<A>[] {
+>(matcher?: ErrorMatcher<T, A>, flat = true): Errors<T> | ErrorTuple<A, T>[] {
   const alert = useAlert();
   const actionData = useActionData();
 
@@ -57,9 +60,9 @@ export function useErrors<
         : [];
 
     // Map each action tuple to its parsed errors
-    const errorTuples = errorDataTuples.map<[A, Errors]>(
+    const errorTuples = errorDataTuples.map<[A, Errors<T>]>(
       ([action, errorData]) => {
-        const errors = errorData2Errors(errorData) || {};
+        const errors = errorData2Errors<T>(errorData) || {};
 
         // If parsing failed, show alert with raw error data
         if (!errors) {
@@ -77,7 +80,7 @@ export function useErrors<
 
     // Reduce ErrorTuple to Errors.
     if (flat) {
-      return filteredErrorTuples.reduce<Errors>((acc, [, errors]) => {
+      return filteredErrorTuples.reduce<Errors<T>>((acc, [, errors]) => {
         return { ...acc, ...errors };
       }, {});
     }
@@ -102,7 +105,9 @@ function isErrorTupleArray<A extends TypedAction = TypedAction>(
  *
  * Returns `false` if the error data cannot be parsed.
  */
-function errorData2Errors(errorData: object): Errors | false {
+function errorData2Errors<T extends object = object>(
+  errorData: object,
+): Errors<T> | false {
   if ("invalidParams" in errorData && Array.isArray(errorData.invalidParams)) {
     return errorData.invalidParams.reduce((acc, invalidParam) => {
       // Validate structure of invalidParam
@@ -112,7 +117,7 @@ function errorData2Errors(errorData: object): Errors | false {
 
       // Accumulate errors as { fieldName: reason }
       return { ...acc, [invalidParam.name]: invalidParam.reason };
-    }, {});
+    }, {} as Errors<T>);
   }
 
   // Return false if errorData cannot be parsed
