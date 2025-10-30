@@ -13,12 +13,13 @@ import {
   RelatedObjectDataGrid,
   RelatedObjectDataGridAction,
 } from "~/components/related";
-import { useErrors } from "~/hooks";
+import { Errors } from "~/hooks";
 import { DataGridTabConfig, TargetType, ZaaktypeLoaderData } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { RelatedObject, components } from "~/types";
 
 export type ZaaktypeDataGridProps = {
+  errors: Errors<RelatedObject<TargetType>>[];
   object: TargetType;
   tabConfig: DataGridTabConfig<TargetType>;
   onTabActionsChange: (
@@ -34,6 +35,7 @@ type ResultaatType = components["schemas"]["ResultaatTypeWithUUID"];
  * Displays related objects and converts user actions into ZaaktypeActions.
  */
 export function ZaaktypeDataGridTab({
+  errors,
   object,
   tabConfig,
   onTabActionsChange,
@@ -45,15 +47,6 @@ export function ZaaktypeDataGridTab({
 
   const isEditing =
     new URLSearchParams(location.search).get("editing") === "true";
-
-  // Extract errors
-  const errorTuples = useErrors<TargetType, ZaaktypeAction>((action) => {
-    return (
-      "relatedObjectKey" in action.payload &&
-      action.payload.relatedObjectKey === tabConfig.key &&
-      "rowIndex" in action.payload
-    );
-  }, false);
 
   const hookDialog = useDialog();
   const [hookDialogState, setHookDialogState] = useState<{
@@ -232,18 +225,6 @@ export function ZaaktypeDataGridTab({
     const key = tabConfig.key;
     const relatedObjects = object._expand[key] || [];
     invariant(Array.isArray(relatedObjects), "relatedObject must be an Array!");
-
-    // Map error tuples to errors per row.
-    const errors = errorTuples.reduce(
-      (acc, [action, errors]) => {
-        if (!action || !action.payload || !("rowIndex" in action.payload))
-          return acc;
-
-        acc[action.payload.rowIndex] = errors;
-        return acc;
-      },
-      relatedObjects.map(() => ({})),
-    );
 
     invariant(
       Array.isArray(relatedObjects),
