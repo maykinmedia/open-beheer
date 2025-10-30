@@ -1,6 +1,7 @@
-import { Tab, Tabs } from "@maykin-ui/admin-ui";
+import { ErrorMessage, Tab, Tabs } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useErrors } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { TabConfig, TargetType } from "~/pages";
@@ -29,11 +30,29 @@ export function ZaaktypeTabs({
   onChange,
   onTabActionsChange,
 }: ZaaktypeTabsProps) {
+  const errors = useErrors<Record<string, string>>();
   const submitAction = useSubmitAction(false);
-
   // (Horizontal) tab data.
   const [tabHash] = useHashParam("tab", "0");
   const activeTabIndex = parseInt(tabHash || "0");
+
+  const [errorsState, setErrorsState] =
+    useState<Partial<Record<string, string>>>(errors);
+  useEffect(() => {
+    setErrorsState(errors);
+  }, [errors]);
+
+  /**
+   * Returns wrapped `fn` that clears `setErrorsState` whenever called.
+   * @param fn - The function to wrap.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  const clearErrorsOn = <T extends Function>(fn: T) => {
+    return (...args: unknown[]) => {
+      setErrorsState({});
+      fn(...args);
+    };
+  };
 
   /**
    * Gets called when the (horizontal) tab is changed.
@@ -61,23 +80,33 @@ export function ZaaktypeTabs({
             <ZaaktypeDataGridTab
               object={object}
               tabConfig={tabConfig}
-              onTabActionsChange={onTabActionsChange}
+              onTabActionsChange={clearErrorsOn(onTabActionsChange)}
             />
           ) : (
             <ZaaktypeAttributeGridTab
               object={object}
               tabConfig={tabConfig}
-              onChange={onChange}
+              onChange={clearErrorsOn(onChange)}
             />
           );
 
         return (
-          <Tab key={tabConfig.label} label={tabConfig.label}>
+          <Tab
+            key={tabConfig.label}
+            label={
+              tabConfig.key in errorsState
+                ? tabConfig.label + " (!)"
+                : tabConfig.label
+            }
+          >
+            {tabConfig.key in errorsState ? (
+              <ErrorMessage>{errorsState[tabConfig.key]}</ErrorMessage>
+            ) : undefined}
             {content}
           </Tab>
         );
       }),
-    [tabConfigs, object, onChange],
+    [tabConfigs, object, onChange, errorsState],
   );
 
   return (

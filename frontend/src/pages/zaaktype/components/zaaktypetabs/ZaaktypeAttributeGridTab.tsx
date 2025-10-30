@@ -52,7 +52,7 @@ export const ZaaktypeAttributeGridTab = ({
     new URLSearchParams(location.search).get("editing") === "true";
 
   // Extract errors
-  const errors = useErrors<ZaaktypeAction>(
+  const errors = useErrors<TargetType, ZaaktypeAction>(
     (action) => action.type === "UPDATE_VERSION",
   );
 
