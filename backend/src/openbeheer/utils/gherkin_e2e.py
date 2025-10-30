@@ -176,6 +176,9 @@ class GherkinRunner:
 
             logout_button = page.get_by_role("button", name="Logout")
             logout_button.wait_for()
+            page.wait_for_timeout(
+                120
+            )  # ¯\_(ツ)_/¯ - Attempt to fix flakiness in WebKit
             logout_button.click()
 
         # Navigation
