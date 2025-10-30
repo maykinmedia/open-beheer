@@ -37,7 +37,7 @@ export function ErrorBoundary() {
   const error = useRouteError();
 
   if (isRouteErrorResponse(error) && error.status === 403) {
-    if (error.data?.detail === "Authenticatiegegevens zijn niet opgegeven.") {
+    if (error.data?.code === "not_authenticated") {
       cleanUp();
       // Redirect user to login as the session probably expired.
       const url = new URL(window.location.toString());
