@@ -106,7 +106,7 @@ class OBFieldsTest(TestCase):
 
     @given(ztc_struct_instances())
     def test_subfields_are_present(self, instance: Struct):
-        ob_fields = ob_fields_of_type(type(instance), include_subfields=True)
+        ob_fields = list(ob_fields_of_type(type(instance), include_subfields=True))
 
         object_ob_fields = [
             ob_field for ob_field in ob_fields if ob_field.type == OBFieldType.object
