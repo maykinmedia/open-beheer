@@ -1,5 +1,6 @@
 import { isPrimitive, useAlert } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
+import { useMemo } from "react";
 import { useActionData } from "react-router";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 
@@ -32,59 +33,57 @@ export function useErrors<
 export function useErrors<
   T extends object = object,
   A extends TypedAction = TypedAction,
->(matcher?: ErrorMatcher<T, A>, flat = true): Errors | ErrorTuple<A>[] {
+>(matcher?: ErrorMatcher<T, A>, flat = true): Errors<T> | ErrorTuple<A>[] {
   const alert = useAlert();
-  const actionData =
-    useActionData() ||
-    ([] as ErrorDataTuple<A> | ErrorDataTuple<A>[] | undefined);
+  const actionData = useActionData();
 
-  // No action data returned → no errors
-  if (!actionData) {
-    return flat ? {} : [];
-  }
+  return useMemo(() => {
+    const normalizedActionData = actionData || ([] as ErrorDataTuple<A>[]);
 
-  // Validate that actionData is an array
-  invariant(
-    Array.isArray(actionData),
-    "actionData should either be a [TypedAction, object] or a [TypedAction, object][]!",
-  );
+    // Validate that actionData is an array
+    invariant(
+      Array.isArray(normalizedActionData),
+      "actionData should either be a [TypedAction, object] or a [TypedAction, object][]!",
+    );
 
-  // Detect whether we received a batch of tuples or a single tuple
-  const isBatch = isErrorTupleArray<A>(actionData);
+    // Detect whether we received a batch of tuples or a single tuple
+    const isBatch = isErrorTupleArray<A>(normalizedActionData);
 
-  // Normalize into an array of tuples
-  const errorDataTuples = isBatch
-    ? actionData
-    : Array.isArray(actionData) && actionData.length
-      ? ([actionData] as [A, object][])
-      : [];
+    // Normalize into an array of tuples
+    const errorDataTuples = isBatch
+      ? normalizedActionData
+      : Array.isArray(normalizedActionData) && normalizedActionData.length
+        ? ([normalizedActionData] as [A, object][])
+        : [];
 
-  // Map each action tuple to its parsed errors
-  const errorTuples = errorDataTuples.map<[A, Errors]>(
-    ([action, errorData]) => {
-      const errors = errorData2Errors(errorData) || {};
+    // Map each action tuple to its parsed errors
+    const errorTuples = errorDataTuples.map<[A, Errors]>(
+      ([action, errorData]) => {
+        const errors = errorData2Errors(errorData) || {};
 
-      // If parsing failed, show alert with raw error data
-      if (!errors) {
-        alert("Foutmelding", JSON.stringify(errorData), "Ok");
-      }
+        // If parsing failed, show alert with raw error data
+        if (!errors) {
+          alert("Foutmelding", JSON.stringify(errorData), "Ok");
+        }
 
-      return [action, errors];
-    },
-  );
+        return [action, errors];
+      },
+    );
 
-  // If matcher is set, only use errors that match.
-  const filteredErrorTuples = matcher
-    ? errorTuples.filter((tuple) => matcher(...tuple))
-    : errorTuples;
+    // If matcher is set, only use errors that match.
+    const filteredErrorTuples = matcher
+      ? errorTuples.filter((tuple) => matcher(...tuple))
+      : errorTuples;
 
-  // Reduce ErrorTuple to Errors.
-  if (flat) {
-    return filteredErrorTuples.reduce<Errors>((acc, [, errors]) => {
-      return { ...acc, ...errors };
-    }, {});
-  }
-  return filteredErrorTuples;
+    // Reduce ErrorTuple to Errors.
+    if (flat) {
+      return filteredErrorTuples.reduce<Errors>((acc, [, errors]) => {
+        return { ...acc, ...errors };
+      }, {});
+    }
+
+    return filteredErrorTuples;
+  }, [actionData, matcher, flat]);
 }
 
 /**
