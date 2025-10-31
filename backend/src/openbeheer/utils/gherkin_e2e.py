@@ -137,15 +137,16 @@ class GherkinRunner:
             for i in range(1, amount + 1):
                 padded_sequence_number = str(i).zfill(3)
 
-                overrides = {
+                data = {
                     "aanleiding": f"New Zaaktype {padded_sequence_number}",
                     "doel": f"New Zaaktype {padded_sequence_number}",
                     "onderwerp": f"New Zaaktype {padded_sequence_number}",
                     "referentieproces": {
                         "naam": f"ReferentieProces {padded_sequence_number}"
                     },
+                    **overrides,
                 }
-                zaaktype = helper.create_zaaktype(catalogus.url, **overrides)
+                zaaktype = helper.create_zaaktype(catalogus.url, **data)
                 assert zaaktype.url
                 zaaktypen.append(zaaktype)
 
@@ -360,6 +361,18 @@ class GherkinRunner:
             paragraph = dd.locator("p")
 
             expect(paragraph).to_have_attribute(attribue_key, attribute_value)
+
+        def table_should_contain(
+            self, page: Page, table_header: str, table_value: str
+        ) -> None:
+            table_pair = page.locator(
+                ".mykn-attributelist__pair", has_text=table_header
+            )
+
+            # Locate the <dd> inside the div with the key (dt) and value (dd) pair
+            dd = table_pair.locator(".mykn-attributelist__value")
+
+            expect(dd).to_contain_text(table_value)
 
         def session_storage_should_be_cleared(self, page: Page) -> None:
             session_storage = page.evaluate("() => JSON.stringify(sessionStorage)")

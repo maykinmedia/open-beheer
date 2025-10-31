@@ -44,7 +44,8 @@ export const FIELDSETS_BEHANDELING_EN_PROCES: FieldSet<TargetType>[] = [
   [
     "Referentieproces",
     {
-      fields: ["referentieproces"], // TODO: Missing referentieprocesnaam & referentieproces url
+      // @ts-expect-error - These are nested fields, not present on "TargetType"
+      fields: ["referentieproces.naam", "referentieproces.link"],
       span: 12,
       colSpan: 6,
     },
@@ -95,6 +96,38 @@ export const FIELDSETS_BRONNEN_EN_RELATIES: FieldSet<TargetType>[] = [
     {
       titleSpan: 12,
       fields: ["catalogus", "deelzaaktypen"],
+      span: 12,
+      colSpan: 4,
+    },
+  ],
+  [
+    "Broncatalogus",
+    {
+      titleSpan: 12,
+      fields: [
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
+        "broncatalogus.domein",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
+        "broncatalogus.rsin",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
+        "broncatalogus.url",
+      ],
+      span: 12,
+      colSpan: 4,
+    },
+  ],
+  [
+    "Bronzaaktype",
+    {
+      titleSpan: 12,
+      fields: [
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
+        "bronzaaktype.identificatie",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
+        "bronzaaktype.omschrijving",
+        // @ts-expect-error - These are nested fields, not present on "TargetType"
+        "bronzaaktype.url",
+      ],
       span: 12,
       colSpan: 4,
     },

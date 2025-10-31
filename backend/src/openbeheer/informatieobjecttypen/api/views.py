@@ -175,6 +175,7 @@ class InformatieObjectTypeDetailView(
         option_overrides: Mapping[str, list[OBOption]] = {},
         *,
         base_editable: Callable[[str], bool] = bool,
+        include_subfields: bool = False,
     ) -> Iterable[OBField]:
         # We can't to edit concept directly, we use the "publish" action to change it.
         yield from super().get_fields(

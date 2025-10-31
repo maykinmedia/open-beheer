@@ -50,6 +50,8 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
                 "indicatie_intern_of_extern",
                 "publicatie_indicatie",
                 "publicatietekst",
+                "broncatalogus",
+                "bronzaaktype",
                 # TODO: fields about selectielijst_procestype that need to be expanded.
                 "selectielijst_procestype",
                 # TODO: expand fields of the referentie process,

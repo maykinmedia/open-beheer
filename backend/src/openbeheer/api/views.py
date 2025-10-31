@@ -639,6 +639,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
         option_overrides: Mapping[str, list[OBOption]] = {},
         *,
         base_editable: Callable[[str], bool] = bool,
+        include_subfields: bool = False,
     ) -> Iterable[OBField]:
         """Create OBFields for attributes on `data`.
 
@@ -653,6 +654,7 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
             self.data_type,
             option_overrides=option_overrides,
             base_editable=base_editable,
+            include_subfields=include_subfields,
         )
 
     def _has_return_type(self, obj: object) -> TypeIs[T | ZGWError]:

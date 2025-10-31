@@ -138,7 +138,11 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
         self.assertIn("fieldsets", data)
         self.assertIn("fields", data)
 
-        fields_by_name = {f["name"]: f for f in data["fields"]}
+        fields_by_name = {
+            f["name"]: f
+            for f in data["fields"]
+            if len(f["name"].split(".")) == 1 or f["name"].startswith("_expand")
+        }
         fields = {f for f in fields_by_name if not f.startswith("_expand")}
         # all fields should exist on the result
         self.assertSetEqual(fields, set(data["result"].keys()) - {"_expand"})
@@ -459,6 +463,41 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             )
             field_names = set(fields_by_name.keys())
             assert fields_in_fieldsets - field_names == set()
+
+        with self.subTest("Subfields"):
+            subfields = {
+                f["name"]
+                for f in data["fields"]
+                if len(f["name"].split(".")) > 1 and not f["name"].startswith("_expand")
+            }
+            self.assertSetEqual(
+                {
+                    "bronzaaktype.url",
+                    "gerelateerdeZaaktypen.zaaktype",
+                    "broncatalogus.url",
+                    "bronzaaktype.identificatie",
+                    "broncatalogus.domein",
+                    "referentieproces.naam",
+                    "gerelateerdeZaaktypen.toelichting",
+                    "referentieproces.link",
+                    "gerelateerdeZaaktypen.aardRelatie",
+                    "broncatalogus.rsin",
+                    "bronzaaktype.omschrijving",
+                    # These are bogus fields that get included because of the workaround that ExpandableZaakType
+                    # needs to contain the field zaaktypeinformatieobjecttypen otherwise the frontend doesn't pick
+                    # up the corresponding _expand field.
+                    "zaaktypeinformatieobjecttypen.url",
+                    "zaaktypeinformatieobjecttypen.statustype",
+                    "zaaktypeinformatieobjecttypen.uuid",
+                    "zaaktypeinformatieobjecttypen.richting",
+                    "zaaktypeinformatieobjecttypen.zaaktype",
+                    "zaaktypeinformatieobjecttypen.catalogus",
+                    "zaaktypeinformatieobjecttypen.informatieobjecttype",
+                    "zaaktypeinformatieobjecttypen.volgnummer",
+                    "zaaktypeinformatieobjecttypen.zaaktypeIdentificatie",
+                },
+                subfields,
+            )
 
     def test_patch_zaaktype(self):
         zaaktype = self.helper.create_zaaktype()

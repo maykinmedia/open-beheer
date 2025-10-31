@@ -6,7 +6,6 @@
 import datetime
 import enum
 from functools import singledispatch
-from itertools import starmap
 from types import NoneType, UnionType
 from typing import (
     Annotated,
@@ -132,6 +131,7 @@ class OBFieldType(enum.StrEnum):
     number = enum.auto()
     string = enum.auto()
     text = enum.auto()
+    object = enum.auto()
     # jsx = enum.auto()
 
 
@@ -177,6 +177,8 @@ def as_ob_fieldtype(
                 field_name,
                 meta,
             )
+        case type(), _ if hasattr(t, "__struct_fields__"):
+            return OBFieldType.object
         case _:
             # fallback to input widget
             return OBFieldType.string
@@ -276,6 +278,44 @@ class OBField[T](Struct, rename="camel", omit_defaults=True):
         self.name = camelize(self.name)
 
 
+def get_ob_subfields(
+    t: type | UnionType | Annotated,
+    option_overrides: Mapping[CamelCaseFieldName, list[OBOption]],
+    base_editable: Callable[[CamelCaseFieldName], bool],
+    meta: Meta | None = None,
+    prefix: str = "",
+) -> Iterable[OBField]:
+    args = get_args(t)
+    meta = meta or next((arg for arg in args if isinstance(arg, Meta)), None)
+
+    if args:
+        yield from get_ob_subfields(
+            next(ut for ut in args if ut not in (NoneType, UnsetType)),
+            option_overrides,
+            base_editable,
+            meta,
+            prefix,
+        )
+        return
+
+    assert isinstance(t, type)
+    if hasattr(t, "__struct_fields__"):
+        for field_name in t.__struct_fields__:
+            field = getattr(t, field_name)
+            prefixed_name: CamelCaseFieldName = camelize(prefix + field_name)
+
+            yield OBField(
+                name=prefixed_name,
+                type=as_ob_fieldtype(field, field_name),
+                options=option_overrides.get(prefixed_name, options(field)),
+                # TODO: we need to find a better way to handle this in the frontend before we enable editing :S
+                # editable=base_editable(prefixed_name)
+                # and not (_core_type(field) in READ_ONLY_TYPES),
+                editable=False,
+                required=_ob_required(t),
+            )
+
+
 def _core_type(annotation) -> type:
     """Drill down into Generics / Annotations and return the main type"""
     # `annotation` has no annotation, because pyright can't follow `get_args` correctly
@@ -308,6 +348,7 @@ def ob_fields_of_type(
     *,
     prefix: str = "",
     base_editable: Callable[[CamelCaseFieldName], bool] = bool,
+    include_subfields: bool = False,
 ) -> Iterable[OBField]:
     """
     Return the :class:`OBField` instances for the given `data_type`.
@@ -326,19 +367,18 @@ def ob_fields_of_type(
         other rules.
     """
 
-    def to_ob_fields(name: str, annotation: type) -> list[OBField]:
+    def to_ob_fields(name: str, annotation: type) -> Iterable[OBField]:
         if name == "_expand":
             attrs = get_type_hints(annotation, include_extras=True)
-            return [
-                field
-                for attr, attr_type in attrs.items()
+            for attr, attr_type in attrs.items():
                 for field in ob_fields_of_type(
                     _core_type(attr_type),
                     option_overrides=option_overrides,
                     prefix=f"_expand.{camelize(attr)}.",
                     base_editable=base_editable,
-                )
-            ]
+                ):
+                    yield field
+            return
 
         # closure over option_overrides
         not_applicable = object()
@@ -363,10 +403,16 @@ def ob_fields_of_type(
                     ob_field.filter_lookup = filter_name
                     ob_field.filter_value = value
 
-        return [ob_field]
+        yield ob_field
+
+        if include_subfields and ob_field.type == OBFieldType.object:
+            yield from get_ob_subfields(
+                annotation, option_overrides, base_editable, prefix=prefixed_name + "."
+            )
 
     attrs = get_type_hints(data_type, include_extras=True)
-    return sum(starmap(to_ob_fields, attrs.items()), [])
+    for name, annotation in attrs.items():
+        yield from to_ob_fields(name, annotation)
 
 
 class OBList[T](Struct):
