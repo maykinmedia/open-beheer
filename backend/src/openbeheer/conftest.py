@@ -18,8 +18,8 @@ from openbeheer.utils.tests import VCRMixin
 
 
 @pytest.fixture
-def runner(live_server_vcr) -> GherkinRunner:
-    return GherkinRunner(live_server_vcr)
+def runner(live_server_vcr, browser) -> GherkinRunner:
+    return GherkinRunner(live_server_vcr, browser)
 
 
 @pytest.fixture(scope="function")
