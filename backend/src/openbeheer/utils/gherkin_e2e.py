@@ -2,7 +2,7 @@ import json
 import re
 
 from furl import furl
-from playwright.sync_api import Locator, Page, expect
+from playwright.sync_api import Browser, Locator, Page, expect
 from pytest_django.live_server_helper import LiveServer
 from zgw_consumers.constants import APITypes
 from zgw_consumers.models import Service
@@ -59,8 +59,9 @@ class GherkinRunner:
     understand the test flow and the expected outcomes.
     """
 
-    def __init__(self, live_server: LiveServer):
+    def __init__(self, live_server: LiveServer, browser: Browser) -> None:
         self.live_server = live_server
+        self.browser = browser
 
     @property
     def given(self):
@@ -176,9 +177,11 @@ class GherkinRunner:
 
             logout_button = page.get_by_role("button", name="Logout")
             logout_button.wait_for()
-            page.wait_for_timeout(
-                120
-            )  # ¯\_(ツ)_/¯ - Attempt to fix flakiness in WebKit
+
+            # ¯\_(ツ)_/¯ - Attempt to fix flakiness in WebKit
+            if self.runner.browser.browser_type.name == "webkit":
+                page.wait_for_timeout(120)
+
             logout_button.click()
 
         # Navigation
