@@ -3566,6 +3566,8 @@ export interface operations {
                 catalogus?: string;
                 datumGeldigheid?: string;
                 identificatie?: string;
+                identificatie__icontains?: string;
+                omschrijving__icontains?: string;
                 page?: number;
                 status?: "alles" | "concept" | "definitief";
                 trefwoorden?: string;
