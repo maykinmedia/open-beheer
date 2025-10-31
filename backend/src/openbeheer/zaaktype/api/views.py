@@ -17,7 +17,7 @@ import structlog
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
-from msgspec import UNSET, Meta, UnsetType
+from msgspec import UNSET, Meta, UnsetType, field
 from msgspec.json import decode
 from msgspec.structs import asdict, replace
 from rest_framework import status
@@ -113,6 +113,12 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="came
     trefwoorden: Annotated[
         str | UnsetType, Meta(description="Comma separated keywords")
     ] = UNSET
+    identificatie__icontains: Annotated[
+        str | UnsetType, Meta(description="*Experimental* Open Zaak")
+    ] = field(name="identificatie__icontains", default=UNSET)
+    omschrijving__icontains: Annotated[
+        str | UnsetType, Meta(description="*Experimental* Open Zaak")
+    ] = field(name="omschrijving__icontains", default=UNSET)
 
 
 class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):
@@ -482,6 +488,12 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         "zaaktypeinformatieobjecttypen": expand_zaaktype_informatieobjecttype,
     }
 
+    read_only_expansions: set[CamelCaseFieldName] = {
+        camelize(f)
+        for f in expansions
+        if f not in PatchedZaakTypeRequest.__struct_fields__
+    }
+
     def get_item_versions(
         self, slug: str, data: ZaakType
     ) -> tuple[list[ZaakType] | ZGWError, int]:
@@ -530,8 +542,6 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             else []
         )
 
-        expansions = set(map(camelize, self.expansions))
-
         yield from super().get_fields(
             data,
             option_overrides={
@@ -548,10 +558,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
                     )
                 ],
             },
-            base_editable=(
-                # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
-                lambda name: name == "selectielijstProcestype" or name not in expansions
-            ),
+            base_editable=lambda name: name not in self.read_only_expansions,
         )
         yield from ob_fields_of_type(
             EigenschapSpecificatie, prefix="_expand.eigenschappen.specificatie."

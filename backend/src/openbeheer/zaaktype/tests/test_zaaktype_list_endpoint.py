@@ -153,6 +153,40 @@ class ZaakTypeListViewTest(VCRAPITestCase):
             {r["identificatie"] for r in data["results"]}, {"ZAAKTYPE-2018-0000000001"}
         )
 
+    def test_identificatie_partial_filter(self):
+        self.client.force_authenticate(self.user)
+
+        response = self.client.get(
+            self.url, query_params={"identificatie__icontains": "type-2018-0000000002"}
+        )
+
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreater(data["pagination"]["count"], 0)
+        self.assertGreater(len(data["results"]), 0)
+
+        self.assertSetEqual(
+            {r["identificatie"] for r in data["results"]}, {"ZAAKTYPE-2018-0000000002"}
+        )
+
+    def test_omschrijving_partial_filter(self):
+        self.client.force_authenticate(self.user)
+
+        response = self.client.get(
+            self.url, query_params={"omschrijving__icontains": "destruction"}
+        )
+
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreater(data["pagination"]["count"], 0)
+        self.assertGreater(len(data["results"]), 0)
+
+        self.assertTrue(
+            all("destruction" in r["omschrijving"].lower() for r in data["results"])
+        )
+
     def test_trefwoorden_filter_single_word(self):
         self.client.force_authenticate(self.user)
 

@@ -418,6 +418,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
             assert "selectielijstProcestype" in editable_fields
             # but statustypen has a tab
             assert "statustypen" not in editable_fields
+            # yet deelzaaktypen should be selectable
+            assert "deelzaaktypen" in editable_fields
 
             assert (
                 fields_by_name["_expand.eigenschappen.beginGeldigheid"]["type"]
