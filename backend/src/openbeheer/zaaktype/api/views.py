@@ -17,7 +17,7 @@ import structlog
 from ape_pie import APIClient
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from furl import furl
-from msgspec import UNSET, Meta, UnsetType
+from msgspec import UNSET, Meta, UnsetType, field
 from msgspec.json import decode
 from msgspec.structs import asdict, replace
 from rest_framework import status
@@ -113,6 +113,12 @@ class ZaaktypenGetParametersQuery(OBPagedQueryParams, kw_only=True, rename="came
     trefwoorden: Annotated[
         str | UnsetType, Meta(description="Comma separated keywords")
     ] = UNSET
+    identificatie__icontains: Annotated[
+        str | UnsetType, Meta(description="*Experimental* Open Zaak")
+    ] = field(name="identificatie__icontains", default=UNSET)
+    omschrijving__icontains: Annotated[
+        str | UnsetType, Meta(description="*Experimental* Open Zaak")
+    ] = field(name="omschrijving__icontains", default=UNSET)
 
 
 class ZaakTypeSummary(VersionedResourceSummary, kw_only=True, rename="camel"):

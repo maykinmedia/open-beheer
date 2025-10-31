@@ -448,6 +448,16 @@ paths:
         schema:
           type: string
       - in: query
+        name: identificatie__icontains
+        schema:
+          description: '*Experimental* Open Zaak'
+          type: string
+      - in: query
+        name: omschrijving__icontains
+        schema:
+          description: '*Experimental* Open Zaak'
+          type: string
+      - in: query
         name: page
         schema:
           type: integer
