@@ -482,6 +482,12 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         "zaaktypeinformatieobjecttypen": expand_zaaktype_informatieobjecttype,
     }
 
+    read_only_expansions: set[CamelCaseFieldName] = {
+        camelize(f)
+        for f in expansions
+        if f not in PatchedZaakTypeRequest.__struct_fields__
+    }
+
     def get_item_versions(
         self, slug: str, data: ZaakType
     ) -> tuple[list[ZaakType] | ZGWError, int]:
@@ -530,8 +536,6 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
             else []
         )
 
-        expansions = set(map(camelize, self.expansions))
-
         yield from super().get_fields(
             data,
             option_overrides={
@@ -548,10 +552,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
                     )
                 ],
             },
-            base_editable=(
-                # selectielijstProcestype is the only editable expansion (because it's a ForeignKey?)
-                lambda name: name == "selectielijstProcestype" or name not in expansions
-            ),
+            base_editable=lambda name: name not in self.read_only_expansions,
         )
         yield from ob_fields_of_type(
             EigenschapSpecificatie, prefix="_expand.eigenschappen.specificatie."
