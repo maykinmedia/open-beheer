@@ -5,8 +5,8 @@ import {
   useAlert,
 } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useActionData } from "react-router";
+import { useEffect, useMemo, useState } from "react";
+import { useActionData, useSearchParams } from "react-router";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
 import { TabConfig } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
@@ -46,11 +46,6 @@ export type NonFieldErrorsByTab<T extends object> = Partial<
   Record<keyof T, string>
 >;
 
-export type FunctionWrap = (fn: WrappedFunction) => WrappedFunction;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type WrappedFunction = (...args: any[]) => unknown;
-
 /**
  * Aggregates and manages all error types related to a Zaaktype object and its tabs.
  *
@@ -69,7 +64,6 @@ export type WrappedFunction = (...args: any[]) => unknown;
  *  1. `nonFieldErrorsState`: errors related to entire tabs or relations.
  *  2. `relatedFieldErrorsByTabState`: errors for nested related objects (arrays/grids).
  *  3. `nonRelatedFieldErrorsByTabState`: errors for direct fields on the object.
- *  4. `clearErrorsOn`: a memoized function wrapper that resets error states.
  */
 export function useErrorsState<T extends object, A extends TypedAction>(
   object: Expanded<T>,
@@ -78,8 +72,9 @@ export function useErrorsState<T extends object, A extends TypedAction>(
   NonFieldErrorsByTab<T>,
   RelatedFieldErrorsByTab<T>,
   NonRelatedFieldErrorsByTab<T>,
-  FunctionWrap,
 ] {
+  const [searchParams] = useSearchParams();
+
   // Create a record that matches every relatedObjectKey/tabKey with a non-field error string.
   const nonFieldErrorsByTab = useNonFieldErrors<T, A>(object, tabConfigs);
 
@@ -131,28 +126,18 @@ export function useErrorsState<T extends object, A extends TypedAction>(
     }
   }, [nonRelatedFieldErrorsByTab]);
 
-  /**
-   * Returns a memoized wrapper around `fn` that clears
-   * `nonFieldErrorsState` and `relatedFieldErrorsByTabState` before calling it.
-   *
-   * @param fn - The function to wrap.
-   * @returns A stable callback that clears errors and then calls `fn`.
-   */
-  const clearErrorsOn = useCallback<FunctionWrap>(
-    (fn) =>
-      (...args) => {
-        setNonFieldErrorsState({});
-        setRelatedFieldErrorsByTabState({});
-        return fn(...args);
-      },
-    [],
-  );
+  useEffect(() => {
+    if (!searchParams.get("editing")) {
+      setNonFieldErrorsState({});
+      setNonRelatedFieldErrorsByTabState({});
+      setRelatedFieldErrorsByTabState({});
+    }
+  }, [searchParams]);
 
   return [
     nonFieldErrorsState,
     relatedFieldErrorsByTabState,
     nonRelatedFieldErrorsByTabState,
-    clearErrorsOn,
   ];
 }
 

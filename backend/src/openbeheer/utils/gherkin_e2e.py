@@ -212,6 +212,17 @@ class GherkinRunner:
             button.click()
             page.wait_for_load_state("networkidle")
 
+        def user_navigates_to_zaaktype_detail_page(
+            self, page: Page, zaaktype: ZaakTypeWithUUID
+        ) -> None:
+            """
+            Navigates to the zaaktype list page (by navigation)
+            """
+
+            self.runner.when.user_navigates_to_zaaktype_list_page(page)
+            page.wait_for_load_state("networkidle")
+            self.runner.when.user_clicks_on_link(page, str(zaaktype.identificatie))
+
         def user_navigates_to_informatieobjecttype_list_page(
             self, page: Page, catalogus: Catalogus
         ) -> None:
@@ -262,7 +273,10 @@ class GherkinRunner:
 
         # Actions
 
-        def user_clicks_on_button(self, page: Page, **kwargs) -> None:
+        def user_clicks_on_button(self, page: Page, name=None, **kwargs) -> None:
+            if name:
+                kwargs["name"] = name
+
             button = page.get_by_role("button", **kwargs)
             button.wait_for()
             button.click()
@@ -290,7 +304,7 @@ class GherkinRunner:
             """
             Fills the form field with the given value.
             If multiple form fields are found, the field at the given index is filled.
-            If no index is provided: the the last field is used to accommodate modal forms.
+            If no index is provided: the last field is used to accommodate modal forms.
             """
 
             # Certain form fields may be shown in a modal that needs some time to load
@@ -299,15 +313,19 @@ class GherkinRunner:
 
             # Try a (custom) select
             selects = page.get_by_role("combobox", name=label)
+            _index = index if index > -1 else selects.count() - 1
             if selects.count():
-                select = selects.nth(index)
+                select = selects.nth(_index)
                 select.click()
                 option = select.get_by_text(value)
                 option.click()
                 return
 
             # Fill (native) input
-            page.get_by_label(label).nth(index).fill(value)
+            inputs = page.get_by_label(label)
+            _index = index if index > -1 else inputs.count() - 1
+            input = inputs.nth(_index)
+            input.fill(value)
 
     class Then(GherkinScenario):
         """
@@ -330,16 +348,15 @@ class GherkinRunner:
         # Content
 
         def page_should_contain_text(
-            self, page: Page, text: str, timeout: int | None = None
+            self, page: Page, text: str, timeout: int | None = None, index: int = 0
         ) -> Locator:
+            page.wait_for_load_state("networkidle")
             if timeout is None:
                 timeout = 500
 
-            # Wait for the text to appear in the DOM
-            page.wait_for_selector(f"text={text}", timeout=timeout)
-
             # Confirm the element with the text is visible
-            element = page.locator(f"text={text}").nth(0)
+            element = page.locator(f"text={text}").nth(index)
+            element.wait_for()
             expect(element).to_be_visible(timeout=timeout)
             return element
 
