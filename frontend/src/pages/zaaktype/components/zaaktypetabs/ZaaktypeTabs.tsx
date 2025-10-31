@@ -1,11 +1,7 @@
 import { ErrorMessage, Tab, Tabs } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  useNonFieldErrors,
-  useNonRelatedFieldErrors,
-  useRelatedFieldErrors,
-} from "~/hooks";
+import React, { useCallback, useMemo } from "react";
+import { useErrorsState } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { TabConfig, TargetType } from "~/pages";
@@ -35,76 +31,15 @@ export function ZaaktypeTabs({
   onTabActionsChange,
 }: ZaaktypeTabsProps) {
   //
-  // Error handling.
+  // Hooks.
   //
 
-  // Create a record that matches every relatedObjectKey/tabKey with a non-field error string.
-  const nonFieldErrorsByTab = useNonFieldErrors(tabConfigs);
-
-  // Create a record that matches every relatedObjectKey/tabKey with an `Errors[]` array.
-  const relatedFieldErrorsByTab = useRelatedFieldErrors(object);
-
-  // Create a record that matches every relatedObjectKey/tabKey with an `Errors[]` array.
-  const nonRelatedFieldErrorsByTab = useNonRelatedFieldErrors(
-    tabConfigs,
-    object,
-  );
-
-  // Store NonFieldErrorsByTab record in state.
-  const [nonFieldErrorsState, setNonFieldErrorsState] =
-    useState(nonFieldErrorsByTab);
-
-  // Sync FieldErrorsByTab record.
-  useEffect(() => {
-    // Only update, don't clear (automatically).
-    // This prevents clearing errors on tab change.
-    if (Object.keys(nonFieldErrorsByTab).length) {
-      setNonFieldErrorsState(nonFieldErrorsByTab);
-    }
-  }, [nonFieldErrorsByTab]);
-
-  // Store `relatedFieldErrorsByTab` record in state.
-  const [relatedFieldErrorsByTabState, setRelatedFieldErrorsByTabState] =
-    useState(relatedFieldErrorsByTab);
-
-  // Sync `relatedFieldErrorsByTabState`.
-  useEffect(() => {
-    // Only update, don't clear (automatically).
-    // This prevents clearing errors on tab change.
-    if (Object.keys(relatedFieldErrorsByTab).length) {
-      setRelatedFieldErrorsByTabState(relatedFieldErrorsByTab);
-    }
-  }, [relatedFieldErrorsByTab]);
-
-  // Store `relatedFieldErrorsByTab` record in state.
-  const [nonRelatedFieldErrorsByTabState, setNonRelatedFieldErrorsByTabState] =
-    useState(nonRelatedFieldErrorsByTab);
-
-  // Sync `nonRelatedFieldErrorsByTabState`.
-  useEffect(() => {
-    // Only update, don't clear (automatically).
-    // This prevents clearing errors on tab change.
-    if (Object.keys(nonRelatedFieldErrorsByTab).length) {
-      setNonRelatedFieldErrorsByTabState(nonRelatedFieldErrorsByTab);
-    }
-  }, [nonRelatedFieldErrorsByTab]);
-
-  /**
-   * Returns wrapped `fn` that clears `nonFieldErrorsState` and `relatedFieldErrorsByTabState` whenever called.
-   * @param fn - The function to wrap.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  const clearErrorsOn = <T extends Function>(fn: T) => {
-    return (...args: unknown[]) => {
-      setNonFieldErrorsState({});
-      setRelatedFieldErrorsByTabState({});
-      fn(...args);
-    };
-  };
-
-  //
-  // Regular hooks.
-  //
+  const [
+    nonFieldErrors,
+    relatedFieldErrorsByTab,
+    nonRelatedFieldErrorsByTab,
+    clearErrorsOn,
+  ] = useErrorsState<TargetType, ZaaktypeAction>(object, tabConfigs);
 
   const submitAction = useSubmitAction(false);
   // (Horizontal) tab data.
@@ -142,19 +77,19 @@ export function ZaaktypeTabs({
       tabConfigs.map((tabConfig) => {
         // console.log(tabConfig.key, relatedFieldErrorsByTabState[tabConfig.key]);
         const content =
-          tabConfig.view === "DataGrid" ? (
-            <ZaaktypeDataGridTab
-              errors={relatedFieldErrorsByTabState[tabConfig.key] || []}
-              object={object}
-              tabConfig={tabConfig}
-              onTabActionsChange={clearErrorsOn(onTabActionsChange)}
-            />
-          ) : (
+          tabConfig.view === "AttributeGrid" ? (
             <ZaaktypeAttributeGridTab
-              errors={nonRelatedFieldErrorsByTabState[tabConfig.key] || {}}
+              errors={nonRelatedFieldErrorsByTab[tabConfig.key] || {}}
               object={object}
               tabConfig={tabConfig}
               onChange={clearErrorsOn(onChange)}
+            />
+          ) : (
+            <ZaaktypeDataGridTab
+              errors={relatedFieldErrorsByTab[tabConfig.key] || []}
+              object={object}
+              tabConfig={tabConfig}
+              onTabActionsChange={clearErrorsOn(onTabActionsChange)}
             />
           );
 
@@ -162,16 +97,16 @@ export function ZaaktypeTabs({
           <Tab
             key={tabConfig.label}
             label={
-              tabConfig.key in nonFieldErrorsState ||
-              tabConfig.key in relatedFieldErrorsByTabState ||
-              tabConfig.key in nonRelatedFieldErrorsByTabState
+              tabConfig.key in nonFieldErrors ||
+              tabConfig.key in relatedFieldErrorsByTab ||
+              tabConfig.key in nonRelatedFieldErrorsByTab
                 ? tabConfig.label + " (!)"
                 : tabConfig.label
             }
           >
-            {tabConfig.key in nonFieldErrorsState && (
+            {tabConfig.key in nonFieldErrors && (
               <ErrorMessage>
-                {nonFieldErrorsState[tabConfig.key as keyof TargetType]}
+                {nonFieldErrors[tabConfig.key as keyof TargetType]}
               </ErrorMessage>
             )}
             {content}
@@ -181,9 +116,12 @@ export function ZaaktypeTabs({
     [
       tabConfigs,
       object,
+      nonFieldErrors,
+      relatedFieldErrorsByTab,
+      nonRelatedFieldErrorsByTab,
+      clearErrorsOn,
       onChange,
-      nonFieldErrorsState,
-      relatedFieldErrorsByTabState,
+      onTabActionsChange,
     ],
   );
 
