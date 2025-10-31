@@ -63,24 +63,21 @@ from openbeheer.types._open_beheer import (
     LAXProcesType,
     VersionedResourceSummary,
     ZaakObjectTypeExtension,
+    ZaakObjectTypeWithUUID,
     ZaakTypeInformatieObjectTypeWithUUID,
+    ZaakTypeWithUUID,
     fetch_selectielijst_resultaat_options,
     ob_fields_of_type,
 )
 from openbeheer.types.ztc import (
-    BesluitType,
     BrondatumArchiefprocedure,
-    Eigenschap,
     EigenschapSpecificatie,
     InformatieObjectType,
     PaginatedZaakTypeList,
     PatchedZaakTypeRequest,
-    ResultaatType,
-    RolType,
     Status,
     StatusType,
     VertrouwelijkheidaanduidingEnum,
-    ZaakObjectType,
     ZaakType,
     ZaakTypeRequest,
 )
@@ -204,7 +201,7 @@ class ZaakTypeListView(
         besluittypen, errors = create_many(
             api_client,
             "besluittypen",
-            BesluitType,
+            BesluitTypeWithUUID,
             inject_foreignkeys("besluittypen"),
             partial(format_related_resource_error, "besluittypen"),
         )
@@ -220,7 +217,7 @@ class ZaakTypeListView(
         resultaattypen, errors = create_many(
             api_client,
             "resultaattypen",
-            ResultaatType,
+            ResultaatTypeWithUUID,
             inject_foreignkeys("resultaattypen"),
             partial(format_related_resource_error, "resultaattypen"),
         )
@@ -228,7 +225,7 @@ class ZaakTypeListView(
         eigenschappen, errors = create_many(
             api_client,
             "eigenschappen",
-            Eigenschap,
+            EigenschapWithUUID,
             inject_foreignkeys("eigenschappen"),
             partial(format_related_resource_error, "eigenschappen"),
         )
@@ -236,7 +233,7 @@ class ZaakTypeListView(
         informatieobjecttypen, errors = create_many(
             api_client,
             "informatieobjecttypen",
-            InformatieObjectType,
+            InformatieObjectTypeWithUUID,
             inject_foreignkeys("informatieobjecttypen"),
             partial(format_related_resource_error, "informatieobjecttypen"),
         )
@@ -244,7 +241,7 @@ class ZaakTypeListView(
         roltypen, errors = create_many(
             api_client,
             "roltypen",
-            RolType,
+            RolTypeWithUUID,
             inject_foreignkeys("roltypen"),
             partial(format_related_resource_error, "roltypen"),
         )
@@ -252,7 +249,7 @@ class ZaakTypeListView(
         deelzaaktypen, errors = create_many(
             api_client,
             "zaaktypen",
-            ZaakType,
+            ZaakTypeWithUUID,
             posted_expansions.get("deelzaaktypen", []),
             partial(format_related_resource_error, "deelzaaktypen"),
         )
@@ -260,7 +257,7 @@ class ZaakTypeListView(
         zaakobjecttypen, errors = create_many(
             api_client,
             "zaakobjecttypen",
-            ZaakObjectType,
+            ZaakObjectTypeWithUUID,
             inject_foreignkeys("zaakobjecttypen"),
             partial(format_related_resource_error, "zaakobjecttypen"),
         )

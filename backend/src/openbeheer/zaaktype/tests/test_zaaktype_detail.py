@@ -268,6 +268,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                     "eindeGeldigheid": None,
                     "beginObject": None,
                     "eindeObject": None,
+                    "afleidingswijze": "afgehandeld",
                 },
                 {
                     "uuid": furl(resultaattype2.url).path.segments[-1],
@@ -301,6 +302,7 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                     "eindeGeldigheid": None,
                     "beginObject": None,
                     "eindeObject": None,
+                    "afleidingswijze": "afgehandeld",
                 },
             ]
             self.assertEqual(

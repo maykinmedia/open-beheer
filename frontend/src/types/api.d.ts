@@ -2354,6 +2354,8 @@ export interface components {
             selectielijstklasse: string;
             /** Format: uuid */
             uuid?: string;
+            /** @description Read-only afleidingswijze, set from bronArchiefProcedure */
+            afleidingswijze?: components["schemas"]["AfleidingswijzeEnum"];
             /**
              * is van
              * @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin resultaten van dit RESULTAATTYPE bereikt kunnen worden.

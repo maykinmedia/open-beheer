@@ -41,6 +41,7 @@ from .selectielijst import (
     ResultaatTypeOmschrijvingGeneriek as _ResultaatTypeOmschrijvingGeneriek,
 )
 from .ztc import (
+    AfleidingswijzeEnum,
     BesluitType,
     Eigenschap,
     FormaatEnum,
@@ -653,6 +654,22 @@ class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
             max_length=1000,
         ),
     ]
+    # afleidingswijze is actually a property from brondatum_archiefprocedure
+    # set here because front end doesn't support nested structures. yet? 🤞
+    afleidingswijze: (
+        Annotated[
+            AfleidingswijzeEnum,
+            Meta(
+                description="Read-only afleidingswijze, set from bronArchiefProcedure",
+            ),
+        ]
+        | UnsetType
+    ) = UNSET
+
+    def __post_init__(self):
+        super().__post_init__()
+        if self.brondatum_archiefprocedure:
+            self.afleidingswijze = self.brondatum_archiefprocedure.afleidingswijze
 
 
 class EigenschapWithUUID(UUIDMixin, Eigenschap):
