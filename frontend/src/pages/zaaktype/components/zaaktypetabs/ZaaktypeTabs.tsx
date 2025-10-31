@@ -34,12 +34,8 @@ export function ZaaktypeTabs({
   // Hooks.
   //
 
-  const [
-    nonFieldErrors,
-    relatedFieldErrorsByTab,
-    nonRelatedFieldErrorsByTab,
-    clearErrorsOn,
-  ] = useErrorsState<TargetType, ZaaktypeAction>(object, tabConfigs);
+  const [nonFieldErrors, relatedFieldErrorsByTab, nonRelatedFieldErrorsByTab] =
+    useErrorsState<TargetType, ZaaktypeAction>(object, tabConfigs);
 
   const submitAction = useSubmitAction(false);
   // (Horizontal) tab data.
@@ -82,14 +78,14 @@ export function ZaaktypeTabs({
               errors={nonRelatedFieldErrorsByTab[tabConfig.key] || {}}
               object={object}
               tabConfig={tabConfig}
-              onChange={clearErrorsOn(onChange)}
+              onChange={onChange}
             />
           ) : (
             <ZaaktypeDataGridTab
               errors={relatedFieldErrorsByTab[tabConfig.key] || []}
               object={object}
               tabConfig={tabConfig}
-              onTabActionsChange={clearErrorsOn(onTabActionsChange)}
+              onTabActionsChange={onTabActionsChange}
             />
           );
 
@@ -119,7 +115,6 @@ export function ZaaktypeTabs({
       nonFieldErrors,
       relatedFieldErrorsByTab,
       nonRelatedFieldErrorsByTab,
-      clearErrorsOn,
       onChange,
       onTabActionsChange,
     ],
