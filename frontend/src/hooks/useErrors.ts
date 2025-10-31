@@ -1,9 +1,14 @@
-import { getFieldName, isPrimitive, useAlert } from "@maykin-ui/admin-ui";
+import {
+  getFieldName,
+  isPrimitive,
+  isString,
+  useAlert,
+} from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useActionData } from "react-router";
 import { TypedAction } from "~/hooks/useSubmitAction.tsx";
-import { TabConfig, TargetType } from "~/pages";
+import { TabConfig } from "~/pages";
 import { ZaaktypeAction } from "~/pages/zaaktype/zaaktype.action.ts";
 import { Expanded, RelatedObject } from "~/types";
 
@@ -11,61 +16,175 @@ import { Expanded, RelatedObject } from "~/types";
  * Maps each tab key (or related object key) to an array of field-level errors
  * related to a specific related object.
  */
-export type RelatedFieldErrorsByTab = Partial<{
-  [index: string]: RelatedErrors;
-}>;
+export type RelatedFieldErrorsByTab<T extends object> = Partial<
+  Record<string, RelatedErrors<T>>
+>;
 
 /**
  * List of field-level errors for an expanded related target type.
  */
-export type RelatedErrors = Errors<Expanded<TargetType>>[];
+export type RelatedErrors<T extends object> = Errors<Expanded<T>>[];
 
 /**
  * Maps each tab key to a set of field-level errors that are not related
  * to nested or related objects.
  */
-export type NonRelatedFieldErrorsByTab = Partial<{
-  [index: string]: NonRelatedErrors;
-}>;
+export type NonRelatedFieldErrorsByTab<T extends object> = Partial<
+  Record<string, NonRelatedErrors<T>>
+>;
 
 /**
  * Field-level errors for the main (non-related) target type.
  */
-export type NonRelatedErrors = Errors<TargetType>;
+export type NonRelatedErrors<T extends object> = Errors<T>;
 
 /**
  * Maps non-field-level errors (errors not tied to specific fields)
  * to each tab key in the configuration.
  */
-export type NonFieldErrorsByTab = Partial<{
-  [index in keyof TargetType]: string;
-}>;
+export type NonFieldErrorsByTab<T extends object> = Partial<
+  Record<keyof T, string>
+>;
+
+export type FunctionWrap = (fn: WrappedFunction) => WrappedFunction;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WrappedFunction = (...args: any[]) => unknown;
+
+/**
+ * Aggregates and manages all error types related to a Zaaktype object and its tabs.
+ *
+ * This hook:
+ * - Collects and synchronizes non-field, related-field, and non-related-field errors
+ *   derived from backend validation results.
+ * - Keeps these errors in React state to prevent unintended clearing between tab switches.
+ * - Provides a utility `clearErrorsOn(fn)` that wraps a function and clears all
+ *   tracked error states before executing it.
+ *
+ * @typeParam T - The base object type (e.g. Zaaktype).
+ * @typeParam A - The typed action associated with backend interactions.
+ * @param object - The current object instance being edited.
+ * @param tabConfigs - The tab configuration array describing how fields are grouped.
+ * @returns A tuple containing:
+ *  1. `nonFieldErrorsState`: errors related to entire tabs or relations.
+ *  2. `relatedFieldErrorsByTabState`: errors for nested related objects (arrays/grids).
+ *  3. `nonRelatedFieldErrorsByTabState`: errors for direct fields on the object.
+ *  4. `clearErrorsOn`: a memoized function wrapper that resets error states.
+ */
+export function useErrorsState<T extends object, A extends TypedAction>(
+  object: Expanded<T>,
+  tabConfigs: TabConfig<T>[],
+): [
+  NonFieldErrorsByTab<T>,
+  RelatedFieldErrorsByTab<T>,
+  NonRelatedFieldErrorsByTab<T>,
+  FunctionWrap,
+] {
+  // Create a record that matches every relatedObjectKey/tabKey with a non-field error string.
+  const nonFieldErrorsByTab = useNonFieldErrors<T, A>(object, tabConfigs);
+
+  // Create a record that matches every relatedObjectKey/tabKey with an `Errors[]` array.
+  const relatedFieldErrorsByTab = useRelatedFieldErrors<T, A>(object);
+
+  // Create a record that matches every relatedObjectKey/tabKey with an `Errors[]` array.
+  const nonRelatedFieldErrorsByTab = useNonRelatedFieldErrors(
+    object,
+    tabConfigs,
+  );
+
+  // Store NonFieldErrorsByTab record in state.
+  const [nonFieldErrorsState, setNonFieldErrorsState] =
+    useState(nonFieldErrorsByTab);
+
+  // Sync FieldErrorsByTab record.
+  useEffect(() => {
+    // Only update, don't clear (automatically).
+    // This prevents clearing errors on tab change.
+    if (Object.keys(nonFieldErrorsByTab).length) {
+      setNonFieldErrorsState(nonFieldErrorsByTab);
+    }
+  }, [nonFieldErrorsByTab]);
+
+  // Store `relatedFieldErrorsByTab` record in state.
+  const [relatedFieldErrorsByTabState, setRelatedFieldErrorsByTabState] =
+    useState(relatedFieldErrorsByTab);
+
+  // Sync `relatedFieldErrorsByTabState`.
+  useEffect(() => {
+    // Only update, don't clear (automatically).
+    // This prevents clearing errors on tab change.
+    if (Object.keys(relatedFieldErrorsByTab).length) {
+      setRelatedFieldErrorsByTabState(relatedFieldErrorsByTab);
+    }
+  }, [relatedFieldErrorsByTab]);
+
+  // Store `relatedFieldErrorsByTab` record in state.
+  const [nonRelatedFieldErrorsByTabState, setNonRelatedFieldErrorsByTabState] =
+    useState(nonRelatedFieldErrorsByTab);
+
+  // Sync `nonRelatedFieldErrorsByTabState`.
+  useEffect(() => {
+    // Only update, don't clear (automatically).
+    // This prevents clearing errors on tab change.
+    if (Object.keys(nonRelatedFieldErrorsByTab).length) {
+      setNonRelatedFieldErrorsByTabState(nonRelatedFieldErrorsByTab);
+    }
+  }, [nonRelatedFieldErrorsByTab]);
+
+  /**
+   * Returns a memoized wrapper around `fn` that clears
+   * `nonFieldErrorsState` and `relatedFieldErrorsByTabState` before calling it.
+   *
+   * @param fn - The function to wrap.
+   * @returns A stable callback that clears errors and then calls `fn`.
+   */
+  const clearErrorsOn = useCallback<FunctionWrap>(
+    (fn) =>
+      (...args) => {
+        setNonFieldErrorsState({});
+        setRelatedFieldErrorsByTabState({});
+        return fn(...args);
+      },
+    [],
+  );
+
+  return [
+    nonFieldErrorsState,
+    relatedFieldErrorsByTabState,
+    nonRelatedFieldErrorsByTabState,
+    clearErrorsOn,
+  ];
+}
 
 /**
  * Collects and maps non-field-level errors to tabs based on the provided
  * tab configuration. Used for actions affecting the entire target type hierarchy.
  *
+ * @typeParam T - The base object type (e.g. Zaaktype).
+ * @typeParam A - The typed action associated with backend interactions.
+ * @param object - The target object containing related entities.
  * @param tabConfigs - The list of tab configurations defining the form layout.
  * @returns A memoized mapping of non-field errors by tab key.
  */
-export function useNonFieldErrors(tabConfigs: TabConfig<TargetType>[]) {
-  const errorTuples = useErrors<
-    TargetType | RelatedObject<TargetType>,
-    ZaaktypeAction
-  >(undefined, false);
+export function useNonFieldErrors<T extends object, A extends TypedAction>(
+  object: T,
+  tabConfigs: TabConfig<T>[],
+) {
+  const errorTuples = useErrors<T | RelatedObject<T>, A>(undefined, false);
 
-  return useMemo<NonFieldErrorsByTab>(() => {
-    return errorTuples.reduce<NonFieldErrorsByTab>((acc, [, errors]) => {
+  return useMemo(() => {
+    return errorTuples.reduce<NonFieldErrorsByTab<T>>((acc, [, errors]) => {
       // Search for errors based on tabConfig keys.
       // - Applicable to actions acting on entire ZaakType hierarchy (e.g. "PUBLISH_VERSION").
       // - Relevant for non-nested errors relating to directly to a relation.
       // - Action does not have a relatedObjectKey.
       // - Errors relate to relation expressed by tab, not to nested fields.
       tabConfigs.forEach((tabConfig) => {
-        const _key = tabConfig.key;
-        if (_key in errors) {
-          const key = _key as keyof (TargetType | RelatedObject<TargetType>);
-          acc[key] = errors[key];
+        const key = tabConfig.key;
+        if (key in errors) {
+          invariant(key in object, "key not key in object!");
+          invariant(key in errors, "key is not key in errors!");
+          acc[key as keyof T] = errors[key as keyof typeof errors];
         }
       });
       return acc;
@@ -77,25 +196,33 @@ export function useNonFieldErrors(tabConfigs: TabConfig<TargetType>[]) {
  * Collects and maps related field-level errors to tabs based on
  * related object keys found in the action payload.
  *
+ * @typeParam T - The base object type (e.g. Zaaktype).
+ * @typeParam A - The typed action associated with backend interactions.
  * @param object - The target object containing related entities.
  * @returns A memoized mapping of related field errors by tab key.
  */
-export function useRelatedFieldErrors(object: TargetType) {
-  const errorTuples = useErrors<
-    TargetType | RelatedObject<TargetType>,
-    ZaaktypeAction
-  >(undefined, false);
+export function useRelatedFieldErrors<T extends object, A extends TypedAction>(
+  object: Expanded<T>,
+) {
+  const errorTuples = useErrors<T | RelatedObject<T>, A>(undefined, false);
 
-  return useMemo<RelatedFieldErrorsByTab>(
+  return useMemo<RelatedFieldErrorsByTab<T>>(
     () =>
       errorTuples.reduce((acc, [action]) => {
         // Search for errors based on the relatedObjectKey in action payload
         // - Applicable to actions acting on related objects (e.g. "ADD_RELATED_OBJECT").
         // - Relevant for related objects in DataGrids.
         // - Action explicitly sets tab.
+        // - Array of errors is returned matching each row in DataGrid.
         // - Errors relate to fields within tab rather than relation expressed by tab.
-        if ("relatedObjectKey" in action.payload) {
+        if (
+          !isPrimitive(action.payload) &&
+          "relatedObjectKey" in action.payload
+        ) {
           const key = action.payload.relatedObjectKey;
+          invariant(isString(key), "key is not a string!");
+          invariant(key in object._expand, "key is not key in object!");
+
           const relatedObject = object._expand[key];
 
           if (relatedObject) {
@@ -103,6 +230,7 @@ export function useRelatedFieldErrors(object: TargetType) {
 
             const siblings = errorTuples.filter(([sAction]) => {
               return (
+                !isPrimitive(sAction.payload) &&
                 "relatedObjectKey" in sAction.payload &&
                 sAction.payload.relatedObjectKey === key
               );
@@ -110,13 +238,13 @@ export function useRelatedFieldErrors(object: TargetType) {
 
             return {
               ...acc,
-              [key]: errorPerRow(siblings, length),
+              [key]: errorPerRow<T, A>(siblings, length),
             };
           }
         }
         return acc;
       }, {}),
-    [errorTuples, object, errorPerRow],
+    [errorTuples, object],
   );
 }
 
@@ -124,76 +252,84 @@ export function useRelatedFieldErrors(object: TargetType) {
  * Collects and maps non-related field-level errors (errors directly on the
  * main object) to tabs based on the tab configuration.
  *
- * @param tabConfigs - The list of tab configurations defining the form layout.
+ * @typeParam T - The base object type (e.g. Zaaktype).
+ * @typeParam A - The typed action associated with backend interactions.
  * @param object - The main object being validated.
+ * @param tabConfigs - The list of tab configurations defining the form layout.
  * @returns A memoized mapping of non-related field errors by tab key.
  */
-export function useNonRelatedFieldErrors(
-  tabConfigs: TabConfig<TargetType>[],
-  object: TargetType,
-) {
-  const errorTuples = useErrors<
-    TargetType | RelatedObject<TargetType>,
-    ZaaktypeAction
-  >(undefined, false);
+export function useNonRelatedFieldErrors<
+  T extends object,
+  A extends ZaaktypeAction,
+>(object: T, tabConfigs: TabConfig<T>[]) {
+  const errorTuples = useErrors<T | RelatedObject<T>, A>(undefined, false);
 
-  return useMemo<NonRelatedFieldErrorsByTab>(
+  return useMemo(
     () =>
-      errorTuples.reduce((acc, [action, errors]) => {
-        if ("relatedObjectKey" in action.payload) {
-          return acc;
-        }
+      errorTuples.reduce<NonRelatedFieldErrorsByTab<T>>(
+        (acc, [action, errors]) => {
+          if ("relatedObjectKey" in action.payload) {
+            return acc;
+          }
 
-        // Search for errors based on tabConfig keys.
-        // - Applicable to actions acting on ZaakType (e.g. "UPDATE_VERSION").
-        // - Relevant for errors on ZaakType fields.
-        // - Errors relate to ZaakType fields directly.
-        const _acc: NonRelatedFieldErrorsByTab = { ...acc };
-        for (const tabConfig of tabConfigs) {
-          if (tabConfig.view !== "AttributeGrid") continue;
+          // Search for errors based on tabConfig keys.
+          // - Applicable to actions acting on ZaakType (e.g. "UPDATE_VERSION").
+          // - Relevant for errors on ZaakType fields.
+          // - Errors relate to ZaakType fields directly.
+          for (const tabConfig of tabConfigs) {
+            if (tabConfig.view !== "AttributeGrid") continue;
 
-          const key = tabConfig.key;
-          const tabConfigFields = tabConfig.sections.flatMap((section) =>
-            section.fieldsets.flatMap((fieldset) =>
-              fieldset[1].fields.map((field) => getFieldName(field)),
-            ),
-          );
+            const key = tabConfig.key;
+            const tabConfigFields = tabConfig.sections.flatMap((section) =>
+              section.fieldsets.flatMap((fieldset) =>
+                fieldset[1].fields.map((field) => getFieldName(field)),
+              ),
+            );
 
-          for (const tabConfigField of tabConfigFields) {
-            if (
-              tabConfigField in object &&
-              !Array.isArray(object[tabConfigField]) &&
-              tabConfigField in errors
-            ) {
-              const errs = errors as NonRelatedErrors;
-              const current = _acc[key] ?? {};
-              _acc[key] = {
-                ...current,
-                [tabConfigField]: errs[tabConfigField],
-              };
+            for (const tabConfigField of tabConfigFields) {
+              if (
+                tabConfigField in object &&
+                !Array.isArray(object[tabConfigField]) &&
+                tabConfigField in errors
+              ) {
+                const current = acc[key] ?? {};
+
+                acc[key] = {
+                  ...current,
+                  [tabConfigField]:
+                    errors[tabConfigField as keyof typeof errors],
+                };
+              }
             }
           }
-        }
-        return _acc;
-      }, {}),
-    [errorTuples, object, errorPerRow],
+          return acc;
+        },
+        {},
+      ),
+    [errorTuples, object],
   );
 }
 
 /**
  * Return `Errors[]` of `size`, each object sits position indicated `ZaaktypeAction` found in
  * `errorTuples[number][0].payload.rowIndex`.
+ * @typeParam T - The base object type (e.g. Zaaktype).
+ * @typeParam A - The typed action associated with backend interactions.
  */
-function errorPerRow(
-  errorTuples: [ZaaktypeAction, Errors<RelatedObject<TargetType>>][],
+function errorPerRow<T extends object, A extends TypedAction>(
+  errorTuples: [A, Errors<RelatedObject<T>>][],
   size: number,
-): Errors<TargetType>[] {
+): Errors<T>[] {
   return errorTuples.reduce((acc, [action, errors]) => {
-    if (!action || !action.payload || !("rowIndex" in action.payload))
+    const payload = action.payload;
+    if (payload && !isPrimitive(payload) && "rowIndex" in payload) {
+      const rowIndex = payload.rowIndex;
+      invariant(typeof rowIndex === "number", "rowIndex is not a number!");
+      acc[rowIndex] = errors;
       return acc;
-
-    acc[action.payload.rowIndex] = errors;
-    return acc;
+    } else {
+      return acc;
+    }
   }, new Array(size).fill({}));
 }
 
