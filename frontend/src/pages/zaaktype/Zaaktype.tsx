@@ -166,10 +166,12 @@ export function ZaaktypePage() {
 
       // The new value.
       const value =
-        e.target instanceof HTMLInputElement &&
-        Object.hasOwn(e.target, "checked")
-          ? e.target.checked
-          : e.target.value;
+        e.target instanceof HTMLSelectElement && e.target.multiple
+          ? Array.from(e.target.selectedOptions).map((o) => o.value)
+          : e.target instanceof HTMLInputElement &&
+              Object.hasOwn(e.target, "checked")
+            ? e.target.checked
+            : e.target.value;
 
       // When rendering an object, it's value is converted to string using an
       // override (see `ZaaktypeTab`. When changing its value (and creating a

@@ -479,7 +479,6 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         "roltypen": make_expansion(
             "roltypen", _get_params_with_status, RolTypeWithUUID
         ),
-        "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": expand_zaakobjecttypen,
         "selectielijst_procestype": expand_selectielijstprocestype,
         "zaaktypeinformatieobjecttypen": expand_zaaktype_informatieobjecttype,
