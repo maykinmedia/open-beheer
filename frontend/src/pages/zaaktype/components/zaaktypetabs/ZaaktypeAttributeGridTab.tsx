@@ -6,12 +6,14 @@ import {
   Grid,
   Sidebar,
   Toolbar,
+  TypedField,
   fields2TypedFields,
   isPrimitive,
 } from "@maykin-ui/admin-ui";
 import { invariant, slugify } from "@maykin-ui/client-common";
 import React, { ReactNode, useCallback, useMemo } from "react";
 import { useLoaderData, useLocation, useParams } from "react-router";
+import { getZaaktype } from "~/api/zaaktype.ts";
 import {
   RelatedObjectBadge,
   RelatedObjectRenderer,
@@ -46,7 +48,7 @@ export const ZaaktypeAttributeGridTab = ({
 }: ZaaktypeAttributeGridTabProps) => {
   const { fields } = useLoaderData() as ZaaktypeLoaderData;
   const location = useLocation();
-  const { serviceSlug } = useParams();
+  const { serviceSlug, catalogusId } = useParams();
   invariant(serviceSlug, "serviceSlug must be provided!");
 
   const isEditing =
@@ -137,6 +139,52 @@ export const ZaaktypeAttributeGridTab = ({
     [setSectionHash],
   );
 
+  const fetchDeelzaaktypen = async (query: string) => {
+    const _query = query.trim().toLowerCase();
+
+    if (!serviceSlug || !catalogusId) {
+      throw new Error("serviceSlug and catalogusId must be provided!"); // Shouldn't happen
+    }
+    const [byIdent, byOmschrijving] = await Promise.all([
+      getZaaktype({
+        serviceSlug,
+        catalogusId,
+        identificatie: _query,
+      }),
+      getZaaktype({
+        serviceSlug,
+        catalogusId,
+        omschrijving: _query,
+      }),
+    ]);
+
+    const allResults = [...byIdent.results, ...byOmschrijving.results];
+    const unique = Array.from(
+      new Map(allResults.map((zaaktype) => [zaaktype.url, zaaktype])).values(),
+    );
+
+    return unique.map((zaaktype) => ({
+      label: `${zaaktype.identificatie} - ${zaaktype.omschrijving}`,
+      value: zaaktype.url,
+    }));
+  };
+
+  const fieldPatches = useMemo<Record<string, Partial<TypedField>>>(
+    () => ({
+      deelzaaktypen: {
+        options: fetchDeelzaaktypen,
+        multiple: true,
+        placeholder: "Kies één of meer deelzaaktypen",
+      },
+    }),
+    [],
+  );
+
+  const getFieldPatch = (
+    fieldName?: string,
+  ): Partial<TypedField> | undefined =>
+    fieldName ? fieldPatches[fieldName] : undefined;
+
   /**
    * Builds the AttributeGrid for the active section.
    * Merges overrides for complex and expanded fields.
@@ -152,7 +200,12 @@ export const ZaaktypeAttributeGridTab = ({
             field?.name && field.name in expandedOverrides
               ? false
               : field?.editable;
-          return { ...field, editable };
+          const patch = getFieldPatch(field?.name);
+          return {
+            ...field,
+            editable,
+            ...patch,
+          };
         }),
       },
     ]) as FieldSet<TargetType>[];
