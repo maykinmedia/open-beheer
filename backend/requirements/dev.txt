@@ -242,7 +242,7 @@ django-sendfile2==0.7.2
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
     #   django-privates
-django-setup-configuration==0.7.2
+django-setup-configuration==0.11.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -473,7 +473,7 @@ mozilla-django-oidc==4.0.1
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
     #   mozilla-django-oidc-db
-mozilla-django-oidc-db==0.25.0
+mozilla-django-oidc-db==1.0.2
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -969,7 +969,7 @@ yarl==1.20.1
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
     #   vcrpy
-zgw-consumers==0.38.0
+zgw-consumers==1.1.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
