@@ -175,13 +175,12 @@ class GherkinRunner:
             profile_button = page.get_by_role("button", name="Profiel")
             profile_button.click()
 
-            logout_button = page.get_by_role("button", name="Logout")
-            logout_button.wait_for()
-
             # ¯\_(ツ)_/¯ - Attempt to fix flakiness in WebKit
             if self.runner.browser.browser_type.name == "webkit":
                 page.wait_for_timeout(120)
 
+            logout_button = page.get_by_role("button", name="Logout")
+            logout_button.wait_for()
             logout_button.click()
 
         # Navigation
