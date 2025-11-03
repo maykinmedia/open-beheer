@@ -84,7 +84,7 @@ export const RelatedObjectRenderer = <T extends TargetType>(
 
   // Single related item in AttributeList.
   if (!Array.isArray(relatedObject)) {
-    if (!relatedObject) return null;
+    if (!relatedObject) return "-";
 
     return (
       <RelatedObjectBadge
@@ -96,13 +96,15 @@ export const RelatedObjectRenderer = <T extends TargetType>(
 
   // Multiple related items in AttributeList.
   if (Array.isArray(relatedObject)) {
-    return relatedObject.map((relatedObject, index) => (
-      <RelatedObjectBadge
-        key={relatedObject.uuid + index}
-        relatedObject={relatedObject}
-        allowedFields={allowedFields}
-      />
-    ));
+    return relatedObject.length
+      ? relatedObject.map((relatedObject, index) => (
+          <RelatedObjectBadge
+            key={relatedObject.uuid + index}
+            relatedObject={relatedObject}
+            allowedFields={allowedFields}
+          />
+        ))
+      : "-";
   }
 };
 RelatedObjectRenderer.displayName = "RelatedObjectRenderer";
