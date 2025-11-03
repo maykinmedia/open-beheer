@@ -125,6 +125,7 @@ INSTALLED_APPS = [
     "simple_certmanager",
     "maykin_common",
     "django_structlog",
+    "django_setup_configuration",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
@@ -584,3 +585,12 @@ SPECTACULAR_SETTINGS = {
         "openbeheer.api.drf_spectacular.schema.post_process_hook",
     ],
 }
+
+#
+# Django Setup Configuration
+#
+SETUP_CONFIGURATION_STEPS = [
+    "zgw_consumers.contrib.setup_configuration.steps.ServiceConfigurationStep",
+    "openbeheer.config.setup_configuration.steps.APIConfigConfigurationStep",
+    "mozilla_django_oidc_db.setup_configuration.steps.AdminOIDCConfigurationStep",
+]
