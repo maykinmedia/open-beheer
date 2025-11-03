@@ -41,7 +41,7 @@ def test_add_resultaattypen(page: Page, runner: GherkinRunner):
 
     # Navigate to resultaattypen tab
     _.when.user_selects_tab(page, "Resultaattypen")
-    _.when.user_clicks_on_button(page, name="Bewerken", exact=True)
+    _.when.user_clicks_on_button(page, name="Bewerken")
 
     # Zero state
     _.then.page_should_not_contain_text(
@@ -71,7 +71,7 @@ def test_add_resultaattypen(page: Page, runner: GherkinRunner):
     _.when.user_clicks_on_button(page, name="Doorgaan")
 
     # Save
-    _.when.user_clicks_on_button(page, name="Opslaan en afsluiten")
+    _.when.user_clicks_on_button(page, name="Opslaan")
 
     _.then.page_should_not_contain_text(page, "Voeg toe")
     _.then.page_should_contain_text(
