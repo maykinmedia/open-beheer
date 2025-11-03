@@ -1,5 +1,4 @@
 import { getCookie } from "@maykin-ui/client-common/cookie";
-import { ensureCSRFToken } from "~/api/auth.ts";
 
 /** The base origin for all API requests. */
 export const API_URL = import.meta.env.MYKN_API_URL || window.location.origin;
@@ -71,4 +70,8 @@ export async function request<T>(
     // in case isf expected to return nothing, the caller should use `T = void`
     return undefined as T;
   }
+}
+
+function ensureCSRFToken() {
+  return request("GET", "/auth/ensure-csrf-token/");
 }
