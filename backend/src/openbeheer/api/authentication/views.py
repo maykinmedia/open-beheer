@@ -16,7 +16,7 @@ from .serializers import AuthSerializer
     summary=_("Get CSRF cookie"),
     responses={204: None},
 )
-class EnsureCSRFView(APIView):
+class EnsureCSRFTokenView(APIView):
     permission_classes = []
 
     def get(self, request, *args, **kwargs):

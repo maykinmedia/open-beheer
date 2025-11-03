@@ -146,6 +146,7 @@ export type UpdateZaaktypeVersionPayload = {
 /**
  * Updates a new zaaktype version.
  */
+
 export async function updateZaaktypeVersionAction(
   action: TypedAction<"UPDATE_VERSION", UpdateZaaktypeVersionPayload>,
 ) {

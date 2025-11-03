@@ -4,8 +4,8 @@ import { components } from "~/types";
 
 import { OidcInfoType } from "./types";
 
-export function ensureCSRF() {
-  return request("GET", "/auth/ensure-csrf/");
+export function ensureCSRFToken() {
+  return request("GET", "/auth/ensure-csrf-token/");
 }
 
 /**
