@@ -4,6 +4,7 @@ import {
   Field,
   Outline,
   SerializedFormData,
+  Toolbar,
   TypedField,
 } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
@@ -50,13 +51,15 @@ export type RelatedObjectDataGridProps<T extends object> = {
   /** Called when list of actions (dispatch to persist) is changed. */
   onActionsChange: (actions: RelatedObjectDataGridAction<T>[]) => void;
   /**
-   * Hook that allows modifying the `relatedObject` before committing changes.
+   * Hook that allows modifying the `relatedObject` before committing changes. Can be called directly by the user using
+   * an action button, if this button is used: `hook` will be called with `userRequested` set to true..
    *
    * This function is called right before a change is committed, giving you a chance
    * to adjust or validate the `relatedObject`.
    *
    * @param object - The object related to the pending change.
    * @param actionType - The type of action describing the change.
+   * @param userRequested - Whether the user explicitly triggered the hook.
    * @returns A promise resolving to either:
    * - The modified `object`, which will be committed.
    * - `false`, to cancel (skip) committing the change.
@@ -67,6 +70,7 @@ export type RelatedObjectDataGridProps<T extends object> = {
   hook?: (
     object: T,
     actionType: RelatedObjectDataGridAction<T>["type"],
+    userRequested: boolean,
   ) => Promise<T | false>;
 };
 
@@ -253,7 +257,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
     const newRow = createRow();
 
     // Run hook.
-    const rowWithHookResult = await hook(newRow, "CREATE");
+    const rowWithHookResult = await hook(newRow, "CREATE", false);
 
     // Hook returned falsy result, reject change.,
     if (!rowWithHookResult) return;
@@ -327,7 +331,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
       const relatedObject = _relatedObject as T;
 
       // Run hook.
-      const rowWithHookResult = await hook(relatedObject, "UPDATE");
+      const rowWithHookResult = await hook(relatedObject, "UPDATE", false);
 
       // Hook returned falsy result, reject change.,
       if (!rowWithHookResult) {
@@ -415,7 +419,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
       );
 
       // Run hook.
-      const rowWithHookResult = await hook(row, "DELETE");
+      const rowWithHookResult = await hook(row, "DELETE", false);
 
       // Hook returned falsy result, reject change.,
       if (!rowWithHookResult) {
@@ -471,6 +475,95 @@ export function RelatedObjectDataGrid<T extends object = object>({
     ],
   );
 
+  /**
+   * Manually executes the optional `hook` for a row triggered by a user action.
+   *
+   * Behaviour:
+   * - locates the row by reference in `objectListState`
+   * - calls `hook()` with action type `"UPDATE"` and `userRequested = true`
+   * - if `hook` returns `false` the change is ignored
+   * - if `hook` returns an updated object it is committed as update action
+   *
+   * @param row - The row for which the hook should be executed.
+   */
+  const handleHook = useCallback(
+    async (row: object) => {
+      // Find row index.
+      const index = objectListState.findIndex((object) => object === row);
+
+      // Clean object.
+      const _relatedObject = { ...row };
+      if ("actions" in _relatedObject) {
+        delete _relatedObject.actions;
+      }
+      const relatedObject = _relatedObject as T;
+
+      // Run hook.
+      const rowWithHookResult = await hook(relatedObject, "UPDATE", true);
+
+      if (!rowWithHookResult) {
+        return;
+      }
+
+      const newObjectList = objectListState.map((row, i) =>
+        index === i ? (rowWithHookResult as T) : row,
+      );
+
+      // Update `updateActions` for existing object.
+      const newUpdateActions =
+        index <= updateActionsState.length - 1
+          ? updateActionsState.map((action, i) => {
+              if (i === index) {
+                return {
+                  ...action,
+                  type: "UPDATE" as const,
+                  payload: {
+                    rowIndex: index,
+                    object: rowWithHookResult,
+                  },
+                };
+              }
+              return action;
+            })
+          : updateActionsState;
+
+      // Update `addActions` for newly created object.
+      const newAddActions =
+        index > updateActionsState.length - 1
+          ? createActionsState.map((action, i) => {
+              if (i + updateActionsState.length === index) {
+                return {
+                  ...action,
+                  payload: { rowIndex: index, object: rowWithHookResult },
+                };
+              }
+              return action;
+            })
+          : createActionsState;
+
+      setObjectListState(newObjectList);
+      setUpdateActionsState(newUpdateActions);
+      setCreateActionsState(newAddActions);
+
+      const actions = [
+        ...deleteActionsState,
+        ...newUpdateActions,
+        ...newAddActions,
+      ].filter((actionOrNull): actionOrNull is RelatedObjectDataGridAction<T> =>
+        Boolean(actionOrNull),
+      );
+      onActionsChange(actions);
+    },
+    [
+      objectListState,
+      hook,
+      createActionsState,
+      updateActionsState,
+      deleteActionsState,
+      onActionsChange,
+    ],
+  );
+
   // The objects to render, may include overrides and actions.
   const displayedObjectList = useMemo<(T & { actions: JSX.Element })[]>(() => {
     return objectListState.map((row) => {
@@ -496,15 +589,23 @@ export function RelatedObjectDataGrid<T extends object = object>({
         ...row,
         ...overrides,
         actions: (
-          <Button
-            disabled={isLoading || !isEditingState}
-            size="xs"
-            variant="danger"
-            title="Verwijderen"
-            onClick={() => handleDelete(row)}
-          >
-            <Outline.TrashIcon />
-          </Button>
+          <Toolbar pad={false}>
+            <Button
+              disabled={isLoading || !isEditingState}
+              title="Meer velden"
+              onClick={() => handleHook(row)}
+            >
+              <Outline.SquaresPlusIcon />
+            </Button>
+            <Button
+              disabled={isLoading || !isEditingState}
+              variant="danger"
+              title="Verwijderen"
+              onClick={() => handleDelete(row)}
+            >
+              <Outline.TrashIcon />
+            </Button>
+          </Toolbar>
         ),
       };
     });
