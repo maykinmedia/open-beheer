@@ -122,7 +122,7 @@ class GherkinRunner:
             return catalogus
 
         def zaaktypen_exist(
-                self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
+            self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
         ) -> list[ZaakTypeWithUUID]:
             """
             Creates zaaktypen in Open Zaak for testing, depends on existence of
@@ -161,7 +161,7 @@ class GherkinRunner:
         # Authentication
 
         def user_logs_in(
-                self, page: Page, username: str = "johndoe", password: str = "secret"
+            self, page: Page, username: str = "johndoe", password: str = "secret"
         ) -> None:
             page.goto(f"{self.runner.live_server.url}/")
             expect(page).to_have_url(self.runner.live_server.url + "/login?next=/")
@@ -194,7 +194,7 @@ class GherkinRunner:
             page.goto(f"{self.runner.live_server.url}/")
 
         def user_selects_catalogus(
-                self, page: Page, catalogus: Catalogus, check_url: bool = True
+            self, page: Page, catalogus: Catalogus, check_url: bool = True
         ) -> None:
             page.wait_for_load_state("networkidle")
 
@@ -219,7 +219,7 @@ class GherkinRunner:
             page.wait_for_load_state("networkidle")
 
         def user_navigates_to_informatieobjecttype_list_page(
-                self, page: Page, catalogus: Catalogus
+            self, page: Page, catalogus: Catalogus
         ) -> None:
             """
             Navigates to the informatieobjecttype list page (by navigation)
@@ -236,7 +236,7 @@ class GherkinRunner:
             )
 
         def user_navigates_to_informatieobjecttype_create_page(
-                self, page: Page, catalogus: Catalogus
+            self, page: Page, catalogus: Catalogus
         ) -> None:
             page.wait_for_load_state("networkidle")
 
@@ -291,7 +291,7 @@ class GherkinRunner:
             page.get_by_label(label).click()
 
         def user_fills_form_field(
-                self, page: Page, label: str, value: str, index: int = -1
+            self, page: Page, label: str, value: str, index: int = -1
         ) -> None:
             """
             Fills the form field with the given value.
@@ -336,7 +336,7 @@ class GherkinRunner:
         # Content
 
         def page_should_contain_text(
-                self, page: Page, text: str, timeout: int | None = None
+            self, page: Page, text: str, timeout: int | None = None
         ) -> Locator:
             if timeout is None:
                 timeout = 500
@@ -353,7 +353,7 @@ class GherkinRunner:
             expect(page.locator(f"text={text}")).to_have_count(0)
 
         def table_entry_should_contain_aria_label(
-                self, page: Page, table_header: str, attribue_key: str, attribute_value: str
+            self, page: Page, table_header: str, attribue_key: str, attribute_value: str
         ) -> None:
             table_pair = page.locator(
                 ".mykn-attributelist__pair", has_text=table_header
