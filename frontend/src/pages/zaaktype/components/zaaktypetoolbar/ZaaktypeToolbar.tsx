@@ -47,33 +47,23 @@ export function ZaaktypeToolbar({
           {
             children: (
               <>
+                <Outline.DocumentDuplicateIcon />
+                Opslaan als
+              </>
+            ),
+            variant: "transparent",
+            onClick: onSaveAs,
+          },
+          "spacer",
+          {
+            children: (
+              <>
                 <Outline.NoSymbolIcon />
                 Annuleren
               </>
             ),
             variant: "transparent",
             onClick: onCancel,
-          },
-          "spacer",
-          {
-            children: (
-              <>
-                <Outline.DocumentDuplicateIcon />
-                Opslaan als nieuw Zaaktype
-              </>
-            ),
-            variant: "transparent",
-            onClick: onSaveAs,
-          },
-          {
-            children: (
-              <>
-                <Outline.ArrowDownTrayIcon />
-                Opslaan en afsluiten
-              </>
-            ),
-            variant: "transparent",
-            onClick: onSave,
           },
           {
             children: (
@@ -82,8 +72,18 @@ export function ZaaktypeToolbar({
                 Publiceren
               </>
             ),
-            variant: "primary",
+            variant: "transparent",
             onClick: onPublish,
+          },
+          {
+            children: (
+              <>
+                <Outline.ArrowDownTrayIcon />
+                Opslaan
+              </>
+            ),
+            variant: "primary",
+            onClick: onSave,
           },
         ];
       }
