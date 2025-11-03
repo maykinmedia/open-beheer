@@ -211,6 +211,7 @@ export function ZaaktypeDataGridTab({
                   omschrijvingGeneriek: resultaattypeomschrijvingOption.label,
                   selectielijstklasse,
                   brondatumArchiefprocedure,
+                  afleidingswijze: brondatumArchiefprocedure.afleidingswijze,
                 } as ResultaatType);
               }}
               onCancel={() => {
