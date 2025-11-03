@@ -93,7 +93,7 @@ def test_edit_and_save_informatieobjecttype(page: Page, runner: GherkinRunner):
     )
     page.get_by_label("Omschrijving").fill("Updated Omschrijving")
 
-    runner.when.user_clicks_on_button(page, name="Opslaan", exact=True)
+    runner.when.user_clicks_on_button(page, name="Opslaan")
     runner.then.path_should_be(
         page,
         f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/{iot.uuid}",
