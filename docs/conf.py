@@ -10,6 +10,12 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 
+import django
+from django.conf import settings
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_settings_module")
+django.setup()
+
 import openbeheer  # noqa isort:skip
 
 # from objects.setup import setup_env  # noqa isort:skip
@@ -42,6 +48,8 @@ extensions = [
     # "sphinx_tabs.tabs",
     # "recommonmark",
     # "sphinx_markdown_tables",
+    "sphinx.ext.autodoc",
+    "django_setup_configuration.documentation.setup_config_example",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

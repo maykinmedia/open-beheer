@@ -103,6 +103,22 @@ Backend Setup (Django)
 
       src/manage.py runserver
 
+.. _example_auto_config: 
+
+Automatic configuration
+-----------------------
+
+For development, you can configure the backend to use the external applications provided as 
+docker compose by using the following setup-configuration file:
+
+.. literalinclude:: ../../backend/src/openbeheer/config/setup_configuration/fixtures/data.yaml
+
+This can be loaded by doing (from the backend folder):
+
+.. code:: bash
+
+   src/manage.py setup_configuration --yaml-file src/openbeheer/config/setup_configuration/fixtures/data.yaml
+
 Frontend Setup (React)
 ----------------------
 
