@@ -122,12 +122,14 @@ export function ZaaktypeDataGridTab({
   const relatedObjectHook = async (
     relatedObject: RelatedObject<TargetType>,
     actionType: RelatedObjectDataGridAction<typeof relatedObject>["type"],
+    userRequested: boolean,
   ): Promise<false | RelatedObject<TargetType>> => {
     switch (tabConfig.key) {
       case "resultaattypen":
         return await resultaatTypeHook(
           relatedObject as components["schemas"]["ResultaatTypeWithUUID"],
           actionType,
+          userRequested,
         );
     }
     return relatedObject;
@@ -141,7 +143,13 @@ export function ZaaktypeDataGridTab({
     async (
       resultaatType: ResultaatType,
       actionType: RelatedObjectDataGridAction<ResultaatType>["type"],
+      userRequested: boolean,
     ): Promise<ResultaatType | false> => {
+      // Edits without explicit request pass.
+      if (actionType.toUpperCase().includes("UPDATE") && !userRequested)
+        return resultaatType;
+
+      // Deletes always pass.
       if (actionType.toUpperCase().includes("DELETE")) return resultaatType;
 
       return new Promise((resolve, reject) => {
