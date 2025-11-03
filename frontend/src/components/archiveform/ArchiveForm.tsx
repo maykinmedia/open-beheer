@@ -40,7 +40,7 @@ export type ArchiveFormProps = {
     omschrijving: string;
     resultaattypeomschrijving: ArchiveFormData["resultaattypeomschrijving"];
     selectielijstklasse: ArchiveFormData["selectielijstklasse"];
-    brondatumArchiefprocedure: BrondatumFieldValues;
+    brondatumArchiefprocedure: Omit<BrondatumFieldValues, "einddatumBekend">;
   }) => void;
 };
 
@@ -197,7 +197,6 @@ export function ArchiveForm({
           brondatumArchiefprocedure: {
             afleidingswijze: data.afleidingswijze || "",
             datumkenmerk: data.datumkenmerk || "",
-            einddatumBekend: false,
             objecttype: data.objecttype || "",
             registratie: data.registratie || "",
             procestermijn: data.procestermijn || "",
