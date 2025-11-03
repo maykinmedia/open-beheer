@@ -131,7 +131,7 @@ django-sendfile2==0.7.2
     # via
     #   -r requirements/base.txt
     #   django-privates
-django-setup-configuration==0.7.2
+django-setup-configuration==0.11.0
     # via -r requirements/base.txt
 django-simple-certmanager==2.4.1
     # via
@@ -226,7 +226,7 @@ mozilla-django-oidc==4.0.1
     # via
     #   -r requirements/base.txt
     #   mozilla-django-oidc-db
-mozilla-django-oidc-db==0.25.0
+mozilla-django-oidc-db==1.0.2
     # via -r requirements/base.txt
 msgspec==0.19.0
     # via -r requirements/base.txt
@@ -437,5 +437,5 @@ wrapt==1.17.2
     #   vcrpy
 yarl==1.20.1
     # via vcrpy
-zgw-consumers==0.38.0
+zgw-consumers==1.1.0
     # via -r requirements/base.txt
