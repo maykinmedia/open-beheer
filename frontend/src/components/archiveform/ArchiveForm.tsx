@@ -37,6 +37,7 @@ export type ArchiveFormProps = {
 
   /** Gets called when the form is submitted. */
   onSubmit: (data: {
+    omschrijving: string;
     resultaattypeomschrijving: ArchiveFormData["resultaattypeomschrijving"];
     selectielijstklasse: ArchiveFormData["selectielijstklasse"];
     brondatumArchiefprocedure: BrondatumFieldValues;
@@ -44,6 +45,7 @@ export type ArchiveFormProps = {
 };
 
 export type ArchiveFormData = BrondatumFieldValues & {
+  omschrijving: string;
   resultaattypeomschrijving: string;
   selectielijstklasse: string;
 };
@@ -71,6 +73,7 @@ export function ArchiveForm({
 
   /** Form field values. */
   const [formState, setFormState] = useState<ArchiveFormData>({
+    omschrijving: resultaatType.omschrijving,
     resultaattypeomschrijving:
       resultaatType.resultaattypeomschrijving ||
       resultaattypeomschrijvingOptions?.[0].value?.toString() ||
@@ -134,6 +137,12 @@ export function ArchiveForm({
 
     return [
       {
+        label: "Omschrijving",
+        name: "omschrijving",
+        type: "text",
+        value: formState?.omschrijving,
+      },
+      {
         label: "Resultaattypeomschrijving",
         name: "resultaattypeomschrijving",
         type: "text",
@@ -182,6 +191,7 @@ export function ArchiveForm({
       validateOnChange
       onSubmit={(_, data) =>
         onSubmit({
+          omschrijving: data.omschrijving,
           resultaattypeomschrijving: data.resultaattypeomschrijving,
           selectielijstklasse: data.selectielijstklasse,
           brondatumArchiefprocedure: {
