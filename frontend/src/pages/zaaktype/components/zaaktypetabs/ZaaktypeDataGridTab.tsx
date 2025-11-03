@@ -187,6 +187,7 @@ export function ZaaktypeDataGridTab({
               }
               selectielijstklasseOptions={selectielijstklasseOptions}
               onSubmit={({
+                omschrijving,
                 resultaattypeomschrijving,
                 selectielijstklasse,
                 brondatumArchiefprocedure,
@@ -207,6 +208,7 @@ export function ZaaktypeDataGridTab({
                 // Resolve with provided additions.
                 resolve({
                   ...resultaatType,
+                  omschrijving,
                   resultaattypeomschrijving,
                   omschrijvingGeneriek: resultaattypeomschrijvingOption.label,
                   selectielijstklasse,
