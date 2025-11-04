@@ -1,43 +1,33 @@
 import {
-  Body,
-  Button,
-  Card,
-  CardBaseTemplate,
-  Column,
-  Form,
   FormField,
   FormValidator,
-  Grid,
-  H1,
-  H2,
-  Modal,
-  P,
   SerializedFormData,
-  Ul,
   validateForm,
 } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
 import React, { FormEvent, useCallback, useContext, useEffect } from "react";
 import { useActionData, useLoaderData, useParams } from "react-router";
 import { CATALOGUS_PARAM, OBContext, SERVICE_PARAM } from "~/App.tsx";
-import { useBreadcrumbItems } from "~/hooks";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
 import { getUUIDFromString } from "~/lib/format/string.ts";
-import { getZaaktypeCreateFields } from "~/lib/zaaktype/zaaktypeCreate.ts";
+import { ZAAKTYPE_CREATE_BASE_FIELDS } from "~/lib/zaaktype/zaaktypeCreate.ts";
 import {
   ZaakTypeCreateAction,
   ZaaktypeCreateActionPayload,
   ZaaktypeCreateLoaderData,
 } from "~/pages";
 import { components } from "~/types";
+import { CreateView } from "~/views/CreateView";
 
-import "./zaaktypeCreate.styles.css";
+type ZaaktypeTemplate =
+  components["schemas"]["Sjabloon_OptionalExpandableZaakTypeRequest_"] & {
+    uuid: string;
+  };
 
 export function ZaaktypeCreatePage() {
   const obContext = useContext(OBContext);
   const { results } = useLoaderData<ZaaktypeCreateLoaderData>();
 
-  const breadcrumbItems = useBreadcrumbItems();
   const submitAction = useSubmitAction<ZaakTypeCreateAction>(false);
   const params = useParams();
   const serviceSlug = params[SERVICE_PARAM];
@@ -48,16 +38,12 @@ export function ZaaktypeCreatePage() {
 
   const actionData = useActionData() as components["schemas"]["ZGWError"];
 
-  const [isFillingForm, setIsFillingForm] = React.useState(false);
-  const [valuesState, setValuesState] = React.useState<
-    Partial<ZaaktypeCreateLoaderData["results"][0]>
-  >({});
   const [nonFieldErrors, setNonFieldErrors] = React.useState<
     string[] | undefined
   >();
 
   const [isValidState, setIsValidState] = React.useState(false);
-  const fields = getZaaktypeCreateFields(valuesState.waarden);
+  const fields = ZAAKTYPE_CREATE_BASE_FIELDS;
 
   useEffect(() => {
     if (actionData?.invalidParams?.length) {
@@ -72,22 +58,6 @@ export function ZaaktypeCreatePage() {
     }
   }, [actionData]);
 
-  const handleSelectTemplate = useCallback(
-    (uuid: string | null) => {
-      setValuesState({});
-      setNonFieldErrors(undefined);
-      if (uuid) {
-        const selectedResult = results.find((result) => result.uuid === uuid);
-        if (selectedResult) {
-          setValuesState({ ...selectedResult });
-        }
-      } else {
-        setValuesState({});
-      }
-    },
-    [results],
-  );
-
   const handleValidate = useCallback<FormValidator>(
     (values: object, fields: FormField[], validators) => {
       const errors = validateForm(values, fields, validators);
@@ -95,7 +65,7 @@ export function ZaaktypeCreatePage() {
       setIsValidState(isValid);
       return errors;
     },
-    [valuesState],
+    [],
   );
 
   const handleSubmit = useCallback(
@@ -117,10 +87,7 @@ export function ZaaktypeCreatePage() {
 
       invariant(catalogusURL, "Unable to determine catalogus url!");
       const finalPayload: ZaaktypeCreateActionPayload = {
-        zaaktype: {
-          ...valuesState.waarden,
-          ...data,
-        },
+        zaaktype: data,
         serviceSlug: serviceSlug,
         catalogus: catalogusURL,
       };
@@ -133,114 +100,22 @@ export function ZaaktypeCreatePage() {
     [isValidState],
   );
 
-  return (
-    <CardBaseTemplate breadcrumbItems={breadcrumbItems}>
-      <Modal
-        size="m"
-        title="Basis"
-        open={isFillingForm}
-        onClose={() => setIsFillingForm(false)}
-      >
-        <Body fullHeight>
-          <P>
-            Je staat op het punt een nieuw zaaktype te starten. Geef een
-            identificatie en omschrijving op. Deze twee gegevens vormen de basis
-            van je nieuwe zaaktype.
-          </P>
-          <Form
-            key={`zaaktypecreate-form-${valuesState.uuid || ""}`}
-            aria-label="Zaaktype aanmaken"
-            nonFieldErrors={nonFieldErrors}
-            fields={fields}
-            justify="stretch"
-            labelSubmit="Zaaktype aanmaken"
-            validateOnChange
-            showActions={true}
-            validate={handleValidate}
-            onSubmit={handleSubmit}
-          />
-        </Body>
-      </Modal>
-      <Body>
-        <Grid fullHeight={true}>
-          <Column span={12}>
-            <H1>Kies een sjabloon</H1>
-          </Column>
-          <Column span={6}>
-            <P>
-              Maak een nieuw zaaktype aan door te starten vanaf een sjabloon of
-              met een blanco opzet. Kies de variant die het beste past bij het
-              soort proces dat je wilt inrichten
-            </P>
-          </Column>
-          <Column span={6} />
+  const modalText =
+    "Je staat op het punt een nieuw zaaktype te starten. Geef een identificatie en omschrijving op. Deze twee gegevens vormen de basis van je nieuwe zaaktype.";
 
-          {results.map((result) => (
-            <Column
-              span={3}
-              key={result.uuid}
-              className="zaaktypecreate__card-column-wrapper"
-            >
-              <ZaaktypeCreateCard
-                result={result}
-                selectedTemplate={valuesState.uuid || null}
-                setSelectedTemplate={handleSelectTemplate}
-              />
-            </Column>
-          ))}
-          <Column span={12}>
-            <Button
-              variant="primary"
-              disabled={!valuesState.uuid}
-              onClick={() => setIsFillingForm(true)}
-            >
-              Gebruik dit sjabloon
-            </Button>
-          </Column>
-        </Grid>
-      </Body>
-    </CardBaseTemplate>
+  const templates = results.filter((result): result is ZaaktypeTemplate =>
+    Boolean(result.uuid),
+  );
+
+  return (
+    <CreateView<ZaaktypeTemplate>
+      formFields={fields}
+      modalText={modalText}
+      nonFieldErrors={nonFieldErrors}
+      resourceName="zaaktype"
+      templates={templates}
+      onValidate={handleValidate}
+      onSubmit={handleSubmit}
+    />
   );
 }
-
-type ZaaktypeCreateCardProps = {
-  result: ZaaktypeCreateLoaderData["results"][number];
-  selectedTemplate: string | null;
-  setSelectedTemplate: (uuid: string | null) => void;
-};
-
-export const ZaaktypeCreateCard: React.FC<ZaaktypeCreateCardProps> = ({
-  result,
-  selectedTemplate,
-  setSelectedTemplate,
-}) => {
-  return (
-    <Card
-      className="zaaktypecreate__card"
-      onClick={() => setSelectedTemplate(result.uuid || null)}
-      border={true}
-      titleAs={H2}
-      title={result.naam}
-      actions={[
-        {
-          ["aria-label"]: result.naam,
-          type: "radio",
-          name: `zaaktypecreate-${result.naam}`,
-          value: result.uuid,
-          checked: selectedTemplate === result.uuid,
-        },
-      ]}
-    >
-      <Body fullHeight={true} className="zaaktypecreate__card-body">
-        <P>{result.omschrijving}</P>
-        {result.voorbeelden.length > 0 && (
-          <Ul>
-            {result.voorbeelden.map((voorbeeld: string) => (
-              <li key={voorbeeld}>{voorbeeld}</li>
-            ))}
-          </Ul>
-        )}
-      </Body>
-    </Card>
-  );
-};
