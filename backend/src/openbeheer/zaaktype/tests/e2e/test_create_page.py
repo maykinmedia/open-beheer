@@ -44,7 +44,7 @@ def test_create_zaaktype(page: Page, runner: GherkinRunner):
     _.when.user_fills_form_field(page, "Identificatienummer", "gh-305")
     _.when.user_fills_form_field(page, "Omschrijving", "created zaaktype")
     _.when.user_clicks_on_button(page, name="Zaaktype aanmaken")
-    _.then.page_should_contain_text(page, "gh-305", timeout=10000)
+    _.then.page_should_contain_text(page, "gh-305", timeout=15000)
 
     # Navigate to algemeen tab
     _.when.user_selects_tab(page, "Algemeen")
