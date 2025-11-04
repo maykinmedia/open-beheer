@@ -67,6 +67,7 @@ def test_add_resultaattypen(page: Page, runner: GherkinRunner):
         page,
         "Selectielijstklasse",
         "1.1.3 - Ingericht - vernietigen - P10Y - Wijziging inrichting BRP systeem",
+        1,
     )
     _.when.user_clicks_on_button(page, name="Doorgaan")
 

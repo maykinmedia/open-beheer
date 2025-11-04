@@ -300,12 +300,11 @@ class GherkinRunner:
             page.get_by_label(label).click()
 
         def user_fills_form_field(
-            self, page: Page, label: str, value: str, index: int = -1
+            self, page: Page, label: str, value: str, index: int = 0
         ) -> None:
             """
             Fills the form field with the given value.
             If multiple form fields are found, the field at the given index is filled.
-            If no index is provided: the last field is used to accommodate modal forms.
             """
 
             # Certain form fields may be shown in a modal that needs some time to load
@@ -314,9 +313,8 @@ class GherkinRunner:
 
             # Try a (custom) select
             selects = page.get_by_role("combobox", name=label)
-            _index = index if index > -1 else selects.count() - 1
             if selects.count():
-                select = selects.nth(_index)
+                select = selects.nth(index)
                 select.click()
                 option = select.get_by_text(value)
                 option.click()
@@ -324,8 +322,7 @@ class GherkinRunner:
 
             # Fill (native) input
             inputs = page.get_by_label(label)
-            _index = index if index > -1 else inputs.count() - 1
-            input = inputs.nth(_index)
+            input = inputs.nth(index)
             input.fill(value)
 
     class Then(GherkinScenario):
