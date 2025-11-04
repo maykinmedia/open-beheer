@@ -110,7 +110,7 @@ export const ZaaktypeAttributeGridTab = ({
       const relatedObject = expand[fieldName as keyof Expand<TargetType>];
 
       if (!(fieldName in expand) || originalValue === null) continue;
-      if (isEditing && field.options) continue;
+      if (isEditing) continue;
 
       overrides[fieldName] = (
         <RelatedObjectRenderer
