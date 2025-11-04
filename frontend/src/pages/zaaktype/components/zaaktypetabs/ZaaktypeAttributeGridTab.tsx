@@ -1,9 +1,11 @@
 import {
   AttributeGrid,
+  Badge,
   Column,
   Field,
   FieldSet,
   Grid,
+  Option,
   Sidebar,
   Toolbar,
   TypedField,
@@ -11,9 +13,15 @@ import {
   isPrimitive,
 } from "@maykin-ui/admin-ui";
 import { invariant, slugify } from "@maykin-ui/client-common";
-import React, { ReactNode, useCallback, useMemo } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useLoaderData, useLocation, useParams } from "react-router";
-import { getZaaktype } from "~/api/zaaktype.ts";
+import { getZaaktype, getZaaktypen } from "~/api/zaaktype.ts";
 import {
   RelatedObjectBadge,
   RelatedObjectRenderer,
@@ -21,12 +29,13 @@ import {
 } from "~/components/related";
 import { Errors } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
+import { getZaaktypeUUID } from "~/lib";
 import {
   AttributeGridTabConfig,
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
-import { Expand, ExpandItemKeys, RelatedObject } from "~/types";
+import { Expand, ExpandItemKeys, RelatedObject, components } from "~/types";
 
 type ZaaktypeAttributeGridTabProps = {
   errors: Errors<TargetType>;
@@ -68,6 +77,100 @@ export const ZaaktypeAttributeGridTab = ({
     return tabConfig.sections.length > 1;
   }, [tabConfig]);
 
+  const [selectedDeelzaaktypenOptions, setSelectedDeelzaaktypenOptions] =
+    useState<Option[]>([]);
+
+  const mapZaaktypenToOptions = (
+    zaaktypen:
+      | components["schemas"]["ExpandableZaakType"]
+      | components["schemas"]["ExpandableZaakType"][],
+  ): Option[] => {
+    const list = Array.isArray(zaaktypen) ? zaaktypen : [zaaktypen];
+
+    return list.map((z) => ({
+      label: `${z.identificatie} - ${z.omschrijving}`,
+      value: z.url,
+    }));
+  };
+
+  const fetchDeelzaaktypen = async (query: string) => {
+    const _query = query.trim().toLowerCase();
+
+    if (!serviceSlug || !catalogusId) {
+      throw new Error("serviceSlug and catalogusId must be provided!"); // Shouldn't happen
+    }
+    const [byIdent, byOmschrijving] = await Promise.all([
+      getZaaktypen({
+        serviceSlug,
+        catalogusId,
+        identificatie: _query,
+      }),
+      getZaaktypen({
+        serviceSlug,
+        catalogusId,
+        omschrijving: _query,
+      }),
+    ]);
+
+    const allResults = [
+      ...byIdent.results,
+      ...byOmschrijving.results,
+    ] as components["schemas"]["ExpandableZaakType"][];
+    const unique = Array.from(
+      new Map(allResults.map((zaaktype) => [zaaktype.url, zaaktype])).values(),
+    );
+
+    return mapZaaktypenToOptions(unique);
+  };
+
+  const fieldPatches = useMemo<Record<string, Partial<TypedField>>>(
+    () => ({
+      deelzaaktypen: {
+        options: fetchDeelzaaktypen,
+        multiple: true,
+        placeholder: "Kies één of meer deelzaaktypen",
+      },
+    }),
+    [],
+  );
+
+  const getFieldPatch = (
+    fieldName?: string,
+  ): Partial<TypedField> | undefined =>
+    fieldName ? fieldPatches[fieldName] : undefined;
+
+  useEffect(() => {
+    if (isEditing) return;
+    const run = async () => {
+      for (const field of fields) {
+        const fieldName = field.name.split(".").pop();
+        const originalValue = object[fieldName as keyof TargetType];
+        const patch = getFieldPatch(fieldName);
+
+        if (
+          patch &&
+          Array.isArray(originalValue) &&
+          originalValue.every((v) => typeof v === "string")
+        ) {
+          if (fieldName === "deelzaaktypen") {
+            // For every single string value in the array (URL), fetch the zaaktype for it
+            const promises = originalValue.map((url) => {
+              const zaaktypeUUID = getZaaktypeUUID({ url });
+              if (!zaaktypeUUID) return null;
+              return getZaaktype({ serviceSlug, zaaktypeUUID });
+            });
+            const response = await Promise.all(promises);
+            const zaaktypen = response
+              .filter((res) => res !== null)
+              .map((res) => res.result);
+            setSelectedDeelzaaktypenOptions(mapZaaktypenToOptions(zaaktypen));
+          }
+        }
+      }
+    };
+    void run();
+  }, [isEditing]);
+
   /**
    * Maps complex (non-primitive) fields to rendered components.
    * Non-primitive values are displayed as RelatedObjectBadge or editable text.
@@ -82,20 +185,27 @@ export const ZaaktypeAttributeGridTab = ({
       const fieldName = _fieldName as keyof TargetType;
       const originalValue = object[fieldName];
 
-      if (
-        originalValue &&
-        !isPrimitive(originalValue) &&
-        !Array.isArray(originalValue)
-      ) {
+      if (!originalValue) continue;
+      if (isPrimitive(originalValue)) continue;
+
+      if (!Array.isArray(originalValue)) {
         overrides[fieldName] = isEditing ? (
           getObjectValue(originalValue)
         ) : (
           <RelatedObjectBadge relatedObject={originalValue} />
         );
       }
+
+      if (fieldName === "deelzaaktypen") {
+        overrides[fieldName] = isEditing
+          ? (originalValue as string[])
+          : selectedDeelzaaktypenOptions.map((option) => (
+              <Badge key={option.value}>{option.label}</Badge>
+            ));
+      }
     }
     return overrides;
-  }, [fields, object]);
+  }, [fields, object, selectedDeelzaaktypenOptions]);
 
   /**
    * Maps expandable fields to rendered components showing related data.
@@ -138,52 +248,6 @@ export const ZaaktypeAttributeGridTab = ({
     },
     [setSectionHash],
   );
-
-  const fetchDeelzaaktypen = async (query: string) => {
-    const _query = query.trim().toLowerCase();
-
-    if (!serviceSlug || !catalogusId) {
-      throw new Error("serviceSlug and catalogusId must be provided!"); // Shouldn't happen
-    }
-    const [byIdent, byOmschrijving] = await Promise.all([
-      getZaaktype({
-        serviceSlug,
-        catalogusId,
-        identificatie: _query,
-      }),
-      getZaaktype({
-        serviceSlug,
-        catalogusId,
-        omschrijving: _query,
-      }),
-    ]);
-
-    const allResults = [...byIdent.results, ...byOmschrijving.results];
-    const unique = Array.from(
-      new Map(allResults.map((zaaktype) => [zaaktype.url, zaaktype])).values(),
-    );
-
-    return unique.map((zaaktype) => ({
-      label: `${zaaktype.identificatie} - ${zaaktype.omschrijving}`,
-      value: zaaktype.url,
-    }));
-  };
-
-  const fieldPatches = useMemo<Record<string, Partial<TypedField>>>(
-    () => ({
-      deelzaaktypen: {
-        options: fetchDeelzaaktypen,
-        multiple: true,
-        placeholder: "Kies één of meer deelzaaktypen",
-      },
-    }),
-    [],
-  );
-
-  const getFieldPatch = (
-    fieldName?: string,
-  ): Partial<TypedField> | undefined =>
-    fieldName ? fieldPatches[fieldName] : undefined;
 
   /**
    * Builds the AttributeGrid for the active section.

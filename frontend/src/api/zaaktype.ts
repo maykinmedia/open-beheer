@@ -4,6 +4,19 @@ import { components } from "~/types";
 
 export const getZaaktype = async ({
   serviceSlug,
+  zaaktypeUUID,
+}: {
+  serviceSlug: string;
+  zaaktypeUUID: string;
+}) => {
+  const response = await request<
+    components["schemas"]["DetailResponse_ExpandableZaakType_"]
+  >("GET", `/service/${serviceSlug}/zaaktypen/${zaaktypeUUID}/`);
+  return { ...response };
+};
+
+export const getZaaktypen = async ({
+  serviceSlug,
   catalogusId,
   identificatie,
   omschrijving,
