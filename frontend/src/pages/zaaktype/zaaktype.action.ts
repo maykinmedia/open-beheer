@@ -222,7 +222,7 @@ export async function saveAsAction(
   }
 
   try {
-    const { uuid } = await request<components["schemas"]["ZaakTypeWithUUID"]>(
+    const { uuid } = await request<components["schemas"]["ExpandableZaakType"]>(
       "POST",
       `/service/${serviceSlug}/zaaktypen/`,
       {},
