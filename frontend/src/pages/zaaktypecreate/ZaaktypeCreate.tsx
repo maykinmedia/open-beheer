@@ -1,9 +1,4 @@
-import {
-  FormField,
-  FormValidator,
-  SerializedFormData,
-  validateForm,
-} from "@maykin-ui/admin-ui";
+import { FormField, FormValidator, validateForm } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
 import React, { FormEvent, useCallback, useContext, useEffect } from "react";
 import { useActionData, useLoaderData, useParams } from "react-router";
@@ -68,7 +63,10 @@ export function ZaaktypeCreatePage() {
   );
 
   const handleSubmit = useCallback(
-    async (event: FormEvent<HTMLFormElement>, data: SerializedFormData) => {
+    async (
+      event: FormEvent<HTMLFormElement>,
+      data: ZaaktypeTemplate["waarden"],
+    ) => {
       if (!isValidState || !serviceSlug || !catalogusUUID) {
         console.warn(
           "Form is not valid or serviceSlug/catalogusSlug is missing.",
