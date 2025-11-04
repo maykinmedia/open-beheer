@@ -1,0 +1,14 @@
+.createcard-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.createcard {
+  display: flex;
+  flex: 1;
+}
+
+.createcard__body {
+  display: flex;
+  flex-direction: column;
+}
