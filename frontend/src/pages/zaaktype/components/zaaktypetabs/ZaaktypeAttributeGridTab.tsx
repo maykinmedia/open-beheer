@@ -93,6 +93,40 @@ export const ZaaktypeAttributeGridTab = ({
     }));
   };
 
+  /**
+   * Fetches and sets selected deelzaaktypen options when not editing.
+   */
+  useEffect(() => {
+    if (isEditing) return;
+
+    const deelzaaktypenField = fields.find(
+      (f) => f.name.split(".").pop() === "deelzaaktypen",
+    );
+    if (!deelzaaktypenField) return;
+
+    const raw = object["deelzaaktypen" as keyof TargetType];
+
+    if (!Array.isArray(raw)) return;
+
+    const run = async () => {
+      const urls = raw as string[];
+
+      const fetches = urls.map((url) => {
+        const zaaktypeUUID = getZaaktypeUUID({ url });
+        return zaaktypeUUID ? getZaaktype({ serviceSlug, zaaktypeUUID }) : null;
+      });
+
+      const results = await Promise.all(fetches);
+      const zaaktypen = results
+        .filter((res) => res !== null)
+        .map((res) => res.result);
+
+      setSelectedDeelzaaktypenOptions(mapZaaktypenToOptions(zaaktypen));
+    };
+
+    void run();
+  }, [isEditing, fields, object, serviceSlug]);
+
   const fetchDeelzaaktypen = async (query: string) => {
     const _query = query.trim().toLowerCase();
 
@@ -139,38 +173,6 @@ export const ZaaktypeAttributeGridTab = ({
   ): Partial<TypedField> | undefined =>
     fieldName ? fieldPatches[fieldName] : undefined;
 
-  useEffect(() => {
-    if (isEditing) return;
-    const run = async () => {
-      for (const field of fields) {
-        const fieldName = field.name.split(".").pop();
-        const originalValue = object[fieldName as keyof TargetType];
-        const patch = getFieldPatch(fieldName);
-
-        if (
-          patch &&
-          Array.isArray(originalValue) &&
-          originalValue.every((v) => typeof v === "string")
-        ) {
-          if (fieldName === "deelzaaktypen") {
-            // For every single string value in the array (URL), fetch the zaaktype for it
-            const promises = originalValue.map((url) => {
-              const zaaktypeUUID = getZaaktypeUUID({ url });
-              if (!zaaktypeUUID) return null;
-              return getZaaktype({ serviceSlug, zaaktypeUUID });
-            });
-            const response = await Promise.all(promises);
-            const zaaktypen = response
-              .filter((res) => res !== null)
-              .map((res) => res.result);
-            setSelectedDeelzaaktypenOptions(mapZaaktypenToOptions(zaaktypen));
-          }
-        }
-      }
-    };
-    void run();
-  }, [isEditing]);
-
   /**
    * Maps complex (non-primitive) fields to rendered components.
    * Non-primitive values are displayed as RelatedObjectBadge or editable text.
@@ -185,8 +187,19 @@ export const ZaaktypeAttributeGridTab = ({
       const fieldName = _fieldName as keyof TargetType;
       const originalValue = object[fieldName];
 
-      if (!originalValue) continue;
-      if (isPrimitive(originalValue)) continue;
+      if (!originalValue || isPrimitive(originalValue)) continue;
+
+      // When deelzaaktypen we want to render badges for selected options
+      if (fieldName === "deelzaaktypen") {
+        overrides[fieldName] = isEditing
+          ? (originalValue as string[])
+          : selectedDeelzaaktypenOptions.length > 0
+            ? selectedDeelzaaktypenOptions.map((option) => (
+                <Badge key={option.value}>{option.label}</Badge>
+              ))
+            : "-";
+        continue;
+      }
 
       if (!Array.isArray(originalValue)) {
         overrides[fieldName] = isEditing ? (
@@ -194,14 +207,6 @@ export const ZaaktypeAttributeGridTab = ({
         ) : (
           <RelatedObjectBadge relatedObject={originalValue} />
         );
-      }
-
-      if (fieldName === "deelzaaktypen") {
-        overrides[fieldName] = isEditing
-          ? (originalValue as string[])
-          : selectedDeelzaaktypenOptions.map((option) => (
-              <Badge key={option.value}>{option.label}</Badge>
-            ));
       }
     }
     return overrides;
