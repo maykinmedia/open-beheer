@@ -32,6 +32,7 @@ def test_create_informatieobjecttype(page: Page, runner: GherkinRunner):
     runner.when.user_selects_catalogus(page, catalogus)
     runner.when.user_navigates_to_informatieobjecttype_list_page(page, catalogus)
     runner.when.user_navigates_to_informatieobjecttype_create_page(page, catalogus)
+    runner.when.user_clicks_on_checkbox(page, "Basis")
     runner.when.user_clicks_on_button(page, name="Gebruik dit sjabloon")
 
     runner.then.page_should_contain_text(
@@ -39,7 +40,7 @@ def test_create_informatieobjecttype(page: Page, runner: GherkinRunner):
     )
     page.get_by_label("Omschrijving").fill("A beautiful IOT")
 
-    runner.when.user_clicks_on_button(page, name="Verzenden")
+    runner.when.user_clicks_on_button(page, name="Informatieobjecttype aanmaken")
 
     runner.then.path_should_be(
         page, f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen"
