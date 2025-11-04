@@ -141,6 +141,7 @@ export const ZaaktypeAttributeGridTab = ({
 
   const fetchDeelzaaktypen = async (query: string) => {
     const _query = query.trim().toLowerCase();
+    if (_query.length <= 2) return [];
 
     if (!serviceSlug || !catalogusId) {
       throw new Error("serviceSlug and catalogusId must be provided!"); // Shouldn't happen
