@@ -1,3 +1,5 @@
+from datetime import date
+
 import pytest
 from furl import furl
 from playwright.sync_api import Page
@@ -92,6 +94,9 @@ def test_edit_and_save_informatieobjecttype(page: Page, runner: GherkinRunner):
         f"/OZ/{furl(catalogus.url).path.segments[-1]}/informatieobjecttypen/{iot.uuid}?editing=true",
     )
     page.get_by_label("Omschrijving").fill("Updated Omschrijving")
+    runner.when.user_fills_date_field_in_table(
+        page, "Begin Geldigheid", date(2030, 12, 10)
+    )
 
     runner.when.user_clicks_on_button(page, name="Opslaan")
     runner.then.path_should_be(
@@ -100,6 +105,7 @@ def test_edit_and_save_informatieobjecttype(page: Page, runner: GherkinRunner):
     )
 
     runner.then.page_should_contain_text(page, "Updated Omschrijving")
+    runner.then.page_should_contain_text(page, "2030-12-10")
 
 
 @pytest.mark.e2e
