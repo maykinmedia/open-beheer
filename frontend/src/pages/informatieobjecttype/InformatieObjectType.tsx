@@ -3,7 +3,6 @@ import {
   Body,
   CardBaseTemplate,
   FieldSet,
-  FormValidator,
   H2,
   Outline,
   Solid,
@@ -72,13 +71,6 @@ export function InformatieObjectTypePage() {
       type: "PUBLISH",
       payload: {},
     });
-  }, []);
-
-  const onValidate = useCallback<FormValidator>((values: object) => {
-    // This is a hack, we are using the validate method to update
-    // the state of the informatieobjecttype used in the form
-    setNewIOTData(values as PatchedBackendIOT);
-    return {};
   }, []);
 
   const getButtons = useCallback(
@@ -182,7 +174,12 @@ export function InformatieObjectTypePage() {
           editable={isEditing ? undefined : false}
           editing={isEditing}
           fieldsets={fieldsetsWithFieldInfo}
-          validate={onValidate}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setNewIOTData({
+              ...newIOTData,
+              [event.target.name]: event.target.value,
+            })
+          }
         />
       </Body>
 
