@@ -574,7 +574,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
             (typedFields) => typedFields.name === key,
           );
           const options = field?.options;
-          if (!options) continue;
+          if (!options || typeof options === "function") continue;
 
           const value = row[key];
           const option = options.find((option) => option.value === value);

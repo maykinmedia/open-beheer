@@ -175,6 +175,7 @@ export const ZaaktypeAttributeGridTab = ({
         options: fetchDeelzaaktypen,
         multiple: true,
         placeholder: "Kies één of meer deelzaaktypen",
+        fetchOnMount: true,
       },
     }),
     [],
