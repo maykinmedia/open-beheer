@@ -252,6 +252,8 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        self.assertIn("uuid", response.json())
+
     def test_create_zaaktype_with_related_resultaattype(self):
         self.client.force_login(self.user)
 

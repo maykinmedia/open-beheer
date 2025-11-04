@@ -101,7 +101,6 @@ export const FIXTURE_ZAAKTYPE: components["schemas"]["ExpandableZaakType"] = {
       },
     ],
     roltypen: [],
-    deelzaaktypen: [],
     zaakobjecttypen: [],
     selectielijstProcestype: {
       nummer: 1,
