@@ -12,7 +12,8 @@ from msgspec import UNSET, Meta, Struct, field
 
 from openbeheer.types import FrontendFieldSet, FrontendFieldsets, make_fields_optional
 from openbeheer.types.ztc import (
-    Catalogus,
+    BronCatalogus,
+    BronZaaktype,
     IndicatieInternOfExternEnum,
     ReferentieProces,
     VertrouwelijkheidaanduidingEnum,
@@ -278,8 +279,8 @@ waarden_dict = {
     ),
     "selectielijst_procestype": "",
     "verantwoordelijke": "De verantwoordelijke (soort) organisatie.",
-    "broncatalogus": make_fields_optional(Catalogus)(url="", domein="", rsin=""),
-    "bronzaaktype": OptionalZaakType(identificatie="", omschrijving=""),
+    "broncatalogus": BronCatalogus(url="", domein="", rsin=""),
+    "bronzaaktype": BronZaaktype(url="", identificatie="", omschrijving=""),
     "begin_geldigheid": date.today(),
     "versiedatum": date.today(),
     "catalogus": "",
