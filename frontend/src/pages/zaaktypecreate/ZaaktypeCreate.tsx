@@ -43,7 +43,6 @@ export function ZaaktypeCreatePage() {
   >();
 
   const [isValidState, setIsValidState] = React.useState(false);
-  const fields = ZAAKTYPE_CREATE_BASE_FIELDS;
 
   useEffect(() => {
     if (actionData?.invalidParams?.length) {
@@ -109,7 +108,7 @@ export function ZaaktypeCreatePage() {
 
   return (
     <CreateView<ZaaktypeTemplate>
-      formFields={fields}
+      formFields={ZAAKTYPE_CREATE_BASE_FIELDS}
       modalText={modalText}
       nonFieldErrors={nonFieldErrors}
       resourceName="zaaktype"
