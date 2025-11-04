@@ -360,7 +360,6 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                     }
                 ],
             )
-            self.assertEqual(zaaktype_data["_expand"]["deelzaaktypen"], [])
             self.assertEqual(zaaktype_data["_expand"]["zaakobjecttypen"], [])
             self.assertEqual(
                 zaaktype_data["_expand"]["selectielijstProcestype"],

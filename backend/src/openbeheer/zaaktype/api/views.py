@@ -65,7 +65,6 @@ from openbeheer.types._open_beheer import (
     ZaakObjectTypeExtension,
     ZaakObjectTypeWithUUID,
     ZaakTypeInformatieObjectTypeWithUUID,
-    ZaakTypeWithUUID,
     fetch_selectielijst_resultaat_options,
     ob_fields_of_type,
 )
@@ -252,14 +251,14 @@ class ZaakTypeListView(
             partial(format_related_resource_error, "roltypen"),
         )
         all_errors.extend(errors)
-        deelzaaktypen, errors = create_many(
-            api_client,
-            "zaaktypen",
-            ZaakTypeWithUUID,
-            posted_expansions.get("deelzaaktypen", []),
-            partial(format_related_resource_error, "deelzaaktypen"),
-        )
-        all_errors.extend(errors)
+        # deelzaaktypen, errors = create_many(
+        #     api_client,
+        #     "zaaktypen",
+        #     ZaakTypeWithUUID,
+        #     posted_expansions.get("deelzaaktypen", []),
+        #     partial(format_related_resource_error, "deelzaaktypen"),
+        # )
+        # all_errors.extend(errors)
         zaakobjecttypen, errors = create_many(
             api_client,
             "zaakobjecttypen",
@@ -279,9 +278,9 @@ class ZaakTypeListView(
         zaaktype.informatieobjecttypen = [t.url for t in informatieobjecttypen if t.url]
         zaaktype.roltypen = [t.url for t in roltypen if t.url]
         # accepts existing
-        zaaktype.deelzaaktypen = [t.url for t in deelzaaktypen if t.url] + (
-            zaaktype.deelzaaktypen or []
-        )
+        # zaaktype.deelzaaktypen = [t.url for t in deelzaaktypen if t.url] + (
+        #     zaaktype.deelzaaktypen or []
+        # )
         zaaktype.zaakobjecttypen = [t.url for t in zaakobjecttypen if t.url]
 
         # existing besluittypen and deelzaaktypen are not expanded (yet?)
@@ -293,7 +292,7 @@ class ZaakTypeListView(
             eigenschappen=eigenschappen,
             informatieobjecttypen=informatieobjecttypen,
             roltypen=roltypen,
-            deelzaaktypen=deelzaaktypen,
+            # deelzaaktypen=deelzaaktypen,
             zaakobjecttypen=zaakobjecttypen,
         )
 
@@ -306,16 +305,16 @@ class ZaakTypeListView(
         return params
 
 
-def expand_deelzaaktype(
-    client: APIClient, zaaktypen: Iterable[ZaakType]
-) -> list[list[ZaakType | None]]:
-    return [
-        [
-            fetch_one(client, dz_url, ZaakType) if dz_url else None
-            for dz_url in (zt.deelzaaktypen or [])
-        ]
-        for zt in zaaktypen
-    ]
+# def expand_deelzaaktype(
+#     client: APIClient, zaaktypen: Iterable[ZaakType]
+# ) -> list[list[ZaakType | None]]:
+#     return [
+#         [
+#             fetch_one(client, dz_url, ZaakType) if dz_url else None
+#             for dz_url in (zt.deelzaaktypen or [])
+#         ]
+#         for zt in zaaktypen
+#     ]
 
 
 def expand_selectielijstprocestype(
@@ -479,6 +478,7 @@ class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
         "roltypen": make_expansion(
             "roltypen", _get_params_with_status, RolTypeWithUUID
         ),
+        # "deelzaaktypen": expand_deelzaaktype,
         "zaakobjecttypen": expand_zaakobjecttypen,
         "selectielijst_procestype": expand_selectielijstprocestype,
         "zaaktypeinformatieobjecttypen": expand_zaaktype_informatieobjecttype,

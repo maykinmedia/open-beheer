@@ -652,74 +652,7 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
             {et["url"] for et in created_zaaktype["_expand"]["roltypen"]},
         )
 
-    def test_create_zaaktype_with_related_deelzaaktypen(self):
-        self.client.force_login(self.user)
-
-        data = {
-            "omschrijving": "New Zaaktype 001",
-            "vertrouwelijkheidaanduiding": "geheim",
-            "doel": "New Zaaktype 001",
-            "aanleiding": "New Zaaktype 001",
-            "indicatieInternOfExtern": "intern",
-            "handelingInitiator": "aanvragen",
-            "onderwerp": "New Zaaktype 001",
-            "handelingBehandelaar": "handelin",
-            "doorlooptijd": "P40D",
-            "opschortingEnAanhoudingMogelijk": False,
-            "verlengingMogelijk": True,
-            "verlengingstermijn": "P40D",
-            "publicatieIndicatie": False,
-            "productenOfDiensten": ["https://example.com/product/321"],
-            "referentieproces": {"naam": "ReferentieProces 1"},
-            "verantwoordelijke": "200000000",
-            "beginGeldigheid": "2025-06-19",
-            "versiedatum": "2025-06-19",
-            "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-            "besluittypen": [],
-            "gerelateerdeZaaktypen": [],
-            "resultaattypen": [],
-            "_expand": {
-                "deelzaaktypen": [
-                    {
-                        "omschrijving": "Sub Zaaktype 001",
-                        "vertrouwelijkheidaanduiding": "geheim",
-                        "doel": "Sub Zaaktype 001",
-                        "aanleiding": "Sub Zaaktype 001",
-                        "indicatieInternOfExtern": "intern",
-                        "handelingInitiator": "aanvragen",
-                        "onderwerp": "Sub Zaaktype 001",
-                        "handelingBehandelaar": "handelin",
-                        "doorlooptijd": "P40D",
-                        "opschortingEnAanhoudingMogelijk": False,
-                        "verlengingMogelijk": True,
-                        "verlengingstermijn": "P40D",
-                        "publicatieIndicatie": False,
-                        "productenOfDiensten": ["https://example.com/product/321"],
-                        "referentieproces": {"naam": "ReferentieProces 1"},
-                        "verantwoordelijke": "200000000",
-                        "beginGeldigheid": "2025-06-19",
-                        "versiedatum": "2025-06-19",
-                        "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-                        "besluittypen": [],
-                        "gerelateerdeZaaktypen": [],
-                        "resultaattypen": [],
-                    }
-                ]
-            },
-        }
-        response = self.client.post(self.url, data=data, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        created_zaaktype = response.json()
-
-        self.assertEqual(len(created_zaaktype["deelzaaktypen"]), 1)
-        self.assertSetEqual(
-            set(created_zaaktype["deelzaaktypen"]),
-            {et["url"] for et in created_zaaktype["_expand"]["deelzaaktypen"]},
-        )
-
-    def test_create_zaaktype_with_new_and_existing_deelzaaktypen(self):
+    def test_create_zaaktype_with_existing_deelzaaktypen(self):
         self.client.force_login(self.user)
 
         existing = self.helper.create_zaaktype(
@@ -750,34 +683,6 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
             "gerelateerdeZaaktypen": [],
             "resultaattypen": [],
             "deelzaaktypen": [existing.url],
-            "_expand": {
-                "deelzaaktypen": [
-                    {
-                        "omschrijving": "Sub Zaaktype 001",
-                        "vertrouwelijkheidaanduiding": "geheim",
-                        "doel": "Sub Zaaktype 001",
-                        "aanleiding": "Sub Zaaktype 001",
-                        "indicatieInternOfExtern": "intern",
-                        "handelingInitiator": "aanvragen",
-                        "onderwerp": "Sub Zaaktype 001",
-                        "handelingBehandelaar": "handelin",
-                        "doorlooptijd": "P40D",
-                        "opschortingEnAanhoudingMogelijk": False,
-                        "verlengingMogelijk": True,
-                        "verlengingstermijn": "P40D",
-                        "publicatieIndicatie": False,
-                        "productenOfDiensten": ["https://example.com/product/321"],
-                        "referentieproces": {"naam": "ReferentieProces 1"},
-                        "verantwoordelijke": "200000000",
-                        "beginGeldigheid": "2025-06-19",
-                        "versiedatum": "2025-06-19",
-                        "catalogus": "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77",
-                        "besluittypen": [],
-                        "gerelateerdeZaaktypen": [],
-                        "resultaattypen": [],
-                    }
-                ]
-            },
         }
         response = self.client.post(self.url, data=data, format="json")
 
@@ -785,11 +690,10 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
 
         created_zaaktype = response.json()
 
-        self.assertEqual(len(created_zaaktype["deelzaaktypen"]), 2)
+        self.assertEqual(len(created_zaaktype["deelzaaktypen"]), 1)
         self.assertSetEqual(
             set(created_zaaktype["deelzaaktypen"]),
-            {et["url"] for et in created_zaaktype["_expand"]["deelzaaktypen"]}
-            | {existing.url},
+            {existing.url},
         )
 
     def test_create_zaaktype_with_zaakobjecttypen(self):
