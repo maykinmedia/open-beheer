@@ -176,12 +176,12 @@ class GherkinRunner:
             profile_button.click()
 
             # ¯\_(ツ)_/¯ - Attempt to fix flakiness in WebKit
-            if self.runner.browser.browser_type.name == "webkit":
+            is_webkit = self.runner.browser.browser_type.name == "webkit"
+            if is_webkit:
                 page.wait_for_timeout(120)
 
             logout_button = page.get_by_role("button", name="Logout")
-            logout_button.wait_for()
-            logout_button.click()
+            logout_button.click(force=is_webkit)
 
         # Navigation
 
@@ -323,6 +323,7 @@ class GherkinRunner:
         # Location
 
         def url_should_be(self, page: Page, url: str) -> None:
+            page.wait_for_load_state("networkidle")
             expect(page).to_have_url(url)
 
         def url_should_match(self, page: Page, url: str) -> None:
