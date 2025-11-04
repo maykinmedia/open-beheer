@@ -179,7 +179,7 @@ class GherkinRunner:
             # ¯\_(ツ)_/¯ - Attempt to fix flakiness in WebKit
             is_webkit = self.runner.browser.browser_type.name == "webkit"
             if is_webkit:
-                page.wait_for_timeout(120)
+                page.wait_for_timeout(300)
 
             logout_button = page.get_by_role("button", name="Logout")
             logout_button.click(force=is_webkit)
