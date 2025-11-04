@@ -1,3 +1,4 @@
+import datetime
 import json
 import re
 
@@ -313,6 +314,29 @@ class GherkinRunner:
 
             # Fill (native) input
             page.get_by_label(label).nth(index).fill(value)
+
+        def user_fills_date_field_in_table(
+            self, page: Page, table_header: str, date_value: datetime.date
+        ) -> None:
+            table_pair = page.locator(
+                ".mykn-attributelist__pair", has_text=table_header
+            )
+            dd = table_pair.locator(".mykn-attributelist__value")
+
+            year, month, day = date_value.isoformat().split("-")
+            dd.get_by_label("dag van de maand").fill(day)
+            page.keyboard.press(
+                "Tab"
+            )  # Needs blur event, otherwise the change is not registered
+            page.wait_for_timeout(
+                50
+            )  # If you are too quick, the change is not registered
+            dd.get_by_label("maand", exact=True).fill(month)
+            page.keyboard.press("Tab")
+            page.wait_for_timeout(50)
+            dd.get_by_label("jaar").fill(year)
+            page.wait_for_timeout(50)
+            page.keyboard.press("Tab")
 
     class Then(GherkinScenario):
         """
