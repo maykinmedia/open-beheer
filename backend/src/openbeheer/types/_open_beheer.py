@@ -762,7 +762,7 @@ class ZaakTypeExtension(Struct, frozen=True, rename="camel"):
     eigenschappen: UnsetType | list[EigenschapWithUUID] = UNSET
     informatieobjecttypen: UnsetType | list[InformatieObjectTypeWithUUID] = UNSET
     roltypen: UnsetType | list[RolTypeWithUUID] = UNSET
-    deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
+    # deelzaaktypen: UnsetType | list[ZaakTypeWithUUID] = UNSET
     zaakobjecttypen: UnsetType | list[ExpandableZaakObjectTypeWithUUID] = UNSET
     selectielijst_procestype: UnsetType | LAXProcesType = UNSET
     zaaktypeinformatieobjecttypen: (
