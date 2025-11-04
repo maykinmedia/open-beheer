@@ -279,7 +279,7 @@ function getBrondatumFieldByName(
         ? stub.options
         : undefined;
 
-  if (options) {
+  if (options && typeof options !== "function") {
     (field as ChoiceFieldProps).options = options;
   }
   return field;
