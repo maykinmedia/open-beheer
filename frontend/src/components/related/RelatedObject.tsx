@@ -33,7 +33,7 @@ type RelatedObjectRendererProps<
 };
 
 /**
- * Renders either a DataGrid or a list of badges for a set of related objects,
+ * Renders either a list of badges for a set of related objects,
  * depending on the tab configuration.
  */
 export const RelatedObjectRenderer = <T extends TargetType>(
