@@ -2,6 +2,19 @@ import { request } from "~/api/request.ts";
 import { ListResponse } from "~/api/types";
 import { components } from "~/types";
 
+export const getZaaktype = async ({
+  serviceSlug,
+  zaaktypeUUID,
+}: {
+  serviceSlug: string;
+  zaaktypeUUID: string;
+}) => {
+  const response = await request<
+    components["schemas"]["DetailResponse_ExpandableZaakType_"]
+  >("GET", `/service/${serviceSlug}/zaaktypen/${zaaktypeUUID}/`);
+  return { ...response };
+};
+
 /**
  * Fetches "Zaaktype" from a given service catalog.
  *
@@ -11,7 +24,7 @@ import { components } from "~/types";
  * @param omschrijving - Optional partial match filter for the description field.
  * @returns A promise resolving to a list response containing ZaakTypeSummary objects.
  */
-export const getZaaktype = async ({
+export const getZaaktypen = async ({
   serviceSlug,
   catalogusId,
   identificatie,
