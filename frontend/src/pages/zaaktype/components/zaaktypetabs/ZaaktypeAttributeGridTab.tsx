@@ -1,9 +1,11 @@
 import {
   AttributeGrid,
+  Badge,
   Column,
   Field,
   FieldSet,
   Grid,
+  Option,
   Sidebar,
   Toolbar,
   TypedField,
@@ -11,9 +13,15 @@ import {
   isPrimitive,
 } from "@maykin-ui/admin-ui";
 import { invariant, slugify } from "@maykin-ui/client-common";
-import React, { ReactNode, useCallback, useMemo } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useLoaderData, useLocation, useParams } from "react-router";
-import { getZaaktype } from "~/api/zaaktype.ts";
+import { getZaaktype, getZaaktypen } from "~/api/zaaktype.ts";
 import {
   RelatedObjectBadge,
   RelatedObjectRenderer,
@@ -21,12 +29,13 @@ import {
 } from "~/components/related";
 import { Errors } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
+import { getZaaktypeUUID } from "~/lib";
 import {
   AttributeGridTabConfig,
   TargetType,
   ZaaktypeLoaderData,
 } from "~/pages";
-import { Expand, ExpandItemKeys, RelatedObject } from "~/types";
+import { Expand, ExpandItemKeys, RelatedObject, components } from "~/types";
 
 type ZaaktypeAttributeGridTabProps = {
   errors: Errors<TargetType>;
@@ -68,6 +77,56 @@ export const ZaaktypeAttributeGridTab = ({
     return tabConfig.sections.length > 1;
   }, [tabConfig]);
 
+  const [selectedDeelzaaktypenOptions, setSelectedDeelzaaktypenOptions] =
+    useState<Option[]>([]);
+
+  const mapZaaktypenToOptions = (
+    zaaktypen:
+      | components["schemas"]["ExpandableZaakType"]
+      | components["schemas"]["ExpandableZaakType"][],
+  ): Option[] => {
+    const list = Array.isArray(zaaktypen) ? zaaktypen : [zaaktypen];
+
+    return list.map((z) => ({
+      label: `${z.identificatie} - ${z.omschrijving}`,
+      value: z.url,
+    }));
+  };
+
+  /**
+   * Fetches and sets selected deelzaaktypen options when not editing.
+   */
+  useEffect(() => {
+    if (isEditing) return;
+
+    const deelzaaktypenField = fields.find(
+      (f) => f.name.split(".").pop() === "deelzaaktypen",
+    );
+    if (!deelzaaktypenField) return;
+
+    const raw = object["deelzaaktypen" as keyof TargetType];
+
+    if (!Array.isArray(raw)) return;
+
+    const run = async () => {
+      const urls = raw as string[];
+
+      const fetches = urls.map((url) => {
+        const zaaktypeUUID = getZaaktypeUUID({ url });
+        return zaaktypeUUID ? getZaaktype({ serviceSlug, zaaktypeUUID }) : null;
+      });
+
+      const results = await Promise.all(fetches);
+      const zaaktypen = results
+        .filter((res) => res !== null)
+        .map((res) => res.result);
+
+      setSelectedDeelzaaktypenOptions(mapZaaktypenToOptions(zaaktypen));
+    };
+
+    void run();
+  }, [isEditing, fields, object, serviceSlug]);
+
   /**
    * Maps complex (non-primitive) fields to rendered components.
    * Non-primitive values are displayed as RelatedObjectBadge or editable text.
@@ -82,11 +141,30 @@ export const ZaaktypeAttributeGridTab = ({
       const fieldName = _fieldName as keyof TargetType;
       const originalValue = object[fieldName];
 
-      if (
-        originalValue &&
-        !isPrimitive(originalValue) &&
-        !Array.isArray(originalValue)
-      ) {
+      if (!originalValue || isPrimitive(originalValue)) continue;
+
+      // When deelzaaktypen we want to render badges for selected options
+      if (fieldName === "deelzaaktypen") {
+        overrides[fieldName] = isEditing
+          ? (originalValue as string[])
+          : selectedDeelzaaktypenOptions.length > 0
+            ? selectedDeelzaaktypenOptions.map((option) => (
+                <Badge
+                  key={option.value}
+                  href={
+                    option.value
+                      ? `/${serviceSlug}/${catalogusId}/zaaktypen/${getZaaktypeUUID({ url: String(option.value) })}`
+                      : undefined
+                  }
+                >
+                  {option.label}
+                </Badge>
+              ))
+            : "-";
+        continue;
+      }
+
+      if (!Array.isArray(originalValue)) {
         overrides[fieldName] = isEditing ? (
           getObjectValue(originalValue)
         ) : (
@@ -95,7 +173,7 @@ export const ZaaktypeAttributeGridTab = ({
       }
     }
     return overrides;
-  }, [fields, object]);
+  }, [fields, object, selectedDeelzaaktypenOptions]);
 
   /**
    * Maps expandable fields to rendered components showing related data.
@@ -112,7 +190,7 @@ export const ZaaktypeAttributeGridTab = ({
       const relatedObject = expand[fieldName as keyof Expand<TargetType>];
 
       if (!(fieldName in expand) || originalValue === null) continue;
-      if (isEditing) continue;
+      if (isEditing && field.options) continue;
 
       overrides[fieldName] = (
         <RelatedObjectRenderer
@@ -147,12 +225,12 @@ export const ZaaktypeAttributeGridTab = ({
       throw new Error("serviceSlug and catalogusId must be provided!"); // Shouldn't happen
     }
     const [byIdent, byOmschrijving] = await Promise.all([
-      getZaaktype({
+      getZaaktypen({
         serviceSlug,
         catalogusId,
         identificatie: _query,
       }),
-      getZaaktype({
+      getZaaktypen({
         serviceSlug,
         catalogusId,
         omschrijving: _query,
