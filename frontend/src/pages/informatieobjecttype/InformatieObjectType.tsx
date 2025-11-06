@@ -170,6 +170,7 @@ export function InformatieObjectTypePage() {
         <H2>{ucFirst(result.omschrijving)}</H2>
 
         <AttributeGrid
+          valueProps={{ boolProps: { explicit: true } }}
           object={isEditing ? { ...result, ...newIOTData } : result}
           editable={isEditing ? undefined : false}
           editing={isEditing}
