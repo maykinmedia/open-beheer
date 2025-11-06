@@ -20,7 +20,12 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Link, useLoaderData, useLocation, useParams } from "react-router";
+import {
+  useLoaderData,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router";
 import { getZaaktype, getZaaktypen } from "~/api/zaaktype.ts";
 import {
   RelatedObjectBadge,
@@ -57,6 +62,7 @@ export const ZaaktypeAttributeGridTab = ({
 }: ZaaktypeAttributeGridTabProps) => {
   const { fields } = useLoaderData() as ZaaktypeLoaderData;
   const location = useLocation();
+  const navigate = useNavigate();
   const { serviceSlug, catalogusId } = useParams();
   invariant(serviceSlug, "serviceSlug must be provided!");
 
@@ -108,30 +114,36 @@ export const ZaaktypeAttributeGridTab = ({
 
     if (!Array.isArray(raw)) return;
 
-    let cancelled = false;
-
+    let abortControllers: AbortController[] = [];
     const run = async () => {
       const urls = raw as string[];
+      const uuid = urls
+        .map((url) => getZaaktypeUUID({ url }))
+        .filter((uuid): uuid is string => Boolean(uuid));
+      const fetchTuples = uuid.map((zaaktypeUUID) =>
+        getZaaktype({ serviceSlug, zaaktypeUUID }),
+      );
+      const promises: Promise<
+        components["schemas"]["DetailResponse_ExpandableZaakType_"]
+      >[] = [];
 
-      const fetches = urls.map((url) => {
-        const zaaktypeUUID = getZaaktypeUUID({ url });
-        return zaaktypeUUID ? getZaaktype({ serviceSlug, zaaktypeUUID }) : null;
+      fetchTuples.forEach(([promise, abortController]) => {
+        promises.push(promise);
+        abortControllers.push(abortController);
       });
 
-      const results = await Promise.all(fetches);
-      if (cancelled) return;
-
-      const zaaktypen = results
-        .filter((res) => res !== null)
-        .map((res) => res.result);
-
+      const results = await Promise.all(promises);
+      const zaaktypen = results.map((result) => result.result);
       setSelectedDeelzaaktypenOptions(mapZaaktypenToOptions(zaaktypen));
     };
 
     void run();
 
     return () => {
-      cancelled = true;
+      abortControllers.forEach((abortController) =>
+        abortController.abort("useEffect cleanup"),
+      );
+      abortControllers = [];
     };
   }, [isEditing, fields, object, serviceSlug]);
 
@@ -164,10 +176,14 @@ export const ZaaktypeAttributeGridTab = ({
                   uuid && `/${serviceSlug}/${catalogusId}/zaaktypen/${uuid}`;
 
                 return to ? (
-                  <Badge>
-                    <Link key={option.value} to={to}>
-                      {option.label}
-                    </Link>
+                  <Badge
+                    href={to}
+                    onClick={(e: React.MouseEvent) => {
+                      e.preventDefault();
+                      navigate(to);
+                    }}
+                  >
+                    {option.label}
                   </Badge>
                 ) : (
                   <Badge key={option.value}>{option.label}</Badge>
