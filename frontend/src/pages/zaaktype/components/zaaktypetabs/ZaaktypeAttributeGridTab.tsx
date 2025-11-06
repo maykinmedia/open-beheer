@@ -20,7 +20,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useLoaderData, useLocation, useParams } from "react-router";
+import { Link, useLoaderData, useLocation, useParams } from "react-router";
 import { getZaaktype, getZaaktypen } from "~/api/zaaktype.ts";
 import {
   RelatedObjectBadge,
@@ -108,6 +108,8 @@ export const ZaaktypeAttributeGridTab = ({
 
     if (!Array.isArray(raw)) return;
 
+    let cancelled = false;
+
     const run = async () => {
       const urls = raw as string[];
 
@@ -117,6 +119,8 @@ export const ZaaktypeAttributeGridTab = ({
       });
 
       const results = await Promise.all(fetches);
+      if (cancelled) return;
+
       const zaaktypen = results
         .filter((res) => res !== null)
         .map((res) => res.result);
@@ -125,6 +129,10 @@ export const ZaaktypeAttributeGridTab = ({
     };
 
     void run();
+
+    return () => {
+      cancelled = true;
+    };
   }, [isEditing, fields, object, serviceSlug]);
 
   /**
@@ -148,18 +156,23 @@ export const ZaaktypeAttributeGridTab = ({
         overrides[fieldName] = isEditing
           ? (originalValue as string[])
           : selectedDeelzaaktypenOptions.length > 0
-            ? selectedDeelzaaktypenOptions.map((option) => (
-                <Badge
-                  key={option.value}
-                  href={
-                    option.value
-                      ? `/${serviceSlug}/${catalogusId}/zaaktypen/${getZaaktypeUUID({ url: String(option.value) })}`
-                      : undefined
-                  }
-                >
-                  {option.label}
-                </Badge>
-              ))
+            ? selectedDeelzaaktypenOptions.map((option) => {
+                const uuid =
+                  option.value &&
+                  getZaaktypeUUID({ url: String(option.value) });
+                const to =
+                  uuid && `/${serviceSlug}/${catalogusId}/zaaktypen/${uuid}`;
+
+                return to ? (
+                  <Badge>
+                    <Link key={option.value} to={to}>
+                      {option.label}
+                    </Link>
+                  </Badge>
+                ) : (
+                  <Badge key={option.value}>{option.label}</Badge>
+                );
+              })
             : "-";
         continue;
       }
