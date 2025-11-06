@@ -140,6 +140,7 @@ class GherkinRunner:
                 padded_sequence_number = str(i).zfill(3)
 
                 overrides = {
+                    "identificatie": f"ZAAKTYPE-2025-{padded_sequence_number.zfill(10)}",
                     "aanleiding": f"New Zaaktype {padded_sequence_number}",
                     "doel": f"New Zaaktype {padded_sequence_number}",
                     "onderwerp": f"New Zaaktype {padded_sequence_number}",
@@ -302,7 +303,12 @@ class GherkinRunner:
             page.get_by_label(label).click()
 
         def user_fills_form_field(
-            self, page: Page, label: str, value: str, index: int = 0
+            self,
+            page: Page,
+            label: str,
+            value: str,
+            index: int = 0,
+            skip_combo: bool = False,
         ) -> None:
             """
             Fills the form field with the given value.
@@ -313,17 +319,21 @@ class GherkinRunner:
             # We add a tiny delay here to prevent API complication and allow the modal to render
             page.wait_for_timeout(10)
 
+            modals = page.get_by_role("dialog")
+            locator = modals.first if modals.count() else page
+
             # Try a (custom) select
-            selects = page.get_by_role("combobox", name=label)
-            if selects.count():
-                select = selects.nth(index)
-                select.click()
-                option = select.get_by_text(value)
-                option.click()
-                return
+            if not skip_combo:
+                selects = locator.get_by_role("combobox", name=label)
+                if selects.count():
+                    select = selects.nth(index)
+                    select.click()
+                    option = select.get_by_text(value)
+                    option.click()
+                    return
 
             # Fill (native) input
-            inputs = page.get_by_label(label)
+            inputs = locator.get_by_label(label)
             input = inputs.nth(index)
             input.fill(value)
 

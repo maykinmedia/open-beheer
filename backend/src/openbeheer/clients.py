@@ -34,7 +34,7 @@ def _build_with_logging[**P, C: APIClient](build: Callable[P, C]) -> Callable[P,
 
         @wraps(_original_request)
         def logging_request(method: str | bytes, url: str | bytes, *args, **kwargs):
-            logger.info(
+            logger.debug(
                 f"{method} request",
                 base_url=client.base_url,
                 url=url,
@@ -42,7 +42,7 @@ def _build_with_logging[**P, C: APIClient](build: Callable[P, C]) -> Callable[P,
             )
             with request_lock:
                 response = _original_request(method, url, *args, **kwargs)
-            logger.info(
+            logger.debug(
                 f"{method} response",
                 base_url=client.base_url,
                 path=url,
