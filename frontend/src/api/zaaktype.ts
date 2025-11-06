@@ -2,17 +2,30 @@ import { request } from "~/api/request.ts";
 import { ListResponse } from "~/api/types";
 import { components } from "~/types";
 
-export const getZaaktype = async ({
+export const getZaaktype = ({
   serviceSlug,
   zaaktypeUUID,
 }: {
   serviceSlug: string;
   zaaktypeUUID: string;
-}) => {
-  const response = await request<
+}): [
+  Promise<components["schemas"]["DetailResponse_ExpandableZaakType_"]>,
+  AbortController,
+] => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const response = request<
     components["schemas"]["DetailResponse_ExpandableZaakType_"]
-  >("GET", `/service/${serviceSlug}/zaaktypen/${zaaktypeUUID}/`);
-  return { ...response };
+  >(
+    "GET",
+    `/service/${serviceSlug}/zaaktypen/${zaaktypeUUID}/`,
+    undefined,
+    undefined,
+    undefined,
+    signal,
+  );
+  return [response, controller];
 };
 
 /**
