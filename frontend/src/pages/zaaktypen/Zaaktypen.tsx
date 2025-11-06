@@ -50,7 +50,7 @@ export function ZaaktypenPage() {
           status={
             (filterState.status || "").toLowerCase() as ZaaktypeStatusEnum
           }
-          trefwoorden={filterState.trefwoorden}
+          search={filterState.search}
           onSubmit={handleSubmit}
         />,
         <NavLink key="create-zaaktype" to="create">
