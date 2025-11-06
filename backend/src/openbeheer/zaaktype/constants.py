@@ -72,22 +72,22 @@ ZAAKTYPE_FIELDSETS: FrontendFieldsets = [
             ]
         ),
     ),
-    (
-        "Zaakobjecttypen",
-        FrontendFieldSet(
-            fields=[
-                # TODO: needs design
-                "_expand.zaakobjecttypen.anderObjecttype",
-                "_expand.zaakobjecttypen.objecttype",
-                "_expand.zaakobjecttypen.relatieOmschrijving",
-                "_expand.zaakobjecttypen.resultaattypen",
-                "_expand.zaakobjecttypen.statustype",
-                "_expand.zaakobjecttypen.beginGeldigheid",
-                "_expand.zaakobjecttypen.eindeGeldigheid",
-                # "_expand.zaakobjecttypen.uuid",
-            ]
-        ),
-    ),
+    # (
+    #     "Zaakobjecttypen",
+    #     FrontendFieldSet(
+    #         fields=[
+    #             # TODO: needs design
+    #             "_expand.zaakobjecttypen.anderObjecttype",
+    #             "_expand.zaakobjecttypen.objecttype",
+    #             "_expand.zaakobjecttypen.relatieOmschrijving",
+    #             "_expand.zaakobjecttypen.resultaattypen",
+    #             "_expand.zaakobjecttypen.statustype",
+    #             "_expand.zaakobjecttypen.beginGeldigheid",
+    #             "_expand.zaakobjecttypen.eindeGeldigheid",
+    #             # "_expand.zaakobjecttypen.uuid",
+    #         ]
+    #     ),
+    # ),
     (
         "ZaaktypeInformatieobjecttypen",
         FrontendFieldSet(
