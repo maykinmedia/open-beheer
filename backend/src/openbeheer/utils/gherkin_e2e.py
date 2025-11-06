@@ -174,6 +174,7 @@ class GherkinRunner:
         def user_logs_out(self, page: Page) -> None:
             page.wait_for_load_state("networkidle")
             profile_button = page.get_by_role("button", name="Profiel")
+            profile_button.wait_for()
             profile_button.click()
 
             # ¯\_(ツ)_/¯ - Attempt to fix flakiness in WebKit
