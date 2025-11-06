@@ -25,7 +25,7 @@ export const ZaaktypeFilter: Story = {
   },
   play: async ({ args, canvasElement }) => {
     const trefwoorden = await within(canvasElement).findByRole("textbox", {
-      name: "Trefwoorden",
+      name: "Zoek op identificatie",
     });
     await userEvent.type(trefwoorden, "foo");
     await expect(trefwoorden).toHaveValue("foo");
