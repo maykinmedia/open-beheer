@@ -240,7 +240,7 @@ class EigenschappenDetailView(DetailViewWithoutVersions, DetailView[Eigenschap])
     Endpoint for eigenschappen attached to a particular Zaaktype
     """
 
-    return_data_type = data_type = Eigenschap
+    return_data_type = data_type = EigenschapWithUUID
     endpoint_path = "eigenschappen/{uuid}"
     expansions = {}
 

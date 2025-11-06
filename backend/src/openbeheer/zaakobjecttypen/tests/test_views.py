@@ -201,6 +201,7 @@ class ZaakObjectTypeDetailViewTest(VCRAPITestCase):
             "zaaktypeIdentificatie",
             "_expand",
             "uuid",
+            "adminUrl",
         }
 
         self.assertIn("objecttype", data["_expand"])

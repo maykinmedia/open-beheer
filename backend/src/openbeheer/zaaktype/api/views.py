@@ -214,7 +214,7 @@ class ZaakTypeListView(
         statustypen, errors = create_many(
             api_client,
             "statustypen",
-            StatusType,
+            StatusTypeWithUUID,
             inject_foreignkeys("statustypen"),
             partial(format_related_resource_error, "statustypen"),
         )

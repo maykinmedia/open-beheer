@@ -23,12 +23,13 @@ from typing import (
 )
 from uuid import UUID
 
+from django.conf import settings
 from django.core.cache import cache as django_cache
 
 import msgspec
 from ape_pie import APIClient
 from furl import furl
-from msgspec import UNSET, Meta, Struct, UnsetType, structs
+from msgspec import UNSET, Meta, Struct, UnsetType, field, structs
 from msgspec.json import decode
 
 from openbeheer.clients import iter_pages, objecttypen_client, selectielijst_client
@@ -486,18 +487,49 @@ class UUIDMixin:
     """
 
     uuid: UUID | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
 
     def __post_init__(self):
         if url := getattr(self, "url", None):
             self.uuid = UUID(furl(url).path.segments[-1])
 
 
+def _admin_url(
+    slug: str, uuid: UUID | UnsetType, url: str | None | UnsetType
+) -> str | UnsetType:
+    if not (url and uuid and uuid is not UNSET and url is not UNSET):
+        return UNSET
+
+    base_url: furl
+    if settings.OPEN_ZAAK_ADMIN_BASE_URL:
+        base_url = furl(settings.OPEN_ZAAK_ADMIN_BASE_URL)
+    else:
+        base_url = furl(url).set(path="/admin", query_params=None)
+
+    return str(
+        base_url.add(
+            path=f"/catalogi/{slug}/",
+            query_params={"uuid__exact": uuid},
+        )
+    )
+
+
 class BesluitTypeWithUUID(UUIDMixin, BesluitType):
     uuid: UUID | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("besluittype", self.uuid, self.url)
 
 
 class StatusTypeWithUUID(UUIDMixin, StatusType):
     uuid: UUID | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("statustype", self.uuid, self.url)
 
 
 ResultaatTypeOmschrijvingURL = NewType("ResultaatTypeOmschrijvingURL", str)
@@ -665,11 +697,13 @@ class ResultaatTypeWithUUID(UUIDMixin, ResultaatType):
         ]
         | UnsetType
     ) = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
 
     def __post_init__(self):
         super().__post_init__()
         if self.brondatum_archiefprocedure:
             self.afleidingswijze = self.brondatum_archiefprocedure.afleidingswijze
+        self.admin_url = _admin_url("resultaattype", self.uuid, self.url)
 
 
 class EigenschapWithUUID(UUIDMixin, Eigenschap):
@@ -677,18 +711,30 @@ class EigenschapWithUUID(UUIDMixin, Eigenschap):
     # format is actually a property from specificatie
     # set here because front end doesn't support nested structures.
     formaat: FormaatEnum | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
 
     def __post_init__(self):
         super().__post_init__()
         self.formaat = self.specificatie.formaat
+        self.admin_url = _admin_url("eigenschap", self.uuid, self.url)
 
 
 class InformatieObjectTypeWithUUID(UUIDMixin, InformatieObjectType):
     uuid: UUID | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("informatieobjecttype", self.uuid, self.url)
 
 
 class RolTypeWithUUID(UUIDMixin, RolType):
     uuid: UUID | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("roltype", self.uuid, self.url)
 
 
 class LAXProcesType(ProcesType):
@@ -723,10 +769,20 @@ class ZaakTypeWithUUID(UUIDMixin, ZaakType):
         ]
         | None
     ) = None
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("zaaktype", self.uuid, self.url)
 
 
 class ZaakTypeInformatieObjectTypeWithUUID(UUIDMixin, ZaakTypeInformatieObjectType):
     uuid: UUID | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("zaaktypeinformatieobjecttype", self.uuid, self.url)
 
 
 class ZaakObjectTypeExtension(Struct, frozen=True, rename="camel"):
@@ -735,6 +791,11 @@ class ZaakObjectTypeExtension(Struct, frozen=True, rename="camel"):
 
 class ZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
     uuid: UUID | UnsetType = UNSET
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("zaakobjecttype", self.uuid, self.url)
 
 
 class ExpandableZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
@@ -749,6 +810,11 @@ class ExpandableZaakObjectTypeWithUUID(UUIDMixin, ZaakObjectType):
         ]
     )
     _expand: ZaakObjectTypeExtension = ZaakObjectTypeExtension()
+    admin_url: str | UnsetType = field(name="adminUrl", default=UNSET)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.admin_url = _admin_url("zaakobjecttype", self.uuid, self.url)
 
 
 class ZaakTypeExtension(Struct, frozen=True, rename="camel"):

@@ -171,6 +171,9 @@ class ResultaatTypeDetailViewTest(VCRAPITestCase):
             "eindeGeldigheid",
             "beginObject",
             "eindeObject",
+            "uuid",
+            "adminUrl",
+            "afleidingswijze",
         }
 
     def test_patch_resultaattype(self):
@@ -184,9 +187,6 @@ class ResultaatTypeDetailViewTest(VCRAPITestCase):
         data = response.json()
 
         expected = to_builtins(self.resultaattype) | changes
-
-        del expected["uuid"]
-        del expected["afleidingswijze"]
 
         self.assertEqual(data, expected)
 

@@ -210,7 +210,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 zaaktype_data["_expand"]["informatieobjecttypen"],
                 [
                     {
-                        "uuid": furl(iot.url).path.segments[-1],
+                        "uuid": str(iot.uuid),
+                        "adminUrl": f"http://localhost:8003/admin/catalogi/informatieobjecttype/?uuid__exact={iot.uuid}",
                         "catalogus": zaaktype.catalogus,
                         "omschrijving": "Omschrijving A",
                         "vertrouwelijkheidaanduiding": "openbaar",
@@ -237,7 +238,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
 
             expected_resultaattypen = [
                 {
-                    "uuid": furl(resultaattype1.url).path.segments[-1],
+                    "uuid": (_uuid := furl(resultaattype1.url).path.segments[-1]),
+                    "adminUrl": f"http://localhost:8003/admin/catalogi/resultaattype/?uuid__exact={_uuid}",
                     "url": resultaattype1.url,
                     "zaaktype": zaaktype.url,
                     "zaaktypeIdentificatie": zaaktype.identificatie,
@@ -271,7 +273,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                     "afleidingswijze": "afgehandeld",
                 },
                 {
-                    "uuid": furl(resultaattype2.url).path.segments[-1],
+                    "uuid": (_uuid := furl(resultaattype2.url).path.segments[-1]),
+                    "adminUrl": f"http://localhost:8003/admin/catalogi/resultaattype/?uuid__exact={_uuid}",
                     "url": resultaattype2.url,
                     "zaaktype": zaaktype.url,
                     "zaaktypeIdentificatie": zaaktype.identificatie,
@@ -319,7 +322,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 zaaktype_data["_expand"]["roltypen"],
                 [
                     {
-                        "uuid": furl(roltype.url).path.segments[-1],
+                        "uuid": (_uuid := furl(roltype.url).path.segments[-1]),
+                        "adminUrl": f"http://localhost:8003/admin/catalogi/roltype/?uuid__exact={_uuid}",
                         "url": roltype.url,
                         "zaaktype": zaaktype.url,
                         "zaaktypeIdentificatie": zaaktype.identificatie,
@@ -337,7 +341,8 @@ class ZaakTypeDetailViewTest(VCRAPITestCase):
                 zaaktype_data["_expand"]["statustypen"],
                 [
                     {
-                        "uuid": furl(statustype.url).path.segments[-1],
+                        "uuid": (_uuid := furl(statustype.url).path.segments[-1]),
+                        "adminUrl": f"http://localhost:8003/admin/catalogi/statustype/?uuid__exact={_uuid}",
                         "omschrijving": "Omschrijving A",
                         "zaaktype": zaaktype.url,
                         "volgnummer": 1,

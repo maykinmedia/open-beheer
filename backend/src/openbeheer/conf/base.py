@@ -594,3 +594,9 @@ SETUP_CONFIGURATION_STEPS = [
     "openbeheer.config.setup_configuration.steps.APIConfigConfigurationStep",
     "mozilla_django_oidc_db.setup_configuration.steps.AdminOIDCConfigurationStep",
 ]
+
+# TODO: This ought to be configurable per ZTC Service... But not in a way that
+# hits the db for every deserialise of each object.
+# For the time being the front-end hard codes to the first Service anyway.
+# So this is fine.
+OPEN_ZAAK_ADMIN_BASE_URL = config("OPEN_ZAAK_ADMIN_BASE_URL", default="")

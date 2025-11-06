@@ -147,6 +147,7 @@ class RoltypeDetailViewTest(VCRAPITestCase):
             "uuid",  # our adition
             "zaaktype",
             "zaaktypeIdentificatie",
+            "adminUrl",
         }
 
     def test_patch_roltype(self):

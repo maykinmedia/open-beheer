@@ -145,6 +145,6 @@ class BesluittypeDetailView(DetailViewWithoutVersions, DetailView[BesluitType]):
     Endpoint for Besluittypen attached to a particular Zaaktype
     """
 
-    return_data_type = data_type = BesluitType
+    return_data_type = data_type = BesluitTypeWithUUID
     endpoint_path = "besluittypen/{uuid}"
     expansions = {}

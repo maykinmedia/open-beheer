@@ -55,7 +55,7 @@ class ZaakTypeInformatieobjecttypeListView(
     """
 
     data_type = ZaakTypeInformatieObjectType
-    return_data_type = ZaakTypeInformatieObjectType
+    return_data_type = ZaakTypeInformatieObjectTypeWithUUID
     query_type = ZaaktypeInformatieobjecttypenGetParametersQuery
     endpoint_path = "zaaktype-informatieobjecttypen"
 
