@@ -46,7 +46,7 @@ def test_errors(page: Page, runner: GherkinRunner):
     _.then.url_should_match(page, "editing=true")
 
     # Clear omschrijving
-    _.when.user_fills_form_field(page, "omschrijving", "", 0)
+    _.when.user_fills_form_field(page, "Omschrijving", "", 0)
 
     # Navigate to statustypen tab
     _.when.user_selects_tab(page, "Statustypen")
@@ -58,13 +58,13 @@ def test_errors(page: Page, runner: GherkinRunner):
     # Navigate to overzicht tab to check and fix error message
     _.when.user_selects_tab(page, "Overzicht (!)")
     _.then.page_should_contain_text(page, "Dit veld mag niet leeg zijn.")
-    _.when.user_fills_form_field(page, "omschrijving", "TEST OMSCHRIJVING", 0)
+    _.when.user_fills_form_field(page, "Omschrijving", "TEST OMSCHRIJVING", 0)
 
     # Navigate to statustypen tab to check and fix error message
     _.when.user_selects_tab(page, "Statustypen (!)")
     _.then.page_should_contain_text(page, "Dit veld mag niet leeg zijn.", None, 0)
     _.when.user_fills_form_field(
-        page, "omschrijving", "TEST STATUSTYPE OMSCHRIJVING", 2
+        page, "Omschrijving", "TEST STATUSTYPE OMSCHRIJVING", 2
     )
 
     # Save changes.

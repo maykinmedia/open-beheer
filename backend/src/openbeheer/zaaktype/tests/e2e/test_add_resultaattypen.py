@@ -59,6 +59,7 @@ def test_add_resultaattypen(page: Page, runner: GherkinRunner):
         "Selectielijstklasse",
         "1.1.2 - Ingericht - blijvend_bewaren - Gemeentewapen",
     )
+    _.when.user_fills_form_field(page, "Omschrijving", "Heraldiek", skip_combo=True)
     _.when.user_clicks_on_button(page, name="Doorgaan")
 
     # Add another
@@ -67,7 +68,9 @@ def test_add_resultaattypen(page: Page, runner: GherkinRunner):
         page,
         "Selectielijstklasse",
         "1.1.3 - Ingericht - vernietigen - P10Y - Wijziging inrichting BRP systeem",
-        1,
+    )
+    _.when.user_fills_form_field(
+        page, "Omschrijving", "Vernietiging Haal Centraal", skip_combo=True
     )
     _.when.user_clicks_on_button(page, name="Doorgaan")
 
