@@ -103,8 +103,6 @@ export const ZaaktypeAttributeGridTab = ({
    * Fetches and sets selected deelzaaktypen options when not editing.
    */
   useEffect(() => {
-    if (isEditing) return;
-
     const deelzaaktypenField = fields.find(
       (f) => f.name.split(".").pop() === "deelzaaktypen",
     );
@@ -152,7 +150,7 @@ export const ZaaktypeAttributeGridTab = ({
    * Non-primitive values are displayed as RelatedObjectBadge or editable text.
    */
   const complexOverrides = useMemo(() => {
-    const overrides: Partial<Record<keyof TargetType, ReactNode>> = {};
+    const overrides: Partial<Record<keyof TargetType, unknown>> = {};
 
     for (const field of fields) {
       const _fieldName = field.name.split(".").pop();
@@ -165,31 +163,41 @@ export const ZaaktypeAttributeGridTab = ({
 
       // When deelzaaktypen we want to render badges for selected options
       if (fieldName === "deelzaaktypen") {
-        overrides[fieldName] = isEditing
-          ? (originalValue as string[])
-          : selectedDeelzaaktypenOptions.length > 0
-            ? selectedDeelzaaktypenOptions.map((option) => {
-                const uuid =
-                  option.value &&
-                  getZaaktypeUUID({ url: String(option.value) });
-                const to =
-                  uuid && `/${serviceSlug}/${catalogusId}/zaaktypen/${uuid}`;
+        if (isEditing) {
+          // eslint-disable-next-line max-depth
+          if (!Array.isArray(originalValue)) continue;
+          overrides[fieldName] = originalValue.map((v) => {
+            const label = selectedDeelzaaktypenOptions.find(
+              (s) => s.value === v,
+            )?.label;
+            return label ? { label, value: v } : v;
+          });
+        } else {
+          overrides[fieldName] =
+            selectedDeelzaaktypenOptions.length > 0
+              ? selectedDeelzaaktypenOptions.map((option) => {
+                  const uuid =
+                    option.value &&
+                    getZaaktypeUUID({ url: String(option.value) });
+                  const to =
+                    uuid && `/${serviceSlug}/${catalogusId}/zaaktypen/${uuid}`;
 
-                return to ? (
-                  <Badge
-                    href={to}
-                    onClick={(e: React.MouseEvent) => {
-                      e.preventDefault();
-                      navigate(to);
-                    }}
-                  >
-                    {option.label}
-                  </Badge>
-                ) : (
-                  <Badge key={option.value}>{option.label}</Badge>
-                );
-              })
-            : "-";
+                  return to ? (
+                    <Badge
+                      href={to}
+                      onClick={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        navigate(to);
+                      }}
+                    >
+                      {option.label}
+                    </Badge>
+                  ) : (
+                    <Badge key={option.value}>{option.label}</Badge>
+                  );
+                })
+              : "-";
+        }
         continue;
       }
 
