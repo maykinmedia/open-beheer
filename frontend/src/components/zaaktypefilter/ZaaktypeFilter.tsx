@@ -140,7 +140,7 @@ export function ZaaktypeFilter({
       <Dropdown
         className="ob-zaaktype-filter__filter"
         open={isDropDownOpen}
-        variant="outline"
+        variant="secondary"
         label={
           <>
             <Solid.AdjustmentsHorizontalIcon />
