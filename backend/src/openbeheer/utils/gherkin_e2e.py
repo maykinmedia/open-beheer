@@ -290,9 +290,9 @@ class GherkinRunner:
             if name:
                 kwargs.update({"name": name})
 
-            iot_link = page.get_by_role("link", **kwargs)
+            iot_link = page.get_by_role("link", **kwargs).first
             iot_link.wait_for()
-            href = iot_link.first.get_attribute("href")
+            href = iot_link.get_attribute("href")
             iot_link.click()
 
             if href:
