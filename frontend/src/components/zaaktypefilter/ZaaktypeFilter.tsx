@@ -20,8 +20,8 @@ export type ZaaktypeFilterValues = {
   /** The value for "status". */
   status?: ZaaktypeStatusEnum | null;
 
-  /** The value for "trefwoorden". */
-  trefwoorden?: string | null;
+  /** The value for search. */
+  search?: string | null;
 };
 
 export type ZaaktypeFilterProps = ZaaktypeFilterValues & {
@@ -50,21 +50,21 @@ export type ZaaktypeStatusEnum = (typeof StatusChoices)[number]["value"];
  */
 export function ZaaktypeFilter({
   status,
-  trefwoorden,
+  search,
   onSubmit,
 }: ZaaktypeFilterProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [statusState, setStatusState] = useState<ZaaktypeStatusEnum | null>(
     status || null,
   );
-  const [trefwoordenState, setTrefwoordenState] = useState(trefwoorden);
+  const [searchState, setSearchState] = useState(search);
 
   /**
    * Calls onSubmit with the entered value.
    */
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTrefwoordenState(e.target.value);
-    handleSubmit(e, { trefwoorden: e.target.value });
+    setSearchState(e.target.value);
+    handleSubmit(e, { search: e.target.value });
   };
 
   /**
@@ -79,8 +79,8 @@ export function ZaaktypeFilter({
    */
   const handleReset = useCallback(() => {
     setStatusState(null);
-    setTrefwoordenState(null);
-    onSubmit?.({ status: null, trefwoorden: null, page: 1 });
+    setSearchState(null);
+    onSubmit?.({ status: null, search: null, page: 1 });
   }, [onSubmit]);
 
   /**
@@ -91,11 +91,11 @@ export function ZaaktypeFilter({
       const values = data as ZaaktypeFilterValues;
       onSubmit?.({
         status: values.status || statusState,
-        trefwoorden: values.trefwoorden,
+        search: values.search ?? searchState,
         page: 1, // Filtering invalidates pagination.
       });
     }, 500), // MacOS delay until repeat
-    [trefwoordenState, onSubmit],
+    [searchState, onSubmit],
   );
 
   const fields: FormControlProps[] = [
@@ -130,11 +130,11 @@ export function ZaaktypeFilter({
   return (
     <div className="ob-zaaktype-filter">
       <Input
-        aria-label="Trefwoorden"
+        aria-label="Zoek op identificatie"
         icon={<Solid.MagnifyingGlassIcon />}
-        name="trefwoorden"
-        placeholder="Trefwoorden"
-        value={trefwoordenState || ""}
+        name="search"
+        placeholder="Identificatie"
+        value={searchState || ""}
         onChange={handleSearch}
       />
       <Dropdown

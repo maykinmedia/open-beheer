@@ -19,12 +19,17 @@ export const zaaktypenLoader = loginRequired(
     const { params } = loaderFunctionArgs;
 
     const searchParams = new URL(loaderFunctionArgs.request.url).searchParams;
+    const search = searchParams.get("search");
+    searchParams.delete("search");
+
+    const queryParams = new URLSearchParams(searchParams);
+    if (search) {
+      queryParams.set("identificatie__icontains", search);
+    }
+
     const response = await request<
       ListResponse<components["schemas"]["ZaakTypeSummary"]>
-    >("GET", `/service/${params.serviceSlug}/zaaktypen/`, {
-      catalogus: params.catalogusId,
-      ...Object.fromEntries(searchParams),
-    });
+    >("GET", `/service/${params.serviceSlug}/zaaktypen/`, queryParams);
     return { ...response };
   },
 );
