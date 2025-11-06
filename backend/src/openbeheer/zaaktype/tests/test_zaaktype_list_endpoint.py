@@ -262,6 +262,7 @@ class ZaakTypeCreateViewTest(VCRAPITestCase):
         resultaattype = to_builtins(template_resultaattype)
         del resultaattype["zaaktype"]
         del resultaattype["uuid"]
+        del resultaattype["adminUrl"]
         resultaattype["catalogus"] = (
             "http://localhost:8003/catalogi/api/v1/catalogussen/ec77ad39-0954-4aeb-bcf2-6f45263cde77"
         )

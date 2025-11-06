@@ -157,6 +157,8 @@ class StatusTypeDetailViewTest(VCRAPITestCase):
             "zaakobjecttypen",
             "zaaktype",
             "zaaktypeIdentificatie",
+            "uuid",
+            "adminUrl",
         }
 
     def test_patch_statustype(self):
@@ -170,8 +172,6 @@ class StatusTypeDetailViewTest(VCRAPITestCase):
         data = response.json()
 
         expected = to_builtins(self.statustype) | changes
-
-        del expected["uuid"]
 
         self.assertEqual(data, expected)
 

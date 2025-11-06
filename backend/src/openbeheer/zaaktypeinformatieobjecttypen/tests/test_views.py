@@ -168,6 +168,7 @@ class ZaakTypeInformatieObjectTypeDetailViewTest(VCRAPITestCase):
 
         assert result_keys == {
             "uuid",
+            "adminUrl",
             "zaaktype",
             "informatieobjecttype",
             "volgnummer",

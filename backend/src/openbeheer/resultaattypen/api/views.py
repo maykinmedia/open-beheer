@@ -100,6 +100,6 @@ class ResultaatTypeDetailView(DetailViewWithoutVersions, DetailView[ResultaatTyp
     Endpoint for Resultaattypen attached to a particular Zaaktype
     """
 
-    return_data_type = data_type = ResultaatType
+    return_data_type = data_type = ResultaatTypeWithUUID
     endpoint_path = "resultaattypen/{uuid}"
     expansions = {}

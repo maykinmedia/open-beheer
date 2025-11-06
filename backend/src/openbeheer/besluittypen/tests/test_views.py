@@ -95,6 +95,11 @@ class BesluitTypeListViewTests(VCRAPITestCase):
         refreshed = ztc_client("OZ").get(data["url"]).json()
         self.assertIn(self.zaaktype.url, refreshed["zaaktypen"])
 
+        if not self.vcr_enabled:
+            # Do not try and bend the cassette; that is impossible
+            # Instead, try and realise the truth
+            return
+
         assert self.cassette
         # we shouldn't have sent snake_case to the service
         # OZ might work, but other implementations may not
@@ -203,6 +208,8 @@ class BesluitTypeDetailViewTest(VCRAPITestCase):
             "url",
             "vastgelegdIn",
             "zaaktypen",
+            "uuid",
+            "adminUrl",
         }
 
         self.assertIn(self.zaaktype.url, data["zaaktypen"])
@@ -218,8 +225,6 @@ class BesluitTypeDetailViewTest(VCRAPITestCase):
         data = response.json()
 
         expected = to_builtins(self.besluittype) | changes
-
-        del expected["uuid"]
 
         assert data == expected
 

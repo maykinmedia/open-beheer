@@ -100,6 +100,6 @@ class StatusTypeDetailView(DetailViewWithoutVersions, DetailView[StatusType]):
     Endpoint for statustypen attached to a particular Zaaktype
     """
 
-    return_data_type = data_type = StatusType
+    return_data_type = data_type = StatusTypeWithUUID
     endpoint_path = "statustypen/{uuid}"
     expansions = {}

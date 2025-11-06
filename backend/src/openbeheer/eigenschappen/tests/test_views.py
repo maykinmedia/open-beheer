@@ -191,6 +191,9 @@ class EigenschappenDetailViewTest(VCRAPITestCase):
             "url",
             "zaaktype",
             "zaaktypeIdentificatie",
+            "adminUrl",
+            "uuid",
+            "formaat",
         }
 
     def test_patch_eigenschappen(self):
@@ -205,10 +208,7 @@ class EigenschappenDetailViewTest(VCRAPITestCase):
 
         expected = to_builtins(self.eigenschappen) | changes
 
-        del expected["uuid"]
-        del expected["formaat"]
-
-        self.assertEqual(data, expected)
+        assert data == expected
 
     def test_put_eigenschappen(self):
         self.client.force_login(self.user)
