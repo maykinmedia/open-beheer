@@ -1,0 +1,6 @@
+.related-object-badge__admin-link {
+  color: var(--theme-base-link);
+  text-decoration: none;
+  margin-left: -0.5rem;
+  margin-top: -0.3rem;
+}
