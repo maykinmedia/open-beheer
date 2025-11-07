@@ -338,7 +338,7 @@ export async function selectZaaktypeVersionAction(
  */
 export type SetTabPayload = {
   uuid: string;
-  tabIndex: number;
+  tabKey: string;
 };
 
 /**
@@ -350,7 +350,7 @@ export async function setTabAction(
   const payload = action.payload;
 
   const url = new URL(window.location.href);
-  return redirect(`../${payload.uuid}${url.search}#tab=${payload.tabIndex}`);
+  return redirect(`../${payload.uuid}${url.search}#tab=${payload.tabKey}`);
 }
 
 /**
