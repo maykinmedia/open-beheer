@@ -1,6 +1,8 @@
 import { Badge } from "@maykin-ui/admin-ui";
 import { isPrimitive } from "~/lib";
 
+import "./RelatedObjectBadge.css";
+
 /**
  * This refers to the fields in an object which are allowed to be rendered for
  * an related object. If none of those match: an attempt may be made to automatically
