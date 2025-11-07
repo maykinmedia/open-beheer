@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../src"))
 import django
 from django.conf import settings
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_settings_module")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "openbeheer.conf.ci")
 django.setup()
 
 import openbeheer  # noqa isort:skip
