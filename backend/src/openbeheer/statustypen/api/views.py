@@ -4,7 +4,6 @@ from openbeheer.api.views import DetailView, DetailViewWithoutVersions, ListView
 from openbeheer.types import (
     ExternalServiceError,
     StatusTypeWithUUID,
-    ZGWError,
 )
 from openbeheer.types.ztc import (
     PatchedStatusTypeRequest,
@@ -60,39 +59,23 @@ class StatusTypeListView(
         tags=["statustypen"],
         summary="Get an statustype",
         description="Retrieve an statustype from Open Zaak.",
-        responses={
-            "200": StatusType,
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["statustypen"],
         summary="Patch an statustype",
         description="Partially update a statustype from Open Zaak.",
         request=PatchedStatusTypeRequest,
-        responses={
-            "200": StatusType,
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["statustypen"],
         summary="Put an statustype",
         description="Fully update a statustype from Open Zaak.",
         request=StatusTypeRequest,
-        responses={
-            "200": StatusType,
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["statustypen"],
         summary="Delete an statustype",
         description="Remove permanently a statustype from Open Zaak.",
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class StatusTypeDetailView(DetailViewWithoutVersions, DetailView[StatusType]):

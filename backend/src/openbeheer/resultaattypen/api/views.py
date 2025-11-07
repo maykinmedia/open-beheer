@@ -4,7 +4,6 @@ from openbeheer.api.views import DetailView, DetailViewWithoutVersions, ListView
 from openbeheer.types import (
     ExternalServiceError,
     ResultaatTypeWithUUID,
-    ZGWError,
 )
 from openbeheer.types.ztc import (
     PatchedResultaatTypeRequest,
@@ -60,39 +59,23 @@ class ResultaatTypeListView(
         tags=["Resultaattypen"],
         summary="Get an resultaattype",
         description="Retrieve an resultaattype from Open Zaak.",
-        responses={
-            "200": ResultaatType,
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["Resultaattypen"],
         summary="Patch an resultaattype",
         description="Partially update a resultaattype from Open Zaak.",
         request=PatchedResultaatTypeRequest,
-        responses={
-            "200": ResultaatType,
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["Resultaattypen"],
         summary="Put an resultaattype",
         description="Fully update a resultaattype from Open Zaak.",
         request=ResultaatTypeRequest,
-        responses={
-            "200": ResultaatType,
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["Resultaattypen"],
         summary="Delete an resultaattype",
         description="Remove permanently a resultaattype from Open Zaak.",
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class ResultaatTypeDetailView(DetailViewWithoutVersions, DetailView[ResultaatType]):

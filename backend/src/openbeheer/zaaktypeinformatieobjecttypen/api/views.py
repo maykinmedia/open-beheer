@@ -7,7 +7,6 @@ from openbeheer.api.views import (
 )
 from openbeheer.types import (
     ExternalServiceError,
-    ZGWError,
 )
 from openbeheer.types._open_beheer import ZaakTypeInformatieObjectTypeWithUUID
 from openbeheer.types.ztc import (
@@ -66,39 +65,23 @@ class ZaakTypeInformatieobjecttypeListView(
         tags=["Zaaktype-Informatieobjecttypen"],
         summary="Get an zaaktype_informatieobjecttype",
         description="Retrieve an zaaktype_informatieobjecttype from Open Zaak.",
-        responses={
-            "200": ZaakTypeInformatieObjectType,
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["Zaaktype-Informatieobjecttypen"],
         summary="Patch an zaaktype_informatieobjecttype",
         description="Partially update a zaaktype_informatieobjecttype from Open Zaak.",
         request=PatchedZaakTypeInformatieObjectTypeRequest,
-        responses={
-            "200": ZaakTypeInformatieObjectType,
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["Zaaktype-Informatieobjecttypen"],
         summary="Put an zaaktype_informatieobjecttype",
         description="Fully update a zaaktype_informatieobjecttype from Open Zaak.",
         request=ZaakTypeInformatieObjectTypeRequest,
-        responses={
-            "200": ZaakTypeInformatieObjectType,
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["Zaaktype-Informatieobjecttypen"],
         summary="Delete an zaaktype_informatieobjecttype",
         description="Remove permanently a zaaktype_informatieobjecttype from Open Zaak.",
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class ZaakTypeInformatieObjectTypeDetailView(

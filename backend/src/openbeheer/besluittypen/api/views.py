@@ -15,7 +15,6 @@ from openbeheer.clients import ztc_client
 from openbeheer.types import (
     BesluitTypeWithUUID,
     ExternalServiceError,
-    ZGWError,
 )
 from openbeheer.types.ztc import (
     BesluitType,
@@ -105,39 +104,23 @@ class BesluittypeListView(
         tags=["besluittypen"],
         summary="Get an Besluittype",
         description="Retrieve an Besluittype from Open Zaak.",
-        responses={
-            "200": BesluitType,
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["besluittypen"],
         summary="Patch an Besluittype",
         description="Partially update a Besluittype from Open Zaak.",
         request=PatchedBesluitTypeRequest,
-        responses={
-            "200": BesluitType,
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["besluittypen"],
         summary="Put an Besluittype",
         description="Fully update a Besluittype from Open Zaak.",
         request=BesluitTypeRequest,
-        responses={
-            "200": BesluitType,
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["besluittypen"],
         summary="Delete an Besluittype",
         description="Remove permanently a Besluittype from Open Zaak.",
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class BesluittypeDetailView(DetailViewWithoutVersions, DetailView[BesluitType]):
