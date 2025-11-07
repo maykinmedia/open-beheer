@@ -1,4 +1,10 @@
-import { Body, CardBaseTemplate, H2, useFormDialog } from "@maykin-ui/admin-ui";
+import {
+  Body,
+  CardBaseTemplate,
+  H2,
+  Outline,
+  useFormDialog,
+} from "@maykin-ui/admin-ui";
 import { ucFirst } from "@maykin-ui/client-common";
 import { invariant } from "@maykin-ui/client-common/assert";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -30,6 +36,8 @@ import {
   ZaaktypeAction,
   performAction,
 } from "~/pages/zaaktype/zaaktype.action.ts";
+
+import "./zaaktype.css";
 
 /** Explicit tab configs specified ./tabs, overrides tab config resolved from fieldset. */
 const TAB_CONFIG_OVERRIDES: TabConfig<TargetType>[] = [
@@ -318,9 +326,21 @@ export function ZaaktypePage() {
 
   return (
     <CardBaseTemplate
+      actions={[
+        {
+          href: result.adminUrl,
+          children: (
+            <>
+              Openen in Open Zaak
+              <Outline.ArrowTopRightOnSquareIcon />
+            </>
+          ),
+        },
+      ]}
       breadcrumbItems={breadcrumbItems}
       cardProps={{
         justify: "space-between",
+        className: "zaaktype-page",
       }}
     >
       <Body fullHeight>

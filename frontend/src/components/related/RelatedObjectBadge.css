@@ -1,6 +1,13 @@
-.related-object-badge__admin-link {
-  color: var(--theme-base-link);
-  text-decoration: none;
-  margin-left: -0.5rem;
-  margin-top: -0.3rem;
+.related-object-badge {
+  display: inline-flex;
+  gap: var(--sizes-spacing-xs-h);
+
+  .mykn-a {
+    color: inherit;
+    font-weight: normal;
+  }
+
+  .mykn-a:not(:first-child):last-child:before {
+    content: "|"
+  }
 }

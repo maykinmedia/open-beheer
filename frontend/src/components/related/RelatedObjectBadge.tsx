@@ -1,4 +1,5 @@
-import { Badge } from "@maykin-ui/admin-ui";
+import { A, Badge, Outline } from "@maykin-ui/admin-ui";
+import { NavLink } from "react-router";
 import { isPrimitive } from "~/lib";
 
 import "./RelatedObjectBadge.css";
@@ -18,6 +19,7 @@ export const DEFAULT_ALLOWED_FIELDS = [
 type RelatedObjectBadgeProps<T extends object> = {
   relatedObject: T;
   allowedFields?: string[];
+  relatedObjectKey?: string;
 };
 
 /**
@@ -26,12 +28,14 @@ type RelatedObjectBadgeProps<T extends object> = {
  *
  * @param relatedObject - Single related resource relatedObject
  * @param allowedFields - List of field names permitted for display
+ * @param relatedObjectKey - Key of the object, used to navigate to tab.
  * @returns A Badge containing the primitive value, or null for non-primitives
  * @throws InvalidRelatedObjectError When no allowed key exists
  */
 export function RelatedObjectBadge<T extends object & { adminUrl?: string }>({
   relatedObject,
   allowedFields = DEFAULT_ALLOWED_FIELDS,
+  relatedObjectKey,
 }: RelatedObjectBadgeProps<T>) {
   const value = getObjectValue(relatedObject, allowedFields);
 
@@ -39,18 +43,23 @@ export function RelatedObjectBadge<T extends object & { adminUrl?: string }>({
   const label = `Bewerk ${value} in Open Zaak admin`; // TODO: add relatedObject type?
 
   return isPrimitive(value) ? (
-    <>
-      <Badge>{value}</Badge>
-      {adminUrl && (
-        <a
-          className="related-object-badge__admin-link"
-          href={adminUrl}
-          aria-label={label}
-        >
-          ↗
-        </a>
-      )}
-    </>
+    <Badge className="mykn-badge related-object-badge">
+      <>
+        {relatedObjectKey ? (
+          <NavLink className="mykn-a" to={`#tab=${relatedObjectKey}`}>
+            {value}
+          </NavLink>
+        ) : (
+          value
+        )}
+
+        {adminUrl && (
+          <A href={adminUrl} aria-label={label} target="_blank">
+            <Outline.ArrowTopRightOnSquareIcon />
+          </A>
+        )}
+      </>
+    </Badge>
   ) : null;
 }
 
