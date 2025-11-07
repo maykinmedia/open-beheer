@@ -38,13 +38,14 @@ services:
       - CACHE_AXES=redis:6379/0
       - CSRF_TRUSTED_ORIGINS=http://localhost:9000
       - CSRF_COOKIE_SAMESITE=Strict
-      - CSRF_COOKIE_SECURE=False
+      - CSRF_COOKIE_SECURE=True
       - SESSION_COOKIE_SAMESITE=Strict
-      - SESSION_COOKIE_SECURE=False
-      - TWO_FACTOR_FORCE_OTP_ADMIN=False
-      - TWO_FACTOR_PATCH_ADMIN=False
+      - SESSION_COOKIE_SECURE=True
+      - SESSION_COOKIE_AGE=900
+      - OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS=900
       - MYKN_API_URL=http://localhost:9000
       - MYKN_API_PATH=/api/v1
+      # - OPEN_ZAAK_ADMIN_BASE_URL=https://openzaak.example.nl
     depends_on:
       - db
       - redis
