@@ -3,9 +3,7 @@ Changelog
 =========
 
 
-0.1.0
-=====
+0.9.0 (2025-11-07)
+==================
 
-*<month, day year>*
-
-* Initial release.
+Initial release.
