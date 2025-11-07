@@ -273,6 +273,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
     put:
       operationId: service_informatieobjecttypen_update
       description: Fully update an informatieobjecttype from Open Zaak. This will
@@ -321,6 +333,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
     patch:
       operationId: service_informatieobjecttypen_partial_update
       description: Partially update a informatieobjecttype from Open Zaak. This will
@@ -368,6 +392,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
     delete:
       operationId: service_informatieobjecttypen_destroy
       description: Remove permanently an informatieobjecttype from OZ.
@@ -396,6 +432,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/informatieobjecttypen/{uuid}/publish/:
     post:
@@ -589,6 +637,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
     put:
       operationId: service_zaaktypen_update
       description: Fully update a zaaktype from Open Zaak. According to OZ specs,
@@ -636,6 +696,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
     patch:
       operationId: service_zaaktypen_partial_update
       description: Partially update a zaaktype from Open Zaak. According to OZ specs,
@@ -682,6 +754,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ZGWError'
           description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
     delete:
       operationId: service_zaaktypen_destroy
       description: Delete a zaaktype from Open Zaak. According to OZ specs, this should
@@ -712,6 +796,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/zaaktypen/{uuid}/publish/:
     post:
@@ -910,13 +1006,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BesluitType'
+                $ref: '#/components/schemas/BesluitTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     put:
       operationId: service_zaaktypen_besluittypen_update
@@ -961,13 +1069,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BesluitType'
+                $ref: '#/components/schemas/BesluitTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     patch:
       operationId: service_zaaktypen_besluittypen_partial_update
@@ -1011,13 +1131,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BesluitType'
+                $ref: '#/components/schemas/BesluitTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     delete:
       operationId: service_zaaktypen_besluittypen_destroy
@@ -1053,6 +1185,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/zaaktypen/{zaaktype}/eigenschappen/:
     get:
@@ -1211,13 +1355,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Eigenschap'
+                $ref: '#/components/schemas/EigenschapWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     put:
       operationId: service_zaaktypen_eigenschappen_update
@@ -1262,13 +1418,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Eigenschap'
+                $ref: '#/components/schemas/EigenschapWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     patch:
       operationId: service_zaaktypen_eigenschappen_partial_update
@@ -1312,13 +1480,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Eigenschap'
+                $ref: '#/components/schemas/EigenschapWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     delete:
       operationId: service_zaaktypen_eigenschappen_destroy
@@ -1354,6 +1534,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/zaaktypen/{zaaktype}/resultaattypen/:
     get:
@@ -1512,13 +1704,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultaatType'
+                $ref: '#/components/schemas/ResultaatTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     put:
       operationId: service_zaaktypen_resultaattypen_update
@@ -1563,13 +1767,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultaatType'
+                $ref: '#/components/schemas/ResultaatTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     patch:
       operationId: service_zaaktypen_resultaattypen_partial_update
@@ -1613,13 +1829,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultaatType'
+                $ref: '#/components/schemas/ResultaatTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     delete:
       operationId: service_zaaktypen_resultaattypen_destroy
@@ -1655,6 +1883,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/zaaktypen/{zaaktype}/roltypen/:
     get:
@@ -1824,13 +2064,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RolType'
+                $ref: '#/components/schemas/RolTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     put:
       operationId: service_zaaktypen_roltypen_update
@@ -1875,13 +2127,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RolType'
+                $ref: '#/components/schemas/RolTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     patch:
       operationId: service_zaaktypen_roltypen_partial_update
@@ -1925,13 +2189,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RolType'
+                $ref: '#/components/schemas/RolTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     delete:
       operationId: service_zaaktypen_roltypen_destroy
@@ -1967,6 +2243,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/zaaktypen/{zaaktype}/statustypen/:
     get:
@@ -2125,13 +2413,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusType'
+                $ref: '#/components/schemas/StatusTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     put:
       operationId: service_zaaktypen_statustypen_update
@@ -2176,13 +2476,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusType'
+                $ref: '#/components/schemas/StatusTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     patch:
       operationId: service_zaaktypen_statustypen_partial_update
@@ -2226,13 +2538,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusType'
+                $ref: '#/components/schemas/StatusTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     delete:
       operationId: service_zaaktypen_statustypen_destroy
@@ -2268,6 +2592,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/zaaktypen/{zaaktype}/zaakobjecttypen/:
     get:
@@ -2447,13 +2783,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZaakObjectType'
+                $ref: '#/components/schemas/ExpandableZaakObjectTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     put:
       operationId: service_zaaktypen_zaakobjecttypen_update
@@ -2498,13 +2846,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZaakObjectType'
+                $ref: '#/components/schemas/ExpandableZaakObjectTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     patch:
       operationId: service_zaaktypen_zaakobjecttypen_partial_update
@@ -2548,13 +2908,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZaakObjectType'
+                $ref: '#/components/schemas/ExpandableZaakObjectTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     delete:
       operationId: service_zaaktypen_zaakobjecttypen_destroy
@@ -2590,6 +2962,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/{slug}/zaaktypen/{zaaktype}/zaaktypeinformatieobjecttypen/:
     get:
@@ -2648,7 +3032,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OBList_ZaakTypeInformatieObjectType_'
+                $ref: '#/components/schemas/OBList_ZaakTypeInformatieObjectTypeWithUUID_'
           description: ''
         '400':
           content:
@@ -2752,13 +3136,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     put:
       operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_update
@@ -2803,13 +3199,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     patch:
       operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_partial_update
@@ -2853,13 +3261,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+                $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
           description: ''
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
     delete:
       operationId: service_zaaktypen_zaaktypeinformatieobjecttypen_destroy
@@ -2895,6 +3315,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
           description: ''
   /api/v1/service/choices/:
     get:
@@ -3247,6 +3679,8 @@ components:
         uuid:
           type: string
           format: uuid
+        adminUrl:
+          type: string
         catalogus:
           description: URL-referentie naar de CATALOGUS waartoe dit BESLUITTYPE behoort.
           type: string
@@ -4104,6 +4538,8 @@ components:
           format: uuid
         formaat:
           $ref: '#/components/schemas/FormaatEnum'
+        adminUrl:
+          type: string
         naam:
           description: De naam van de EIGENSCHAP
           type: string
@@ -4212,6 +4648,8 @@ components:
             objecttype:
               $ref: '#/components/schemas/ObjectType'
           required: []
+        adminUrl:
+          type: string
         anderObjecttype:
           description: Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een
             ander, niet in RSGB en RGBZ voorkomend, objecttype betreft.
@@ -4316,6 +4754,8 @@ components:
         uuid:
           type: string
           format: uuid
+        adminUrl:
+          type: string
         _expand:
           default: {}
           title: ZaakTypeExtension
@@ -5270,6 +5710,8 @@ components:
         uuid:
           type: string
           format: uuid
+        adminUrl:
+          type: string
         catalogus:
           description: URL-referentie naar de CATALOGUS waartoe dit INFORMATIEOBJECTTYPE
             behoort.
@@ -5627,8 +6069,8 @@ components:
       - fields
       - pagination
       - results
-    OBList_ZaakTypeInformatieObjectType_:
-      title: OBList[ZaakTypeInformatieObjectType]
+    OBList_ZaakTypeInformatieObjectTypeWithUUID_:
+      title: OBList[ZaakTypeInformatieObjectTypeWithUUID]
       description: Used to draw list views on the frontend.
       type: object
       properties:
@@ -5641,7 +6083,7 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/ZaakTypeInformatieObjectType'
+            $ref: '#/components/schemas/ZaakTypeInformatieObjectTypeWithUUID'
       required:
       - fields
       - pagination
@@ -7605,6 +8047,8 @@ components:
         afleidingswijze:
           description: Read-only afleidingswijze, set from bronArchiefProcedure
           $ref: '#/components/schemas/AfleidingswijzeEnum'
+        adminUrl:
+          type: string
         zaaktype:
           title: is van
           description: URL-referentie naar het ZAAKTYPE van ZAAKen waarin resultaten
@@ -7931,6 +8375,8 @@ components:
         uuid:
           type: string
           format: uuid
+        adminUrl:
+          type: string
         zaaktype:
           description: URL-referentie naar het ZAAKTYPE waar deze ROLTYPEn betrokken
             kunnen zijn.
@@ -8310,6 +8756,8 @@ components:
         uuid:
           type: string
           format: uuid
+        adminUrl:
+          type: string
         omschrijving:
           description: Een korte, voor de initiator van de zaak relevante, omschrijving
             van de aard van de STATUS van zaken van een ZAAKTYPE.
@@ -8753,6 +9201,8 @@ components:
         uuid:
           type: string
           format: uuid
+        adminUrl:
+          type: string
         anderObjecttype:
           description: Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een
             ander, niet in RSGB en RGBZ voorkomend, objecttype betreft.
@@ -9006,6 +9456,8 @@ components:
         uuid:
           type: string
           format: uuid
+        adminUrl:
+          type: string
         zaaktype:
           description: URL-referentie naar het ZAAKTYPE.
           type: string

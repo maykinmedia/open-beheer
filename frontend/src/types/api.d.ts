@@ -836,6 +836,7 @@ export interface components {
         BesluitTypeWithUUID: {
             /** Format: uuid */
             uuid?: string;
+            adminUrl?: string;
             /** @description URL-referentie naar de CATALOGUS waartoe dit BESLUITTYPE behoort. */
             catalogus: string;
             /** @description Aanduiding of BESLUITen van dit BESLUITTYPE gepubliceerd moeten worden. */
@@ -1112,6 +1113,7 @@ export interface components {
             /** Format: uuid */
             uuid?: string;
             formaat?: components["schemas"]["FormaatEnum"];
+            adminUrl?: string;
             /** @description De naam van de EIGENSCHAP */
             naam: string;
             /** @description De beschrijving van de betekenis van deze EIGENSCHAP */
@@ -1151,6 +1153,7 @@ export interface components {
             _expand: {
                 objecttype?: components["schemas"]["ObjectType"];
             };
+            adminUrl?: string;
             /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
             anderObjecttype: boolean;
             /** @description Omschrijving van de betrekking van het Objecttype op zaken van het gerelateerde ZAAKTYPE. */
@@ -1182,6 +1185,7 @@ export interface components {
             selectielijstProcestype: string | null;
             /** Format: uuid */
             uuid?: string;
+            adminUrl?: string;
             /**
              * ZaakTypeExtension
              * @default {}
@@ -1560,6 +1564,7 @@ export interface components {
         InformatieObjectTypeWithUUID: {
             /** Format: uuid */
             uuid?: string;
+            adminUrl?: string;
             /** @description URL-referentie naar de CATALOGUS waartoe dit INFORMATIEOBJECTTYPE behoort. */
             catalogus: string;
             /** @description Omschrijving van de aard van informatieobjecten van dit INFORMATIEOBJECTTYPE. */
@@ -1734,13 +1739,13 @@ export interface components {
             results: components["schemas"]["ZaakObjectTypeWithUUID"][];
         };
         /**
-         * OBList[ZaakTypeInformatieObjectType]
+         * OBList[ZaakTypeInformatieObjectTypeWithUUID]
          * @description Used to draw list views on the frontend.
          */
-        OBList_ZaakTypeInformatieObjectType_: {
+        OBList_ZaakTypeInformatieObjectTypeWithUUID_: {
             fields: components["schemas"]["OBField"][];
             pagination: components["schemas"]["OBPagination"];
-            results: components["schemas"]["ZaakTypeInformatieObjectType"][];
+            results: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
         };
         /**
          * OBList[ZaakTypeSummary]
@@ -2353,6 +2358,7 @@ export interface components {
             uuid?: string;
             /** @description Read-only afleidingswijze, set from bronArchiefProcedure */
             afleidingswijze?: components["schemas"]["AfleidingswijzeEnum"];
+            adminUrl?: string;
             /**
              * is van
              * @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin resultaten van dit RESULTAATTYPE bereikt kunnen worden.
@@ -2471,6 +2477,7 @@ export interface components {
         RolTypeWithUUID: {
             /** Format: uuid */
             uuid?: string;
+            adminUrl?: string;
             /** @description URL-referentie naar het ZAAKTYPE waar deze ROLTYPEn betrokken kunnen zijn. */
             zaaktype: string;
             /** @description Omschrijving van de aard van de ROL. */
@@ -2621,6 +2628,7 @@ export interface components {
         StatusTypeWithUUID: {
             /** Format: uuid */
             uuid?: string;
+            adminUrl?: string;
             /** @description Een korte, voor de initiator van de zaak relevante, omschrijving van de aard van de STATUS van zaken van een ZAAKTYPE. */
             omschrijving: string;
             /** @description URL-referentie naar het ZAAKTYPE van ZAAKen waarin STATUSsen van dit STATUSTYPE bereikt kunnen worden. */
@@ -2773,6 +2781,7 @@ export interface components {
         ZaakObjectTypeWithUUID: {
             /** Format: uuid */
             uuid?: string;
+            adminUrl?: string;
             /** @description Aanduiding waarmee wordt aangegeven of het ZAAKOBJECTTYPE een ander, niet in RSGB en RGBZ voorkomend, objecttype betreft. */
             anderObjecttype: boolean;
             /** @description URL-referentie naar de OBJECTTYPE waartoe dit ZAAKOBJECTTYPE behoort. */
@@ -2866,6 +2875,7 @@ export interface components {
         ZaakTypeInformatieObjectTypeWithUUID: {
             /** Format: uuid */
             uuid?: string;
+            adminUrl?: string;
             /** @description URL-referentie naar het ZAAKTYPE. */
             zaaktype: string;
             /**
@@ -3304,6 +3314,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_informatieobjecttypen_update: {
@@ -3340,6 +3366,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_informatieobjecttypen_destroy: {
@@ -3367,6 +3409,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -3403,6 +3461,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -3561,6 +3635,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_update: {
@@ -3597,6 +3687,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_destroy: {
@@ -3624,6 +3730,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -3660,6 +3782,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -3808,7 +3946,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BesluitType"];
+                    "application/json": components["schemas"]["BesluitTypeWithUUID"];
                 };
             };
             400: {
@@ -3817,6 +3955,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -3845,7 +3999,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BesluitType"];
+                    "application/json": components["schemas"]["BesluitTypeWithUUID"];
                 };
             };
             400: {
@@ -3854,6 +4008,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -3886,6 +4056,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_besluittypen_partial_update: {
@@ -3912,7 +4098,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BesluitType"];
+                    "application/json": components["schemas"]["BesluitTypeWithUUID"];
                 };
             };
             400: {
@@ -3921,6 +4107,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4039,7 +4241,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Eigenschap"];
+                    "application/json": components["schemas"]["EigenschapWithUUID"];
                 };
             };
             400: {
@@ -4048,6 +4250,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4076,7 +4294,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Eigenschap"];
+                    "application/json": components["schemas"]["EigenschapWithUUID"];
                 };
             };
             400: {
@@ -4085,6 +4303,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4117,6 +4351,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_eigenschappen_partial_update: {
@@ -4143,7 +4393,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Eigenschap"];
+                    "application/json": components["schemas"]["EigenschapWithUUID"];
                 };
             };
             400: {
@@ -4152,6 +4402,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4270,7 +4536,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResultaatType"];
+                    "application/json": components["schemas"]["ResultaatTypeWithUUID"];
                 };
             };
             400: {
@@ -4279,6 +4545,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4307,7 +4589,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResultaatType"];
+                    "application/json": components["schemas"]["ResultaatTypeWithUUID"];
                 };
             };
             400: {
@@ -4316,6 +4598,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4348,6 +4646,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_resultaattypen_partial_update: {
@@ -4374,7 +4688,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResultaatType"];
+                    "application/json": components["schemas"]["ResultaatTypeWithUUID"];
                 };
             };
             400: {
@@ -4383,6 +4697,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4503,7 +4833,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RolType"];
+                    "application/json": components["schemas"]["RolTypeWithUUID"];
                 };
             };
             400: {
@@ -4512,6 +4842,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4540,7 +4886,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RolType"];
+                    "application/json": components["schemas"]["RolTypeWithUUID"];
                 };
             };
             400: {
@@ -4549,6 +4895,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4581,6 +4943,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_roltypen_partial_update: {
@@ -4607,7 +4985,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RolType"];
+                    "application/json": components["schemas"]["RolTypeWithUUID"];
                 };
             };
             400: {
@@ -4616,6 +4994,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4734,7 +5128,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["StatusType"];
+                    "application/json": components["schemas"]["StatusTypeWithUUID"];
                 };
             };
             400: {
@@ -4743,6 +5137,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4771,7 +5181,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["StatusType"];
+                    "application/json": components["schemas"]["StatusTypeWithUUID"];
                 };
             };
             400: {
@@ -4780,6 +5190,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4812,6 +5238,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_statustypen_partial_update: {
@@ -4838,7 +5280,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["StatusType"];
+                    "application/json": components["schemas"]["StatusTypeWithUUID"];
                 };
             };
             400: {
@@ -4847,6 +5289,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -4970,7 +5428,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZaakObjectType"];
+                    "application/json": components["schemas"]["ExpandableZaakObjectTypeWithUUID"];
                 };
             };
             400: {
@@ -4979,6 +5437,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -5007,7 +5481,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZaakObjectType"];
+                    "application/json": components["schemas"]["ExpandableZaakObjectTypeWithUUID"];
                 };
             };
             400: {
@@ -5016,6 +5490,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -5048,6 +5538,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_zaakobjecttypen_partial_update: {
@@ -5074,7 +5580,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZaakObjectType"];
+                    "application/json": components["schemas"]["ExpandableZaakObjectTypeWithUUID"];
                 };
             };
             400: {
@@ -5083,6 +5589,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -5110,7 +5632,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OBList_ZaakTypeInformatieObjectType_"];
+                    "application/json": components["schemas"]["OBList_ZaakTypeInformatieObjectTypeWithUUID_"];
                 };
             };
             400: {
@@ -5201,7 +5723,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZaakTypeInformatieObjectType"];
+                    "application/json": components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"];
                 };
             };
             400: {
@@ -5210,6 +5732,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -5238,7 +5776,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZaakTypeInformatieObjectType"];
+                    "application/json": components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"];
                 };
             };
             400: {
@@ -5247,6 +5785,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
@@ -5279,6 +5833,22 @@ export interface operations {
                     "application/json": components["schemas"]["ZGWError"];
                 };
             };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
         };
     };
     service_zaaktypen_zaaktypeinformatieobjecttypen_partial_update: {
@@ -5305,7 +5875,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZaakTypeInformatieObjectType"];
+                    "application/json": components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"];
                 };
             };
             400: {
@@ -5314,6 +5884,22 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };
