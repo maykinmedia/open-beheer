@@ -27,12 +27,29 @@ type RelatedObjectBadgeProps<T extends object> = {
  * @returns A Badge containing the primitive value, or null for non-primitives
  * @throws InvalidRelatedObjectError When no allowed key exists
  */
-export function RelatedObjectBadge<T extends object>({
+export function RelatedObjectBadge<T extends object & { adminUrl?: string }>({
   relatedObject,
   allowedFields = DEFAULT_ALLOWED_FIELDS,
 }: RelatedObjectBadgeProps<T>) {
   const value = getObjectValue(relatedObject, allowedFields);
-  return isPrimitive(value) ? <Badge>{value}</Badge> : null;
+
+  const adminUrl = relatedObject.adminUrl;
+  const label = `Bewerk ${value} in Open Zaak admin`; // TODO: add relatedObject type?
+
+  return isPrimitive(value) ? (
+    <>
+      <Badge>{value}</Badge>
+      {adminUrl && (
+        <a
+          className="related-object-badge__admin-link"
+          href={adminUrl}
+          aria-label={label}
+        >
+          ↗
+        </a>
+      )}
+    </>
+  ) : null;
 }
 
 /**
