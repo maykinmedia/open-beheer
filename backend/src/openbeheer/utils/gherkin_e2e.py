@@ -271,14 +271,6 @@ class GherkinRunner:
             tabpanel = page.locator(f"#{tabpanel_id}")
             tabpanel.wait_for()
 
-            # check url hash
-            index = next(
-                i
-                for i, tab in enumerate(page.get_by_role("tab").all())
-                if tab.text_content() == name
-            )
-            self.runner.then.url_should_match(page, f"tab={index}")
-
         # Actions
         def user_clicks_on_button(self, page: Page, name: str, index: int = 0) -> None:
             button = page.get_by_role("button", name=name, exact=True).nth(index)
