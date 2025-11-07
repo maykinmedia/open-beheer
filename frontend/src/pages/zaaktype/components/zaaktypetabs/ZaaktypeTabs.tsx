@@ -39,8 +39,11 @@ export function ZaaktypeTabs({
 
   const submitAction = useSubmitAction(false);
   // (Horizontal) tab data.
-  const [tabHash] = useHashParam("tab", "0");
-  const activeTabIndex = parseInt(tabHash || "0");
+  const [tabHash] = useHashParam("tab", tabConfigs[0]?.key);
+  const activeTabIndex = Math.max(
+    tabConfigs.findIndex((t) => t.key === tabHash),
+    0,
+  );
 
   //
   // Events.
@@ -51,13 +54,14 @@ export function ZaaktypeTabs({
    */
   const handleTabChange = useCallback(
     (index: number) => {
+      const key = tabConfigs[index].key;
       invariant(object.uuid, "object.uuid must be set");
 
       submitAction({
         type: "SET_TAB",
         payload: {
           uuid: object.uuid,
-          tabIndex: index,
+          tabKey: key,
         },
       });
     },
