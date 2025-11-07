@@ -1,3 +1,6 @@
 .zaaktype-page > .mykn-toolbar:first-child {
+  box-sizing: border-box;
+  padding-inline-end: var(--sizes-spacing-xs-h);
   position: absolute;
+  top: var(--sizes-spacing-xs-v);
 }

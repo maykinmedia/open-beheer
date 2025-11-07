@@ -329,9 +329,10 @@ export function ZaaktypePage() {
       actions={[
         {
           href: result.adminUrl,
+          textDecoration: "underline",
           children: (
             <>
-              Openen in Open Zaak
+              Bewerk in Open Zaak admin
               <Outline.ArrowTopRightOnSquareIcon />
             </>
           ),
