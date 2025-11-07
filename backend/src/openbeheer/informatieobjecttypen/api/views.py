@@ -114,10 +114,6 @@ class InformatieObjectTypeListView(
         tags=["Informatieobjecttypen"],
         summary="Get an informatieobjecttype",
         description="Retrive an informatieobjecttype from Open Zaak.",
-        responses={
-            "200": DetailResponseWithoutVersions[InformatieObjectType],
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["Informatieobjecttypen"],
@@ -128,10 +124,6 @@ class InformatieObjectTypeListView(
             "not a concept. Otherwise will return a 400."
         ),
         request=PatchedInformatieObjectTypeRequest,
-        responses={
-            "200": DetailResponseWithoutVersions[InformatieObjectType],
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["Informatieobjecttypen"],
@@ -142,19 +134,11 @@ class InformatieObjectTypeListView(
             "not a concept. Otherwise will return a 400."
         ),
         request=InformatieObjectTypeRequest,
-        responses={
-            "200": DetailResponseWithoutVersions[InformatieObjectType],
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["Informatieobjecttypen"],
         summary="Delete an informatieobjecttype",
         description=("Remove permanently an informatieobjecttype from OZ."),
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class InformatieObjectTypeDetailView(

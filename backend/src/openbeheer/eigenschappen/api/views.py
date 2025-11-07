@@ -200,39 +200,23 @@ class EigenschappenListView(
         tags=["eigenschappen"],
         summary="Get an eigenschappe",
         description="Retrieve an eigenschap from Open Zaak.",
-        responses={
-            "200": Eigenschap,
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["eigenschappen"],
         summary="Patch an eigenschappe",
         description="Partially update a eigenschap from Open Zaak.",
         request=PatchedEigenschapRequest,
-        responses={
-            "200": Eigenschap,
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["eigenschappen"],
         summary="Put an eigenschappe",
         description="Fully update a eigenschap from Open Zaak.",
         request=EigenschapRequest,
-        responses={
-            "200": Eigenschap,
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["eigenschappen"],
         summary="Delete an eigenschappe",
         description="Remove permanently a eigenschap from Open Zaak.",
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class EigenschappenDetailView(DetailViewWithoutVersions, DetailView[Eigenschap]):

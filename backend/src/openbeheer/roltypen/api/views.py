@@ -4,7 +4,6 @@ from openbeheer.api.views import DetailView, DetailViewWithoutVersions, ListView
 from openbeheer.types import (
     ExternalServiceError,
     RolTypeWithUUID,
-    ZGWError,
 )
 from openbeheer.types.ztc import (
     PatchedRolTypeRequest,
@@ -60,39 +59,23 @@ class RoltypeListView(
         tags=["roltypen"],
         summary="Get an roltype",
         description="Retrieve an roltype from Open Zaak.",
-        responses={
-            "200": RolType,
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["roltypen"],
         summary="Patch an roltype",
         description="Partially update a roltype from Open Zaak.",
         request=PatchedRolTypeRequest,
-        responses={
-            "200": RolType,
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["roltypen"],
         summary="Put an roltype",
         description="Fully update a roltype from Open Zaak.",
         request=RolTypeRequest,
-        responses={
-            "200": RolType,
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["roltypen"],
         summary="Delete an roltype",
         description="Remove permanently a roltype from Open Zaak.",
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class RoltypeDetailView(DetailViewWithoutVersions, DetailView[RolType]):

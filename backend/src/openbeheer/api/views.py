@@ -593,6 +593,28 @@ class DetailView[T: Struct](MsgspecAPIView, ABC):
     endpoint_path: str
     expansions: Mapping[str, Expansion[T, object]] = {}
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        set_schema_responses = extend_schema(
+            responses={
+                "200": self.return_data_type,
+                "400": ZGWError,
+                "502": ExternalServiceError,
+                "504": ExternalServiceError,
+            }
+        )
+        self.get = set_schema_responses(self.get)
+        self.put = set_schema_responses(self.put)
+        self.patch = set_schema_responses(self.patch)
+        self.delete = extend_schema(
+            responses={
+                "204": None,
+                "400": ZGWError,
+                "502": ExternalServiceError,
+                "504": ExternalServiceError,
+            },
+        )(self.delete)
+
     def get_item_data(self, slug: str, uuid: UUID) -> tuple[T | ZGWError, int]:
         with ztc_client(slug) as client:
             response = client.get(

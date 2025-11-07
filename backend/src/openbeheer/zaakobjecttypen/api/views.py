@@ -17,7 +17,6 @@ from openbeheer.types import (
     ExpandableZaakObjectTypeWithUUID,
     ExternalServiceError,
     ZaakObjectTypeWithUUID,
-    ZGWError,
 )
 from openbeheer.types.objecttypen import ObjectType
 from openbeheer.types.ztc import (
@@ -98,39 +97,23 @@ def expand_zaakobjecttype(
         tags=["zaakobjecttypen"],
         summary="Get an zaakobjecttype",
         description="Retrieve an zaakobjecttype from Open Zaak.",
-        responses={
-            "200": ZaakObjectType,
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["zaakobjecttypen"],
         summary="Patch an zaakobjecttype",
         description="Partially update a zaakobjecttype from Open Zaak.",
         request=PatchedZaakObjectTypeRequest,
-        responses={
-            "200": ZaakObjectType,
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["zaakobjecttypen"],
         summary="Put an zaakobjecttype",
         description="Fully update a zaakobjecttype from Open Zaak.",
         request=ZaakObjectTypeRequest,
-        responses={
-            "200": ZaakObjectType,
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["zaakobjecttypen"],
         summary="Delete an zaakobjecttype",
         description="Remove permanently a zaakobjecttype from Open Zaak.",
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class ZaakObjectTypeDetailView(DetailViewWithoutVersions, DetailView[ZaakObjectType]):

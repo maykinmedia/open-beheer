@@ -20,6 +20,7 @@ from msgspec.json import schema_components
 from rest_framework.serializers import Field, Serializer
 from structlog import get_logger
 
+from openbeheer.types import _open_beheer
 from openbeheer.types._drf_spectacular import QueryParamSchema
 
 if TYPE_CHECKING:
@@ -125,7 +126,9 @@ class MsgSpecExtension(OpenApiSerializerExtension):
             sub_component = ResolvedComponent(
                 name=sub_name,
                 type=ResolvedComponent.SCHEMA,
-                object=self.__identity_map.get(sub_name, sub_name),
+                object=getattr(
+                    _open_beheer, sub_name, self.__identity_map.get(sub_name, sub_name)
+                ),
                 schema=sub_schema,
             )
             # we register strings here, but extend_schema registers objects
@@ -142,6 +145,7 @@ class MsgSpecExtension(OpenApiSerializerExtension):
                 )
                 if registry_name == sub_name:
                     continue
+
             auto_schema.registry.register_on_missing(sub_component)
 
         # This is a JSON schema and not an OpenAPI schema. We might need to convert it.

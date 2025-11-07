@@ -75,7 +75,6 @@ from openbeheer.types.ztc import (
     PaginatedZaakTypeList,
     PatchedZaakTypeRequest,
     Status,
-    StatusType,
     VertrouwelijkheidaanduidingEnum,
     ZaakType,
     ZaakTypeRequest,
@@ -394,10 +393,6 @@ def expand_zaaktype_informatieobjecttype(
         summary="Get a zaaktype",
         description="Retrive a zaaktype from Open Zaak.",
         request=None,
-        responses={
-            "200": DetailResponse[ExpandableZaakType],
-            "400": ZGWError,
-        },
     ),
     patch=extend_schema(
         tags=["Zaaktypen"],
@@ -407,10 +402,6 @@ def expand_zaaktype_informatieobjecttype(
             " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
         ),
         request=PatchedZaakTypeRequest,
-        responses={
-            "200": DetailResponse[ExpandableZaakType],
-            "400": ZGWError,
-        },
     ),
     put=extend_schema(
         tags=["Zaaktypen"],
@@ -420,10 +411,6 @@ def expand_zaaktype_informatieobjecttype(
             " draft zaaktypen. In practice, it modifies also the non-draft zaaktypen."
         ),
         request=ZaakTypeRequest,
-        responses={
-            "200": DetailResponse[ExpandableZaakType],
-            "400": ZGWError,
-        },
     ),
     delete=extend_schema(
         tags=["Zaaktypen"],
@@ -433,10 +420,6 @@ def expand_zaaktype_informatieobjecttype(
             " draft zaaktypen. In practice, it deletes also the published zaaktypen."
         ),
         request=None,
-        responses={
-            "204": None,
-            "400": ZGWError,
-        },
     ),
 )
 class ZaakTypeDetailView(DetailWithVersions, DetailView[ExpandableZaakType]):
