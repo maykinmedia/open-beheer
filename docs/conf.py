@@ -7,12 +7,9 @@
 # -- Path setup --------------------------------------------------------------
 import os
 import sys
+import django
 
 sys.path.insert(0, os.path.abspath("../src"))
-
-import django
-from django.conf import settings
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "openbeheer.conf.ci")
 django.setup()
 
