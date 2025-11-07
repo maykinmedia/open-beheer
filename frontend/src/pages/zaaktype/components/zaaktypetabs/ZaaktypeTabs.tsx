@@ -53,9 +53,13 @@ export function ZaaktypeTabs({
    * Gets called when the (horizontal) tab is changed.
    */
   const handleTabChange = useCallback(
-    (index: number) => {
-      const key = tabConfigs[index].key;
+    (indexOrKey: number | string) => {
       invariant(object.uuid, "object.uuid must be set");
+
+      const key =
+        typeof indexOrKey === "number"
+          ? tabConfigs[indexOrKey].key
+          : indexOrKey;
 
       submitAction({
         type: "SET_TAB",

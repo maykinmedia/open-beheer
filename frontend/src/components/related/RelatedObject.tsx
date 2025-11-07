@@ -104,6 +104,7 @@ export const RelatedObjectRenderer = <T extends TargetType>(
       <RelatedObjectBadge
         key={relatedObject.uuid + index}
         relatedObject={relatedObject}
+        relatedObjectKey={relatedObjectKey}
         allowedFields={allowedFields}
       />
     ));
