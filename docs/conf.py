@@ -8,22 +8,16 @@
 import os
 import sys
 import django
+import pathlib
 
-sys.path.insert(0, os.path.abspath("../src"))
+root_folder = pathlib.Path(__file__).parent.parent
+src_folder = (root_folder / pathlib.Path("backend") / pathlib.Path("src") )
+
+sys.path.insert(0, str(src_folder))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "openbeheer.conf.ci")
 django.setup()
 
 import openbeheer  # noqa isort:skip
-
-# from objects.setup import setup_env  # noqa isort:skip
-
-# TODO: This needs to be enabled when we want to use autodoc to grab
-# documentation from classes and functions. However, enabling django.setup()
-# causes RTD to fail because GDAL is not present in the RTD environment.
-# See: https://github.com/readthedocs/readthedocs-docker-images/issues/114#issuecomment-570566599
-#
-# setup_env()
-# django.setup()
 
 # -- Project information -----------------------------------------------------
 
