@@ -8,8 +8,6 @@ Open Beheer
 
 |docker|
 
-Easily create and publish smart forms (`Nederlandse versie`_)
-
 Developed by `Maykin B.V.`_, originally commissioned by `Gemeente Rotterdam`_.
 
 .. note::
