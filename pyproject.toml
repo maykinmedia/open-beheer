@@ -40,19 +40,19 @@ values = ["", "alpha", "beta", "rc", "final"]
 optional_value = "final"
 
 [[tool.bumpversion.files]]
-filename = "src/openbeheer/__init__.py"
+filename = "backend/src/openbeheer/__init__.py"
 
 [[tool.bumpversion.files]]
-filename = "../README.rst"
+filename = "README.rst"
 search = ":Version: {current_version}"
 replace = ":Version: {new_version}"
 
 [[tool.bumpversion.files]]
-filename = "src/openbeheer/conf/base.py"
+filename = "backend/src/openbeheer/conf/base.py"
 search = "API_VERSION = \"{current_version}\""
 replace = "API_VERSION = \"{new_version}\""
 
 [[tool.bumpversion.files]]
-filename = "../frontend/package.json"
+filename = "frontend/package.json"
 search = "\"version\": \"{current_version}\""
 replace = "\"version\": \"{new_version}\""
