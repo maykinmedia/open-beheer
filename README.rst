@@ -2,7 +2,7 @@
 Open Beheer
 ===========
 
-:Version: 0.9.0
+:Version: 0.9.1
 :Source: https://github.com/maykinmedia/open-beheer
 :Keywords: Common Ground, Catalogi API, ZGW APIs
 
