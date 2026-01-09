@@ -31,7 +31,12 @@ describe("loginAction", () => {
   it("calls login with correct arguments", async () => {
     (login as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
 
-    await loginAction({ request: mockRequest(), params: {}, context: {} });
+    await loginAction({
+      request: mockRequest(),
+      params: {},
+      context: {},
+      unstable_pattern: "",
+    });
 
     expect(login).toHaveBeenCalledWith(
       "testuser",
@@ -47,6 +52,7 @@ describe("loginAction", () => {
       request: mockRequest(),
       params: {},
       context: {},
+      unstable_pattern: "",
     });
 
     expect(result).toEqual({ type: "redirect", location: "/" });
@@ -59,6 +65,7 @@ describe("loginAction", () => {
       request: mockRequest("http://localhost/login?next=/dashboard"),
       params: {},
       context: {},
+      unstable_pattern: "",
     });
 
     expect(result).toEqual({ type: "redirect", location: "/dashboard" });
@@ -83,6 +90,7 @@ describe("loginAction", () => {
       request: mockRequest(),
       params: {},
       context: {},
+      unstable_pattern: "",
     });
 
     expect(result).toEqual({ error: "Invalid credentials" });
