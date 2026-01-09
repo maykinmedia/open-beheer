@@ -24,7 +24,7 @@ export const FIXTURE_ZAAKTYPE_VERSIONS: components["schemas"]["VersionSummary"][
       uuid: "fc685de7-d386-4d9f-861c-244700d68e80",
       concept: false,
       beginGeldigheid: "2025-01-01",
-      eindeGeldigheid: "2025-12-31",
+      eindeGeldigheid: null,
     },
     {
       uuid: "37454e74-99cd-4689-9589-c819ad8f1b88",
