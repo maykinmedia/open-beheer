@@ -32,7 +32,12 @@ export async function zaaktypeCreateAction({
 
   switch (action.type) {
     case "ZAAKTYPE_CREATE":
-      return await createZaaktypeAction({ request, params, context });
+      return await createZaaktypeAction({
+        request,
+        params,
+        context,
+        unstable_pattern: "",
+      });
     default:
       throw new Error("INVALID ACTION TYPE SPECIFIED!");
   }
