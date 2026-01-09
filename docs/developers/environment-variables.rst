@@ -72,6 +72,9 @@ Backend (Django)
 Frontend (React)
 ----------------
 
+Frontend (React)
+----------------
+
 .. list-table::
    :header-rows: 1
    :widths: 30 50 20
@@ -80,14 +83,31 @@ Frontend (React)
      - Description
      - Default
    * - ``MYKN_API_URL``
-     - Base URL for the backend API.
-     - ``http://localhost:5173``
+     - Base URL of the backend API. Falls back to the current origin when not set.
+     - ``window.location.origin``
    * - ``MYKN_API_PATH``
-     - Path to the API.
+     - Base path for all API requests.
      - ``/api/v1``
+   * - ``MYKN_CACHE_DISABLED``
+     - Disable all frontend caching when set to ``"true"``.
+     - ``false``
+   * - ``MYKN_CACHE_PREFIX``
+     - Prefix used for frontend cache keys.
+     - ``oab.lib.cache``
+   * - ``MYKN_CACHE_MAX_AGE``
+     - Maximum age of cached frontend data in milliseconds.
+     - ``600000``
+   * - ``MYKN_CO_REVIEW_POLL_INTERVAL``
+     - Poll interval in milliseconds for checking co-review updates.
+     - ``3000``
+   * - ``MYKN_ZAAK_URL_TEMPLATE``
+     - Template string used to format links to a zaak in Open Zaak.
+       The template is interpolated with zaak data at runtime.
+     - ``""``
 
 Notes
 -----
 
 - All frontend environment variables **must** start with ``MYKN_`` to be exposed to the app during build time.
-
+- Frontend defaults are applied at runtime when environment variables are not set.
+- Changes to frontend environment variables require rebuilding the React application.
