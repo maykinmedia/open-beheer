@@ -464,7 +464,7 @@ pygments==2.19.2
     #   -r requirements/type-checking.txt
     #   pytest
     #   sphinx
-pyjwt==2.10.1
+pyjwt==2.12.1
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
