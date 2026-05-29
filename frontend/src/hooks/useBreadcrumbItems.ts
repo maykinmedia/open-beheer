@@ -12,10 +12,25 @@ import { useMatches } from "react-router";
  */
 export function useBreadcrumbItems() {
   const matches = useMatches();
-  return matches
-    .filter((m) => m.pathname !== "/")
+  const result = matches
+    .filter((m) => m.pathname !== "/") // Exclude root
+    .filter(
+      // Exclude list views
+      (m) =>
+        !(
+          m.loaderData &&
+          typeof m.loaderData == "object" &&
+          "results" in m.loaderData
+        ),
+    )
     .map((m) => ({
-      label: string2Title(m.id),
+      label:
+        //@ts-expect-error - loaderdata is untyped here.
+        m.loaderData?.result?.identificatie ||
+        //@ts-expect-error - loaderdata is untyped here.
+        m.loaderData?.result?.omschrijving ||
+        string2Title(m.id),
       href: m.pathname,
     }));
+  return result;
 }
