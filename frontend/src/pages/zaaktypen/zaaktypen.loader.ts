@@ -27,6 +27,10 @@ export const zaaktypenLoader = loginRequired(
       queryParams.set("identificatie__icontains", search);
     }
 
+    if ("catalogusId" in params && params.catalogusId) {
+      queryParams.set("catalogus", params.catalogusId);
+    }
+
     const response = await request<
       ListResponse<components["schemas"]["ZaakTypeSummary"]>
     >("GET", `/service/${params.serviceSlug}/zaaktypen/`, queryParams);
