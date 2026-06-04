@@ -1,6 +1,7 @@
 import datetime
 import json
 import re
+from typing import Mapping
 
 from furl import furl
 from playwright.sync_api import Browser, Locator, Page, expect
@@ -13,7 +14,13 @@ from openbeheer.accounts.models import User
 from openbeheer.accounts.tests.factories import UserFactory
 from openbeheer.config.models import APIConfig
 from openbeheer.config.tests.factories import APIConfigFactory
-from openbeheer.types import ZaakTypeWithUUID
+from openbeheer.types import (
+    InformatieObjectTypeWithUUID,
+    ResultaatTypeWithUUID,
+    RolTypeWithUUID,
+    StatusTypeWithUUID,
+    ZaakTypeWithUUID,
+)
 from openbeheer.types.ztc import Catalogus
 from openbeheer.utils.open_zaak_helper.data_creation import (
     OpenZaakDataCreationHelper,
@@ -87,7 +94,23 @@ class GherkinRunner:
             Creates a user for testing.
             """
 
-            return UserFactory.create(username="johndoe", password="secret")
+            return UserFactory.create(
+                username="johndoe",
+                password="secret",
+                first_name="John",
+                last_name="Doe",
+            )
+
+        def user_is_logged_in(self, page: Page, user: User):
+            """
+            Authenticates user
+            """
+            _ = self.runner
+
+            _.when.user_opens_application(page)
+            _.when.user_fills_form_field(page, "Gebruikersnaam", user.username)
+            _.when.user_fills_form_field(page, "Wachtwoord", "secret")
+            _.when.user_clicks_on_button(page, "Inloggen")
 
         def api_config_exists(self) -> APIConfig:
             """
@@ -111,22 +134,68 @@ class GherkinRunner:
 
         def catalogus_exists(self) -> Catalogus:
             """
-            Creates catalogus in Open Zaak for testing, depends on existence of
-            ztc Service.
+            Creates catalogus in Open Zaak for testing.
 
             :return: The created catalogus
             """
 
             helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
-            catalogus = helper.create_catalogus()
+            catalogus = helper.get_or_create_catalogus(naam="Voorbeeld catalogus")
             assert catalogus.url
             return catalogus
 
+        def informatieobjecttype_exists(
+            self, catalogus: Catalogus, **overrides: Mapping[str, _JSONEncodable]
+        ) -> ZaakTypeWithUUID:
+            """
+            Creates informatieobjecttype in Open Zaak for testing.
+
+            :return: The created informatieobjecttype
+            """
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            informatieobjecttype = helper.get_or_create_informatieobjecttype(
+                catalogus.url,
+                **{
+                    "omschrijving": "Voorbeeld informatieobjecttype",
+                    **overrides,
+                },
+            )
+            assert informatieobjecttype.url
+            return informatieobjecttype
+
+        def informatieobjecttype_is_published(
+            self, informatieobjecttype: InformatieObjectTypeWithUUID
+        ) -> ZaakTypeWithUUID:
+            """
+            Creates informatieobjecttype in Open Zaak for testing.
+
+            :return: The created informatieobjecttype
+            """
+
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            helper.publish_informatieobjecttype(informatieobjecttype)
+
+        def zaaktype_exists(self, catalogus: Catalogus) -> ZaakTypeWithUUID:
+            """
+            Creates zaaktype in Open Zaak for testing.
+
+            :return: The created zaaktype
+            """
+
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            zaaktype = helper.get_or_create_zaaktype(
+                catalogus.url,
+                identificatie="ZAAKTYPE-2025-0000000000",
+                omschrijving="Voorbeeld zaaktype",
+            )
+            assert zaaktype.url
+            return zaaktype
+
         def zaaktypen_exist(
-            self, catalogus: Catalogus, amount: int = 3, **overrides: _JSONEncodable
+            self, catalogus: Catalogus, amount: int = 3
         ) -> list[ZaakTypeWithUUID]:
             """
-            Creates zaaktypen in Open Zaak for testing, depends on existence of
+            Creates zaaktypen in Open Zaak for testing, depends on the existence of
             ztc Service.
 
             :return: The created zaaktypen
@@ -138,21 +207,33 @@ class GherkinRunner:
             zaaktypen = []
             for i in range(1, amount + 1):
                 padded_sequence_number = str(i).zfill(3)
-
-                overrides = {
-                    "identificatie": f"ZAAKTYPE-2025-{padded_sequence_number.zfill(10)}",
-                    "aanleiding": f"New Zaaktype {padded_sequence_number}",
-                    "doel": f"New Zaaktype {padded_sequence_number}",
-                    "onderwerp": f"New Zaaktype {padded_sequence_number}",
-                    "referentieproces": {
-                        "naam": f"ReferentieProces {padded_sequence_number}"
-                    },
-                }
-                zaaktype = helper.create_zaaktype(catalogus.url, **overrides)
+                zaaktype = helper.get_or_create_zaaktype(
+                    catalogus.url,
+                    identificatie=f"ZAAKTYPE-2025-{padded_sequence_number.zfill(10)}",
+                    omschrijving="Voorbeeld zaaktype",
+                )
                 assert zaaktype.url
                 zaaktypen.append(zaaktype)
 
             return zaaktypen
+
+        def statustype_exists(
+            self, zaaktype: ZaakTypeWithUUID, omschrijving: str, volgnummer: int
+        ) -> StatusTypeWithUUID:
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            return helper.create_statustype(
+                zaaktype.url, omschrijving=omschrijving, volgnummer=volgnummer
+            )
+
+        def roltype_exists(self, zaaktype: ZaakTypeWithUUID) -> RolTypeWithUUID:
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            return helper.create_roltype(zaaktype.url)
+
+        def resultaattype_exists(
+            self, zaaktype: ZaakTypeWithUUID
+        ) -> ResultaatTypeWithUUID:
+            helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            return helper.create_resultaattype(zaaktype.url)
 
     class When(GherkinScenario):
         """
@@ -165,12 +246,14 @@ class GherkinRunner:
         def user_logs_in(
             self, page: Page, username: str = "johndoe", password: str = "secret"
         ) -> None:
-            page.goto(f"{self.runner.live_server.url}/")
-            expect(page).to_have_url(self.runner.live_server.url + "/login?next=/")
+            _ = self.runner
+            _.when.user_opens_application(page)
+            _.then.url_should_match(page, "/login?next=/")
 
-            page.get_by_label("Gebruikersnaam").fill(username)
-            page.get_by_label("Wachtwoord").fill(password)
-            page.get_by_role("button", name="Inloggen").click()
+            _.when.user_fills_form_field(page, "Gebruikersnaam", username)
+            _.when.user_fills_form_field(page, "Wachtwoord", password)
+            _.when.user_clicks_on_button(page, "Inloggen")
+            _.then.page_should_contain_text(page, "Open Beheer")
 
         def user_logs_out(self, page: Page) -> None:
             page.wait_for_load_state("networkidle")
@@ -188,7 +271,7 @@ class GherkinRunner:
 
         # Navigation
 
-        def user_open_application(self, page: Page) -> None:
+        def user_opens_application(self, page: Page) -> None:
             """
             Navigate to the home page (by URL).
             """
@@ -220,6 +303,33 @@ class GherkinRunner:
             button.click()
             page.wait_for_load_state("networkidle")
 
+        # deprecated
+        def user_creates_zaaktype(self, page: Page, catalogus: Catalogus) -> None:
+            _ = self.runner
+
+            # Login
+            _.when.user_opens_application(page)
+
+            # Open create view
+            _.when.user_selects_catalogus(page, catalogus)
+            _.when.user_navigates_to_zaaktype_list_page(page)
+            _.when.user_clicks_on_link(page, "Nieuw zaaktype")
+            page.screenshot(path="../docs/manual/_assets/test_4_create_zaaktype.png")
+
+            # Create zaaktype
+            _.when.user_clicks_on_checkbox(page, "Basis")
+            _.when.user_clicks_on_button(page, name="Gebruik dit sjabloon")
+            _.when.user_fills_form_field(
+                page, "Identificatienummer", "ZAAKTYPE-2026-0000000000"
+            )
+            _.when.user_fills_form_field(page, "Omschrijving", "Voorbeeld zaaktype")
+            _.when.user_clicks_on_button(page, name="Zaaktype aanmaken")
+            _.then.page_should_contain_text(page, "gh-305", timeout=15000)
+
+            # Navigate to algemeen tab
+            _.when.user_selects_tab(page, "Algemeen")
+            _.then.page_should_contain_text(page, "Voorbeeld zaaktype")
+
         def user_navigates_to_zaaktype_detail_page(
             self, page: Page, zaaktype: ZaakTypeWithUUID
         ) -> None:
@@ -230,6 +340,24 @@ class GherkinRunner:
             self.runner.when.user_navigates_to_zaaktype_list_page(page)
             page.wait_for_load_state("networkidle")
             self.runner.when.user_clicks_on_link(page, str(zaaktype.identificatie))
+
+        def user_navigates_to_informatieobjecttype_detail_page(
+            self,
+            page: Page,
+            catalogus: Catalogus,
+            informatieobjecttype: InformatieObjectTypeWithUUID,
+        ) -> None:
+            """
+            Navigates to the zaaktype list page (by navigation)
+            """
+
+            self.runner.when.user_navigates_to_informatieobjecttype_list_page(
+                page, catalogus
+            )
+            page.wait_for_load_state("networkidle")
+            self.runner.when.user_clicks_on_link(
+                page, str(informatieobjecttype.omschrijving)
+            )
 
         def user_navigates_to_informatieobjecttype_list_page(
             self, page: Page, catalogus: Catalogus
@@ -277,6 +405,17 @@ class GherkinRunner:
             button.wait_for()
             button.click()
 
+        def user_clicks_on_checkbox(self, page: Page, label: str) -> None:
+            page.get_by_label(label).click()
+
+        def user_clicks_on_combobox(
+            self, page: Page, name: str, index: int = 0
+        ) -> None:
+            page.wait_for_load_state("networkidle")
+            combobox = page.get_by_role("combobox").get_by_text(name).nth(index)
+            combobox.wait_for()
+            combobox.click()
+
         def user_clicks_on_link(self, page: Page, name: str = "") -> None:
             kwargs = {}
             if name:
@@ -291,8 +430,10 @@ class GherkinRunner:
                 self.runner.then.url_should_match(page, href)
             page.wait_for_load_state("networkidle")
 
-        def user_clicks_on_checkbox(self, page: Page, label: str) -> None:
-            page.get_by_label(label).click()
+        def user_clicks_on_text(self, page: Page, name: str, index: int = 0) -> None:
+            text = page.get_by_text(name).nth(index)
+            text.wait_for()
+            text.click()
 
         def user_fills_form_field(
             self,
@@ -320,8 +461,17 @@ class GherkinRunner:
                 if selects.count():
                     select = selects.nth(index)
                     select.click()
-                    option = select.get_by_text(value)
-                    option.click()
+                    page.wait_for_timeout(30)
+                    options = select.get_by_text(value).filter(visible=True)
+                    assert options.count()
+
+                    for option in options.all():
+                        if option.is_visible():
+                            option.click()
+
+                    page.wait_for_timeout(30)
+                    select.blur()
+                    page.wait_for_timeout(30)
                     return
 
             # Fill (native) input
@@ -366,7 +516,7 @@ class GherkinRunner:
 
         def url_should_match(self, page: Page, url: str) -> None:
             pattern = re.compile(rf".*{re.escape(url)}.*")
-            expect(page).to_have_url(pattern)
+            expect(page).to_have_url(pattern, timeout=10000)
 
         def path_should_be(self, page: Page, path: str) -> None:
             self.url_should_be(page, self.runner.live_server.url + path)

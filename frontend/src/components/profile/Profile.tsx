@@ -59,7 +59,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
             <Column span={6} />
             <Column span={6}>
               <NavLink key="logout" to="logout">
-                <Button variant="primary" aria-label="Logout">
+                <Button variant="primary" aria-label="Uitloggen">
                   <Solid.ArrowRightEndOnRectangleIcon /> Uitloggen
                 </Button>
               </NavLink>

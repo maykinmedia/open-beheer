@@ -6,8 +6,9 @@ from typing import Literal, Mapping, Sequence, Type
 from faker import Faker
 from faker.providers import lorem
 from furl import furl
-from msgspec import to_builtins
+from msgspec import convert, to_builtins
 from msgspec.json import decode
+from zgw_consumers.utils import pagination_helper
 
 from openbeheer.clients import objecttypen_client, ztc_client
 from openbeheer.types import (
@@ -69,6 +70,37 @@ class OpenZaakDataCreationHelper:
             strict=False,
         )
 
+    def _get_or_create_resource[T](
+        self,
+        data: Mapping[str, _JSONEncodable],
+        resource_path: str,
+        resource_type: Type[T],
+    ) -> T:
+        with ztc_client(self.ztc_service_slug) as client:
+            response_get = client.get(resource_path)
+            for obj in pagination_helper(client, response_get.json()):
+                for key in data:
+                    if data[key] != obj[key]:
+                        break
+                else:
+                    return convert(obj, type=resource_type, strict=False)
+
+            if response_get.status_code == 404:
+                result = self._create_resource(data, resource_path, resource_type)
+                return result
+
+            if response_get.status_code == 400:
+                raise Exception(decode(response_get.content))
+
+            response_get.raise_for_status()
+
+            response_create = client.post(resource_path, json=data)
+            return decode(
+                response_create.content,
+                type=resource_type,
+                strict=False,
+            )
+
     def _publish_resource(
         self,
         resource_path: str,
@@ -106,6 +138,21 @@ class OpenZaakDataCreationHelper:
             data, "informatieobjecttypen", InformatieObjectTypeWithUUID
         )
 
+    def get_or_create_informatieobjecttype(
+        self, catalogus: str = "", **overrides: _JSONEncodable
+    ) -> InformatieObjectTypeWithUUID:
+        data: dict[str, _JSONEncodable] = {
+            "catalogus": self._get_catalogus(catalogus),
+            "omschrijving": "Omschrijving A",
+            "vertrouwelijkheidaanduiding": "openbaar",
+            "beginGeldigheid": "2025-07-01",
+            "informatieobjectcategorie": "Blue",
+        } | overrides
+
+        return self._get_or_create_resource(
+            data, "informatieobjecttypen", InformatieObjectTypeWithUUID
+        )
+
     def publish_informatieobjecttype(
         self, informatieobjecttype: InformatieObjectTypeWithUUID
     ) -> None:
@@ -122,6 +169,16 @@ class OpenZaakDataCreationHelper:
         } | overrides
 
         return self._create_resource(data, "catalogussen", Catalogus)
+
+    def get_or_create_catalogus(self, **overrides: _JSONEncodable) -> Catalogus:
+        data: dict[str, _JSONEncodable] = {
+            "domein": "ZAAK",
+            "rsin": "123456782",
+            "contactpersoonBeheerNaam": "Ubaldo",
+            "naam": faker.sentence(),
+        } | overrides
+
+        return self._get_or_create_resource(data, "catalogussen", Catalogus)
 
     def create_statustype(
         self, zaaktype: str = "", **overrides: _JSONEncodable
@@ -184,6 +241,36 @@ class OpenZaakDataCreationHelper:
         } | overrides
 
         return self._create_resource(data, "zaaktypen", ZaakTypeWithUUID)
+
+    def get_or_create_zaaktype(
+        self, catalogus: str = "", **overrides: _JSONEncodable
+    ) -> ZaakTypeWithUUID:
+        data: dict[str, _JSONEncodable] = {
+            "omschrijving": faker.sentence(),
+            "vertrouwelijkheidaanduiding": "geheim",
+            "doel": "New Zaaktype 001",
+            "aanleiding": "New Zaaktype 001",
+            "indicatieInternOfExtern": "intern",
+            "handelingInitiator": "aanvragen",
+            "onderwerp": "New Zaaktype 001",
+            "handelingBehandelaar": "handelin",
+            "doorlooptijd": "P40D",
+            "opschortingEnAanhoudingMogelijk": False,
+            "verlengingMogelijk": True,
+            "verlengingstermijn": "P40D",
+            "publicatieIndicatie": False,
+            "productenOfDiensten": ["https://example.com/product/321"],
+            "referentieproces": {"naam": "ReferentieProces 1"},
+            "verantwoordelijke": "200000000",
+            "beginGeldigheid": "2025-06-19",
+            "versiedatum": "2025-06-19",
+            "catalogus": self._get_catalogus(catalogus),
+            "besluittypen": [],
+            "gerelateerdeZaaktypen": [],
+            "selectielijstProcestype": "https://selectielijst.openzaak.nl/api/v1/procestypen/aa8aa2fd-b9c6-4e34-9a6c-58a677f60ea0",
+        } | overrides
+
+        return self._get_or_create_resource(data, "zaaktypen", ZaakTypeWithUUID)
 
     def create_resultaattype(
         self,
