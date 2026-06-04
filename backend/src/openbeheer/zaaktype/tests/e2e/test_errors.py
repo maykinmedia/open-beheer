@@ -32,7 +32,7 @@ def test_errors(page: Page, runner: GherkinRunner):
     zaaktypen = _.given.zaaktypen_exist(catalogus)
 
     # Login
-    _.when.user_open_application(page)
+    _.when.user_opens_application(page)
     _.when.user_logs_in(page)
     _.then.path_should_be(page, "/OZ/")
 

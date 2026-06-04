@@ -23,7 +23,7 @@ def test_retrieve_informatieobjecttypen(page: Page, runner: GherkinRunner):
     iot = helper.create_informatieobjecttype(catalogus=catalogus.url)
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.user_open_application(page)
+    runner.when.user_opens_application(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")

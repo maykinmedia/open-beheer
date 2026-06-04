@@ -28,7 +28,7 @@ def test_view_informatieobjecttype(page: Page, runner: GherkinRunner):
 
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.user_open_application(page)
+    runner.when.user_opens_application(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")
@@ -70,7 +70,7 @@ def test_edit_and_save_informatieobjecttype(page: Page, runner: GherkinRunner):
 
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.user_open_application(page)
+    runner.when.user_opens_application(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")
@@ -125,7 +125,7 @@ def test_edit_and_cancel_informatieobjecttype(page: Page, runner: GherkinRunner)
 
     UserFactory.create(username="johndoe", password="secret")
 
-    runner.when.user_open_application(page)
+    runner.when.user_opens_application(page)
     runner.when.user_logs_in(page, username="johndoe", password="secret")
 
     runner.then.path_should_be(page, "/OZ/")
