@@ -33,6 +33,7 @@ def test_scenario_navigate_zaaktype(page: Page, runner: GherkinRunner):
     _.when.user_logs_in(page)
     _.when.user_selects_catalogus(page, catalogus)
     _.when.user_navigates_to_zaaktype_list_page(page)
+    assert zaaktypen[0].identificatie
     _.when.user_clicks_on_text(page, zaaktypen[0].identificatie)
 
     _.then.page_should_contain_text(page, "Overzicht")

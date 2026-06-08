@@ -1,7 +1,6 @@
 import datetime
 import json
 import re
-from typing import Mapping
 
 from furl import furl
 from playwright.sync_api import Browser, Locator, Page, expect
@@ -145,14 +144,15 @@ class GherkinRunner:
             return catalogus
 
         def informatieobjecttype_exists(
-            self, catalogus: Catalogus, **overrides: Mapping[str, _JSONEncodable]
-        ) -> ZaakTypeWithUUID:
+            self, catalogus: Catalogus, **overrides: _JSONEncodable
+        ) -> InformatieObjectTypeWithUUID:
             """
             Creates informatieobjecttype in Open Zaak for testing.
 
             :return: The created informatieobjecttype
             """
             helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            assert catalogus.url
             informatieobjecttype = helper.get_or_create_informatieobjecttype(
                 catalogus.url,
                 **{
@@ -165,7 +165,7 @@ class GherkinRunner:
 
         def informatieobjecttype_is_published(
             self, informatieobjecttype: InformatieObjectTypeWithUUID
-        ) -> ZaakTypeWithUUID:
+        ) -> None:
             """
             Creates informatieobjecttype in Open Zaak for testing.
 
@@ -183,6 +183,7 @@ class GherkinRunner:
             """
 
             helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            assert catalogus.url
             zaaktype = helper.get_or_create_zaaktype(
                 catalogus.url,
                 identificatie="ZAAKTYPE-2025-0000000000",
@@ -221,18 +222,21 @@ class GherkinRunner:
             self, zaaktype: ZaakTypeWithUUID, omschrijving: str, volgnummer: int
         ) -> StatusTypeWithUUID:
             helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            assert zaaktype.url
             return helper.create_statustype(
                 zaaktype.url, omschrijving=omschrijving, volgnummer=volgnummer
             )
 
         def roltype_exists(self, zaaktype: ZaakTypeWithUUID) -> RolTypeWithUUID:
             helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            assert zaaktype.url
             return helper.create_roltype(zaaktype.url)
 
         def resultaattype_exists(
             self, zaaktype: ZaakTypeWithUUID
         ) -> ResultaatTypeWithUUID:
             helper = OpenZaakDataCreationHelper(ztc_service_slug="OZ")
+            assert zaaktype.url
             return helper.create_resultaattype(zaaktype.url)
 
     class When(GherkinScenario):

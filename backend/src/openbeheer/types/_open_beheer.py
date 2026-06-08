@@ -223,7 +223,7 @@ def fetch_objecttype_options():
 
     return [
         as_ob_option(objecttype)
-        for objecttype in sorted(objecttypen, key=lambda item: (item.name))
+        for objecttype in sorted(objecttypen, key=lambda item: item.name)
     ]
 
 
