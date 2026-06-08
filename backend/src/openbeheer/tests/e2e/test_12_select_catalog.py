@@ -34,4 +34,5 @@ def test_scenario_select_catalog(page: Page, runner: GherkinRunner):
     page.screenshot(path="../docs/manual/_assets/test_scenario_select_catalog.png")
 
     _.when.user_clicks_on_text(page, f"{catalogus.naam} ({catalogus.domein})")
+    assert catalogus.url
     _.then.url_should_match(page, catalogus.url.strip("/")[-1])
