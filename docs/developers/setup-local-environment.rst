@@ -18,7 +18,7 @@ Make sure the following tools are installed:
 
 .. _Python: https://www.python.org/
 .. _Virtualenv: https://virtualenv.pypa.io/en/stable/
-.. _Pip: https://packaging.python.org/en/latest/tutorials/installing-packages/#ensure-pip-setuptools-and-wheel-are-up-to-date
+.. _Pip: https://packaging.python.org/en/latest/tutorials/installing-packages/#ensure-pip-is-up-to-date
 .. _PostgreSQL: https://www.postgresql.org/
 .. _Node.js: https://nodejs.org/
 .. _npm: https://www.npmjs.com/
