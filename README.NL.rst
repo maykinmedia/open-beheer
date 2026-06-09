@@ -6,27 +6,23 @@ Open Beheer
 :Source: https://github.com/maykinmedia/open-beheer
 :Keywords: Common Ground, Catalogi API, ZGW APIs
 
-|docker|
+|build-status| |coverage| |code-quality| |ruff| |python-versions| |docker| |docs|
+
 
 Grip op je zaaktypencatalogus, producttypen en objecttypen met een intuïtieve
 interface. (`English version`_)
 
 Ontwikkeld door `Maykin B.V.`_, oorspronkelijk in opdracht van `Gemeente Rotterdam`_.
 
-.. note::
-
-   ⚠️ **Projectstatus:** Dit project is in actieve ontwikkeling.
-   Bepaalde functionaliteiten zijn nog in aanbouw en kunnen wijzigen.
-
 
 Introductie
 ===========
 
 Open Beheer biedt functioneel beheerders een krachtige en gebruiksvriendelijke
-interface bovenop de technische registraties zoals de Catalogi API in bijv. 
+interface bovenop de technische registraties zoals de Catalogi API in bijv.
 `Open Zaak`_. Waar traditionele interfaces vaak technisch en versnipperd zijn,
 brengt Open Beheer overzicht en structuur. Beheerders kunnen eenvoudig
-zaaktypen inrichten, met de juiste statussen, rollen en 
+zaaktypen inrichten, met de juiste statussen, rollen en
 archiveringsinstellingen - een cruciale stap in de informatiehuishouding van
 elke overheidsorganisatie.
 
@@ -56,8 +52,6 @@ eindgebruikers als beheerders.
 
 Component
 =========
-
-|build-status| |coverage| |code-quality| |ruff| |python-versions|
 
 Dit component omvat **Open Beheer UI** en de **Open Beheer Backend for
 Frontend (BFF)**.
@@ -106,3 +100,7 @@ Licensed under the `EUPL`_.
 
 .. |python-versions| image:: https://img.shields.io/badge/python-3.11-blue.svg
     :alt: Supported Python versions
+
+.. |docs| image:: https://readthedocs.org/projects/open-beheer/badge/?version=latest
+    :alt: Read the docs image
+    :target: https://open-beheer.readthedocs.io/en/latest/
