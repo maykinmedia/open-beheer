@@ -6,14 +6,9 @@ Open Beheer
 :Source: https://github.com/maykinmedia/open-beheer
 :Keywords: Common Ground, Catalogi API, ZGW APIs
 
-|docker|
+|build-status| |coverage| |code-quality| |ruff| |python-versions| |docker| |docs|
 
 Developed by `Maykin B.V.`_, originally commissioned by `Gemeente Rotterdam`_.
-
-.. note::
-
-   ⚠️ **Project status:** This project is under active development.
-   Some functionality is still in progress and subject to change.
 
 Introduction
 ===========
@@ -23,10 +18,10 @@ interface in addition to technical registrations such as the Catalog API in,
 for example, `Open Zaak`_. While traditional interfaces are often technical
 and fragmented, Open Beheer provides overview and structure. Administrators
 can easily set up case types, with the correct statuses, roles, and archiving
-settings—a crucial step in the information management of any government 
+settings—a crucial step in the information management of any government
 organization.
 
-Thanks to Open Beheer's intuitive approach, compiling and managing 
+Thanks to Open Beheer's intuitive approach, compiling and managing
 high-quality data becomes much easier. The interface works entirely via
 standardized interfaces, without detours or individual interpretations of the
 data, which benefits reliability, consistency, and compliance.
@@ -52,8 +47,6 @@ both end users and administrators.
 
 Component
 =========
-
-|build-status| |coverage| |code-quality| |ruff| |python-versions|
 
 This component includes the **Open Beheer UI** and the **Open Beheer Backend
 for Frontend (BFF)**.
@@ -102,3 +95,7 @@ Licensed under the `EUPL`_.
 
 .. |python-versions| image:: https://img.shields.io/badge/python-3.11-blue.svg
     :alt: Supported Python versions
+
+.. |docs| image:: https://readthedocs.org/projects/open-beheer/badge/?version=latest
+    :alt: Read the docs image
+    :target: https://open-beheer.readthedocs.io/en/latest/
