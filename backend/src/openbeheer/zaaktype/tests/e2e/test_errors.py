@@ -26,7 +26,6 @@ def test_errors(page: Page, runner: GherkinRunner):
     _.given.user_exists()
     _.given.api_config_exists()
     _.given.ztc_service_exists()
-    _.given.catalogus_exists()
 
     catalogus = _.given.catalogus_exists()
     zaaktypen = _.given.zaaktypen_exist(catalogus)
