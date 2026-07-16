@@ -83,6 +83,10 @@ function App() {
         const currentUser = await whoAmI(controller.signal);
         setUser(currentUser);
       } catch (error) {
+        // Nog logged in.
+        if (error instanceof Response && error.status === 403) {
+          navigate("/login");
+        }
         console.error("Failed to fetch user:", error);
       }
     };
