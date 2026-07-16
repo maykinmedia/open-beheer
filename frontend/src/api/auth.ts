@@ -1,4 +1,4 @@
-import { cacheDelete, cacheMemo } from "@maykin-ui/client-common";
+import { cacheDelete } from "@maykin-ui/client-common";
 import { request } from "~/api/request.ts";
 import { components } from "~/types";
 
@@ -35,14 +35,14 @@ const CACHE_KEY_WHOAMI = "whoAmI";
  * API call to get the current logged-in user.
  */
 export async function whoAmI(signal?: AbortSignal) {
-  return cacheMemo(CACHE_KEY_WHOAMI, request<components["schemas"]["User"]>, [
+  return request<components["schemas"]["User"]>(
     "GET",
     "/whoami/",
     undefined,
     undefined,
     undefined,
     signal,
-  ]);
+  );
 }
 
 /**
