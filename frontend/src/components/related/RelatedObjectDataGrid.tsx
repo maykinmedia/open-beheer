@@ -72,6 +72,9 @@ export type RelatedObjectDataGridProps<T extends object> = {
     actionType: RelatedObjectDataGridAction<T>["type"],
     userRequested: boolean,
   ) => Promise<T | false>;
+
+  /** Whether a button should be shown triggering the hook. */
+  showHookButton?: boolean;
 };
 
 /**
@@ -92,6 +95,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
   objectList,
   onActionsChange,
   hook = (row) => Promise.resolve(row),
+  showHookButton,
 }: RelatedObjectDataGridProps<T>) {
   // Loading state.
   const { state } = useNavigation();
@@ -590,13 +594,15 @@ export function RelatedObjectDataGrid<T extends object = object>({
         ...overrides,
         actions: (
           <Toolbar pad={false}>
-            <Button
-              disabled={isLoading || !isEditingState}
-              title="Meer velden"
-              onClick={() => handleHook(row)}
-            >
-              <Outline.SquaresPlusIcon />
-            </Button>
+            {showHookButton && (
+              <Button
+                disabled={isLoading || !isEditingState}
+                title="Meer velden"
+                onClick={() => handleHook(row)}
+              >
+                <Outline.SquaresPlusIcon />
+              </Button>
+            )}
             <Button
               disabled={isLoading || !isEditingState}
               variant="danger"
@@ -609,7 +615,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
         ),
       };
     });
-  }, [objectListState, isEditingState, typedFields]);
+  }, [objectListState, isEditingState, typedFields, showHookButton]);
 
   // Every item in `objectList` should have a record in [...updateActions, ...addActions], in other words:
   // every row has an actions (or null) attached to it based on its index.

@@ -258,6 +258,7 @@ export function ZaaktypeDataGridTab({
         objectList={relatedObjects}
         onActionsChange={handleActionsChange}
         hook={relatedObjectHook}
+        showHookButton={tabConfig.key === "resultaattypen"}
       />
     );
   }, [
