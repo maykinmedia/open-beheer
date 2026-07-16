@@ -1,7 +1,7 @@
 Environment Variables
 =====================
 
-This document outlines all environment variables used in the project, separated by backend (Django) and frontend (React).
+This document outlines environment variables used in the project, separated by backend (Django) and frontend (React).
 
 Backend (Django)
 ----------------
@@ -13,9 +13,13 @@ Backend (Django)
    * - Variable
      - Description
      - Default
-   * - ``FOO``
-     - Bar
-     - ``"bla"``
+   * - ``SESSION_COOKIE_AGE``
+     - Session lifetime in seconds.
+     - ``1209600``
+   * - ``SESSION_EXPIRE_AT_BROWSER_CLOSE``
+     - Expire sessions when the browser closes.
+     - ``False``
+
 
 Frontend (React)
 ----------------

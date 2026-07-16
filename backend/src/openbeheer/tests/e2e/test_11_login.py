@@ -1,3 +1,5 @@
+from django.test import override_settings
+
 import pytest
 from playwright.sync_api import Page
 
@@ -69,4 +71,41 @@ def test_scenario_log_out(page: Page, runner: GherkinRunner):
     page.screenshot(path="../docs/manual/_assets/test_scenario_log_out.png")
 
     _.when.user_clicks_on_button(page, "Uitloggen")
+    _.then.page_should_contain_text(page, "Inloggen")
+
+
+@override_settings(SESSION_COOKIE_AGE=1)
+@pytest.mark.e2e
+@vcr_overrides(
+    custom_matchers=[
+        ("query_without_datum_geldigheid", matcher_query_without_datum_geldigheid)
+    ],
+    custom_match_on=[
+        "method",
+        "scheme",
+        "host",
+        "port",
+        "path",
+        "query_without_datum_geldigheid",
+    ],
+)
+def test_session_expires(page: Page, runner: GherkinRunner):
+    _ = runner
+
+    _.given.api_config_exists()
+    _.given.ztc_service_exists()
+
+    user = _.given.user_exists()
+    catalogus = _.given.catalogus_exists()
+
+    # Login
+    _.when.user_opens_application(page)
+    _.when.user_fills_form_field(page, "Gebruikersnaam", user.username)
+    _.when.user_fills_form_field(page, "Wachtwoord", "secret")
+
+    _.when.user_clicks_on_button(page, "Inloggen")
+    _.then.page_should_contain_text(page, "Open Beheer")
+    page.wait_for_timeout(1000)
+    _.when.user_selects_catalogus(page, catalogus, check_url=False)
+
     _.then.page_should_contain_text(page, "Inloggen")

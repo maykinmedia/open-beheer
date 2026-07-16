@@ -325,6 +325,14 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
+# The age of session cookies, in seconds.
+SESSION_COOKIE_AGE = config("SESSION_COOKIE_AGE", default=1209600)
+
+# Whether to expire the session when the user closes their browser.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = config(
+    "SESSION_EXPIRE_AT_BROWSER_CLOSE", default=False
+)
+
 SESSION_COOKIE_NAME = "openbeheer_sessionid"
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
