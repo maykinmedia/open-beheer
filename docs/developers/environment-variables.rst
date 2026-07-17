@@ -33,6 +33,9 @@ Frontend (React)
    * - ``MYKN_API_PATH``
      - Path to the API.
      - ``/api/v1``
+   * - ``MYKN_STATIC_URL``
+     - Base URL for static files.
+     - ``${MYKN_API_URL}/static``
 
 Notes
 -----
