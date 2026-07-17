@@ -84,7 +84,6 @@ CACHES = {
     },
 }
 
-
 #
 # APPLICATIONS enabled for this project
 #
@@ -318,7 +317,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
 # Allow logging in with both username+password and email+password
 AUTHENTICATION_BACKENDS = [
     "axes.backends.AxesBackend",
@@ -329,7 +327,6 @@ AUTHENTICATION_BACKENDS = [
 
 SESSION_COOKIE_NAME = "openbeheer_sessionid"
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-
 
 #
 # Django OIDC
@@ -414,6 +411,62 @@ HEALTH_CHECKS = [
     "openbeheer.config.health_checks.APIConfigHealthCheck",
 ]
 
+
+
+#
+# MAYKIN-COMMON branding
+#
+MKN_BRANDING_PRODUCT_DEFINITION = ProductDefinition(
+    name="Open Beheer",
+    hyperlink="https://github.com/maykinmedia/open-beheer",
+    logo_path="ico/open-beheer-icon.svg",
+)
+custom_product_name: str = config(
+    "CUSTOM_PRODUCT_NAME",
+    default="",
+    documentation=DocumentationParams(
+        help_text=(
+            "Specify the custom product name when redistributing the application, e.g. "
+            "as part of your own software suite."
+        ),
+        group="Branding",
+    ),
+)
+MKN_BRANDING_DERIVED_PRODUCT_DEFINITION = (
+    ProductDefinition(
+        name=custom_product_name,
+        hyperlink=config(
+            "CUSTOM_PRODUCT_URL",
+            default="",
+            documentation=DocumentationParams(
+                help_text=(
+                    "Optional link for the custom product when redistributing the "
+                    "application. If provided, the product name will be clickable."
+                ),
+                group="Branding",
+            ),
+        ),
+        logo_path=config(
+            "CUSTOM_PRODUCT_LOGO_PATH",
+            default="",
+            documentation=DocumentationParams(group="Branding"),
+        ),
+        logo_url=config(
+            "CUSTOM_PRODUCT_LOGO_URL",
+            default="",
+            documentation=DocumentationParams(
+                help_text=(
+                    "Optional link for the custom product logo when redistributing the "
+                    "application. When using externally hosted assets, note that you may "
+                    "need to tweak the Content-Security-Policy settings."
+                ),
+                group="Branding",
+            ),
+        ),
+    )
+    if custom_product_name
+    else None
+)
 
 ##############################
 #                            #
@@ -567,7 +620,6 @@ REST_FRAMEWORK = {
     },
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
-
 
 #
 # SPECTACULAR - OpenAPI schema generation
