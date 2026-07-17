@@ -2,6 +2,10 @@
 Open Beheer
 ===========
 
+.. image:: .github/assets/open-beheer-logo.svg
+    :height: 100px
+    :alt: Open Beheer
+
 :Version: 0.9.0
 :Source: https://github.com/maykinmedia/open-beheer
 :Keywords: Common Ground, Catalogi API, ZGW APIs
