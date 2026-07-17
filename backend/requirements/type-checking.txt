@@ -218,7 +218,7 @@ jsonschema-specifications==2024.10.1
     #   jsonschema
 maykin-2fa==1.0.2
     # via -r requirements/base.txt
-maykin-common==0.4.0
+maykin-common==0.20.1
     # via
     #   -r requirements/base.txt
     #   -r requirements/type-checking.in
@@ -307,7 +307,9 @@ python-dateutil==2.9.0.post0
     #   -r requirements/base.txt
     #   django-relativedelta
 python-decouple==3.8
-    # via -r requirements/base.txt
+    # via
+    #   -r requirements/base.txt
+    #   maykin-common
 python-dotenv==1.1.0
     # via
     #   -r requirements/base.txt

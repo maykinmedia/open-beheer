@@ -458,7 +458,7 @@ maykin-2fa==1.0.2
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
-maykin-common==0.4.0
+maykin-common==0.20.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -653,6 +653,7 @@ python-decouple==3.8
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
+    #   maykin-common
 python-dotenv==1.1.0
     # via
     #   -c requirements/ci.txt
