@@ -1,5 +1,3 @@
-from django.test import override_settings
-
 import pytest
 from playwright.sync_api import Page
 
@@ -74,7 +72,6 @@ def test_scenario_log_out(page: Page, runner: GherkinRunner):
     _.then.page_should_contain_text(page, "Inloggen")
 
 
-@override_settings(SESSION_COOKIE_AGE=1)
 @pytest.mark.e2e
 @vcr_overrides(
     custom_matchers=[
@@ -105,7 +102,7 @@ def test_scenario_session_expires(page: Page, runner: GherkinRunner):
 
     _.when.user_clicks_on_button(page, "Inloggen")
     _.then.page_should_contain_text(page, "Open Beheer")
-    page.wait_for_timeout(1000)
+    page.context.clear_cookies()
     _.when.user_selects_catalogus(page, catalogus, check_url=False)
 
     _.then.page_should_contain_text(page, "Inloggen")
