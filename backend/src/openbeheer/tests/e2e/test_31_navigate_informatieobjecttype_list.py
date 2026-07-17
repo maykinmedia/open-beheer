@@ -32,6 +32,7 @@ def test_scenario_navigate_informatieobjecttype_list(page: Page, runner: Gherkin
     _.when.user_logs_in(page)
     _.when.user_selects_catalogus(page, catalogus)
     _.when.user_clicks_on_button(page, "Informatieobjecttypen")
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_navigate_informatieobjecttype_list.png"
     )

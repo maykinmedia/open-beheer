@@ -42,6 +42,7 @@ def test_scenario_edit_informatieobjecttype(page: Page, runner: GherkinRunner):
     _.then.page_should_contain_text(page, "Opslaan")
 
     _.when.user_fills_form_field(page, "Omschrijving", "Bijgewerkt")
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_edit_informatieobjecttype.png"
     )

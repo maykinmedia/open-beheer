@@ -32,6 +32,7 @@ def test_scenario_log_in(page: Page, runner: GherkinRunner):
     _.when.user_opens_application(page)
     _.when.user_fills_form_field(page, "Gebruikersnaam", user.username)
     _.when.user_fills_form_field(page, "Wachtwoord", "secret")
+    page.wait_for_timeout(300)
     page.screenshot(path="../docs/manual/_assets/test_scenario_log_in.png")
 
     _.when.user_clicks_on_button(page, "Inloggen")
@@ -66,6 +67,7 @@ def test_scenario_log_out(page: Page, runner: GherkinRunner):
 
     _.when.user_clicks_on_button(page, "Profiel")  # Shown as initials
     _.then.page_should_contain_text(page, "Account")
+    page.wait_for_timeout(300)
     page.screenshot(path="../docs/manual/_assets/test_scenario_log_out.png")
 
     _.when.user_clicks_on_button(page, "Uitloggen")

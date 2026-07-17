@@ -37,4 +37,5 @@ def test_scenario_navigate_zaaktype(page: Page, runner: GherkinRunner):
     _.when.user_clicks_on_text(page, zaaktypen[0].identificatie)
 
     _.then.page_should_contain_text(page, "Overzicht")
+    page.wait_for_timeout(300)
     page.screenshot(path="../docs/manual/_assets/test_scenario_navigate_zaaktype.png")

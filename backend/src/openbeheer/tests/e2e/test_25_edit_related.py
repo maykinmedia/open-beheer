@@ -59,6 +59,7 @@ def test_scenario_edit_related_statustypen(page: Page, runner: GherkinRunner):
     _.when.user_clicks_on_button(page, "Bewerken")
 
     _.when.user_fills_form_field(page, "Omschrijving", "Bijgewerkt", index=3)
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_edit_related_statustypen.png"
     )
@@ -135,6 +136,7 @@ def test_scenario_edit_related_zaaktypeinformatieobjecttypen(
     _.then.page_should_contain_text(page, "Opslaan")
 
     _.when.user_fills_form_field(page, "Richting", "Uitgaand")
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_edit_related_zaaktypeinformatieobjecttypen.png"
     )
@@ -220,6 +222,7 @@ def test_scenario_edit_related_roltypen(page: Page, runner: GherkinRunner):
     _.then.page_should_contain_text(page, "Opslaan")
 
     _.when.user_fills_form_field(page, 'Bewerk "omschrijving"', "Uitvoerder", index=2)
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_edit_related_roltypen.png"
     )
@@ -308,6 +311,7 @@ def test_scenario_edit_related_resultaattypen(page: Page, runner: GherkinRunner)
     _.when.user_fills_form_field(
         page, "Omschrijving", "Handleiding begrepen", skip_combo=True
     )
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_edit_related_resultaattypen.png"
     )
@@ -390,6 +394,7 @@ def test_scenario_edit_related_eigenschappen(page: Page, runner: GherkinRunner):
     _.then.page_should_contain_text(page, "Opslaan")
 
     _.when.user_fills_form_field(page, "Definitie", "Bijgewerkt", index=1)
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_edit_related_eigenschappen.png"
     )

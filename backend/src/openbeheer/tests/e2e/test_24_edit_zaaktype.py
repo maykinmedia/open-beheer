@@ -47,6 +47,8 @@ def test_scenario_edit_zaaktype(page: Page, runner: GherkinRunner):
     )
     _.when.user_fills_form_field(page, "Selectielijst", "2020 - 1 - ")
 
+    page.wait_for_timeout(300)
+
     page.screenshot(path="../docs/manual/_assets/test_scenario_edit_zaaktype.png")
     _.when.user_clicks_on_button(page, "Opslaan")
     _.then.page_should_contain_text(page, "Bewerken")

@@ -42,6 +42,7 @@ def test_scenario_create_informatieobjecttype(page: Page, runner: GherkinRunner)
     _.when.user_clicks_on_checkbox(page, "Basis")
     _.when.user_clicks_on_button(page, "Gebruik dit sjabloon")
     _.when.user_fills_form_field(page, "Omschrijving", "Voorbeeld informatieobjecttype")
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_create_informatieobjecttype.png"
     )
