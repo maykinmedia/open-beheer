@@ -1,7 +1,7 @@
 import os
 import warnings
 
-from .utils import config
+from maykin_common.config import config
 
 os.environ.setdefault("IS_HTTPS", "no")
 os.environ.setdefault("SECRET_KEY", "dummy")
