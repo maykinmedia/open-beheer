@@ -40,6 +40,7 @@ def test_scenario_publish_informatieobjecttype(page: Page, runner: GherkinRunner
         page, catalogus, informatieobjecttype
     )
     _.then.page_should_contain_text(page, "ConceptJa")
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_publish_informatieobjecttype.png"
     )

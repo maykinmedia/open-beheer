@@ -37,6 +37,7 @@ def test_scenario_create_zaaktype(page: Page, runner: GherkinRunner):
     _.when.user_selects_catalogus(page, catalogus)
     _.when.user_navigates_to_zaaktype_list_page(page)
     _.when.user_clicks_on_link(page, "Nieuw zaaktype")
+    page.wait_for_timeout(300)
     page.screenshot(path="../docs/manual/_assets/test_scenario_create_zaaktype.png")
 
     # Create zaaktype

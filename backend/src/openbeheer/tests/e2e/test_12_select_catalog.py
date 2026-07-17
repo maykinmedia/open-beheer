@@ -31,6 +31,7 @@ def test_scenario_select_catalog(page: Page, runner: GherkinRunner):
 
     _.when.user_logs_in(page)
     _.when.user_clicks_on_combobox(page, "Selecteer catalogus")
+    page.wait_for_timeout(300)
     page.screenshot(path="../docs/manual/_assets/test_scenario_select_catalog.png")
 
     _.when.user_clicks_on_text(page, f"{catalogus.naam} ({catalogus.domein})")

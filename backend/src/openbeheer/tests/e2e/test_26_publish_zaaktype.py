@@ -49,6 +49,7 @@ def test_scenario_publish_informatieobjecttype(page: Page, runner: GherkinRunner
     # Publish zaaktype
     _.when.user_clicks_on_button(page, "Bewerken")
     _.then.page_should_contain_text(page, "Opslaan")
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_publish_informatieobjecttype.png"
     )

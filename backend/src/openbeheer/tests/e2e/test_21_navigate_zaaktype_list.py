@@ -33,6 +33,7 @@ def test_scenario_navigate_zaaktype_list(page: Page, runner: GherkinRunner):
     _.when.user_logs_in(page)
     _.when.user_selects_catalogus(page, catalogus)
     _.when.user_clicks_on_button(page, "Zaaktypen")
+    page.wait_for_timeout(300)
     page.screenshot(
         path="../docs/manual/_assets/test_scenario_navigate_zaaktype_list.png"
     )
