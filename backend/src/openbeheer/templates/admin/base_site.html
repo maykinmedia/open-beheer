@@ -8,13 +8,8 @@
 {% block extrastyle %}
     {{ block.super }}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'bundles/admin_overrides.css' %}">
-
-    <link href="{% static 'ico/favicon.svg' %}" sizes="any" rel="icon" type="image/svg+xml" />
-    <link href="{% static 'ico/favicon-96x96.png' %}" sizes="96x96" rel="icon" type="image/png" />
-    <link href="{% static 'ico/favicon-32x32.png' %}" sizes="32x32" rel="icon" type="image/png" />
-    <link href="{% static 'ico/favicon.png' %}" sizes="16x16" rel="icon" type="image/png" />
-    <link href="{% static 'ico/favicon.png' %}" rel="shortcut icon">
+    <link rel="stylesheet" type="text/css" href="{% static 'bundles/admin_overrides.css' %}">z
+    <link href="{% static 'ico/open-beheer-icon.svg' %}" sizes="any" rel="icon" type="image/svg+xml" />
 {% endblock %}
 
 {% block branding %}
@@ -61,9 +56,5 @@
 
 {# Override footer block to display version information if you're a logged in staff user #}
 {% block footer %}
-    <div id="footer">
-        {% if user.is_authenticated and user.is_staff %}
-            {% show_version_info %}
-        {% endif %}
-    </div>
+    {% include "maykin_common/includes/footer.html" with user=user only %}
 {% endblock %}
