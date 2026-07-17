@@ -7,3 +7,7 @@ body,
 body {
   margin: 0;
 }
+
+.mykn-toolbar .ob-logo {
+  width: 30px;
+}
