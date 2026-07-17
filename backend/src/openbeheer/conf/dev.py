@@ -3,8 +3,6 @@ import warnings
 
 from corsheaders.defaults import default_headers
 
-from .utils import config
-
 os.environ.setdefault("DEBUG", "yes")
 os.environ.setdefault("ALLOWED_HOSTS", "*")
 os.environ.setdefault(

@@ -5,8 +5,10 @@ from pathlib import Path
 from django.urls import reverse_lazy
 
 import sentry_sdk
+from maykin_common.branding import ProductDefinition
+from maykin_common.config import DocumentationParams, config
 
-from .utils import config, get_sentry_integrations
+from .utils import get_sentry_integrations
 
 # Build paths inside the project, so further paths can be defined relative to
 # the code root.
@@ -52,12 +54,12 @@ USE_THOUSAND_SEPARATOR = True
 #
 DATABASES = {
     "default": {
-        "ENGINE": config("DB_ENGINE", "django.db.backends.postgresql"),
-        "NAME": config("DB_NAME", "openbeheer"),
-        "USER": config("DB_USER", "openbeheer"),
-        "PASSWORD": config("DB_PASSWORD", "openbeheer"),
-        "HOST": config("DB_HOST", "localhost"),
-        "PORT": config("DB_PORT", 5432, cast=lambda s: int(s) if s else ""),
+        "ENGINE": config("DB_ENGINE", default="django.db.backends.postgresql"),
+        "NAME": config("DB_NAME", default="openbeheer"),
+        "USER": config("DB_USER", default="openbeheer"),
+        "PASSWORD": config("DB_PASSWORD", default="openbeheer"),
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": config("DB_PORT", default=5432),
     }
 }
 
@@ -66,7 +68,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{config('CACHE_DEFAULT', 'localhost:6379/0')}",
+        "LOCATION": f"redis://{config('CACHE_DEFAULT', default='localhost:6379/0')}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "IGNORE_EXCEPTIONS": True,
@@ -74,7 +76,7 @@ CACHES = {
     },
     "axes": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{config('CACHE_AXES', 'localhost:6379/0')}",
+        "LOCATION": f"redis://{config('CACHE_AXES', default='localhost:6379/0')}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "IGNORE_EXCEPTIONS": True,
@@ -363,12 +365,12 @@ FIXTURE_DIRS = (DJANGO_PROJECT_DIR / "fixtures",)
 # Custom settings
 #
 PROJECT_NAME = "openbeheer"
-ENVIRONMENT = config("ENVIRONMENT", "")
+ENVIRONMENT = config("ENVIRONMENT", default="")
 
 # Displaying environment information
-ENVIRONMENT_LABEL = config("ENVIRONMENT_LABEL", ENVIRONMENT)
-ENVIRONMENT_BACKGROUND_COLOR = config("ENVIRONMENT_BACKGROUND_COLOR", "orange")
-ENVIRONMENT_FOREGROUND_COLOR = config("ENVIRONMENT_FOREGROUND_COLOR", "black")
+ENVIRONMENT_LABEL = config("ENVIRONMENT_LABEL", default=ENVIRONMENT)
+ENVIRONMENT_BACKGROUND_COLOR = config("ENVIRONMENT_BACKGROUND_COLOR", default="orange")
+ENVIRONMENT_FOREGROUND_COLOR = config("ENVIRONMENT_FOREGROUND_COLOR", default="black")
 SHOW_ENVIRONMENT = config("SHOW_ENVIRONMENT", default=True)
 
 # This setting is used by the csrf_failure view (accounts app).
@@ -378,7 +380,7 @@ SHOW_ENVIRONMENT = config("SHOW_ENVIRONMENT", default=True)
 LOGIN_URLS = [reverse_lazy("admin:login")]
 
 if "GIT_SHA" in os.environ:
-    GIT_SHA = config("GIT_SHA", "")
+    GIT_SHA = config("GIT_SHA", default="")
 # in docker (build) context, there is no .git directory
 elif (BASE_DIR / ".git").exists():
     try:
@@ -396,7 +398,7 @@ elif (BASE_DIR / ".git").exists():
 else:
     GIT_SHA = None
 
-RELEASE = config("RELEASE", GIT_SHA)
+RELEASE = config("RELEASE", default=GIT_SHA)
 
 # Default (connection timeout, read timeout) for the requests library (in seconds)
 REQUESTS_DEFAULT_TIMEOUT = (10, 30)
@@ -492,7 +494,7 @@ HIJACK_INSERT_BEFORE = (
 #
 # SENTRY - error monitoring
 #
-SENTRY_DSN = config("SENTRY_DSN", None)
+SENTRY_DSN = config("SENTRY_DSN", default=None)
 
 if SENTRY_DSN:
     SENTRY_CONFIG = {
@@ -509,7 +511,7 @@ if SENTRY_DSN:
 ELASTIC_APM_SERVER_URL = os.getenv("ELASTIC_APM_SERVER_URL", None)
 ELASTIC_APM = {
     "SERVICE_NAME": f"openbeheer {ENVIRONMENT}",
-    "SECRET_TOKEN": config("ELASTIC_APM_SECRET_TOKEN", "default"),
+    "SECRET_TOKEN": config("ELASTIC_APM_SECRET_TOKEN", default="default"),
     "SERVER_URL": ELASTIC_APM_SERVER_URL,
 }
 if not ELASTIC_APM_SERVER_URL:
@@ -518,7 +520,7 @@ if not ELASTIC_APM_SERVER_URL:
 
 # Subpath (optional)
 # This environment variable can be configured during deployment.
-SUBPATH = config("SUBPATH", None)
+SUBPATH = config("SUBPATH", default=None)
 if SUBPATH:
     SUBPATH = f"/{SUBPATH.strip('/')}"
 
