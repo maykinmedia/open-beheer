@@ -91,7 +91,7 @@ def test_scenario_log_out(page: Page, runner: GherkinRunner):
         "query_without_datum_geldigheid",
     ],
 )
-def test_session_expires(page: Page, runner: GherkinRunner):
+def test_scenario_session_expires(page: Page, runner: GherkinRunner):
     _ = runner
 
     _.given.api_config_exists()
