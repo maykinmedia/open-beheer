@@ -3,15 +3,11 @@
 #   timestamp: 2025-09-29T15:28:09+00:00
 #   version:   0.30.1
 
-from __future__ import annotations
-
+from datetime import timedelta
 from enum import Enum
-from typing import TYPE_CHECKING, Annotated, List
+from typing import Annotated, List
 
 from msgspec import Meta, Struct, field
-
-if TYPE_CHECKING:
-    from datetime import timedelta
 
 
 class ProcesType(Struct, kw_only=True):
@@ -257,6 +253,7 @@ class Procestermijn(Enum):
     ingeschatte_bestaansduur_procesobject = "ingeschatte_bestaansduur_procesobject"
     vast_te_leggen_datum = "vast_te_leggen_datum"
     samengevoegd_met_bewaartermijn = "samengevoegd_met_bewaartermijn"
+    field_ = ""
 
 
 class Resultaat(Struct, kw_only=True):
