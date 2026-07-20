@@ -6,7 +6,9 @@ import {
   Hr,
   Logo,
   Outline,
+  P,
   Select,
+  Solid,
 } from "@maykin-ui/admin-ui";
 import "@maykin-ui/admin-ui/style";
 import "@maykin-ui/admin-ui/style/themes/blue-suede-shoes.css";
@@ -18,6 +20,7 @@ import {
   useLocation,
   useMatches,
   useNavigate,
+  useNavigation,
   useParams,
 } from "react-router";
 import { whoAmI } from "~/api";
@@ -57,6 +60,7 @@ function App() {
   const [user, setUser] = useState<components["schemas"]["User"] | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { state } = useNavigation();
   const params = useParams();
   const matches = useMatches();
   const currentMatch = useCurrentMatch();
@@ -121,9 +125,19 @@ function App() {
       <Logo key="logo" abbreviated variant="contrast" />,
       ...buttons,
       "spacer",
+      <>
+        {state !== "idle" ? (
+          <P title="Bezig met laden...">
+            <Solid.ArrowPathIcon
+              spin
+              stroke="var(--button-color-text-primary)"
+            />
+          </P>
+        ) : undefined}
+      </>,
       <Profile key="Profile" user={user} />,
     ];
-  }, [location, user]);
+  }, [location, state, user]);
 
   /**
    * The sidebar navigation items.
