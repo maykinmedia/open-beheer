@@ -95,6 +95,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/selectielijst/resultaten/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a Resultaat
+         * @description Retrieve a Resultaat from Selectielijst.
+         */
+        get: operations["service_resultaten_retrieve_one"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/service/{slug}/catalogi/choices/": {
         parameters: {
             query?: never;
@@ -1654,6 +1674,48 @@ export interface components {
              */
             procesobject: string;
         };
+        /**
+         * LAXResultaat
+         * @description A version of selectielijst.Resultaat with just the fields we need for the option labels
+         */
+        LAXResultaat: {
+            url: string;
+            /**
+             * Nummer
+             * @description Nummer van het resultaat. Dit wordt samengesteld met het procestype en generiek resultaat indien van toepassing.
+             */
+            nummer: number;
+            /**
+             * Naam
+             * @description Benaming van het procestype
+             */
+            naam: string;
+            /**
+             * Waardering
+             * @enum {unknown}
+             */
+            waardering: "" | "blijvend_bewaren" | "vernietigen";
+            /** @default null */
+            procesType: string | null;
+            /** @default null */
+            volledigNummer: string | null;
+            /** @default null */
+            procestermijn: ("" | "bestaansduur_procesobject" | "ingeschatte_bestaansduur_procesobject" | "nihil" | "samengevoegd_met_bewaartermijn" | "vast_te_leggen_datum") | null;
+            /**
+             * Procestermijn weergave
+             * @default
+             */
+            procestermijnWeergave: string;
+            /** @default null */
+            bewaartermijn: string | null;
+            /** @default null */
+            omschrijving: string | null;
+        };
+        /**
+         * LAXWaardering
+         * @enum {unknown}
+         */
+        LAXWaardering: "" | "blijvend_bewaren" | "vernietigen";
         None: null;
         /**
          * OBField
@@ -2240,6 +2302,11 @@ export interface components {
             /** @default null */
             gerelateerdeZaaktypen: components["schemas"]["ZaakTypenRelatieRequest"][] | null;
         };
+        /**
+         * Procestermijn
+         * @enum {unknown}
+         */
+        Procestermijn: "" | "bestaansduur_procesobject" | "ingeschatte_bestaansduur_procesobject" | "nihil" | "samengevoegd_met_bewaartermijn" | "vast_te_leggen_datum";
         /** ReferentieProces */
         ReferentieProces: {
             /**
@@ -3149,6 +3216,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OIDCInfo"];
+                };
+            };
+        };
+    };
+    service_resultaten_retrieve_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LAXResultaat"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZGWError"];
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
+                };
+            };
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalServiceError"];
                 };
             };
         };

@@ -67,7 +67,7 @@
   "lint-staged": {
     "*.{js,ts,md}": [
       "npm run lint:fix",
-      "npx ast-grep scan"
+      "ast-grep scan || npx ast-grep scan"
     ]
   },
   "msw": {
