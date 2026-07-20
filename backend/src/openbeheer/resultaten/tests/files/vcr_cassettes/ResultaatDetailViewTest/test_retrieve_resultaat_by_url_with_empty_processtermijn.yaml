@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+    method: GET
+    uri: https://selectielijst.openzaak.nl/api/v1/resultaten/8320ab7d-3a8d-4c8b-b94a-14b4fa374d0a
+  response:
+    body:
+      string: '{"url":"https://selectielijst.openzaak.nl/api/v1/resultaten/8320ab7d-3a8d-4c8b-b94a-14b4fa374d0a","procesType":"https://selectielijst.openzaak.nl/api/v1/procestypen/e1b73b12-b2f6-4c4e-8929-94f84dd2a57d","nummer":1,"volledigNummer":"1.1.1","generiek":false,"specifiek":true,"naam":"Ingericht","omschrijving":"Inrichten
+        of wijzigen met een organisatie brede impact","herkomst":"Systeemanalyse","waardering":"blijvend_bewaren","procestermijn":"","procestermijnWeergave":"","bewaartermijn":null,"toelichting":"Organisatiewijziging","algemeenBestuurEnInrichtingOrganisatie":true,"bedrijfsvoeringEnPersoneel":false,"publiekeInformatieEnRegistratie":false,"burgerzaken":false,"veiligheid":false,"verkeerEnVervoer":false,"economie":false,"onderwijs":false,"sportCultuurEnRecreatie":false,"sociaalDomein":false,"volksgezonheidEnMilieu":false,"vhrosv":false,"heffenBelastingen":false,"alleTaakgebieden":false,"procestermijnOpmerking":""}'
+    headers:
+      API-version:
+      - 1.0.0
+      Allow:
+      - GET, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '927'
+      Content-Type:
+      - application/json
+      Feature-Policy:
+      - autoplay 'none'; camera 'none'
+      Referrer-Policy:
+      - same-origin
+      Strict-Transport-Security:
+      - max-age=63072000
+      X-Content-Type-Options:
+      - nosniff
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      X-XSS-Protection:
+      - 1; mode=block
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

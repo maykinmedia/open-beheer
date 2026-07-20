@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+    method: GET
+    uri: https://selectielijst.openzaak.nl/api/v1/resultaten/7f838b25-3fc2-4bb7-a6be-5fc52b76df75
+  response:
+    body:
+      string: '{"url":"https://selectielijst.openzaak.nl/api/v1/resultaten/7f838b25-3fc2-4bb7-a6be-5fc52b76df75","procesType":"https://selectielijst.openzaak.nl/api/v1/procestypen/9be366e2-f63c-494a-8a77-62446251b006","nummer":1,"volledigNummer":"8.1","generiek":true,"specifiek":false,"naam":"Verstrekt","omschrijving":"","herkomst":"Risicoanalyse","waardering":"vernietigen","procestermijn":"bestaansduur_procesobject","procestermijnWeergave":"De
+        bestaans- of geldigheidsduur van het procesobject.","bewaartermijn":"P10Y","toelichting":"Uitkering
+        of inkomensvoorziening, inburgeringstraject, duurzaamheidslening, krediethypotheek.","algemeenBestuurEnInrichtingOrganisatie":false,"bedrijfsvoeringEnPersoneel":false,"publiekeInformatieEnRegistratie":false,"burgerzaken":false,"veiligheid":false,"verkeerEnVervoer":false,"economie":false,"onderwijs":false,"sportCultuurEnRecreatie":false,"sociaalDomein":true,"volksgezonheidEnMilieu":false,"vhrosv":false,"heffenBelastingen":false,"alleTaakgebieden":false,"procestermijnOpmerking":""}'
+    headers:
+      API-version:
+      - 1.0.0
+      Allow:
+      - GET, HEAD, OPTIONS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1018'
+      Content-Type:
+      - application/json
+      Feature-Policy:
+      - autoplay 'none'; camera 'none'
+      Referrer-Policy:
+      - same-origin
+      Strict-Transport-Security:
+      - max-age=63072000
+      X-Content-Type-Options:
+      - nosniff
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      X-XSS-Protection:
+      - 1; mode=block
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
