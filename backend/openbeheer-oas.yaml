@@ -80,6 +80,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/OIDCInfo'
           description: ''
+  /api/v1/selectielijst/resultaten/:
+    get:
+      operationId: service_resultaten_retrieve_one
+      description: Retrieve a Resultaat from Selectielijst.
+      summary: Get a Resultaat
+      tags:
+      - resultaten
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LAXResultaat'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZGWError'
+          description: ''
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
+        '504':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalServiceError'
+          description: ''
   /api/v1/service/{slug}/catalogi/choices/:
     get:
       operationId: service_catalogi_choices_retrieve
@@ -5900,6 +5934,88 @@ components:
       - naam
       - omschrijving
       - procesobject
+    LAXResultaat:
+      title: LAXResultaat
+      description: A version of selectielijst.Resultaat with just the fields we need
+        for the option labels
+      type: object
+      properties:
+        url:
+          type: string
+        nummer:
+          title: Nummer
+          description: Nummer van het resultaat. Dit wordt samengesteld met het procestype
+            en generiek resultaat indien van toepassing.
+          type: integer
+          minimum: 0
+          maximum: 32767
+        naam:
+          title: Naam
+          description: Benaming van het procestype
+          type: string
+          maxLength: 40
+          minLength: 1
+        waardering:
+          title: Waardering
+          enum:
+          - ''
+          - blijvend_bewaren
+          - vernietigen
+        procesType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+        volledigNummer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+        procestermijn:
+          anyOf:
+          - title: Procestermijn
+            description: "Uitleg bij mogelijke waarden:\n\n* `nihil` - Nihil\n* `bestaansduur_procesobject`\
+              \ - De bestaans- of geldigheidsduur van het procesobject.\n* `ingeschatte_bestaansduur_procesobject`\
+              \ - De ingeschatte maximale bestaans- of geldigheidsduur van het procesobject.\n\
+              * `vast_te_leggen_datum` - De tijdens het proces vast te leggen datum\
+              \ waarop de geldigheid van het procesobject komt te vervallen. \n* `samengevoegd_met_bewaartermijn`\
+              \ - De procestermijn is samengevoegd met de bewaartermijn."
+            enum:
+            - ''
+            - bestaansduur_procesobject
+            - ingeschatte_bestaansduur_procesobject
+            - nihil
+            - samengevoegd_met_bewaartermijn
+            - vast_te_leggen_datum
+          - type: 'null'
+          default: null
+        procestermijnWeergave:
+          title: Procestermijn weergave
+          type: string
+          minLength: 0
+          default: ''
+        bewaartermijn:
+          anyOf:
+          - title: Bewaartermijn
+            type: string
+          - type: 'null'
+          default: null
+        omschrijving:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+      required:
+      - url
+      - nummer
+      - naam
+      - waardering
+    LAXWaardering:
+      title: LAXWaardering
+      enum:
+      - ''
+      - blijvend_bewaren
+      - vernietigen
     None:
       type: 'null'
     OBField:
@@ -7653,6 +7769,15 @@ components:
           - type: 'null'
           default: null
       required: []
+    Procestermijn:
+      title: Procestermijn
+      enum:
+      - ''
+      - bestaansduur_procesobject
+      - ingeschatte_bestaansduur_procesobject
+      - nihil
+      - samengevoegd_met_bewaartermijn
+      - vast_te_leggen_datum
     ReferentieProces:
       title: ReferentieProces
       type: object
