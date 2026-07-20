@@ -128,6 +128,10 @@ urlpatterns = [
         "v1/service/<slug:slug>/catalogi/",
         include("openbeheer.catalogi.urls", namespace="catalogi"),
     ),
+    path(
+        "v1/selectielijst/resultaten/",
+        include("openbeheer.resultaten.urls", namespace="resultaten"),
+    ),
     # Other endpoints
     path(
         "v1/",
