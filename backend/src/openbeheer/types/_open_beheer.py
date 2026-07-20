@@ -38,6 +38,7 @@ from openbeheer.utils import camelize
 
 from . import objecttypen, selectielijst
 from .selectielijst import (
+    Procestermijn,
     ProcesType,
     ResultaatTypeOmschrijvingGeneriek as _ResultaatTypeOmschrijvingGeneriek,
 )
@@ -619,6 +620,19 @@ class LAXResultaat(Struct, rename="camel"):
     waardering: Annotated[LAXWaardering, Meta(title="Waardering")]
     proces_type: ProcesTypeURL | None = None
     volledig_nummer: str | None = None
+    procestermijn: (
+        Annotated[
+            Procestermijn,
+            Meta(
+                description="Uitleg bij mogelijke waarden:\n\n* `nihil` - Nihil\n* `bestaansduur_procesobject` - De bestaans- of geldigheidsduur van het procesobject.\n* `ingeschatte_bestaansduur_procesobject` - De ingeschatte maximale bestaans- of geldigheidsduur van het procesobject.\n* `vast_te_leggen_datum` - De tijdens het proces vast te leggen datum waarop de geldigheid van het procesobject komt te vervallen. \n* `samengevoegd_met_bewaartermijn` - De procestermijn is samengevoegd met de bewaartermijn.",
+                title="Procestermijn",
+            ),
+        ]
+        | None
+    ) = None
+    procestermijn_weergave: Annotated[
+        str, Meta(min_length=0, title="Procestermijn weergave")
+    ] = ""
     # ISO8601 PY is ambiguous in days, so not convertible to timedelta
     bewaartermijn: Annotated[str, Meta(title="Bewaartermijn")] | None = None
     omschrijving: str | None = None
