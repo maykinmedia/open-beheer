@@ -1,5 +1,6 @@
 import { ChoiceFieldProps, FormField } from "@maykin-ui/admin-ui";
 import { string2Title } from "@maykin-ui/client-common";
+import { getResultaatByUrl } from "~/api/selectielijst.ts";
 import { components } from "~/types";
 import { components as selectielijstComponents } from "~/types/selectielijst";
 
@@ -10,19 +11,11 @@ import { components as selectielijstComponents } from "~/types/selectielijst";
 /**
  * A selectielijstklasse (resultaat).
  */
-type Resultaat = selectielijstComponents["schemas"]["Resultaat"];
 
 /**
  * Also known as "archiefnominatie", specified on the selectielijstklasse (resultaat).
  */
 type Waardering = selectielijstComponents["schemas"]["Resultaat"]["waardering"];
-
-/**
- * This specifies the duration of the process, it's value is used to compute the
- * available `AfleidingsWijze` values for a resultaattype.
- */
-type Procestermijn =
-  selectielijstComponents["schemas"]["Resultaat"]["procestermijn"];
 
 /**
  * (Partially) describing how the brondatum for the archiving action  should be
@@ -78,25 +71,14 @@ export function getArchiveMetaBySelectielijstResultaatURL(
       new AbortController(),
     ];
   }
-  const abortController = new AbortController();
-  const promise = fetch(url, { signal: abortController.signal }).then(
-    async (response) => {
-      // Catch error.
-      if (!response.ok) {
-        throw new Error(`Failed to fetch result from URL: ${url}`);
-      }
-
-      // Get Resultaat object.
-      const resultaat = (await response.json()) as Resultaat;
-
-      // Return tuple
-      return [
+  const [request, abortController] = getResultaatByUrl(url);
+  const promise = request.then(
+    (resultaat) =>
+      [
         resultaat.waardering as Waardering,
         getAfleidingsWijzenBySelectielijstResultaat(resultaat),
-      ] as ArchiveMeta;
-    },
+      ] as ArchiveMeta,
   );
-
   return [promise, abortController];
 }
 
@@ -148,7 +130,7 @@ export function getBrondatumFieldsByAfleidingsWijze(
  * @throws Error if an unrecognized process term value is provided.
  */
 function getAfleidingsWijzenBySelectielijstResultaat(
-  resultaat: Resultaat,
+  resultaat: components["schemas"]["LAXResultaat"],
 ): Afleidingswijze[] {
   return getAfleidingsWijzenByProcestermijn(resultaat.procestermijn);
 }
@@ -170,11 +152,9 @@ function getAfleidingsWijzenBySelectielijstResultaat(
  * @throws Error if an unrecognized process term value is provided.
  */
 function getAfleidingsWijzenByProcestermijn(
-  procesTermijn: Procestermijn,
+  procesTermijn: components["schemas"]["LAXResultaat"]["procestermijn"],
 ): Afleidingswijze[] {
   switch (procesTermijn) {
-    // @ts-expect-error - FIXME: This should not happen but seems to occur in:
-    // {@link https://selectielijst.openzaak.nl/api/v1/resultaten/8af64c99-a168-40dd-8afd-9fbe0597b6dc}
     case "":
     case "nihil":
       return ["afgehandeld"];
