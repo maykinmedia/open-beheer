@@ -14,6 +14,7 @@ import "@maykin-ui/admin-ui/style";
 import "@maykin-ui/admin-ui/style/themes/blue-suede-shoes.css";
 import { string2Title } from "@maykin-ui/client-common";
 import { createContext, useEffect, useMemo, useState } from "react";
+import React from "react";
 import {
   Outlet,
   RouteObject,
@@ -125,7 +126,7 @@ function App() {
       <Logo key="logo" abbreviated variant="contrast" />,
       ...buttons,
       "spacer",
-      <>
+      <React.Fragment key="spinner">
         {state !== "idle" ? (
           <P title="Bezig met laden...">
             <Solid.ArrowPathIcon
@@ -134,7 +135,7 @@ function App() {
             />
           </P>
         ) : undefined}
-      </>,
+      </React.Fragment>,
       <Profile key="Profile" user={user} />,
     ];
   }, [location, state, user]);
