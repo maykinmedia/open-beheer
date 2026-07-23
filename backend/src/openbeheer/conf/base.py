@@ -326,7 +326,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # The age of session cookies, in seconds.
-SESSION_COOKIE_AGE = config("SESSION_COOKIE_AGE", default=1209600)
+SESSION_COOKIE_AGE = config("SESSION_COOKIE_AGE", default=1209600)  # 2 weeks
 
 # Whether to expire the session when the user closes their browser.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = config(
