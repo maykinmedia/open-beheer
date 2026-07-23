@@ -85,7 +85,7 @@ function App() {
       } catch (error) {
         // Nog logged in.
         if (error instanceof Response && error.status === 403) {
-          navigate("/login");
+          return navigate("/login");
         }
         console.error("Failed to fetch user:", error);
       }
