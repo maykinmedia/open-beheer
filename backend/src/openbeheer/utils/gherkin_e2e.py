@@ -527,6 +527,22 @@ class GherkinRunner:
 
         # Content
 
+        def page_should_contain_button(
+            self, page: Page, text: str, timeout: int | None = None, index: int = 0
+        ) -> Locator:
+            page.wait_for_load_state("networkidle")
+            if timeout is None:
+                timeout = 500
+
+            # Confirm the element with the text is visible
+            element = page.get_by_role("button", name=text).nth(index)
+            element.wait_for()
+            expect(element).to_be_visible(timeout=timeout)
+            return element
+
+        def page_should_not_contain_button(self, page: Page, text: str) -> None:
+            expect(page.get_by_role("button", name=text)).to_have_count(0)
+
         def page_should_contain_text(
             self, page: Page, text: str, timeout: int | None = None, index: int = 0
         ) -> Locator:
