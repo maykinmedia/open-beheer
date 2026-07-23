@@ -118,6 +118,19 @@ class GherkinRunner:
             api_config = APIConfigFactory.create()
             return api_config
 
+        def selectielijst_service_exists(self) -> Service:
+            """
+            Creates ztc Service for testing.
+            """
+
+            return ServiceFactory.create(
+                slug="Selectielijst",
+                api_type=APITypes.orc,
+                api_root="https://selectielijst.openzaak.nl/api/v1/",
+                client_id="test-vcr",
+                secret="test-vcr",
+            )
+
         def ztc_service_exists(self) -> Service:
             """
             Creates ztc Service for testing.

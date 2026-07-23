@@ -25,6 +25,7 @@ def test_scenario_edit_related_statustypen(page: Page, runner: GherkinRunner):
 
     _.given.user_exists()
     _.given.api_config_exists()
+    _.given.selectielijst_service_exists()
     _.given.ztc_service_exists()
 
     catalogus = _.given.catalogus_exists()
@@ -100,6 +101,7 @@ def test_scenario_edit_related_zaaktypeinformatieobjecttypen(
 
     _.given.user_exists()
     _.given.api_config_exists()
+    _.given.selectielijst_service_exists()
     _.given.ztc_service_exists()
 
     catalogus = _.given.catalogus_exists()
@@ -175,6 +177,7 @@ def test_scenario_edit_related_roltypen(page: Page, runner: GherkinRunner):
 
     _.given.user_exists()
     _.given.api_config_exists()
+    _.given.selectielijst_service_exists()
     _.given.ztc_service_exists()
 
     catalogus = _.given.catalogus_exists()
@@ -263,6 +266,7 @@ def test_scenario_edit_related_resultaattypen(page: Page, runner: GherkinRunner)
 
     _.given.user_exists()
     _.given.api_config_exists()
+    _.given.selectielijst_service_exists()
     _.given.ztc_service_exists()
 
     catalogus = _.given.catalogus_exists()
@@ -351,6 +355,7 @@ def test_scenario_edit_related_eigenschappen(page: Page, runner: GherkinRunner):
 
     _.given.user_exists()
     _.given.api_config_exists()
+    _.given.selectielijst_service_exists()
     _.given.ztc_service_exists()
 
     catalogus = _.given.catalogus_exists()
