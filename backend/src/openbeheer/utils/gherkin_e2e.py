@@ -528,11 +528,9 @@ class GherkinRunner:
         # Content
 
         def page_should_contain_button(
-            self, page: Page, text: str, timeout: int | None = None, index: int = 0
+            self, page: Page, text: str, *, timeout: int = 500, index: int = 0
         ) -> Locator:
             page.wait_for_load_state("networkidle")
-            if timeout is None:
-                timeout = 500
 
             # Confirm the element with the text is visible
             element = page.get_by_role("button", name=text).nth(index)
