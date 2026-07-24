@@ -59,7 +59,7 @@ DATABASES = {
         "USER": config("DB_USER", default="openbeheer"),
         "PASSWORD": config("DB_PASSWORD", default="openbeheer"),
         "HOST": config("DB_HOST", default="localhost"),
-        "PORT": config("DB_PORT", default=5432),
+        "PORT": config("DB_PORT", default="5432", cast=lambda s: int(s) if s else ""),
     }
 }
 
