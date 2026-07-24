@@ -61,7 +61,7 @@ def test_errors(page: Page, runner: GherkinRunner):
 
     # Navigate to statustypen tab to check and fix error message
     _.when.user_selects_tab(page, "Statustypen (!)")
-    _.then.page_should_contain_text(page, "Dit veld mag niet leeg zijn.", None, 0)
+    _.then.page_should_contain_text(page, "Dit veld mag niet leeg zijn.", index=0)
     _.when.user_fills_form_field(
         page, "Omschrijving", "TEST STATUSTYPE OMSCHRIJVING", 2
     )
@@ -74,4 +74,4 @@ def test_errors(page: Page, runner: GherkinRunner):
     _.when.user_selects_tab(page, "Overzicht")
     _.then.page_should_contain_text(page, "TEST OMSCHRIJVING")
     _.when.user_selects_tab(page, "Statustypen")
-    _.then.page_should_contain_text(page, "TEST STATUSTYPE OMSCHRIJVING", None, 1)
+    _.then.page_should_contain_text(page, "TEST STATUSTYPE OMSCHRIJVING", index=1)
