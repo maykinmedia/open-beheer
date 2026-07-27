@@ -85,6 +85,12 @@ paths:
       operationId: service_resultaten_retrieve_one
       description: Retrieve a Resultaat from Selectielijst.
       summary: Get a Resultaat
+      parameters:
+      - in: query
+        name: url
+        schema:
+          type: string
+        required: true
       tags:
       - resultaten
       security:

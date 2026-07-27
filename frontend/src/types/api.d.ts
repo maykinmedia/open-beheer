@@ -3222,7 +3222,9 @@ export interface operations {
     };
     service_resultaten_retrieve_one: {
         parameters: {
-            query?: never;
+            query: {
+                url: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
