@@ -182,7 +182,7 @@ export function ZaaktypePage() {
             : e.target.value;
 
       // When rendering an object, it's value is converted to string using an
-      // override (see `ZaaktypeTab`. When changing its value (and creating a
+      // override (see `ZaaktypeTab`). When changing its value (and creating a
       // pending update), the original shape needs to be restored.
       //
       // @see `ZaaktypeTab.complexOverrides`
@@ -328,8 +328,8 @@ export function ZaaktypePage() {
     <CardBaseTemplate
       actions={[
         {
+          componentType: "buttonLink",
           href: result.adminUrl,
-          textDecoration: "underline",
           children: (
             <>
               Bewerk in Open Zaak admin

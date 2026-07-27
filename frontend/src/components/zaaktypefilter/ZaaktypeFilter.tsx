@@ -131,7 +131,7 @@ export function ZaaktypeFilter({
     <div className="ob-zaaktype-filter">
       <Input
         aria-label="Zoek op identificatie"
-        icon={<Solid.MagnifyingGlassIcon />}
+        suffix={<Solid.MagnifyingGlassIcon />}
         name="search"
         placeholder="Identificatie"
         value={searchState || ""}

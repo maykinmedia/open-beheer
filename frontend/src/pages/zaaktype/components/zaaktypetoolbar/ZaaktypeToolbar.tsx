@@ -1,4 +1,4 @@
-import { Outline, Solid, Toolbar } from "@maykin-ui/admin-ui";
+import { Outline, Solid, Toolbar, ToolbarItem } from "@maykin-ui/admin-ui";
 import React, { useMemo } from "react";
 import { useLoaderData } from "react-router";
 import { ZaaktypeLoaderData } from "~/pages";
@@ -27,11 +27,12 @@ export function ZaaktypeToolbar({
   const isEditing =
     new URLSearchParams(location.search).get("editing") === "true";
 
-  const button = useMemo(() => {
+  const button = useMemo<ToolbarItem[]>(() => {
     if (versions?.some((v) => v.concept)) {
       if (!isEditing) {
         return [
           {
+            componentType: "button",
             children: (
               <>
                 <Solid.PencilSquareIcon />
@@ -45,6 +46,7 @@ export function ZaaktypeToolbar({
       } else {
         return [
           {
+            componentType: "button",
             children: (
               <>
                 <Outline.DocumentDuplicateIcon />
@@ -56,6 +58,7 @@ export function ZaaktypeToolbar({
           },
           "spacer",
           {
+            componentType: "button",
             children: (
               <>
                 <Outline.NoSymbolIcon />
@@ -66,6 +69,7 @@ export function ZaaktypeToolbar({
             onClick: onCancel,
           },
           {
+            componentType: "button",
             children: (
               <>
                 <Outline.CloudArrowUpIcon />
@@ -76,6 +80,7 @@ export function ZaaktypeToolbar({
             onClick: onPublish,
           },
           {
+            componentType: "button",
             children: (
               <>
                 <Outline.ArrowDownTrayIcon />
@@ -90,6 +95,7 @@ export function ZaaktypeToolbar({
     } else {
       return [
         {
+          componentType: "button",
           children: (
             <>
               <Outline.PlusIcon />

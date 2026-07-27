@@ -13,6 +13,7 @@ import {
   Modal,
   Outline,
   P,
+  ToolbarItem,
   Ul,
 } from "@maykin-ui/admin-ui";
 import { slugify, ucFirst } from "@maykin-ui/client-common";
@@ -181,15 +182,18 @@ export function CreateCard<T extends TemplateBase>({
       border={true}
       titleAs={H2}
       title={label}
-      actions={[
-        {
-          ["aria-label"]: label,
-          type: "radio",
-          name: `createcard-${slugify(label)}`,
-          value: template.uuid,
-          checked: selectedTemplate === template.uuid,
-        },
-      ]}
+      actions={
+        [
+          {
+            componentType: "formControl",
+            ["aria-label"]: label,
+            type: "radio",
+            name: `createcard-${slugify(label)}`,
+            value: template.uuid,
+            checked: selectedTemplate === template.uuid,
+          },
+        ] satisfies ToolbarItem[]
+      }
     >
       <Body fullHeight={true} className="createcard__body">
         <P>{template.omschrijving}</P>
