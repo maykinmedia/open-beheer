@@ -1,5 +1,5 @@
 from ape_pie import InvalidURLError
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from msgspec import ValidationError
 from msgspec.json import decode
 from rest_framework.request import Request
@@ -18,6 +18,9 @@ from openbeheer.utils.decorators import handle_service_errors
         tags=["resultaten"],
         summary="Get a Resultaat",
         description="Retrieve a Resultaat from Selectielijst.",
+        parameters=[
+            OpenApiParameter(name="url", required=True),
+        ],
         responses={
             "200": LAXResultaat,
             "400": ZGWError,
