@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from ape_pie import InvalidURLError
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from msgspec import ValidationError
@@ -34,41 +32,30 @@ class ResultaatDetailView(MsgspecAPIView):
     """
 
     @handle_service_errors
-    def get(
-        self, request: Request, uuid: UUID | None = None, *args, **kwargs
-    ) -> Response:
+    def get(self, request: Request, *args, **kwargs) -> Response:
         with selectielijst_client() as client:
-            if uuid is None:
-                url = request.GET.get("url", None)
-                if url is None:
-                    return Response(
-                        ZGWError(
-                            code="Bad request",
-                            title="Missing uuid or url",
-                            detail="",
-                            instance="",
-                            status=400,
-                            invalid_params=[
-                                InvalidParam(
-                                    name="uuid",
-                                    code="missing",
-                                    reason="Either path param uuid or query param url should be present.",
-                                ),
-                                InvalidParam(
-                                    name="url",
-                                    code="missing",
-                                    reason="Either path param uuid or query param url should be present.",
-                                ),
-                            ],
-                        ),
-                        400,
-                    )
-                endpoint = url
-            else:
-                endpoint = f"resultaten/{uuid}"
+            url = request.GET.get("url", None)
+            if url is None:
+                return Response(
+                    ZGWError(
+                        code="Bad request",
+                        title="Missing url",
+                        detail="",
+                        instance="",
+                        status=400,
+                        invalid_params=[
+                            InvalidParam(
+                                name="url",
+                                code="missing",
+                                reason="Query param url should be present.",
+                            ),
+                        ],
+                    ),
+                    400,
+                )
 
             try:
-                response = client.get(endpoint)
+                response = client.get(url)
             except InvalidURLError as e:
                 return Response(
                     ZGWError(
@@ -80,7 +67,7 @@ class ResultaatDetailView(MsgspecAPIView):
                         invalid_params=[
                             InvalidParam(
                                 name="url",
-                                code="missing",
+                                code="invalid",
                                 reason="Invalid url provided.",
                             ),
                         ],
