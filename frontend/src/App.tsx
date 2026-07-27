@@ -1,7 +1,6 @@
 import {
   BaseTemplate,
   Button,
-  ButtonProps,
   Card,
   ConfigContext,
   H2,
@@ -10,6 +9,7 @@ import {
   P,
   Select,
   Solid,
+  ToolbarItem,
   useDialog,
 } from "@maykin-ui/admin-ui";
 import "@maykin-ui/admin-ui/style";
@@ -119,28 +119,24 @@ function App() {
   /**
    * The primary navigation items.
    */
-  const primaryNavigationItems = useMemo(() => {
+  const primaryNavigationItems = useMemo<ToolbarItem[]>(() => {
     // Login page should not show primary navigation.
     if (hideUi) {
       return [];
     }
 
-    const buttons = [
+    return [
+      <Logo key="logo" about abbreviated />,
       {
+        componentType: "button",
+
+        key: "Catalogi",
         children: <Outline.Squares2X2Icon />,
         title: "Catalogi",
         onClick: () => navigate("/"),
+        align: "start",
+        pad: true,
       },
-    ].map<ButtonProps>((props) => ({
-      ...props,
-      // eslint-disable-next-line react/prop-types
-      key: props.title,
-      align: "start",
-      pad: true,
-    }));
-    return [
-      <Logo key="logo" about abbreviated />,
-      ...buttons,
       "spacer",
       <Fragment key="spinner">
         {state !== "idle" ? (
@@ -166,8 +162,10 @@ function App() {
     }
     const items = childRoutes
       .filter((route) => route.path)
-      .map(({ path, id }: RouteObject): ButtonProps => {
+      .map(({ path, id }: RouteObject): ToolbarItem => {
         return {
+          componentType: "button",
+
           active: Boolean(id && matches.map((m) => m.id).includes(id)),
           align: "start",
           children: string2Title(path?.split("/").pop()?.trim() || ""),

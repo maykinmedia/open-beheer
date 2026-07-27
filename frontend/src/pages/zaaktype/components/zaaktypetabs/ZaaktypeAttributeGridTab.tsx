@@ -8,6 +8,7 @@ import {
   Option,
   Sidebar,
   Toolbar,
+  ToolbarItem,
   TypedField,
   fields2TypedFields,
   isPrimitive,
@@ -370,17 +371,20 @@ export const ZaaktypeAttributeGridTab = ({
           <Toolbar
             align="start"
             direction="vertical"
-            items={tabConfig.sections.map((subTabConfig, index: number) => ({
-              active: activeSectionIndex === index,
-              children: (
-                <>
-                  {subTabConfig.icon}
-                  {subTabConfig.label}
-                </>
-              ),
-              key: slugify(subTabConfig.label),
-              onClick: () => handleSectionChange(index),
-            }))}
+            items={tabConfig.sections.map<ToolbarItem>(
+              (subTabConfig, index: number) => ({
+                componentType: "button",
+                active: activeSectionIndex === index,
+                children: (
+                  <>
+                    {subTabConfig.icon}
+                    {subTabConfig.label}
+                  </>
+                ),
+                key: slugify(subTabConfig.label),
+                onClick: () => handleSectionChange(index),
+              }),
+            )}
             variant="transparent"
           />
         </Sidebar>
