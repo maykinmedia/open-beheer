@@ -9,7 +9,9 @@ export type LoginActionData = object;
  */
 export async function loginAction({
   request,
-}: ActionFunctionArgs): Promise<LoginActionData> {
+}: {
+  request: ActionFunctionArgs["request"];
+}): Promise<LoginActionData> {
   const formData = await request.formData();
   const username = formData.get("username");
   const password = formData.get("password");

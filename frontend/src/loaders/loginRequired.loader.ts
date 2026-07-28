@@ -11,8 +11,8 @@ import { LoaderFunction, redirect } from "react-router";
  *  provided arguments.
  */
 export function loginRequired<T extends object>(
-  wrappedLoader: LoaderFunction,
-): LoaderFunction<T | Response> {
+  wrappedLoader: LoaderFunction<T>,
+): LoaderFunction<T> {
   return async (loaderFunctionArgs, handlerCtx) => {
     try {
       return await wrappedLoader(loaderFunctionArgs, handlerCtx);
