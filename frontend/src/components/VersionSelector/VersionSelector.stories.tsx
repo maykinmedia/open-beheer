@@ -1,5 +1,5 @@
-import { action } from "storybook/actions";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { action } from "storybook/actions";
 import { userEvent, within } from "storybook/test";
 import { FIXTURE_ZAAKTYPE_VERSIONS } from "~/fixtures";
 

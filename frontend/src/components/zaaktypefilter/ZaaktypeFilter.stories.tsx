@@ -1,12 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  expect,
-  fn,
-  screen,
-  userEvent,
-  waitFor,
-  within,
-} from "storybook/test";
+import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test";
 
 import { ZaaktypeFilter as ZaaktypeFilterComponent } from "./ZaaktypeFilter";
 
@@ -20,7 +13,6 @@ type Story = StoryObj<typeof meta>;
 
 export const ZaaktypeFilter: Story = {
   args: {
-    children: "The quick brown fox jumps over the lazy dog.",
     onSubmit: fn(),
   },
   play: async ({ args, canvasElement }) => {
