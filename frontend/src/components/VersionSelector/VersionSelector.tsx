@@ -1,5 +1,5 @@
 import { Button, Outline } from "@maykin-ui/admin-ui";
-import { formatDate } from "@storybook/blocks";
+import { formatDate } from "@maykin-ui/client-common";
 import { FC, useId, useMemo, useState } from "react";
 import { components } from "~/types";
 

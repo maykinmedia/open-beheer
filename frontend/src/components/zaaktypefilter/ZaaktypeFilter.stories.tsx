@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   expect,
   fn,
@@ -6,7 +6,7 @@ import {
   userEvent,
   waitFor,
   within,
-} from "@storybook/test";
+} from "storybook/test";
 
 import { ZaaktypeFilter as ZaaktypeFilterComponent } from "./ZaaktypeFilter";
 
