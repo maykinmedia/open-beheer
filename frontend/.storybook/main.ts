@@ -2,9 +2,8 @@ import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
   addons: [
-    "@storybook/addon-essentials",
     "@chromatic-com/storybook",
-    "@storybook/experimental-addon-test",
+    "@storybook/addon-vitest",
     "storybook-addon-remix-react-router",
     {
       name: "@storybook/addon-coverage",
@@ -14,6 +13,7 @@ const config: StorybookConfig = {
         },
       },
     },
+    "@storybook/addon-docs",
   ],
   core: {
     disableTelemetry: true,

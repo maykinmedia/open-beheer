@@ -1,5 +1,5 @@
 import "@maykin-ui/admin-ui/style";
-import type { Preview } from "@storybook/react";
+import type { Preview } from "@storybook/react-vite";
 import { initialize, mswLoader } from "msw-storybook-addon";
 
 // Initialize MSW
