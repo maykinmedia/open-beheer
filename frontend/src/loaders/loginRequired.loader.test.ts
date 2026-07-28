@@ -18,7 +18,8 @@ describe("loginRequired", () => {
       } as unknown as Request,
       params: {},
       context: {},
-      unstable_pattern: "",
+      url: new URL("http://www.example.com/"),
+      pattern: "",
     });
     expect(redirect).toHaveBeenCalledWith("/login?next=/");
   });
@@ -34,7 +35,8 @@ describe("loginRequired", () => {
       } as unknown as Request,
       params: {},
       context: {},
-      unstable_pattern: "",
+      url: new URL("http://www.example.com/"),
+      pattern: "",
     });
     expect(redirect).toHaveBeenCalledWith("/login?next=/destruction-lists/");
   });
@@ -50,7 +52,8 @@ describe("loginRequired", () => {
       } as unknown as Request,
       params: {},
       context: {},
-      unstable_pattern: "",
+      url: new URL("http://www.example.com/"),
+      pattern: "",
     });
     expect(redirect).toHaveBeenCalledWith("/login?next=/");
   });

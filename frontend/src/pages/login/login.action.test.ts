@@ -33,9 +33,6 @@ describe("loginAction", () => {
 
     await loginAction({
       request: mockRequest(),
-      params: {},
-      context: {},
-      unstable_pattern: "",
     });
 
     expect(login).toHaveBeenCalledWith(
@@ -50,9 +47,6 @@ describe("loginAction", () => {
 
     const result = await loginAction({
       request: mockRequest(),
-      params: {},
-      context: {},
-      unstable_pattern: "",
     });
 
     expect(result).toEqual({ type: "redirect", location: "/" });
@@ -63,9 +57,6 @@ describe("loginAction", () => {
 
     const result = await loginAction({
       request: mockRequest("http://localhost/login?next=/dashboard"),
-      params: {},
-      context: {},
-      unstable_pattern: "",
     });
 
     expect(result).toEqual({ type: "redirect", location: "/dashboard" });
@@ -88,9 +79,6 @@ describe("loginAction", () => {
 
     const result = await loginAction({
       request: mockRequest(),
-      params: {},
-      context: {},
-      unstable_pattern: "",
     });
 
     expect(result).toEqual({ error: "Invalid credentials" });

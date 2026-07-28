@@ -22,8 +22,6 @@ export type ZaaktypeCreateActionPayload = {
  */
 export async function zaaktypeCreateAction({
   request,
-  params,
-  context,
 }: ActionFunctionArgs): Promise<
   ZaaktypeCreateActionPayload["zaaktype"] | Response
 > {
@@ -34,18 +32,15 @@ export async function zaaktypeCreateAction({
     case "ZAAKTYPE_CREATE":
       return await createZaaktypeAction({
         request,
-        params,
-        context,
-        unstable_pattern: "",
       });
     default:
       throw new Error("INVALID ACTION TYPE SPECIFIED!");
   }
 }
 
-async function createZaaktypeAction(
-  actionFunctionArgs: ActionFunctionArgs,
-): Promise<ZaaktypeCreateActionPayload["zaaktype"] | Response> {
+async function createZaaktypeAction(actionFunctionArgs: {
+  request: ActionFunctionArgs["request"];
+}): Promise<ZaaktypeCreateActionPayload["zaaktype"] | Response> {
   const data = await actionFunctionArgs.request.json();
   const payload = data.payload as ZaaktypeCreateActionPayload;
 
