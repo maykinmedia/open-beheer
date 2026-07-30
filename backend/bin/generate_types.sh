@@ -80,6 +80,7 @@ datamodel-codegen \
     --output-model-type msgspec.Struct \
     --snake-case-field \
     --use-union-operator \
+    --strict-nullable \
     --enable-version-header \
     --keyword-only \
     --output "${TARGET_DIR}/${API}.py" \

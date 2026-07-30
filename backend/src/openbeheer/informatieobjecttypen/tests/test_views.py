@@ -225,8 +225,10 @@ class InformatieObjectTypeDetailViewTest(VCRAPITestCase):
             self.assertNotIn("_expand", iot_data)
 
         with self.subTest("fields"):
-            self.assertEqual(data["fields"][2]["name"], "vertrouwelijkheidaanduiding")
-            self.assertEqual(len(data["fields"][2]["options"]), 8)
+            fields_by_name = {f["name"]: f for f in data["fields"]}
+
+            vertrouwelijkheidaanduiding = fields_by_name["vertrouwelijkheidaanduiding"]
+            self.assertEqual(len(vertrouwelijkheidaanduiding["options"]), 8)
 
             concept_field = [
                 field for field in data["fields"] if field["name"] == "concept"
