@@ -615,7 +615,7 @@ sortedcontainers==2.4.0
     # via
     #   -r requirements/type-checking.txt
     #   hypothesis
-soupsieve==2.6
+soupsieve==2.8.4
     # via beautifulsoup4
 sphinx==8.2.3
     # via
