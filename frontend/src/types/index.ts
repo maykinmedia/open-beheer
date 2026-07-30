@@ -1,4 +1,4 @@
-export * from "./apiOverrides";
-export * from "./expand";
-export * from "./user";
-export * from "./zaaktype";
+export type * from "./apiOverrides";
+export type * from "./expand";
+export type * from "./user";
+export type * from "./zaaktype";
