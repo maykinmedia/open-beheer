@@ -19,7 +19,7 @@ COPY ./backend/requirements /app/requirements
 RUN uv pip install --system -r requirements/${ENVIRONMENT}.txt
 
 # Stage 2 - Build the Front end
-FROM node:20-bullseye-slim AS frontend-build
+FROM node:20-bookworm-slim AS frontend-build
 
 RUN mkdir /frontend
 WORKDIR /frontend
