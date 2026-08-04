@@ -76,7 +76,7 @@ charset-normalizer==3.4.2
     #   requests
 coverage==7.8.0
     # via -r requirements/test-tools.in
-cryptography==44.0.2
+cryptography==50.0.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
