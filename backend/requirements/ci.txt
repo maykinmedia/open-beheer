@@ -728,7 +728,7 @@ webauthn==2.5.2
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django-two-factor-auth
-webob==1.8.9
+webob==1.8.11
     # via webtest
 webtest==3.0.4
     # via django-webtest
