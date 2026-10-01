@@ -701,7 +701,7 @@ uritemplate==4.1.1
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   drf-spectacular
-urllib3==2.6.3
+urllib3==2.8.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
