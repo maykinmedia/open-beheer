@@ -34,7 +34,7 @@
     "@maykinmedia/eslint-config": "^1.0.0",
     "@storybook/addon-coverage": "^3.0.2",
     "@storybook/addon-docs": "10.5.5",
-    "@storybook/addon-vitest": "10.5.5",
+    "@storybook/addon-vitest": "10.6.2",
     "@storybook/react-vite": "10.5.5",
     "@testing-library/react": "^16.3.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
