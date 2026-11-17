@@ -1,0 +1,3 @@
+MYKN_API_URL=http://localhost:8000
+MYKN_API_PATH=/api/v1
+MYKN_STATIC_URL="${MYKN_API_URL}/static"
