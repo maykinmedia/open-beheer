@@ -33,7 +33,7 @@ Frontend (React)
      - Default
    * - ``MYKN_API_URL``
      - Base URL for the backend API.
-     - ``http://localhost:5173``
+     - ``http://localhost:8000``
    * - ``MYKN_API_PATH``
      - Path to the API.
      - ``/api/v1``
