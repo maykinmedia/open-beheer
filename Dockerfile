@@ -1,6 +1,6 @@
 # Stage 1 - Backend build environment
 # includes compilers and build tooling to create the environment
-FROM python:3.12-slim-bullseye AS backend-build
+FROM python:3.12-slim-bookworm AS backend-build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         pkg-config \
@@ -38,7 +38,7 @@ COPY ./frontend .
 RUN npm run build
 
 # Stage 3 - Build docker image suitable for production
-FROM python:3.12-slim-bullseye
+FROM python:3.12-slim-bookworm
 
 # Stage 3.1 - Set up the needed production dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
