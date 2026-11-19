@@ -244,7 +244,7 @@ phonenumberslite==8.13.55
     #   django-two-factor-auth
 pillow==11.1.0
     # via -r requirements/base.txt
-playwright==1.55.0
+playwright==1.65.2
     # via
     #   -r requirements/type-checking.in
     #   pytest-playwright
@@ -275,8 +275,6 @@ pydantic-settings==2.9.1
     # via
     #   -r requirements/base.txt
     #   django-setup-configuration
-pyee==13.0.0
-    # via playwright
 pygments==2.19.2
     # via pytest
 pyjwt==2.12.1
@@ -293,14 +291,11 @@ pypng==0.20220715.0
     #   qrcode
 pytest==8.4.2
     # via
-    #   pytest-base-url
     #   pytest-django
     #   pytest-playwright
-pytest-base-url==2.1.0
-    # via pytest-playwright
 pytest-django==4.11.1
     # via -r requirements/type-checking.in
-pytest-playwright==0.7.1
+pytest-playwright==0.10.0
     # via -r requirements/type-checking.in
 python-dateutil==2.9.0.post0
     # via
@@ -347,7 +342,6 @@ requests==2.32.4
     #   djangorestframework-stubs
     #   maykin-common
     #   mozilla-django-oidc
-    #   pytest-base-url
     #   zgw-consumers
 rpds-py==0.24.0
     # via
@@ -399,7 +393,6 @@ typing-extensions==4.14.0
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
-    #   pyee
     #   pyopenssl
     #   qrcode
     #   referencing
