@@ -521,7 +521,7 @@ pillow==11.1.0
     #   -r requirements/type-checking.txt
 platformdirs==4.3.8
     # via black
-playwright==1.55.0
+playwright==1.65.2
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -580,12 +580,6 @@ pydantic-settings==2.9.1
     #   -r requirements/type-checking.txt
     #   bump-my-version
     #   django-setup-configuration
-pyee==13.0.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   -r requirements/type-checking.txt
-    #   playwright
 pygments==2.19.2
     # via
     #   -c requirements/ci.txt
@@ -622,21 +616,14 @@ pytest==8.4.2
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
-    #   pytest-base-url
     #   pytest-django
-    #   pytest-playwright
-pytest-base-url==2.1.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
-    #   -r requirements/type-checking.txt
     #   pytest-playwright
 pytest-django==4.11.1
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
-pytest-playwright==0.7.1
+pytest-playwright==0.10.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
@@ -711,7 +698,6 @@ requests==2.32.4
     #   django-rosetta
     #   djangorestframework-stubs
     #   mozilla-django-oidc
-    #   pytest-base-url
     #   requests-mock
     #   sphinx
     #   zgw-consumers
@@ -885,7 +871,6 @@ typing-extensions==4.14.0
     #   mozilla-django-oidc-db
     #   pydantic
     #   pydantic-core
-    #   pyee
     #   pyopenssl
     #   qrcode
     #   referencing
