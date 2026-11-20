@@ -20,7 +20,7 @@ boltons==25.0.0
     # via
     #   face
     #   glom
-cbor2==5.8.0
+cbor2==6.3.0
     # via webauthn
 certifi==2026.10.23
     # via
@@ -131,7 +131,7 @@ furl==2.1.4
     # via ape-pie
 glom==24.11.0
     # via mozilla-django-oidc-db
-idna==3.10
+idna==3.20
     # via requests
 inflection==0.5.1
     # via drf-spectacular
@@ -201,7 +201,7 @@ referencing==0.36.2
     # via
     #   jsonschema
     #   jsonschema-specifications
-requests==2.32.4
+requests==2.34.2
     # via
     #   ape-pie
     #   django-rosetta
