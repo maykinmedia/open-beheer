@@ -467,7 +467,7 @@ class GherkinRunner:
 
             # Certain form fields may be shown in a modal that needs some time to load
             # We add a tiny delay here to prevent API complication and allow the modal to render
-            page.wait_for_timeout(10)
+            page.wait_for_timeout(30)
 
             modals = page.get_by_role("dialog")
             locator = modals.first if modals.count() else page
