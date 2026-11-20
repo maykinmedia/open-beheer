@@ -127,6 +127,7 @@ INSTALLED_APPS = [
     "maykin_common",
     "django_structlog",
     "django_setup_configuration",
+    "privates",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
@@ -655,6 +656,28 @@ SETUP_CONFIGURATION_STEPS = [
     "openbeheer.config.setup_configuration.steps.APIConfigConfigurationStep",
     "mozilla_django_oidc_db.setup_configuration.steps.AdminOIDCConfigurationStep",
 ]
+
+#
+# Django privates
+#
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+    "privates": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+            "location": os.path.join(BASE_DIR, "private_media"),
+            "base_url": "/private-media/",
+        },
+    },
+}
+SENDFILE_ROOT = STORAGES["privates"]["OPTIONS"]["location"]
+SENDFILE_URL = STORAGES["privates"]["OPTIONS"]["base_url"]
+
 
 # TODO: This ought to be configurable per ZTC Service... But not in a way that
 # hits the db for every deserialise of each object.

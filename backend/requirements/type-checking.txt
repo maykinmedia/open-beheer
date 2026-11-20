@@ -115,10 +115,11 @@ django-phonenumber-field==8.0.0
     # via
     #   -r requirements/base.txt
     #   django-two-factor-auth
-django-privates==3.1.0
+django-privates==4.0.3
     # via
     #   -r requirements/base.txt
     #   django-simple-certmanager
+    #   zgw-consumers
 django-redis==5.4.0
     # via -r requirements/base.txt
 django-relativedelta==2.0.0
@@ -131,9 +132,9 @@ django-sendfile2==0.7.2
     # via
     #   -r requirements/base.txt
     #   django-privates
-django-setup-configuration==0.11.0
+django-setup-configuration==0.13.0
     # via -r requirements/base.txt
-django-simple-certmanager==2.4.1
+django-simple-certmanager==4.0.0
     # via
     #   -r requirements/base.txt
     #   zgw-consumers
@@ -432,5 +433,5 @@ wrapt==1.17.2
     #   vcrpy
 yarl==1.20.1
     # via vcrpy
-zgw-consumers==1.1.0
+zgw-consumers==2.2.0
     # via -r requirements/base.txt

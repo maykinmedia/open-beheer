@@ -87,8 +87,10 @@ django-otp==1.6.0
     # via django-two-factor-auth
 django-phonenumber-field==8.0.0
     # via django-two-factor-auth
-django-privates==3.1.0
-    # via django-simple-certmanager
+django-privates==4.0.3
+    # via
+    #   django-simple-certmanager
+    #   zgw-consumers
 django-redis==5.4.0
     # via -r requirements/base.in
 django-relativedelta==2.0.0
@@ -97,11 +99,11 @@ django-rosetta==0.10.2
     # via -r requirements/base.in
 django-sendfile2==0.7.2
     # via django-privates
-django-setup-configuration==0.11.0
+django-setup-configuration==0.13.0
     # via
     #   -r requirements/base.in
     #   zgw-consumers
-django-simple-certmanager==2.4.1
+django-simple-certmanager==4.0.0
     # via zgw-consumers
 django-solo==2.4.0
     # via zgw-consumers
@@ -251,5 +253,5 @@ webauthn==2.5.2
     # via django-two-factor-auth
 wrapt==1.17.2
     # via elastic-apm
-zgw-consumers==1.1.0
+zgw-consumers==2.2.0
     # via -r requirements/base.in
