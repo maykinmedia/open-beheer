@@ -1090,14 +1090,16 @@ export interface components {
         };
         /** EigenschapSpecificatie */
         EigenschapSpecificatie: {
-            /** @description Het soort tekens waarmee waarden van de EIGENSCHAP kunnen worden vastgelegd.
+            /**
+             * @description Het soort tekens waarmee waarden van de EIGENSCHAP kunnen worden vastgelegd.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `tekst` - Tekst
              *     * `getal` - Getal
              *     * `datum` - Datum
-             *     * `datum_tijd` - Datum/tijd */
+             *     * `datum_tijd` - Datum/tijd
+             */
             formaat: components["schemas"]["FormaatEnum"];
             /** @description Het aantal karakters (lengte) waarmee waarden van de EIGENSCHAP worden vastgelegd. */
             lengte: string;
@@ -1110,14 +1112,16 @@ export interface components {
         };
         /** EigenschapSpecificatieRequest */
         EigenschapSpecificatieRequest: {
-            /** @description Het soort tekens waarmee waarden van de EIGENSCHAP kunnen worden vastgelegd.
+            /**
+             * @description Het soort tekens waarmee waarden van de EIGENSCHAP kunnen worden vastgelegd.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `tekst` - Tekst
              *     * `getal` - Getal
              *     * `datum` - Datum
-             *     * `datum_tijd` - Datum/tijd */
+             *     * `datum_tijd` - Datum/tijd
+             */
             formaat: components["schemas"]["FormaatEnum"];
             /** @description Het aantal karakters (lengte) waarmee waarden van de EIGENSCHAP worden vastgelegd. */
             lengte: string;
@@ -1225,7 +1229,8 @@ export interface components {
             zaaktypeinformatieobjecttypen: components["schemas"]["ZaakTypeInformatieObjectTypeWithUUID"][];
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
-            /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
+            /**
+             * @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -1236,19 +1241,22 @@ export interface components {
              *     * `vertrouwelijk` - Vertrouwelijk
              *     * `confidentieel` - Confidentieel
              *     * `geheim` - Geheim
-             *     * `zeer_geheim` - Zeer geheim */
+             *     * `zeer_geheim` - Zeer geheim
+             */
             vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
             /** @description Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype. */
             doel: string;
             /** @description Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE. */
             aanleiding: string;
-            /** @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
+            /**
+             * @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `inkomend` - Inkomend
              *     * `intern` - Intern
-             *     * `uitgaand` - Uitgaand */
+             *     * `uitgaand` - Uitgaand
+             */
             indicatieInternOfExtern: components["schemas"]["IndicatieInternOfExternEnum"];
             /** @description Werkwoord dat hoort bij de handeling die de initiator verricht bij dit zaaktype. Meestal 'aanvragen', 'indienen' of 'melden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_initiator */
             handelingInitiator: string;
@@ -1356,7 +1364,8 @@ export interface components {
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
-            /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
+            /**
+             * @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -1367,19 +1376,22 @@ export interface components {
              *     * `vertrouwelijk` - Vertrouwelijk
              *     * `confidentieel` - Confidentieel
              *     * `geheim` - Geheim
-             *     * `zeer_geheim` - Zeer geheim */
+             *     * `zeer_geheim` - Zeer geheim
+             */
             vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
             /** @description Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype. */
             doel: string;
             /** @description Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE. */
             aanleiding: string;
-            /** @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
+            /**
+             * @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `inkomend` - Inkomend
              *     * `intern` - Intern
-             *     * `uitgaand` - Uitgaand */
+             *     * `uitgaand` - Uitgaand
+             */
             indicatieInternOfExtern: components["schemas"]["IndicatieInternOfExternEnum"];
             /** @description Werkwoord dat hoort bij de handeling die de initiator verricht bij dit zaaktype. Meestal 'aanvragen', 'indienen' of 'melden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_initiator */
             handelingInitiator: string;
@@ -1492,7 +1504,8 @@ export interface components {
             catalogus: string;
             /** @description Omschrijving van de aard van informatieobjecten van dit INFORMATIEOBJECTTYPE. */
             omschrijving: string;
-            /** @description Aanduiding van de mate waarin informatieobjecten van dit INFORMATIEOBJECTTYPE voor de openbaarheid bestemd zijn.
+            /**
+             * @description Aanduiding van de mate waarin informatieobjecten van dit INFORMATIEOBJECTTYPE voor de openbaarheid bestemd zijn.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -1503,7 +1516,8 @@ export interface components {
              *     * `vertrouwelijk` - Vertrouwelijk
              *     * `confidentieel` - Confidentieel
              *     * `geheim` - Geheim
-             *     * `zeer_geheim` - Zeer geheim */
+             *     * `zeer_geheim` - Zeer geheim
+             */
             vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
             /**
              * Format: date
@@ -1540,7 +1554,8 @@ export interface components {
             catalogus: string;
             /** @description Omschrijving van de aard van informatieobjecten van dit INFORMATIEOBJECTTYPE. */
             omschrijving: string;
-            /** @description Aanduiding van de mate waarin informatieobjecten van dit INFORMATIEOBJECTTYPE voor de openbaarheid bestemd zijn.
+            /**
+             * @description Aanduiding van de mate waarin informatieobjecten van dit INFORMATIEOBJECTTYPE voor de openbaarheid bestemd zijn.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -1551,7 +1566,8 @@ export interface components {
              *     * `vertrouwelijk` - Vertrouwelijk
              *     * `confidentieel` - Confidentieel
              *     * `geheim` - Geheim
-             *     * `zeer_geheim` - Zeer geheim */
+             *     * `zeer_geheim` - Zeer geheim
+             */
             vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
             /**
              * Format: date
@@ -1589,7 +1605,8 @@ export interface components {
             catalogus: string;
             /** @description Omschrijving van de aard van informatieobjecten van dit INFORMATIEOBJECTTYPE. */
             omschrijving: string;
-            /** @description Aanduiding van de mate waarin informatieobjecten van dit INFORMATIEOBJECTTYPE voor de openbaarheid bestemd zijn.
+            /**
+             * @description Aanduiding van de mate waarin informatieobjecten van dit INFORMATIEOBJECTTYPE voor de openbaarheid bestemd zijn.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -1600,7 +1617,8 @@ export interface components {
              *     * `vertrouwelijk` - Vertrouwelijk
              *     * `confidentieel` - Confidentieel
              *     * `geheim` - Geheim
-             *     * `zeer_geheim` - Zeer geheim */
+             *     * `zeer_geheim` - Zeer geheim
+             */
             vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
             /**
              * Format: date
@@ -1968,7 +1986,8 @@ export interface components {
             };
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving?: string;
-            /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
+            /**
+             * @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -1979,19 +1998,22 @@ export interface components {
              *     * `vertrouwelijk` - Vertrouwelijk
              *     * `confidentieel` - Confidentieel
              *     * `geheim` - Geheim
-             *     * `zeer_geheim` - Zeer geheim */
+             *     * `zeer_geheim` - Zeer geheim
+             */
             vertrouwelijkheidaanduiding?: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
             /** @description Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype. */
             doel?: string;
             /** @description Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE. */
             aanleiding?: string;
-            /** @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
+            /**
+             * @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `inkomend` - Inkomend
              *     * `intern` - Intern
-             *     * `uitgaand` - Uitgaand */
+             *     * `uitgaand` - Uitgaand
+             */
             indicatieInternOfExtern?: components["schemas"]["IndicatieInternOfExternEnum"];
             /** @description Werkwoord dat hoort bij de handeling die de initiator verricht bij dit zaaktype. Meestal 'aanvragen', 'indienen' of 'melden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_initiator */
             handelingInitiator?: string;
@@ -2488,7 +2510,8 @@ export interface components {
             zaaktype: string;
             /** @description Omschrijving van de aard van de ROL. */
             omschrijving: string;
-            /** @description Algemeen gehanteerde omschrijving van de aard van de ROL.
+            /**
+             * @description Algemeen gehanteerde omschrijving van de aard van de ROL.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -2499,7 +2522,8 @@ export interface components {
              *     * `initiator` - (Initiator) Aanleiding geven tot de start van een zaak ..
              *     * `klantcontacter` - (Klantcontacter) Het eerste aanspreekpunt zijn voor vragen van burgers en bedrijven ..
              *     * `zaakcoordinator` - (Zaakcoördinator) Er voor zorg dragen dat de behandeling van de zaak in samenhang uitgevoerd wordt conform de daarover gemaakte afspraken.
-             *     * `mede_initiator` - (Mede-initiator)  */
+             *     * `mede_initiator` - (Mede-initiator)
+             */
             omschrijvingGeneriek: components["schemas"]["OmschrijvingGeneriekEnum"];
             /** @default null */
             url: string | null;
@@ -2522,7 +2546,8 @@ export interface components {
             zaaktype: string;
             /** @description Omschrijving van de aard van de ROL. */
             omschrijving: string;
-            /** @description Algemeen gehanteerde omschrijving van de aard van de ROL.
+            /**
+             * @description Algemeen gehanteerde omschrijving van de aard van de ROL.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -2533,7 +2558,8 @@ export interface components {
              *     * `initiator` - (Initiator) Aanleiding geven tot de start van een zaak ..
              *     * `klantcontacter` - (Klantcontacter) Het eerste aanspreekpunt zijn voor vragen van burgers en bedrijven ..
              *     * `zaakcoordinator` - (Zaakcoördinator) Er voor zorg dragen dat de behandeling van de zaak in samenhang uitgevoerd wordt conform de daarover gemaakte afspraken.
-             *     * `mede_initiator` - (Mede-initiator)  */
+             *     * `mede_initiator` - (Mede-initiator)
+             */
             omschrijvingGeneriek: components["schemas"]["OmschrijvingGeneriekEnum"];
             /** @default null */
             beginGeldigheid: string | null;
@@ -2549,7 +2575,8 @@ export interface components {
             zaaktype: string;
             /** @description Omschrijving van de aard van de ROL. */
             omschrijving: string;
-            /** @description Algemeen gehanteerde omschrijving van de aard van de ROL.
+            /**
+             * @description Algemeen gehanteerde omschrijving van de aard van de ROL.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -2560,7 +2587,8 @@ export interface components {
              *     * `initiator` - (Initiator) Aanleiding geven tot de start van een zaak ..
              *     * `klantcontacter` - (Klantcontacter) Het eerste aanspreekpunt zijn voor vragen van burgers en bedrijven ..
              *     * `zaakcoordinator` - (Zaakcoördinator) Er voor zorg dragen dat de behandeling van de zaak in samenhang uitgevoerd wordt conform de daarover gemaakte afspraken.
-             *     * `mede_initiator` - (Mede-initiator)  */
+             *     * `mede_initiator` - (Mede-initiator)
+             */
             omschrijvingGeneriek: components["schemas"]["OmschrijvingGeneriekEnum"];
             /** @default null */
             url: string | null;
@@ -2899,13 +2927,15 @@ export interface components {
             informatieobjecttype: string;
             /** @description Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen het ZAAKTYPE. */
             volgnummer: number;
-            /** @description Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+            /**
+             * @description Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `inkomend` - Inkomend
              *     * `intern` - Intern
-             *     * `uitgaand` - Uitgaand */
+             *     * `uitgaand` - Uitgaand
+             */
             richting: components["schemas"]["RichtingEnum"];
             /** @default null */
             url: string | null;
@@ -2927,13 +2957,15 @@ export interface components {
             informatieobjecttype: string;
             /** @description Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen het ZAAKTYPE. */
             volgnummer: number;
-            /** @description Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+            /**
+             * @description Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `inkomend` - Inkomend
              *     * `intern` - Intern
-             *     * `uitgaand` - Uitgaand */
+             *     * `uitgaand` - Uitgaand
+             */
             richting: components["schemas"]["RichtingEnum"];
             /** @default null */
             statustype: string | null;
@@ -2952,13 +2984,15 @@ export interface components {
             informatieobjecttype: string;
             /** @description Uniek volgnummer van het ZAAK-INFORMATIEOBJECTTYPE binnen het ZAAKTYPE. */
             volgnummer: number;
-            /** @description Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
+            /**
+             * @description Aanduiding van de richting van informatieobjecten van het gerelateerde INFORMATIEOBJECTTYPE bij zaken van het gerelateerde ZAAKTYPE.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `inkomend` - Inkomend
              *     * `intern` - Intern
-             *     * `uitgaand` - Uitgaand */
+             *     * `uitgaand` - Uitgaand
+             */
             richting: components["schemas"]["RichtingEnum"];
             /** @default null */
             url: string | null;
@@ -2973,7 +3007,8 @@ export interface components {
         ZaakTypeRequest: {
             /** @description Omschrijving van de aard van ZAAKen van het ZAAKTYPE. */
             omschrijving: string;
-            /** @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
+            /**
+             * @description Aanduiding van de mate waarin zaakdossiers van ZAAKen van dit ZAAKTYPE voor de openbaarheid bestemd zijn. Indien de zaak bij het aanmaken geen vertrouwelijkheidaanduiding krijgt, dan wordt deze waarde gezet.
              *
              *     Uitleg bij mogelijke waarden:
              *
@@ -2984,19 +3019,22 @@ export interface components {
              *     * `vertrouwelijk` - Vertrouwelijk
              *     * `confidentieel` - Confidentieel
              *     * `geheim` - Geheim
-             *     * `zeer_geheim` - Zeer geheim */
+             *     * `zeer_geheim` - Zeer geheim
+             */
             vertrouwelijkheidaanduiding: components["schemas"]["VertrouwelijkheidaanduidingEnum"];
             /** @description Een omschrijving van hetgeen beoogd is te bereiken met een zaak van dit zaaktype. */
             doel: string;
             /** @description Een omschrijving van de gebeurtenis die leidt tot het starten van een ZAAK van dit ZAAKTYPE. */
             aanleiding: string;
-            /** @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
+            /**
+             * @description Een aanduiding waarmee onderscheid wordt gemaakt tussen ZAAKTYPEn die Intern respectievelijk Extern geïnitieerd worden. Indien van beide sprake kan zijn, dan prevaleert de externe initiatie.
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `inkomend` - Inkomend
              *     * `intern` - Intern
-             *     * `uitgaand` - Uitgaand */
+             *     * `uitgaand` - Uitgaand
+             */
             indicatieInternOfExtern: components["schemas"]["IndicatieInternOfExternEnum"];
             /** @description Werkwoord dat hoort bij de handeling die de initiator verricht bij dit zaaktype. Meestal 'aanvragen', 'indienen' of 'melden'. Zie ook het IOB model op https://www.gemmaonline.nl/index.php/Imztc_2.1/doc/attribuutsoort/zaaktype.handeling_initiator */
             handelingInitiator: string;
@@ -3084,13 +3122,15 @@ export interface components {
         ZaakTypenRelatie: {
             /** @description URL referentie naar het gerelateerde zaaktype, mogelijks in een extern ZTC. */
             zaaktype: string;
-            /** @description Omschrijving van de aard van de relatie van zaken van het ZAAKTYPE tot zaken van het andere ZAAKTYPE
+            /**
+             * @description Omschrijving van de aard van de relatie van zaken van het ZAAKTYPE tot zaken van het andere ZAAKTYPE
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `vervolg` - Vervolg
              *     * `bijdrage` - Bijdrage
-             *     * `onderwerp` - Onderwerp */
+             *     * `onderwerp` - Onderwerp
+             */
             aardRelatie: components["schemas"]["AardRelatieEnum"];
             /** @default null */
             toelichting: string | null;
@@ -3099,13 +3139,15 @@ export interface components {
         ZaakTypenRelatieRequest: {
             /** @description URL referentie naar het gerelateerde zaaktype, mogelijks in een extern ZTC. */
             zaaktype: string;
-            /** @description Omschrijving van de aard van de relatie van zaken van het ZAAKTYPE tot zaken van het andere ZAAKTYPE
+            /**
+             * @description Omschrijving van de aard van de relatie van zaken van het ZAAKTYPE tot zaken van het andere ZAAKTYPE
              *
              *     Uitleg bij mogelijke waarden:
              *
              *     * `vervolg` - Vervolg
              *     * `bijdrage` - Bijdrage
-             *     * `onderwerp` - Onderwerp */
+             *     * `onderwerp` - Onderwerp
+             */
             aardRelatie: components["schemas"]["AardRelatieEnum"];
             /** @default null */
             toelichting: string | null;
