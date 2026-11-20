@@ -67,7 +67,7 @@ def test_scenario_edit_related_statustypen(page: Page, runner: GherkinRunner):
 
     _.when.user_clicks_on_button(page, "Opslaan")
     _.then.page_should_contain_text(page, "Status 1", index=1)
-    _.then.page_should_contain_text(page, "Bijgewerkt")
+    _.then.page_should_contain_text(page, "Bijgewerkt", index=1)
     _.then.page_should_contain_text(page, "Status 3", index=1)
 
     # Remove

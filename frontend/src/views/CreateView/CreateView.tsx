@@ -104,7 +104,6 @@ export function CreateView<T extends TemplateBase = TemplateBase>({
             validate={onValidate}
             onSubmit={(event, data) => {
               const values = valuesState?.waarden || {};
-              if ("_expand" in values) delete values._expand;
               onSubmit(event, { ...values, ...data });
             }}
           />

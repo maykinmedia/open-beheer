@@ -1,5 +1,5 @@
 import { debounce } from "@maykin-ui/client-common";
-import { useRef } from "react";
+import { useState } from "react";
 
 /**
  * Creates a debounced version of the provided function.
@@ -15,6 +15,6 @@ export function useDebounce<T extends (...args: Parameters<T>) => void>(
   fn: T,
   timeout?: number,
 ) {
-  const debouncedRef = useRef(debounce(fn, timeout));
-  return debouncedRef.current;
+  const [debouncedFn] = useState(() => debounce(fn, timeout));
+  return debouncedFn;
 }

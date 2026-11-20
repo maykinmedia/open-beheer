@@ -10,13 +10,12 @@ import {
   ToolbarItem,
 } from "@maykin-ui/admin-ui";
 import { ucFirst } from "@maykin-ui/client-common";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { useLoaderData } from "react-router";
 import { useBreadcrumbItems, useCombinedSearchParams } from "~/hooks";
 import { useSubmitAction } from "~/hooks/useSubmitAction";
 import { convertFieldsetsToTabConfig } from "~/lib";
 
-import { TabConfig } from "../zaaktype";
 import {
   BackendIOT,
   InformatieObjectTypeAction,
@@ -33,10 +32,8 @@ export function InformatieObjectTypePage() {
   const isEditing = Boolean(combinedSearchParams.get("editing"));
   const [newIOTData, setNewIOTData] = useState<PatchedBackendIOT>(result);
 
-  const fieldSetConfigs = useMemo<TabConfig<PatchedBackendIOT>[]>(
-    convertFieldsetsToTabConfig<PatchedBackendIOT>(fieldsets),
-    [JSON.stringify([fields, fieldsets])],
-  );
+  const fieldSetConfigs =
+    convertFieldsetsToTabConfig<PatchedBackendIOT>(fieldsets)();
 
   const onToggleEditOn = useCallback<React.MouseEventHandler>(() => {
     submitAction({

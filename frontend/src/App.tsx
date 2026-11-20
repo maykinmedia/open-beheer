@@ -86,8 +86,7 @@ function App() {
 
   // Determine whether we should render the base UI.
   const currentMatchHandle = currentMatch.handle as
-    | Record<string, unknown>
-    | undefined;
+    Record<string, unknown> | undefined;
   const hideUi = currentMatchHandle?.hideUi;
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { FormField, FormValidator, validateForm } from "@maykin-ui/admin-ui";
 import { invariant } from "@maykin-ui/client-common/assert";
-import React, { FormEvent, useCallback, useContext, useEffect } from "react";
+import React, { FormEvent, useCallback, useContext } from "react";
 import { useActionData, useLoaderData, useParams } from "react-router";
 import { CATALOGUS_PARAM, OBContext, SERVICE_PARAM } from "~/App.tsx";
 import { useSubmitAction } from "~/hooks/useSubmitAction.tsx";
@@ -32,25 +32,15 @@ export function ZaaktypeCreatePage() {
   )?.value;
 
   const actionData = useActionData() as components["schemas"]["ZGWError"];
+  const actionNonFieldErrors = actionData?.invalidParams?.length
+    ? actionData.invalidParams.map(
+        (error) => `Het veld "${error.name}" is niet correct: ${error.reason}`,
+      )
+    : [];
 
-  const [nonFieldErrors, setNonFieldErrors] = React.useState<
-    string[] | undefined
-  >();
+  const [nonFieldErrors, setNonFieldErrors] = React.useState<string[]>([]);
 
   const [isValidState, setIsValidState] = React.useState(false);
-
-  useEffect(() => {
-    if (actionData?.invalidParams?.length) {
-      setNonFieldErrors(
-        actionData.invalidParams.map(
-          (error) =>
-            `Het veld "${error.name}" is niet correct: ${error.reason}`,
-        ),
-      );
-    } else {
-      setNonFieldErrors(undefined);
-    }
-  }, [actionData]);
 
   const handleValidate = useCallback<FormValidator>(
     (values: object, fields: FormField[], validators) => {
@@ -108,7 +98,7 @@ export function ZaaktypeCreatePage() {
     <CreateView<ZaaktypeTemplate>
       formFields={ZAAKTYPE_CREATE_BASE_FIELDS}
       modalText={modalText}
-      nonFieldErrors={nonFieldErrors}
+      nonFieldErrors={[...actionNonFieldErrors, ...nonFieldErrors]}
       resourceName="zaaktype"
       templates={templates}
       onValidate={handleValidate}

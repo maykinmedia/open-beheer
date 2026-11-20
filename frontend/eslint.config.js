@@ -1,6 +1,6 @@
 import { ignoreBuildArtifacts } from "@maykinmedia/eslint-config";
 import maykin from "@maykinmedia/eslint-config/recommended";
-import storybook from "eslint-plugin-storybook";
+import { configs } from "eslint-plugin-storybook";
 import eslint_plugin_tsdoc from "eslint-plugin-tsdoc";
 
 const config = [
@@ -14,7 +14,7 @@ const config = [
       "src/types/selectielijst.d.ts",
     ],
   },
-  ...storybook.configs["flat/recommended"],
+  ...configs["flat/recommended"],
   ...maykin,
   {
     plugins: {
