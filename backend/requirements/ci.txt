@@ -170,12 +170,13 @@ django-phonenumber-field==8.0.0
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django-two-factor-auth
-django-privates==3.1.0
+django-privates==4.0.3
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django-simple-certmanager
+    #   zgw-consumers
 django-redis==5.4.0
     # via
     #   -c requirements/base.txt
@@ -198,12 +199,12 @@ django-sendfile2==0.7.2
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django-privates
-django-setup-configuration==0.11.0
+django-setup-configuration==0.13.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
-django-simple-certmanager==2.4.1
+django-simple-certmanager==4.0.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
@@ -732,7 +733,7 @@ yarl==1.20.1
     # via
     #   -r requirements/type-checking.txt
     #   vcrpy
-zgw-consumers==1.1.0
+zgw-consumers==2.2.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
