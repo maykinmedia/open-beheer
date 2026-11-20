@@ -22,23 +22,23 @@ boltons==25.0.0
     #   glom
 cbor2==5.8.0
     # via webauthn
-certifi==2025.6.15
+certifi==2026.10.23
     # via
     #   elastic-apm
     #   requests
     #   sentry-sdk
-cffi==1.17.1
+cffi==2.1.1
     # via cryptography
 charset-normalizer==3.4.2
     # via requests
-cryptography==44.0.2
+cryptography==50.0.2
     # via
     #   django-simple-certmanager
     #   josepy
     #   mozilla-django-oidc
     #   pyopenssl
     #   webauthn
-django==5.2.12
+django==5.2.19
     # via
     #   -r requirements/base.in
     #   django-admin-index
@@ -109,7 +109,7 @@ django-structlog==9.1.1
     # via -r requirements/base.in
 django-two-factor-auth==1.17.0
     # via maykin-2fa
-djangorestframework==3.16.0
+djangorestframework==3.18.3
     # via
     #   -r requirements/base.in
     #   drf-spectacular
@@ -153,7 +153,7 @@ orderedmultidict==1.0.1
     # via furl
 phonenumberslite==8.13.55
     # via django-two-factor-auth
-pillow==11.1.0
+pillow==13.0.0
     # via -r requirements/base.in
 polib==1.2.0
     # via django-rosetta
@@ -169,9 +169,9 @@ pydantic-core==2.33.1
     # via pydantic
 pydantic-settings==2.9.1
     # via django-setup-configuration
-pyjwt==2.12.1
+pyjwt==2.15.1
     # via zgw-consumers
-pyopenssl==25.0.0
+pyopenssl==26.4.0
     # via webauthn
 pypng==0.20220715.0
     # via qrcode
@@ -220,7 +220,7 @@ six==1.17.0
     #   furl
     #   orderedmultidict
     #   python-dateutil
-sqlparse==0.5.3
+sqlparse==0.6.1
     # via django
 structlog==25.4.0
     # via django-structlog
@@ -240,7 +240,7 @@ typing-inspection==0.4.0
     #   pydantic-settings
 uritemplate==4.1.1
     # via drf-spectacular
-urllib3==2.6.3
+urllib3==2.8.0
     # via
     #   elastic-apm
     #   requests
