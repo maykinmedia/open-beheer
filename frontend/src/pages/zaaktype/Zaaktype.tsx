@@ -66,6 +66,8 @@ export function ZaaktypePage() {
   >({});
   useEffect(() => {
     if (!isEditing) {
+      // Explicitly respond to changes of isEditing in order to reset pending updates.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPendingUpdatesState(null);
       setActionsState({});
     }
@@ -98,10 +100,8 @@ export function ZaaktypePage() {
   );
 
   // Convert FieldSet[] to TabConfig[].
-  const fieldSetTabConfigs = useMemo<TabConfig<TargetType>[]>(
-    convertFieldsetsToTabConfig<TargetType>(fieldsets),
-    [JSON.stringify([fields, fieldsets])],
-  );
+  const fieldSetTabConfigs =
+    convertFieldsetsToTabConfig<TargetType>(fieldsets)();
 
   // Allow custom TabConfig's to override `fieldSetTabConfigs` (matches by `key`).
   const tabConfigs = useMemo<TabConfig<TargetType>[]>(

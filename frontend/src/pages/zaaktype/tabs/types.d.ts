@@ -20,8 +20,7 @@ export type TargetType = ZaaktypeLoaderData["result"];
  * The type a the primary tab.
  */
 export type TabConfig<T extends object> =
-  | AttributeGridTabConfig<T>
-  | DataGridTabConfig<T>;
+  AttributeGridTabConfig<T> | DataGridTabConfig<T>;
 
 type BaseTabConfig = {
   label: string;

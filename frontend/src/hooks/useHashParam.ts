@@ -61,14 +61,6 @@ export function useHashParam(
     [_getParams, _setHashParams],
   );
 
-  // Set the default value.
-  useEffect(() => {
-    const value = getValue();
-    if (value === null) {
-      setValue(defaultValue, true);
-    }
-  }, [key, getValue, setValue]);
-
   // Sync with external changes.
   useEffect(() => {
     const listener = () => {
@@ -80,5 +72,5 @@ export function useHashParam(
   }, []);
 
   const value = getValue();
-  return [value, setValue];
+  return [value ?? defaultValue, setValue];
 }

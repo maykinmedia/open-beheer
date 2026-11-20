@@ -96,6 +96,7 @@ export function useErrorsState<T extends object, A extends TypedAction>(
     // Only update, don't clear (automatically).
     // This prevents clearing errors on tab change.
     if (Object.keys(nonFieldErrorsByTab).length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNonFieldErrorsState(nonFieldErrorsByTab);
     }
   }, [nonFieldErrorsByTab]);
@@ -109,6 +110,7 @@ export function useErrorsState<T extends object, A extends TypedAction>(
     // Only update, don't clear (automatically).
     // This prevents clearing errors on tab change.
     if (Object.keys(relatedFieldErrorsByTab).length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRelatedFieldErrorsByTabState(relatedFieldErrorsByTab);
     }
   }, [relatedFieldErrorsByTab]);
@@ -122,12 +124,14 @@ export function useErrorsState<T extends object, A extends TypedAction>(
     // Only update, don't clear (automatically).
     // This prevents clearing errors on tab change.
     if (Object.keys(nonRelatedFieldErrorsByTab).length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNonRelatedFieldErrorsByTabState(nonRelatedFieldErrorsByTab);
     }
   }, [nonRelatedFieldErrorsByTab]);
 
   useEffect(() => {
     if (!searchParams.get("editing")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNonFieldErrorsState({});
       setNonRelatedFieldErrorsByTabState({});
       setRelatedFieldErrorsByTabState({});

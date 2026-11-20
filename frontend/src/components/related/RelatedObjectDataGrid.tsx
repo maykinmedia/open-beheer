@@ -106,25 +106,19 @@ export function RelatedObjectDataGrid<T extends object = object>({
   const serviceSlug = params[SERVICE_PARAM];
   invariant(serviceSlug, "serviceSlug must be provided!");
 
-  // Whether edit mode is active.
-  const [isEditingState, setIsEditingState] = useState(isEditing);
-  useEffect(() => {
-    setIsEditingState(isEditing);
-  }, [isEditing]);
-
   // Typed fields, may contain overrides based on presentational need.
   // Expand name is normalized.
   const typedFields = useMemo<TypedField<T & { actions: JSX.Element }>[]>(
     () => [
       ...fields.map((field) => ({
         ...field,
-        editable: isEditingState ? field.editable : false,
+        editable: isEditing ? field.editable : false,
         name: String(field.name).split(".").pop() as keyof T,
         type: field.type === "text" ? "string" : field.type,
       })),
       { name: "actions", type: "jsx", editable: false, sortable: false },
     ],
-    [fields, isEditingState],
+    [fields, isEditing],
   );
 
   // Add actions state.
@@ -145,6 +139,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
   // The object list state.
   const [objectListState, setObjectListState] = useState(objectList);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setObjectListState([...objectList]);
     setCreateActionsState([]);
     setUpdateActionsState(new Array(objectList.length).fill(null));
@@ -307,6 +302,55 @@ export function RelatedObjectDataGrid<T extends object = object>({
     deleteActionsState,
     onActionsChange,
   ]);
+
+  // The objects to render, may include overrides and actions.
+  const displayedObjectList = useMemo<(T & { actions: JSX.Element })[]>(() => {
+    return objectListState.map((row) => {
+      const overrides: Partial<T> = {};
+      if (!isEditing) {
+        for (const key in row) {
+          const field = typedFields.find(
+            (typedFields) => typedFields.name === key,
+          );
+          const options = field?.options;
+          if (!options || typeof options === "function") continue;
+
+          const value = row[key];
+          const option = options.find((option) => option.value === value);
+          if (!option) continue;
+
+          // @ts-expect-error - R[key] may not be string.
+          overrides[key] = option.label;
+        }
+      }
+
+      return {
+        ...row,
+        ...overrides,
+        actions: (
+          <Toolbar pad={false}>
+            {showHookButton && (
+              <Button
+                disabled={isLoading || !isEditing}
+                title="Meer velden"
+                onClick={() => handleHook(row)}
+              >
+                <Outline.SquaresPlusIcon />
+              </Button>
+            )}
+            <Button
+              disabled={isLoading || !isEditing}
+              variant="danger"
+              title="Verwijderen"
+              onClick={() => handleDelete(row)}
+            >
+              <Outline.TrashIcon />
+            </Button>
+          </Toolbar>
+        ),
+      };
+    });
+  }, [objectListState, isEditing, typedFields, showHookButton]);
 
   /**
    * Handles editing a specific row in the `objectList`.
@@ -568,55 +612,6 @@ export function RelatedObjectDataGrid<T extends object = object>({
     ],
   );
 
-  // The objects to render, may include overrides and actions.
-  const displayedObjectList = useMemo<(T & { actions: JSX.Element })[]>(() => {
-    return objectListState.map((row) => {
-      const overrides: Partial<T> = {};
-      if (!isEditingState) {
-        for (const key in row) {
-          const field = typedFields.find(
-            (typedFields) => typedFields.name === key,
-          );
-          const options = field?.options;
-          if (!options || typeof options === "function") continue;
-
-          const value = row[key];
-          const option = options.find((option) => option.value === value);
-          if (!option) continue;
-
-          // @ts-expect-error - R[key] may not be string.
-          overrides[key] = option.label;
-        }
-      }
-
-      return {
-        ...row,
-        ...overrides,
-        actions: (
-          <Toolbar pad={false}>
-            {showHookButton && (
-              <Button
-                disabled={isLoading || !isEditingState}
-                title="Meer velden"
-                onClick={() => handleHook(row)}
-              >
-                <Outline.SquaresPlusIcon />
-              </Button>
-            )}
-            <Button
-              disabled={isLoading || !isEditingState}
-              variant="danger"
-              title="Verwijderen"
-              onClick={() => handleDelete(row)}
-            >
-              <Outline.TrashIcon />
-            </Button>
-          </Toolbar>
-        ),
-      };
-    });
-  }, [objectListState, isEditingState, typedFields, showHookButton]);
-
   // Every item in `objectList` should have a record in [...updateActions, ...addActions], in other words:
   // every row has an actions (or null) attached to it based on its index.
   // This makes sure the list does not get out of sync.
@@ -629,8 +624,8 @@ export function RelatedObjectDataGrid<T extends object = object>({
   return (
     <>
       <DataGrid<T & { actions: JSX.Element }>
-        editable={isEditingState}
-        editing={isEditingState}
+        editable={isEditing}
+        editing={isEditing}
         errors={errors}
         decorate
         fields={typedFields}
@@ -640,7 +635,7 @@ export function RelatedObjectDataGrid<T extends object = object>({
         onEdit={handleEdit}
       />
 
-      {isEditingState && (
+      {isEditing && (
         <Button disabled={isLoading} variant="secondary" onClick={handleCreate}>
           <Outline.PlusIcon />
           Voeg toe

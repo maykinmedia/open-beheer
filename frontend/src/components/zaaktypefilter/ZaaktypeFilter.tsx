@@ -87,6 +87,7 @@ export function ZaaktypeFilter({
    * Maps the onSubmit of the Form to onSubmit.
    */
   const handleSubmit = useCallback(
+    // eslint-disable-next-line react-hooks/use-memo
     useDebounce((_: FormEvent, data: SerializedFormData = {}) => {
       const values = data as ZaaktypeFilterValues;
       onSubmit?.({
