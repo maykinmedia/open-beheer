@@ -301,7 +301,7 @@ python-decouple==3.8
     # via
     #   -r requirements/base.txt
     #   maykin-common
-python-dotenv==1.1.0
+python-dotenv==1.2.4
     # via
     #   -r requirements/base.txt
     #   pydantic-settings
@@ -380,7 +380,7 @@ types-requests==2.32.4.20250611
     # via
     #   djangorestframework-stubs
     #   maykin-common
-typing-extensions==4.14.0
+typing-extensions==4.16.0
     # via
     #   -r requirements/base.txt
     #   django-stubs

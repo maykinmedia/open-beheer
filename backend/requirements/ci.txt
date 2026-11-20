@@ -499,7 +499,7 @@ python-decouple==3.8
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   maykin-common
-python-dotenv==1.1.0
+python-dotenv==1.2.4
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
@@ -648,7 +648,7 @@ types-requests==2.32.4.20250611
     #   -r requirements/type-checking.txt
     #   djangorestframework-stubs
     #   maykin-common
-typing-extensions==4.14.0
+typing-extensions==4.16.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
