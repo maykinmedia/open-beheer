@@ -183,7 +183,7 @@ python-decouple==3.8
     # via
     #   -r requirements/base.in
     #   maykin-common
-python-dotenv==1.1.0
+python-dotenv==1.2.4
     # via
     #   -r requirements/base.in
     #   pydantic-settings
@@ -226,7 +226,7 @@ sqlparse==0.6.1
     # via django
 structlog==25.4.0
     # via django-structlog
-typing-extensions==4.14.0
+typing-extensions==4.16.0
     # via
     #   mozilla-django-oidc-db
     #   pydantic
