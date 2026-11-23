@@ -47,6 +47,16 @@ export async function request<T>(
   const url = queryString ? `${base}?${queryString}` : base;
   const csrfToken = getCookie("csrftoken");
 
+  if (!csrfToken) {
+    console.error("CSRF token missing!", {
+      cookieNames: document.cookie
+        .split(";")
+        .map((cookie) => cookie.trim().split("=")[0]),
+      hostname: window.location.hostname,
+      pathname: window.location.pathname,
+    });
+  }
+
   const response = await fetch(url, {
     credentials: "include",
     body: data ? JSON.stringify(data) : undefined,
