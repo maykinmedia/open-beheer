@@ -1,0 +1,170 @@
+[
+{
+    "model": "admin_index.appgroup",
+    "fields": {
+        "order": 0,
+        "translations": {
+            "en": "Accounts",
+            "nl": "Accounts"
+        },
+        "name": "Accounts",
+        "slug": "accounts",
+        "models": [
+            [
+                "accounts",
+                "user"
+            ],
+            [
+                "auth",
+                "group"
+            ],
+            [
+                "auth",
+                "permission"
+            ],
+            [
+                "otp_static",
+                "staticdevice"
+            ],
+            [
+                "otp_totp",
+                "totpdevice"
+            ],
+            [
+                "two_factor_webauthn",
+                "webauthndevice"
+            ]
+        ]
+    }
+},
+{
+    "model": "admin_index.appgroup",
+    "fields": {
+        "order": 1,
+        "translations": {
+            "en": "Logs",
+            "nl": "Logs"
+        },
+        "name": "Logs",
+        "slug": "logs",
+        "models": [
+            [
+                "axes",
+                "accessattempt"
+            ],
+            [
+                "axes",
+                "accessfailurelog"
+            ],
+            [
+                "axes",
+                "accesslog"
+            ]
+        ]
+    }
+},
+{
+    "model": "admin_index.appgroup",
+    "fields": {
+        "order": 2,
+        "translations": {
+            "en": "Configuration",
+            "nl": "Configuratie"
+        },
+        "name": "Configuratie",
+        "slug": "configuratie",
+        "models": [
+            [
+                "admin_index",
+                "appgroup"
+            ],
+            [
+                "config",
+                "apiconfig"
+            ],
+            [
+                "mozilla_django_oidc_db",
+                "oidcclient"
+            ],
+            [
+                "mozilla_django_oidc_db",
+                "oidcprovider"
+            ],
+            [
+                "simple_certmanager",
+                "certificate"
+            ],
+            [
+                "simple_certmanager",
+                "signingrequest"
+            ],
+            [
+                "zgw_consumers",
+                "nlxconfig"
+            ],
+            [
+                "zgw_consumers",
+                "service"
+            ]
+        ]
+    }
+},
+{
+    "model": "admin_index.appgroup",
+    "fields": {
+        "order": 3,
+        "translations": {
+            "en": "Useful links",
+            "nl": "Handige links"
+        },
+        "name": "Handige links",
+        "slug": "handige-links",
+        "models": []
+    }
+},
+{
+    "model": "admin_index.applink",
+    "fields": {
+        "order": 0,
+        "translations": {
+            "en": "API Documentation",
+            "nl": "API Documentatie"
+        },
+        "app_group": [
+            "handige-links"
+        ],
+        "name": "API Documentatie",
+        "link": "/api/docs/"
+    }
+},
+{
+    "model": "admin_index.applink",
+    "fields": {
+        "order": 1,
+        "translations": {
+            "en": "Documentation",
+            "nl": "Documentatie"
+        },
+        "app_group": [
+            "handige-links"
+        ],
+        "name": "Documentatie",
+        "link": "https://open-beheer.readthedocs.io/"
+    }
+},
+{
+    "model": "admin_index.applink",
+    "fields": {
+        "order": 2,
+        "translations": {
+            "en": "Github",
+            "nl": "Github"
+        },
+        "app_group": [
+            "handige-links"
+        ],
+        "name": "Github",
+        "link": "https://github.com/maykinmedia/open-beheer/"
+    }
+}
+]
