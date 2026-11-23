@@ -34,23 +34,22 @@ def _build_with_logging[**P, C: APIClient](build: Callable[P, C]) -> Callable[P,
 
         @wraps(_original_request)
         def logging_request(method: str | bytes, url: str | bytes, *args, **kwargs):
-            logger.debug(
-                f"{method} request",
+            with structlog.contextvars.bound_contextvars(
                 base_url=client.base_url,
-                url=url,
-                **kwargs,
-            )
-            with request_lock:
-                response = _original_request(method, url, *args, **kwargs)
-            logger.debug(
-                f"{method} response",
-                base_url=client.base_url,
-                path=url,
-                status=response.status_code,
-                etag=response.headers.get("etag"),
-                body=response.content,
-            )
-            return response
+                client=client,
+                method=method,
+                endpoint=url,
+            ):
+                logger.debug("request", **kwargs)
+                with request_lock:
+                    response = _original_request(method, url, *args, **kwargs)
+                logger.debug(
+                    "response",
+                    status=response.status_code,
+                    etag=response.headers.get("etag"),
+                    body=response.content,
+                )
+                return response
 
         client.request = logging_request
 

@@ -84,7 +84,7 @@ class MsgSpecExtension(OpenApiSerializerExtension):
             return bool(schema_components((target,)))
         except Exception as e:
             if isclass(target) and not isinstance(target, (Serializer, Field)):
-                logger.debug("msgspec can't make schema", target=target, exc_info=e)
+                logger.debug("msgspec_schema_failed", target=target, exc_info=e)
             return False
 
     def __init__(self, target):
@@ -188,7 +188,7 @@ class MsgSpecQueryParamsExtension(OpenApiFilterExtension):
 
         # Register any additional component needed for the schema of the query parameters
         for sub_name, sub_schema in components.items():
-            logger.debug("query_param sub_name", sub_name=sub_name)
+            logger.debug("register_query_param", sub_name=sub_name)
             sub_component = ResolvedComponent(
                 name=sub_name,
                 type=ResolvedComponent.SCHEMA,
@@ -216,18 +216,18 @@ def _sub_schemas(schema: MutableMapping) -> Iterator[MutableMapping]:  # noqa: C
     # adapted from
     # https://github.com/maykinmedia/django-common/blob/800f64d72e2cdd4ad062394e083e62c32ad66575/maykin_common/drf_spectacular/hooks.py
 
-    logger.debug("iterating sub_schemas", schema=schema)
+    logger.debug("iterate_sub_schema", schema=schema)
     match schema:
         # array schema type variants
         case {"type": Sequence() as types} if _is_type(types, "array"):
             if item_schema := schema.get("items"):
-                logger.debug("yield array item", item_schema=item_schema)
+                logger.debug("yield_array_item", item_schema=item_schema)
                 yield item_schema
                 yield from _sub_schemas(item_schema)
 
             if prefix_items := schema.get("prefixItems"):
                 for item_schema in prefix_items:
-                    logger.debug("yield array prefixItems", item_schema=item_schema)
+                    logger.debug("yield_array_prefixitems", item_schema=item_schema)
                     yield item_schema
                     yield from _sub_schemas(item_schema)
         # object schema type
@@ -237,7 +237,7 @@ def _sub_schemas(schema: MutableMapping) -> Iterator[MutableMapping]:  # noqa: C
         # any other actual schema that has a 'type' key. At this point, it cannot
         # be a container, as these have been handled before.
         case {"type": Sequence()} | {"$ref": str()}:
-            logger.debug("yield schema/ref", schema=schema)
+            logger.debug("yield_schema_ref", schema=schema)
             yield schema
         case {"oneOf": nested} | {"allOf": nested} | {"anyOf": nested}:
             for child in nested:
@@ -247,7 +247,7 @@ def _sub_schemas(schema: MutableMapping) -> Iterator[MutableMapping]:  # noqa: C
                 if isinstance(nested, MutableMapping):
                     yield from _sub_schemas(nested)
         case _:
-            logger.debug("not yielding", schema=schema)
+            logger.debug("not_yield", schema=schema)
 
 
 def _inline_ref_with_siblings[Schema: MutableMapping](
@@ -290,7 +290,7 @@ def post_process_hook(result: MutableMapping, *args, **kwargs):  # noqa: C901
 
     schema_objects = result.get("components", {}).get("schemas", {})
     if not schema_objects:
-        logger.debug("no OAS Schema Objects!")
+        logger.debug("schema_objects_not_found")
 
     for schema in chain(parameter_objects, _sub_schemas(schema_objects)):
         _cleanup_ref_title(schema, schema_objects)

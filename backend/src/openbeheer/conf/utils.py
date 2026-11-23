@@ -1,8 +1,4 @@
-import logging
-
 from sentry_sdk.integrations import DidNotEnable, django, redis
-
-logger = logging.getLogger(__name__)
 
 
 def get_sentry_integrations() -> list:
