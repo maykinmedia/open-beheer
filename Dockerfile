@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         git \
         libpq-dev \
+        # required for (log) routing support in uwsgi
+        libpcre3 \
+        libpcre3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -47,11 +50,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         mime-support \
         postgresql-client \
         gettext \
+        libpcre3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY ./backend/bin/docker_start.sh /start.sh
+COPY ./backend/bin/uwsgi.ini /uwsgi.ini
 
 RUN mkdir -p /app/log /app/media /app/src/openbeheer/static/
 

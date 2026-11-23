@@ -27,6 +27,7 @@ def setup_env():
     load_dotenv(dotenv_path)
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "openbeheer.conf.dev")
+    structlog.contextvars.bind_contextvars(source="app")
 
     monkeypatch_requests()
 
