@@ -7,3 +7,4 @@ This section is for deployment and infrastructure documentation.
    :maxdepth: 2
 
    setup-config
+   logging
