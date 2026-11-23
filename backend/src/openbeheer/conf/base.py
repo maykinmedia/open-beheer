@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Literal
 
 # Django-hijack (and Django-hijack-admin)
 from django.urls import reverse_lazy
@@ -7,6 +8,12 @@ from django.urls import reverse_lazy
 import sentry_sdk
 from maykin_common.branding import ProductDefinition
 from maykin_common.config import DocumentationParams, config
+from maykin_common.logging.config import (
+    logging_apps,
+    logging_formatters,
+    logging_middleware,
+    structlog_configure_defaults,
+)
 
 from .utils import get_sentry_integrations
 
@@ -125,7 +132,7 @@ INSTALLED_APPS = [
     "zgw_consumers",
     "simple_certmanager",
     "maykin_common",
-    "django_structlog",
+    *logging_apps,
     "django_setup_configuration",
     "privates",
     # Project applications.
@@ -138,6 +145,19 @@ INSTALLED_APPS = [
     "openbeheer.services",
 ]
 
+_log_requests_via_middleware = config(
+    "LOG_REQUESTS",
+    default=True,
+    documentation=DocumentationParams(
+        help_text=(
+            "Enable structured request logging via django-structlog middleware. "
+            "Logs method, path, status code, and duration for every request."
+        ),
+        group="Logging",
+    ),
+)
+_structlog_middleware = logging_middleware if _log_requests_via_middleware else []
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -145,6 +165,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    *_structlog_middleware,
     "maykin_2fa.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -226,31 +247,22 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="openbeheer@example.co
 # LOGGING
 #
 LOG_STDOUT = config("LOG_STDOUT", default=False)
-
+LOG_FORMAT_CONSOLE: Literal["json", "plain_console"] = config(
+    "LOG_FORMAT_CONSOLE", default="json"
+)
 LOGGING_DIR = BASE_DIR / "log"
+LOG_LEVEL = config("LOG_LEVEL", default="INFO")
+
+_default_handler = "json_file" if not LOG_STDOUT else "console"
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "%(asctime)s %(levelname)s %(name)s %(module)s %(process)d %(thread)d  %(message)s"
-        },
-        "timestamped": {"format": "%(asctime)s %(levelname)s %(name)s  %(message)s"},
-        "simple": {"format": "%(levelname)s  %(message)s"},
-        "performance": {
-            "format": "%(asctime)s %(process)d | %(thread)d | %(message)s",
-        },
-    },
+    "formatters": logging_formatters,
     "filters": {
         "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
     },
     "handlers": {
-        "mail_admins": {
-            "level": "ERROR",
-            "filters": ["require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler",
-        },
         "null": {
             "level": "DEBUG",
             "class": "logging.NullHandler",
@@ -258,51 +270,44 @@ LOGGING = {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
-            "formatter": "timestamped",
+            "formatter": LOG_FORMAT_CONSOLE,
         },
-        "django": {
+        "json_file": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": LOGGING_DIR / "django.log",
-            "formatter": "verbose",
-            "maxBytes": 1024 * 1024 * 10,  # 10 MB
-            "backupCount": 10,
-        },
-        "project": {
-            "level": "DEBUG",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": LOGGING_DIR / "openbeheer.log",
-            "formatter": "verbose",
-            "maxBytes": 1024 * 1024 * 10,  # 10 MB
-            "backupCount": 10,
-        },
-        "performance": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": LOGGING_DIR / "performance.log",
-            "formatter": "performance",
+            "filename": LOGGING_DIR / "application.jsonl",
+            "formatter": "json",
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 10,
         },
     },
     "loggers": {
         "openbeheer": {
-            "handlers": ["project"] if not LOG_STDOUT else ["console"],
-            "level": "INFO",
+            "handlers": [_default_handler],
+            "level": LOG_LEVEL,
             "propagate": True,
         },
         "django.request": {
-            "handlers": ["django"] if not LOG_STDOUT else ["console"],
+            "handlers": [_default_handler],
             "level": "ERROR",
             "propagate": True,
         },
-        "django.template": {
+        # suppress django.server request logs because those are already emitted by
+        # django-structlog middleware
+        "django.server": {
             "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django_structlog": {
+            "handlers": [_default_handler],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
     },
 }
+
+structlog_configure_defaults()
 
 #
 # AUTH settings - user accounts, passwords, backends...
@@ -678,6 +683,10 @@ STORAGES = {
 SENDFILE_ROOT = STORAGES["privates"]["OPTIONS"]["location"]
 SENDFILE_URL = STORAGES["privates"]["OPTIONS"]["base_url"]
 
+#
+# DJANGO-STRUCTLOG
+#
+DJANGO_STRUCTLOG_IP_LOGGING_ENABLED = False
 
 # TODO: This ought to be configurable per ZTC Service... But not in a way that
 # hits the db for every deserialise of each object.

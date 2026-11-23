@@ -218,7 +218,7 @@ jsonschema-specifications==2024.10.1
     #   jsonschema
 maykin-2fa==1.0.2
     # via -r requirements/base.txt
-maykin-common==0.20.1
+maykin-common==0.23.0
     # via
     #   -r requirements/base.txt
     #   -r requirements/type-checking.in

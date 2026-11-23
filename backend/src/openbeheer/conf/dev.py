@@ -18,6 +18,10 @@ os.environ.setdefault("DB_PASSWORD", "openbeheer")
 
 os.environ.setdefault("ENVIRONMENT", "development")
 
+os.environ.setdefault("LOG_STDOUT", "1")
+os.environ.setdefault("LOG_FORMAT_CONSOLE", "plain_console")
+os.environ.setdefault("LOG_LEVEL", "DEBUG")
+
 from .base import *  # noqa isort:skip
 
 # Feel free to switch dev to sqlite3 for simple projects,
@@ -30,25 +34,15 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 LOGGING["loggers"].update(
     {
-        "openbeheer": {
-            "handlers": ["console"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
         "django": {
             "handlers": ["console"],
             "level": "DEBUG",
             "propagate": True,
         },
         "django.db.backends": {
-            "handlers": ["django"],
+            "handlers": ["json_file"],
             "level": "DEBUG",
             "propagate": False,
-        },
-        "performance": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": True,
         },
         "vcr": {
             "handlers": ["console"],
@@ -60,7 +54,7 @@ LOGGING["loggers"].update(
         # Autoreload logs excessively, turn it down a bit.
         #
         "django.utils.autoreload": {
-            "handlers": ["django"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
