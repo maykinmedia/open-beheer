@@ -1,4 +1,4 @@
-import logging
+import logging  # noqa: TID251 - only used for the log levels
 
 from sentry_sdk.integrations import DidNotEnable, django, redis
 from sentry_sdk.integrations.logging import LoggingIntegration

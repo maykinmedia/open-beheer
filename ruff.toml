@@ -35,6 +35,9 @@ select = [
     "N",
     # isort
     "I",
+    # tidy-imports
+    "TID251",
+    "TID253",
 ]
 ignore = [
     "E501", # line too long
@@ -59,3 +62,6 @@ section-order = [
     "first-party",
     "local-folder",
 ]
+
+[lint.flake8-tidy-imports.banned-api]
+"logging".msg = "Use `structlog.stdlib.get_logger(__name__)` instead of the stdlib logging module."
