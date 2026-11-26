@@ -135,6 +135,7 @@ INSTALLED_APPS = [
     *logging_apps,
     "django_setup_configuration",
     "privates",
+    "log_outgoing_requests",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
@@ -247,6 +248,7 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="openbeheer@example.co
 # LOGGING
 #
 LOG_STDOUT = config("LOG_STDOUT", default=False)
+LOG_OUTGOING_REQUESTS = config("LOG_OUTGOING_REQUESTS", default=False)
 LOG_FORMAT_CONSOLE: Literal["json", "plain_console"] = config(
     "LOG_FORMAT_CONSOLE", default="json"
 )
@@ -280,6 +282,12 @@ LOGGING = {
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 10,
         },
+        "save_outgoing_requests": {
+            "level": "DEBUG",
+            "()": "log_outgoing_requests.handlers.outgoing_requests_handler_factory",
+            "buffer_size": 3,  # batch size of log records to write in one go
+            "flush_interval": 15.0,  # in seconds
+        },
     },
     "loggers": {
         "openbeheer": {
@@ -303,6 +311,13 @@ LOGGING = {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": True,
+        },
+        "log_outgoing_requests": {
+            "handlers": (
+                ["console", "save_outgoing_requests"] if LOG_OUTGOING_REQUESTS else []
+            ),
+            "level": "DEBUG",
+            "propagate": False,
         },
         "django_structlog": {
             "handlers": [_default_handler],
@@ -692,6 +707,22 @@ SENDFILE_URL = STORAGES["privates"]["OPTIONS"]["base_url"]
 # DJANGO-STRUCTLOG
 #
 DJANGO_STRUCTLOG_IP_LOGGING_ENABLED = False
+
+#
+# Django-log-outgoing-requests
+#
+LOG_OUTGOING_REQUESTS_DB_SAVE = config("LOG_OUTGOING_REQUESTS_DB_SAVE", default=False)
+LOG_OUTGOING_REQUESTS_DB_SAVE_BODY = config(
+    "LOG_OUTGOING_REQUESTS_DB_SAVE_BODY", default=False
+)
+LOG_OUTGOING_REQUESTS_EMIT_BODY = config(
+    "LOG_OUTGOING_REQUESTS_EMIT_BODY", default=False
+)
+LOG_OUTGOING_REQUESTS_MAX_CONTENT_LENGTH = 524_288  # 0.5MB
+LOG_OUTGOING_REQUESTS_MAX_AGE = config("LOG_OUTGOING_REQUESTS_MAX_AGE", default=7)
+LOG_OUTGOING_REQUESTS_RESET_DB_SAVE_AFTER = None  # because celery is not configured
+LOG_OUTGOING_REQUESTS_HANDLER_USE_QUEUE = True
+LOG_OUTGOING_REQUESTS_HANDLER_ON_ERROR = sentry_sdk.capture_exception
 
 # TODO: This ought to be configurable per ZTC Service... But not in a way that
 # hits the db for every deserialise of each object.

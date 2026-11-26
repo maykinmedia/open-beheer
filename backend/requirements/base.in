@@ -9,6 +9,7 @@ django ~= 5.2
 django-admin-index
 django-axes[ipware]
 django-hijack
+django-log-outgoing-requests
 django-redis
 django-rosetta
 django-structlog

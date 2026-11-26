@@ -94,10 +94,12 @@ django==5.2.19
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   django-admin-index
+    #   django-appconf
     #   django-axes
     #   django-formtools
     #   django-hijack
     #   django-jsonform
+    #   django-log-outgoing-requests
     #   django-otp
     #   django-phonenumber-field
     #   django-privates
@@ -124,6 +126,12 @@ django-admin-index==4.0.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
+django-appconf==1.2.0
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   -r requirements/type-checking.txt
+    #   django-log-outgoing-requests
 django-axes==7.0.2
     # via
     #   -c requirements/base.txt
@@ -152,6 +160,11 @@ django-jsonform==2.23.2
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   mozilla-django-oidc-db
+django-log-outgoing-requests==0.9.1
+    # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
+    #   -r requirements/type-checking.txt
 django-ordered-model==3.7.4
     # via
     #   -c requirements/base.txt
@@ -215,6 +228,7 @@ django-solo==2.4.0
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
+    #   django-log-outgoing-requests
     #   zgw-consumers
 django-structlog==9.1.1
     # via
@@ -449,7 +463,10 @@ pydantic-settings==2.9.1
     #   django-setup-configuration
 pygments==2.21.0
     # via
+    #   -c requirements/base.txt
+    #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
+    #   django-log-outgoing-requests
     #   pytest
     #   sphinx
 pyjwt==2.15.1
@@ -548,6 +565,7 @@ requests==2.34.2
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   ape-pie
+    #   django-log-outgoing-requests
     #   django-rosetta
     #   djangorestframework-stubs
     #   maykin-common
@@ -654,6 +672,7 @@ typing-extensions==4.16.0
     #   -r requirements/base.txt
     #   -r requirements/type-checking.txt
     #   beautifulsoup4
+    #   django-log-outgoing-requests
     #   django-stubs
     #   django-stubs-ext
     #   djangorestframework-stubs
