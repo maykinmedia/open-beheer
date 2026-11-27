@@ -27,9 +27,10 @@ export async function request<T>(
   signal?: AbortSignal,
 ): Promise<T> {
   // For "mutating" methods, update CSRF token.
-  if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-    await ensureCSRFToken();
-  }
+  const isMutating = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
+  const csrfToken = isMutating
+    ? await ensureCSRFToken()
+    : getCookie("csrftoken");
 
   // Filter undefined params.
   let _params = params;
@@ -45,9 +46,7 @@ export async function request<T>(
   const base = API_BASE_URL + endpoint;
   const queryString = _params?.toString() || "";
   const url = queryString ? `${base}?${queryString}` : base;
-  const csrfToken = getCookie("csrftoken");
-
-  if (!csrfToken) {
+  if (isMutating && !csrfToken) {
     console.error("CSRF token missing!", {
       cookieNames: document.cookie
         .split(";")
@@ -82,6 +81,19 @@ export async function request<T>(
   }
 }
 
-function ensureCSRFToken() {
-  return request("GET", "/auth/ensure-csrf-token/");
+/**
+ * Makes sure a CSRF token (cookie) is set and returns it.
+ *
+ * The token is read from the `X-CSRFToken` response header instead of directly
+ * from `document.cookie`: in WebKit a cookie set by a `fetch` response is not
+ * always visible in `document.cookie` immediately, which caused (flaky) 403s.
+ */
+async function ensureCSRFToken(): Promise<string | null> {
+  const response = await fetch(`${API_BASE_URL}/auth/ensure-csrf-token/`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw response;
+  }
+  return response.headers.get("X-CSRFToken") || getCookie("csrftoken");
 }

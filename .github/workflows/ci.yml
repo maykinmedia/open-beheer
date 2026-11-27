@@ -185,8 +185,10 @@ jobs:
       matrix:
         browser:
           - webkit
-        attempt: [1, 2, 3, 4, 5]
-    name: E2E tests ${{ matrix.browser }} (${{ matrix.attempt }})
+          - chromium
+          - firefox
+
+    name: E2E tests ${{ matrix.browser }}
 
     services:
       postgres:

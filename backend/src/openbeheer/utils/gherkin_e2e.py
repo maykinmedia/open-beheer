@@ -275,6 +275,7 @@ class GherkinRunner:
         def user_logs_out(self, page: Page) -> None:
             page.wait_for_load_state("networkidle")
             profile_button = page.get_by_role("button", name="Profiel")
+            page.wait_for_timeout(300)
             profile_button.wait_for()
             profile_button.click()
 
