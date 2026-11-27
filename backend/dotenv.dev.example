@@ -13,9 +13,6 @@ SESSION_COOKIE_SECURE=False
 OIDC_REDIRECT_ALLOWED_HOSTS=localhost:5173
 
 
-# For debugging celery tasks
-# CELERY_TASK_ALWAYS_EAGER=True
-
 # For running e2e tests
 PLAYWRIGHT_BROWSER=firefox
 PLAYWRIGHT_HEADLESS=no
