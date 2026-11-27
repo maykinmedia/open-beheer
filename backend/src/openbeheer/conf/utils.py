@@ -1,8 +1,7 @@
-import logging
+import logging  # noqa: TID251 - only used for the log levels
 
 from sentry_sdk.integrations import DidNotEnable, django, redis
-
-logger = logging.getLogger(__name__)
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 
 def get_sentry_integrations() -> list:
@@ -11,6 +10,12 @@ def get_sentry_integrations() -> list:
     """
     default = [
         django.DjangoIntegration(),
+        LoggingIntegration(
+            level=logging.INFO,  # breadcrumbs
+            # do not send any logs as event to Sentry at all - these must be scraped by
+            # the (container) infrastructure instead.
+            event_level=None,
+        ),
         redis.RedisIntegration(),
     ]
     extra = []

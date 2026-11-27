@@ -358,7 +358,7 @@ def expand_zaakobjecttypen(
                 )
             except KeyError:
                 logger.warning(
-                    "Open Zaak and Objecttypes API out of sync.",
+                    "apis_out_of_sync",
                     zaakobjecttype=zaakobjecttype.url,
                     zaaktype=zaaktype.url,
                 )

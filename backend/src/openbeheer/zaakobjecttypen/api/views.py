@@ -83,7 +83,7 @@ def expand_zaakobjecttype(
             )
     except ValidationError:
         logger.warning(
-            "Open Zaak and Objecttypes API out of sync.",
+            "apis_out_of_sync",
             zaakobjecttype=zaakobjecttype.url,
         )
         return [None]

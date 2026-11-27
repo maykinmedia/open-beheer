@@ -143,7 +143,7 @@ def fetch_one[T](client: APIClient, path: str, result_type: type[T]) -> T | NoRe
         return decode(response.content, type=result_type)
     except ValidationError:
         logger.info(
-            "failed GET response decode",
+            "get_response_decode_failed",
             expected_type=result_type,
             content=response.content,
             service=client.base_url,
@@ -166,7 +166,7 @@ def fetch_response[T](
         return decode(response.content, type=ZGWResponse[result_type])
     except ValidationError:
         logger.info(
-            "failed GET response decode",
+            "get_response_decode_failed",
             expected_type=ZGWResponse[result_type],
             content=response.content,
             service=client.base_url,
@@ -241,7 +241,7 @@ def expand_one[T: Struct, R](
     result = expanded[0]
 
     if len(expanded) > 1:
-        logger.error("too many expansions", extra=expanded[1:])
+        logger.error("expansion_limit_exceeded", extra=expanded[1:])
 
     return result
 
@@ -255,7 +255,7 @@ def create_one[T](
             return decode(response.content, type=result_type)
         except ValidationError as e:
             logger.info(
-                "failed POST response decode",
+                "post_response_decode_failed",
                 error=e,
                 expected_type=result_type,
                 path=path,
@@ -271,7 +271,7 @@ def create_one[T](
     else:
         error = decode(response.content, type=ZGWError)
         logger.info(
-            "failed POST",
+            "post_failed",
             error=error,
             expected_type=result_type,
             path=path,
@@ -522,7 +522,7 @@ class ListView[P: OBPagedQueryParams, T: Struct, S: Struct](MsgspecAPIView):
 
                 return data, response.status_code
             except ValidationError as e:
-                logger.debug("invalid service response", validation_error=e)
+                logger.debug("invalid_service", validation_error=e)
                 return ZGWError(
                     code="Bad response",
                     title="Server returned out of spec response",
