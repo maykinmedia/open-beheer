@@ -59,6 +59,10 @@
             [
                 "axes",
                 "accesslog"
+            ],
+            [
+                "log_outgoing_requests",
+                "outgoingrequestslog"
             ]
         ]
     }
@@ -81,6 +85,10 @@
             [
                 "config",
                 "apiconfig"
+            ],
+            [
+                "log_outgoing_requests",
+                "outgoingrequestslogconfig"
             ],
             [
                 "mozilla_django_oidc_db",
