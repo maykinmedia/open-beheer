@@ -99,6 +99,10 @@ function App() {
         const currentUser = await whoAmI(controller.signal);
         setUser(currentUser);
       } catch (error) {
+        // Ignore aborted requests (React StrictMode).
+        if (controller.signal.aborted) {
+          return;
+        }
         // Nog logged in.
         if (error instanceof Response && error.status === 403) {
           return navigate("/login");
