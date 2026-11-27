@@ -1,4 +1,5 @@
 import os
+import sys
 import warnings
 
 from corsheaders.defaults import default_headers
@@ -21,6 +22,7 @@ os.environ.setdefault("ENVIRONMENT", "development")
 os.environ.setdefault("LOG_STDOUT", "1")
 os.environ.setdefault("LOG_FORMAT_CONSOLE", "plain_console")
 os.environ.setdefault("LOG_LEVEL", "DEBUG")
+os.environ.setdefault("LOG_OUTGOING_REQUESTS", "no")
 
 from .base import *  # noqa isort:skip
 
@@ -135,6 +137,10 @@ warnings.filterwarnings(
 
 # Playwright settings
 E2E_TESTS = config("E2E_TESTS", default=True)
+
+# ensure we insert (audit) logs in the main thread & DB transaction in tests
+if "test" in sys.argv:
+    LOG_OUTGOING_REQUESTS_HANDLER_USE_QUEUE = False
 
 # Override settings with local settings.
 try:  # noqa: SIM105

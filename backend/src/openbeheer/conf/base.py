@@ -6,13 +6,18 @@ from typing import Literal
 from django.urls import reverse_lazy
 
 import sentry_sdk
+import structlog
+from log_outgoing_requests.structlog import ExtractRequestAndResponseDetails
 from maykin_common.branding import ProductDefinition
 from maykin_common.config import DocumentationParams, config
 from maykin_common.logging.config import (
     logging_apps,
-    logging_formatters,
     logging_middleware,
     structlog_configure_defaults,
+)
+from maykin_common.logging.processors import (
+    add_open_telemetry_spans,
+    drop_user_agent_in_dev,
 )
 
 from .utils import get_sentry_integrations
@@ -135,6 +140,7 @@ INSTALLED_APPS = [
     *logging_apps,
     "django_setup_configuration",
     "privates",
+    "log_outgoing_requests",
     # Project applications.
     "openbeheer.accounts",
     "openbeheer.utils",
@@ -247,6 +253,7 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="openbeheer@example.co
 # LOGGING
 #
 LOG_STDOUT = config("LOG_STDOUT", default=False)
+LOG_OUTGOING_REQUESTS = config("LOG_OUTGOING_REQUESTS", default=False)
 LOG_FORMAT_CONSOLE: Literal["json", "plain_console"] = config(
     "LOG_FORMAT_CONSOLE", default="json"
 )
@@ -258,7 +265,40 @@ _default_handler = "json_file" if not LOG_STDOUT else "console"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": logging_formatters,
+    "formatters": {
+        "json": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.processors.JSONRenderer(),
+            # structlog - foreign_pre_chain handles logs coming from stdlib logging module,
+            # while the `structlog.configure` call handles everything coming from structlog.
+            # They are mutually exclusive.
+            "foreign_pre_chain": [
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.TimeStamper(fmt="iso"),
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.ExtraAdder(),
+                ExtractRequestAndResponseDetails(expand_headers=False),
+                drop_user_agent_in_dev,
+                add_open_telemetry_spans,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+            ],
+        },
+        "plain_console": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.dev.ConsoleRenderer(),
+            "foreign_pre_chain": [
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.TimeStamper(fmt="iso"),
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                ExtractRequestAndResponseDetails(expand_headers=True),
+                drop_user_agent_in_dev,
+                add_open_telemetry_spans,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+            ],
+        },
+    },
     "filters": {
         "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
     },
@@ -279,6 +319,12 @@ LOGGING = {
             "formatter": "json",
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 10,
+        },
+        "save_outgoing_requests": {
+            "level": "DEBUG",
+            "()": "log_outgoing_requests.handlers.outgoing_requests_handler_factory",
+            "buffer_size": 3,  # batch size of log records to write in one go
+            "flush_interval": 15.0,  # in seconds
         },
     },
     "loggers": {
@@ -303,6 +349,13 @@ LOGGING = {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": True,
+        },
+        "log_outgoing_requests": {
+            "handlers": (
+                ["console", "save_outgoing_requests"] if LOG_OUTGOING_REQUESTS else []
+            ),
+            "level": "DEBUG",
+            "propagate": False,
         },
         "django_structlog": {
             "handlers": [_default_handler],
@@ -692,6 +745,22 @@ SENDFILE_URL = STORAGES["privates"]["OPTIONS"]["base_url"]
 # DJANGO-STRUCTLOG
 #
 DJANGO_STRUCTLOG_IP_LOGGING_ENABLED = False
+
+#
+# Django-log-outgoing-requests
+#
+LOG_OUTGOING_REQUESTS_DB_SAVE = config("LOG_OUTGOING_REQUESTS_DB_SAVE", default=False)
+LOG_OUTGOING_REQUESTS_DB_SAVE_BODY = config(
+    "LOG_OUTGOING_REQUESTS_DB_SAVE_BODY", default=False
+)
+LOG_OUTGOING_REQUESTS_EMIT_BODY = config(
+    "LOG_OUTGOING_REQUESTS_EMIT_BODY", default=False
+)
+LOG_OUTGOING_REQUESTS_MAX_CONTENT_LENGTH = 524_288  # 0.5MB
+LOG_OUTGOING_REQUESTS_MAX_AGE = config("LOG_OUTGOING_REQUESTS_MAX_AGE", default=7)
+LOG_OUTGOING_REQUESTS_RESET_DB_SAVE_AFTER = None  # because celery is not configured
+LOG_OUTGOING_REQUESTS_HANDLER_USE_QUEUE = True
+LOG_OUTGOING_REQUESTS_HANDLER_ON_ERROR = sentry_sdk.capture_exception
 
 # TODO: This ought to be configurable per ZTC Service... But not in a way that
 # hits the db for every deserialise of each object.

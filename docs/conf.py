@@ -14,6 +14,7 @@ root_folder = pathlib.Path(__file__).parent.parent
 src_folder = (root_folder / pathlib.Path("backend") / pathlib.Path("src") )
 
 sys.path.insert(0, str(src_folder))
+os.environ["LOG_OUTGOING_REQUESTS"] = "false"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "openbeheer.conf.ci")
 django.setup()
 

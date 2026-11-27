@@ -130,6 +130,7 @@ django==5.2.19
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
     #   django-admin-index
+    #   django-appconf
     #   django-axes
     #   django-cors-headers
     #   django-debug-toolbar
@@ -137,6 +138,7 @@ django==5.2.19
     #   django-formtools
     #   django-hijack
     #   django-jsonform
+    #   django-log-outgoing-requests
     #   django-otp
     #   django-phonenumber-field
     #   django-privates
@@ -163,6 +165,12 @@ django-admin-index==4.0.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
+django-appconf==1.2.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   -r requirements/type-checking.txt
+    #   django-log-outgoing-requests
 django-axes==7.0.2
     # via
     #   -c requirements/ci.txt
@@ -197,6 +205,11 @@ django-jsonform==2.23.2
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
     #   mozilla-django-oidc-db
+django-log-outgoing-requests==0.9.1
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   -r requirements/type-checking.txt
 django-ordered-model==3.7.4
     # via
     #   -c requirements/ci.txt
@@ -260,6 +273,7 @@ django-solo==2.4.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
+    #   django-log-outgoing-requests
     #   zgw-consumers
 django-structlog==9.1.1
     # via
@@ -573,6 +587,7 @@ pygments==2.21.0
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
+    #   django-log-outgoing-requests
     #   httpx
     #   pytest
     #   rich
@@ -685,6 +700,7 @@ requests==2.34.2
     #   -r requirements/ci.txt
     #   -r requirements/type-checking.txt
     #   ape-pie
+    #   django-log-outgoing-requests
     #   django-rosetta
     #   djangorestframework-stubs
     #   mozilla-django-oidc
@@ -854,6 +870,7 @@ typing-extensions==4.16.0
     #   anyio
     #   beautifulsoup4
     #   datamodel-code-generator
+    #   django-log-outgoing-requests
     #   django-stubs
     #   django-stubs-ext
     #   djangorestframework-stubs
