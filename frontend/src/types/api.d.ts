@@ -2775,10 +2775,7 @@ export interface components {
             username: string;
             firstName?: string;
             lastName?: string;
-            /**
-             * Email address
-             * Format: email
-             */
+            /** Email address */
             email?: string;
         };
         /**
