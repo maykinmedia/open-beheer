@@ -19,5 +19,4 @@ def get_sentry_integrations() -> list:
         redis.RedisIntegration(),
     ]
 
-
     return [*default]
