@@ -72,6 +72,6 @@ export async function request<T>(
   }
 }
 
-function ensureCSRFToken() {
+export function ensureCSRFToken() {
   return request("GET", "/auth/ensure-csrf-token/");
 }
