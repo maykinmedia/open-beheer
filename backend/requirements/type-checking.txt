@@ -166,7 +166,7 @@ docutils==0.21.2
     # via
     #   -r requirements/base.txt
     #   django-setup-configuration
-drf-spectacular==0.28.0
+drf-spectacular==0.30.0
     # via -r requirements/base.txt
 ecs-logging==2.2.0
     # via

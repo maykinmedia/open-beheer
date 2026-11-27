@@ -312,7 +312,7 @@ docutils==0.21.2
     #   django-setup-configuration
     #   sphinx
     #   sphinx-rtd-theme
-drf-spectacular==0.28.0
+drf-spectacular==0.30.0
     # via
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
