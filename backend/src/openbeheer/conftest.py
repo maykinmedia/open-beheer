@@ -2,11 +2,13 @@ import inspect
 import os
 import pathlib
 import threading
+import time
 from typing import Callable, ContextManager, Generator, Iterable, NoReturn, Protocol
 
 import pytest
 from mozilla_django_oidc_db.constants import OIDC_ADMIN_CONFIG_IDENTIFIER
 from mozilla_django_oidc_db.tests.factories import OIDCClientFactory
+from playwright.sync_api import ConsoleMessage, Page, Response, Route
 from pytest_django import DjangoDbBlocker, live_server_helper
 from pytest_django.fixtures import SettingsWrapper
 from pytest_django.lazy_django import skip_if_no_django
@@ -20,6 +22,45 @@ from openbeheer.utils.tests import VCRMixin
 @pytest.fixture
 def runner(live_server_vcr, browser) -> GherkinRunner:
     return GherkinRunner(live_server_vcr, browser)
+
+
+@pytest.fixture
+def page(page: Page) -> Page:
+    """
+    Extends the pytest-playwright ``page`` fixture with diagnostics for flaky e2e tests.
+
+    * Browser console errors and failing API responses (status >= 400) are printed,
+      so they show up in the pytest output in CI (pytest prints captured stdout of
+      failing tests).
+    * Set ``E2E_SLOW_API_MS`` (e.g. ``E2E_SLOW_API_MS=500``) to delay every API request.
+      This simulates a slow CI runner and makes race conditions reproducible locally.
+    """
+
+    def log_console(msg: ConsoleMessage) -> None:
+        if msg.type in ("error", "warning"):
+            print(f"[browser console.{msg.type}] {msg.text}")
+
+    def log_response(response: Response) -> None:
+        if response.status >= 400:
+            print(
+                f"[browser response] {response.status} "
+                f"{response.request.method} {response.url}"
+            )
+
+    page.on("console", log_console)
+    page.on("response", log_response)
+
+    if delay_ms := int(os.getenv("E2E_SLOW_API_MS", "0")):
+
+        def slow_down(route: Route) -> None:
+            # Note: blocks the sync Playwright event loop, so requests are also
+            # serialized. Good enough to make the app (much) slower.
+            time.sleep(delay_ms / 1000)
+            route.continue_()
+
+        page.route("**/api/v1/**", slow_down)
+
+    return page
 
 
 @pytest.fixture(scope="function")

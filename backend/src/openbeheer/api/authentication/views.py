@@ -20,8 +20,13 @@ class EnsureCSRFTokenView(APIView):
     permission_classes = []
 
     def get(self, request, *args, **kwargs):
-        get_token(request)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        token = get_token(request)
+        # Also return the token as a header: the frontend can't always rely on
+        # reading the cookie right after this response (WebKit may not have synced
+        # the new cookie to `document.cookie` yet).
+        return Response(
+            status=status.HTTP_204_NO_CONTENT, headers={"X-CSRFToken": token}
+        )
 
 
 @extend_schema(

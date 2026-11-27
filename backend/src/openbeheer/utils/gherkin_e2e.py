@@ -275,6 +275,7 @@ class GherkinRunner:
         def user_logs_out(self, page: Page) -> None:
             page.wait_for_load_state("networkidle")
             profile_button = page.get_by_role("button", name="Profiel")
+            page.wait_for_timeout(300)
             profile_button.wait_for()
             profile_button.click()
 
@@ -465,10 +466,18 @@ class GherkinRunner:
             If multiple form fields are found, the field at the given index is filled.
             """
 
-            # Certain form fields may be shown in a modal that needs some time to load
-            # We add a tiny delay here to prevent API complication and allow the modal to render
-            page.wait_for_timeout(30)
+            # Certain form fields may be shown in a modal that needs some time to load.
+            # `.count()` does NOT wait, it returns a snapshot of the DOM. So first wait
+            # (auto-retrying) until the field is actually rendered, on slow browsers
+            # (WebKit in CI) a fixed delay is not enough.
+            # Fields with the same label may exist in hidden tab panels, so wait for
+            # a *visible* one. Which field is filled (`index`) is decided below.
+            any_field = page.get_by_label(label)
+            if not skip_combo:
+                any_field = page.get_by_role("combobox", name=label).or_(any_field)
+            expect(any_field.filter(visible=True).first).to_be_visible()
 
+            # The field is rendered, so if it lives in a modal, the modal is rendered too.
             modals = page.get_by_role("dialog")
             locator = modals.first if modals.count() else page
 
@@ -478,17 +487,15 @@ class GherkinRunner:
                 if selects.count():
                     select = selects.nth(index)
                     select.click()
-                    page.wait_for_timeout(30)
                     options = select.get_by_text(value).filter(visible=True)
-                    assert options.count()
+                    # Wait for the dropdown to open instead of asserting a snapshot.
+                    expect(options.first).to_be_visible()
 
                     for option in options.all():
                         if option.is_visible():
                             option.click()
 
-                    page.wait_for_timeout(30)
                     select.blur()
-                    page.wait_for_timeout(30)
                     return
 
             # Fill (native) input
