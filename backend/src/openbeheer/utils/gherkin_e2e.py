@@ -469,10 +469,12 @@ class GherkinRunner:
             # `.count()` does NOT wait, it returns a snapshot of the DOM. So first wait
             # (auto-retrying) until the field is actually rendered, on slow browsers
             # (WebKit in CI) a fixed delay is not enough.
+            # Fields with the same label may exist in hidden tab panels, so wait for
+            # a *visible* one. Which field is filled (`index`) is decided below.
             any_field = page.get_by_label(label)
             if not skip_combo:
                 any_field = page.get_by_role("combobox", name=label).or_(any_field)
-            expect(any_field.first).to_be_visible()
+            expect(any_field.filter(visible=True).first).to_be_visible()
 
             # The field is rendered, so if it lives in a modal, the modal is rendered too.
             modals = page.get_by_role("dialog")
