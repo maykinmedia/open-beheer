@@ -656,6 +656,8 @@ SPECTACULAR_SETTINGS = {
         "openbeheer.api.drf_spectacular.schema.camelize_serializer_fields",
         "openbeheer.api.drf_spectacular.schema.post_process_hook",
     ],
+    # workaround: https://github.com/tfranzel/drf-spectacular/issues/1543
+    "REDOC_DIST": "https://cdn.jsdelivr.net/npm/redoc@2.5.4",
 }
 
 #
