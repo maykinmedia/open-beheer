@@ -35,7 +35,7 @@ import {
 } from "~/components/related";
 import { Errors } from "~/hooks";
 import { useHashParam } from "~/hooks/useHashParam.ts";
-import { getZaaktypeUUID } from "~/lib";
+import { getZaaktypeUUID, isAbortError } from "~/lib";
 import {
   AttributeGridTabConfig,
   TargetType,
@@ -115,33 +115,38 @@ export const ZaaktypeAttributeGridTab = ({
 
     let abortControllers: AbortController[] = [];
     const run = async () => {
-      const urls = raw as string[];
-      const uuid = urls
-        .map((url) => getZaaktypeUUID({ url }))
-        .filter((uuid): uuid is string => Boolean(uuid));
-      const fetchTuples = uuid.map((zaaktypeUUID) =>
-        getZaaktype({ serviceSlug, zaaktypeUUID }),
-      );
-      const promises: Promise<
-        components["schemas"]["DetailResponse_ExpandableZaakType_"]
-      >[] = [];
+      try {
+        const urls = raw as string[];
 
-      fetchTuples.forEach(([promise, abortController]) => {
-        promises.push(promise);
-        abortControllers.push(abortController);
-      });
+        const uuid = urls
+          .map((url) => getZaaktypeUUID({ url }))
+          .filter((uuid): uuid is string => Boolean(uuid));
 
-      const results = await Promise.all(promises);
-      const zaaktypen = results.map((result) => result.result);
-      setSelectedDeelzaaktypenOptions(mapZaaktypenToOptions(zaaktypen));
+        const fetchTuples = uuid.map((zaaktypeUUID) => {
+          return getZaaktype({ serviceSlug, zaaktypeUUID });
+        });
+        const promises: Promise<
+          components["schemas"]["DetailResponse_ExpandableZaakType_"]
+        >[] = [];
+
+        fetchTuples.forEach(([promise, abortController]) => {
+          promises.push(promise);
+          abortControllers.push(abortController);
+        });
+
+        const results = await Promise.all(promises);
+        const zaaktypen = results.map((result) => result.result);
+        setSelectedDeelzaaktypenOptions(mapZaaktypenToOptions(zaaktypen));
+      } catch (error) {
+        if (isAbortError(error)) return;
+        throw error;
+      }
     };
 
     void run();
 
     return () => {
-      abortControllers.forEach((abortController) =>
-        abortController.abort("useEffect cleanup"),
-      );
+      abortControllers.forEach((abortController) => abortController.abort());
       abortControllers = [];
     };
   }, [isEditing, fields, object, serviceSlug]);

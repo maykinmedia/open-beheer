@@ -69,3 +69,17 @@ export function invalidParams2Errors(
     {},
   );
 }
+
+/**
+ * Checks if the provided error object is an instance of AbortError, a type of
+ * DOMException used to indicate that a request or operation has been explicitly
+ * canceled.
+ *
+ * @param error - The error object to check. Can be any JavaScript unknown type.
+ * @returns true if the error "AbortError"
+ */
+export function isAbortError(
+  error: unknown,
+): error is DOMException & { name: "AbortError" } {
+  return error instanceof DOMException && error.name === "AbortError";
+}

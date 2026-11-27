@@ -7,6 +7,7 @@ import {
 } from "@maykin-ui/admin-ui";
 import { string2Title } from "@maykin-ui/client-common";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { isAbortError } from "~/lib";
 import {
   Afleidingswijze,
   ArchiveMeta,
@@ -109,11 +110,10 @@ export function ArchiveForm({
     promise
       .then((result) => setArchiveMeta(result))
       .catch((error) => {
-        if (error.name !== "AbortError") {
-          console.error("Failed to fetch archive metadata:", error);
-          alert("Foutmelding", error.message, "Ok");
-          onCancel(error.message);
-        }
+        if (isAbortError(error)) return;
+        console.error("Failed to fetch archive metadata:", error);
+        alert("Foutmelding", error.message, "Ok");
+        onCancel(error.message);
       });
 
     return () => abortController.abort();

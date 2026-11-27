@@ -8,6 +8,7 @@ import { useCatalogi } from "./useCatalogi";
 vi.mock("~/api/catalogi.ts", () => ({
   getCatalogiChoices: vi.fn(),
 }));
+const mockedGetCatalogiChoices = vi.mocked(getCatalogiChoices);
 
 describe("useCatalogi", () => {
   const mockService = { label: "Test Service", value: "test-service" };
@@ -25,9 +26,7 @@ describe("useCatalogi", () => {
       { label: "Catalogus A", value: "cat-a" },
       { label: "Catalogus B", value: "cat-b" },
     ];
-    (getCatalogiChoices as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
-      mockCatalogi,
-    );
+    mockedGetCatalogiChoices.mockResolvedValueOnce(mockCatalogi);
 
     const { result } = renderHook(() => useCatalogi(mockService), { wrapper });
 
@@ -35,7 +34,11 @@ describe("useCatalogi", () => {
       expect(result.current.catalogiChoices.length).toBeGreaterThan(0);
     });
 
-    expect(getCatalogiChoices).toHaveBeenCalledWith("test-service");
+    expect(mockedGetCatalogiChoices).toHaveBeenCalled();
+    expect(mockedGetCatalogiChoices.mock.calls[0][0]).toBe("test-service");
+    expect(mockedGetCatalogiChoices.mock.calls[0][1]).toBeInstanceOf(
+      AbortSignal,
+    );
     expect(result.current.catalogiChoices).toEqual(mockCatalogi);
   });
 
@@ -46,11 +49,13 @@ describe("useCatalogi", () => {
       expect(result.current.catalogiChoices).toEqual([]);
     });
 
-    expect(getCatalogiChoices).not.toHaveBeenCalled();
+    expect(mockedGetCatalogiChoices).not.toHaveBeenCalled();
   });
 
   it("sets catalogiChoices to empty array if response is empty", async () => {
-    (getCatalogiChoices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+    (
+      mockedGetCatalogiChoices as ReturnType<typeof vi.fn>
+    ).mockResolvedValueOnce([]);
 
     const { result } = renderHook(() => useCatalogi(mockService), { wrapper });
 

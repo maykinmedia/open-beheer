@@ -40,6 +40,7 @@ import {
   useCurrentMatch,
   useService,
 } from "~/hooks";
+import { isAbortError } from "~/lib";
 import { getUUIDFromString } from "~/lib/format/string.ts";
 import { components } from "~/types";
 
@@ -99,6 +100,8 @@ function App() {
         const currentUser = await whoAmI(controller.signal);
         setUser(currentUser);
       } catch (error) {
+        if (isAbortError(error)) return;
+
         // Nog logged in.
         if (error instanceof Response && error.status === 403) {
           return navigate("/login");

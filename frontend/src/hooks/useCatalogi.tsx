@@ -3,6 +3,7 @@ import { cacheGet, cacheSet } from "@maykin-ui/client-common";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { getCatalogiChoices } from "~/api/catalogi.ts";
+import { isAbortError } from "~/lib";
 import { getUUIDFromString } from "~/lib/format/string.ts";
 import { components } from "~/types";
 
@@ -41,7 +42,10 @@ export function useCatalogi(
       }
 
       try {
-        const choices = await getCatalogiChoices(service.value);
+        const choices = await getCatalogiChoices(
+          service.value,
+          controller.signal,
+        );
         setCatalogiChoices(choices);
 
         // Auto-navigate logic
@@ -59,6 +63,7 @@ export function useCatalogi(
           }
         }
       } catch (error) {
+        if (isAbortError(error)) return;
         const messages: string[] = ["Failed to fetch catalogi choices."];
         if (error instanceof Response) {
           messages.push(`Status: ${error.status}, ${error.statusText}`);

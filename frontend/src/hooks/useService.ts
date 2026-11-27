@@ -4,6 +4,7 @@
  */
 import { useEffect, useState } from "react";
 import { getServiceChoices } from "~/api/service.ts";
+import { isAbortError } from "~/lib";
 import { components } from "~/types";
 
 /**
@@ -25,10 +26,11 @@ export function useService(user: components["schemas"]["User"] | null) {
 
     const fetchServices = async () => {
       try {
-        const serviceChoices = await getServiceChoices();
+        const serviceChoices = await getServiceChoices(controller.signal);
         setServices(serviceChoices);
         setService(serviceChoices[0] ?? null);
       } catch (error) {
+        if (isAbortError(error)) return;
         console.error("Failed to fetch services:", error);
       }
     };
