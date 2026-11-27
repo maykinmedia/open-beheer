@@ -6,13 +6,18 @@ from typing import Literal
 from django.urls import reverse_lazy
 
 import sentry_sdk
+import structlog
+from log_outgoing_requests.structlog import ExtractRequestAndResponseDetails
 from maykin_common.branding import ProductDefinition
 from maykin_common.config import DocumentationParams, config
 from maykin_common.logging.config import (
     logging_apps,
-    logging_formatters,
     logging_middleware,
     structlog_configure_defaults,
+)
+from maykin_common.logging.processors import (
+    add_open_telemetry_spans,
+    drop_user_agent_in_dev,
 )
 
 from .utils import get_sentry_integrations
@@ -260,7 +265,40 @@ _default_handler = "json_file" if not LOG_STDOUT else "console"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": logging_formatters,
+    "formatters": {
+        "json": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.processors.JSONRenderer(),
+            # structlog - foreign_pre_chain handles logs coming from stdlib logging module,
+            # while the `structlog.configure` call handles everything coming from structlog.
+            # They are mutually exclusive.
+            "foreign_pre_chain": [
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.TimeStamper(fmt="iso"),
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.ExtraAdder(),
+                ExtractRequestAndResponseDetails(expand_headers=False),
+                drop_user_agent_in_dev,
+                add_open_telemetry_spans,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+            ],
+        },
+        "plain_console": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.dev.ConsoleRenderer(),
+            "foreign_pre_chain": [
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.TimeStamper(fmt="iso"),
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                ExtractRequestAndResponseDetails(expand_headers=True),
+                drop_user_agent_in_dev,
+                add_open_telemetry_spans,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+            ],
+        },
+    },
     "filters": {
         "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
     },
