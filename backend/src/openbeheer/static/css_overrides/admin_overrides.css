@@ -1,0 +1,277 @@
+:root{
+    --input-field-size: 20em
+}
+html[data-theme=light],:root{
+    --primary: #04a5bb;
+    --accent: #f3f3f3;
+    --secondary: #04a5bb;
+    --primary-fg: #fff;
+    --header-color: #fff;
+    --breadcrumbs-fg: #04a5bb;
+    --breadcrumbs-link-fg: var(--body-fg);
+    --breadcrumbs-bg: #f3f3f3;
+    --link-fg: #017092;
+    --link-hover-color: #051f31;
+    --link-selected-fg: #5b80b2;
+    --hairline-color: #e5e5e5;
+    --button-fg: #fff;
+    --button-hover-bg: #017092;
+    --default-button-bg: #017092;
+    --default-button-hover-bg: #000;
+    --close-button-bg: #888;
+    --close-button-hover-bg: #333;
+    --object-tools-bg: #888;
+    --object-tools-hover-bg: #333;
+    --breadcrumbs-link-hover: #000;
+    --calendar-widget-background: #ddd;
+    --calendar-widget-color: #333
+}
+body{
+    --djai-tab-bg: var(--primary);
+    --djai-tab-bg--active: var(--breadcrumbs-bg);
+    --djai-tab-bg--hover: #017092;
+    --djai-tab-fg--active: var(--secondary);
+    --djai-dropdown-bg--active: #017092;
+    --djai-dropdown-bg--hover: #017092;
+    --custom-djai-border-bottom-width: 8px;
+    --custom-djai-border-bottom-color: #f3f3f3
+}
+@media(prefers-color-scheme:dark){
+    :root{
+        --primary: #037383;
+        --secondary: #037383;
+        --breadcrumbs-fg: #2fc0ec;
+        --breadcrumbs-bg: #333;
+        --link-fg: #04a5bb;
+        --link-hover-color: #b2cddf;
+        --hairline-color: #686868;
+        --button-hover-bg: #04a5bb;
+        --default-button-bg: #04a5bb;
+        --default-button-hover-bg: #888;
+        --breadcrumbs-link-hover: #888
+    }
+    html[data-theme=auto] .djai-dropdown-menu{
+        --djai-tab-bg--hover: #04a5bb;
+        --djai-tab-fg--active: #fff;
+        --djai-dropdown-bg--hover: #04a5bb;
+        --custom-djai-border-bottom-color: #333
+    }
+    html[data-theme=auto] input[type=text],html[data-theme=auto] input[type=password],html[data-theme=auto] input[type=email],html[data-theme=auto] input[type=url],html[data-theme=auto] input[type=number],html[data-theme=auto] input[type=tel],html[data-theme=auto] textarea,html[data-theme=auto] select,html[data-theme=auto] .vTextField{
+        background-color:#232222
+    }
+    html[data-theme=auto] input[type=text]:read-only,html[data-theme=auto] input[type=password]:read-only,html[data-theme=auto] input[type=email]:read-only,html[data-theme=auto] input[type=url]:read-only,html[data-theme=auto] input[type=number]:read-only,html[data-theme=auto] input[type=tel]:read-only,html[data-theme=auto] textarea:read-only,html[data-theme=auto] select:read-only,html[data-theme=auto] .vTextField:read-only{
+        background-color:#1a1818
+    }
+    html[data-theme=auto] input[type=checkbox],html[data-theme=auto] input[type=radio]{
+        color-scheme:dark
+    }
+    html[data-theme=auto] body #toolbar{
+        background:var(--body-bg)
+    }
+}
+html[data-theme=dark]{
+    --primary: #037383;
+    --secondary: #037383;
+    --breadcrumbs-fg: #2fc0ec;
+    --breadcrumbs-bg: #333;
+    --link-fg: #04a5bb;
+    --link-hover-color: #b2cddf;
+    --hairline-color: #686868;
+    --button-hover-bg: #04a5bb;
+    --default-button-bg: #04a5bb;
+    --default-button-hover-bg: #888;
+    --breadcrumbs-link-hover: #888
+}
+html[data-theme=dark] .djai-dropdown-menu{
+    --djai-tab-bg--hover: #04a5bb;
+    --djai-tab-fg--active: #fff;
+    --djai-dropdown-bg--hover: #04a5bb;
+    --custom-djai-border-bottom-color: #333
+}
+html[data-theme=dark] input[type=text],html[data-theme=dark] input[type=password],html[data-theme=dark] input[type=email],html[data-theme=dark] input[type=url],html[data-theme=dark] input[type=number],html[data-theme=dark] input[type=tel],html[data-theme=dark] textarea,html[data-theme=dark] select,html[data-theme=dark] .vTextField{
+    background-color:#232222
+}
+html[data-theme=dark] input[type=text]:read-only,html[data-theme=dark] input[type=password]:read-only,html[data-theme=dark] input[type=email]:read-only,html[data-theme=dark] input[type=url]:read-only,html[data-theme=dark] input[type=number]:read-only,html[data-theme=dark] input[type=tel]:read-only,html[data-theme=dark] textarea:read-only,html[data-theme=dark] select:read-only,html[data-theme=dark] .vTextField:read-only{
+    background-color:#1a1818
+}
+html[data-theme=dark] input[type=checkbox],html[data-theme=dark] input[type=radio]{
+    color-scheme:dark
+}
+html[data-theme=dark] body #toolbar{
+    background:var(--body-bg)
+}
+body.change-form{
+    line-height:1.15
+}
+#branding #site-name a:link,#branding #site-name a:visited{
+    font-weight:700
+}
+#user-tools a,#logout-form button{
+    border-bottom:none;
+    text-decoration:underline
+}
+#user-tools a:focus,#user-tools a:hover,#logout-form button:focus,#logout-form button:hover{
+    color:var(--header-link-color);
+    text-decoration:none
+}
+div.breadcrumbs a:focus,div.breadcrumbs a:hover{
+    color:var(--breadcrumbs-link-hover)
+}
+#changelist-filter a:focus,#changelist-filter a:hover{
+    color:var(--link-fg)!important
+}
+#changelist-filter li.selected a{
+    color:var(--link-fg)!important
+}
+#changelist-filter li.selected a:focus,#changelist-filter li.selected a:hover{
+    color:var(--primary)!important
+}
+.calendar caption,.calendarbox h2{
+    background:var(--calendar-widget-background)!important;
+    color:var(--calendar-widget-color)!important
+}
+.calendar td a:focus,.calendar td a:hover,.timelist a:focus,.timelist a:hover{
+    background:var(--link-fg)!important
+}
+.module.clockbox h2{
+    background:var(--calendar-widget-background)!important;
+    color:var(--calendar-widget-color)!important;
+    font-weight:700!important
+}
+.addlink{
+    background:none;
+    color:var(--body-fg);
+    position:relative
+}
+.addlink:before{
+    display:block;
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:14px;
+    height:14px;
+    margin-right:2px;
+    background:var(--body-fg)!important;
+    color:var(--body-fg);
+    mask-image:url(../img/admin/plus-square-regular.svg);
+    mask-repeat:no-repeat;
+    mask-size:14px 14px;
+    mask-position:0px 0px
+}
+.object-tools a.addlink:before{
+    display:none
+}
+.changelink,.inlinechangelink{
+    background:none;
+    color:var(--body-fg);
+    position:relative
+}
+.changelink:before,.inlinechangelink:before{
+    display:block;
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:14px;
+    height:14px;
+    margin-right:2px;
+    background:var(--body-fg)!important;
+    color:var(--body-fg);
+    mask-image:url(../img/admin/edit-regular.svg);
+    mask-repeat:no-repeat;
+    mask-size:14px 14px;
+    mask-position:0px 0px
+}
+.deletelink{
+    background:url(../img/admin/trash-alt-regular.svg) 0 0/14px 14px no-repeat
+}
+.datetimeshortcuts .clock-icon{
+    background:none;
+    color:var(--body-fg);
+    position:relative
+}
+.datetimeshortcuts .clock-icon:before{
+    display:block;
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:14px;
+    height:14px;
+    margin-right:2px;
+    background:var(--body-fg)!important;
+    color:var(--body-fg);
+    mask-image:url(../img/admin/clock-regular.svg);
+    mask-repeat:no-repeat;
+    mask-size:14px 14px;
+    mask-position:0px 0px
+}
+.datetimeshortcuts .clock-icon{
+    background:none!important
+}
+.datetimeshortcuts .date-icon{
+    background:none;
+    color:var(--body-fg);
+    position:relative
+}
+.datetimeshortcuts .date-icon:before{
+    display:block;
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:14px;
+    height:14px;
+    margin-right:2px;
+    background:var(--body-fg)!important;
+    color:var(--body-fg);
+    mask-image:url(../img/admin/calendar-alt-regular.svg);
+    mask-repeat:no-repeat;
+    mask-size:14px 14px;
+    mask-position:0px 0px
+}
+.datetimeshortcuts .date-icon{
+    background:none!important
+}
+.change-form .vTextField{
+    width:var(--input-field-size)
+}
+.related-widget-wrapper{
+    display:inline-block
+}
+.djai-dropdown-menu{
+    --custom-djai-padding: 40px;
+    margin-inline:calc(-1 * var(--custom-djai-padding));
+    padding-inline:var(--custom-djai-padding);
+    width:100%;
+    border-bottom:var(--custom-djai-border-bottom-width) solid var(--custom-djai-border-bottom-color)
+}
+.djai-dropdown-menu .djai-dropdown-menu__drop{
+    min-width:250px!important
+}
+#header{
+    padding-block-end:0!important
+}
+#header .djai-dropdown-menu .djai-dropdown-menu__item--active:link,#header .djai-dropdown-menu .djai-dropdown-menu__item--active:visited{
+    color:var(--djai-tab-fg--active)
+}
+#header .djai-dropdown-menu .djai-dropdown-menu__item--active:link:hover,#header .djai-dropdown-menu .djai-dropdown-menu__item--active:visited:hover{
+    color:var(--djai-tab-fg--hover)
+}
+div.breadcrumbs{
+    padding-top:calc(10px - var(--custom-djai-border-bottom-width))
+}
+body.login #header{
+    padding-block-end:15px!important
+}
+@media(max-width:1024px){
+    .djai-dropdown-menu{
+        --custom-djai-padding: 30px
+    }
+}
+@media(max-width:767px){
+    .djai-dropdown-menu{
+        --custom-djai-padding: 15px
+    }
+}
