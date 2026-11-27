@@ -180,12 +180,13 @@ jobs:
 
     strategy:
       fail-fast: false
+      # TODO [#444]: temporary, run webkit 5x in parallel to measure flakiness.
+      # Revert to chromium/firefox/webkit (and remove `attempt`) before merging.
       matrix:
         browser:
-          - chromium
-          - firefox
           - webkit
-    name: E2E tests ${{ matrix.browser }}
+        attempt: [1, 2, 3, 4, 5]
+    name: E2E tests ${{ matrix.browser }} (${{ matrix.attempt }})
 
     services:
       postgres:
@@ -245,7 +246,7 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: ''
           E2E_TESTS: yes
-          PLAYWRIGHT_TRACE_PATH: ${{ matrix.browser }}-playwright-trace.zip
+          PLAYWRIGHT_TRACE_PATH: ${{ matrix.browser }}-${{ matrix.attempt }}-playwright-trace.zip
           # See https://github.com/microsoft/playwright-pytest/issues/29
           DJANGO_ALLOW_ASYNC_UNSAFE: yes
           SKIP_BUILD: yes
@@ -253,8 +254,8 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ failure() }}
         with:
-          name: ${{ matrix.browser }}-playwright-trace.zip
-          path: ${{ github.workspace }}/backend/${{ matrix.browser }}-playwright-trace.zip
+          name: ${{ matrix.browser }}-${{ matrix.attempt }}-playwright-trace.zip
+          path: ${{ github.workspace }}/backend/${{ matrix.browser }}-${{ matrix.attempt }}-playwright-trace.zip
           retention-days: 1
           if-no-files-found: error
 
