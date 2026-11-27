@@ -1,6 +1,6 @@
 import logging  # noqa: TID251 - only used for the log levels
 
-from sentry_sdk.integrations import DidNotEnable, django, redis
+from sentry_sdk.integrations import django, redis
 from sentry_sdk.integrations.logging import LoggingIntegration
 
 
@@ -18,13 +18,6 @@ def get_sentry_integrations() -> list:
         ),
         redis.RedisIntegration(),
     ]
-    extra = []
 
-    try:
-        from sentry_sdk.integrations import celery
-    except DidNotEnable:  # happens if the celery import fails by the integration
-        pass
-    else:
-        extra.append(celery.CeleryIntegration())
 
-    return [*default, *extra]
+    return [*default]
