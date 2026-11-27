@@ -5,11 +5,18 @@ import { components } from "~/types";
 /**
  * API call for retrieving catalogi.
  * @param slug - the slug of the service to retrieve catalogi for
- */
-export async function getCatalogiChoices(slug: string) {
+ * @param signal - optional abort signal to cancel the request */
+export async function getCatalogiChoices(slug: string, signal?: AbortSignal) {
   return cacheMemo(
     "getCatalogiChoices",
     request<components["schemas"]["OBOption_str_"][]>,
-    ["GET", `/service/${slug}/catalogi/choices/`],
+    [
+      "GET",
+      `/service/${slug}/catalogi/choices/`,
+      undefined,
+      undefined,
+      undefined,
+      signal,
+    ],
   );
 }
