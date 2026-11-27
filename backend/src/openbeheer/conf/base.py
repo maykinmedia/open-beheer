@@ -299,6 +299,11 @@ LOGGING = {
             "level": "ERROR",
             "propagate": False,
         },
+        "django.template": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        },
         "django_structlog": {
             "handlers": [_default_handler],
             "level": "INFO",
